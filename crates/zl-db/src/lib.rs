@@ -13,6 +13,8 @@
 //!   that lets a rescan skip unchanged games with one integer comparison.
 //! - `game_files` holds every member file of a game (discs, tracks, the playlist itself).
 //! - `game_tags` holds the `[key] value` pairs of tag files.
+//! - `rom_roots.saf_tree` keeps the SAF tree URI the user granted for the folder, and `settings`
+//!   is a small key/value table for app choices (library mode, onboarding, dock).
 //! - `platform_emulator` and `game_emulator` hold the emulator assignment overrides; a NULL
 //!   profile id means "explicitly none", an absent row means "use the default".
 //!
@@ -31,7 +33,10 @@ mod games;
 pub mod migrations;
 mod models;
 mod roots;
+mod settings;
 
 pub use db::Db;
 pub use error::DbError;
-pub use models::{Counts, ExistingGame, Game, GameFile, GameKind, GameQuery, NewGame, Root};
+pub use models::{
+    Counts, ExistingGame, Game, GameFile, GameKind, GameQuery, NewGame, PlatformCount, Root,
+};

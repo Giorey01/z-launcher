@@ -152,3 +152,20 @@ sono concessi.
 (`launch{intent, profile, by}` o `needs_choice{candidates}`), errori attesi, e la lista di
 pacchetti del dispositivo di prova con emulatori rilevati e default proposti. Li legge il test
 Rust e li leggerà Kotlin tramite la FFI.
+
+## URI SAF dei ROM
+
+Gli emulatori ricevono il ROM come documento SAF sotto la cartella concessa dall'utente
+(`ACTION_OPEN_DOCUMENT_TREE`). Il core lo costruisce da solo (`zl_platforms::saf`), senza Android:
+
+- id dell'albero = parte dopo `/tree/` dell'URI concesso, decodificata (`primary:Games`);
+- id del documento = id dell'albero + `/` + percorso del file relativo alla cartella dell'albero
+  (`primary:Games/Ps2/God of War (Europe, Australia) (En,Fr,De,Es,It).iso`);
+- URI = `content://<autorità>/tree/<albero codificato>/document/<documento codificato>`.
+
+La codifica è quella di `Uri.encode` di Android: byte UTF-8 come `%XX` maiuscoli, tranne lettere,
+cifre e `_ - ! . ~ ' ( ) *`. Quindi `(` e `)` restano, mentre `,`, spazio, `[`, `:` e `/` interni
+all'id diventano `%2C`, `%20`, `%5B`, `%3A`, `%2F`. La cartella dell'albero sul file system si
+ricava dall'id (`primary:` è `/storage/emulated/0`, `ABCD-1234:` è `/storage/ABCD-1234`); se il
+volume non è riconoscibile si usa il percorso della cartella radice salvata.
+`{rom_uri}` è `file://` + percorso codificato; `{rom_provider}` non è ancora disponibile.

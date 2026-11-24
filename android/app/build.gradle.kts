@@ -49,11 +49,15 @@ dependencies {
     implementation(libs.compose.ui)
     implementation(libs.compose.foundation)
     implementation(libs.compose.material3)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.kotlinx.coroutines.android)
     // JNA with its Android runtime (libjnidispatch.so): the UniFFI bindings of the Rust core load through it.
     implementation(libs.jna) { artifact { type = "aar" } }
     testImplementation(libs.junit)
     testImplementation(libs.jna)
     testImplementation(libs.kotlinx.coroutines.core)
+    testImplementation(libs.org.json)
 }
 
 // JVM tests run against the real Rust library built for this machine (cargo build, release-ffi):
@@ -62,5 +66,8 @@ tasks.withType<Test>().configureEach {
     dependsOn(":core:native:cargoHost")
     systemProperty("jna.library.path", project(":core:native").layout.buildDirectory.dir("hostLib").get().asFile.absolutePath)
     // The workspace manifest, so the test compares against the real version instead of a copy of it.
+    inputs.dir(rootProject.projectDir.resolve("../fixtures"))
+    // The shared fixtures every target reads (Rust tests read the same files).
+    systemProperty("zl.fixturesDir", rootProject.projectDir.resolve("../fixtures").absolutePath)
     systemProperty("zl.workspaceManifest", rootProject.projectDir.resolve("../Cargo.toml").absolutePath)
 }

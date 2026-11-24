@@ -1,5 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Z-Launcher</string>
-    <string name="core_version_label">Core version: %1$s</string>
+    <string name="dock_all_apps">All apps</string>
+    <string name="dock_setup">Setup</string>
+    <string name="home_empty_title">No games yet</string>
+    <string name="home_empty_hint">Add a ROM folder and scan it to see your games here.</string>
+    <string name="home_open_setup">Open setup</string>
+    <string name="hint_platform">A launch   B back   Start apps</string>
+    <string name="hint_drawer">A open   Y pin to the dock   B back</string>
+    <string name="drawer_title">All apps</string>
+    <string name="picker_title">Choose an emulator for %1$s</string>
+    <string name="picker_hint">%1$s will start with the emulator you pick, and it becomes the default for this platform.</string>
+    <string name="picker_core">Core: %1$s</string>
+    <string name="msg_no_emulator">No installed emulator can launch %1$s games.</string>
+    <string name="msg_launch_not_installed">The emulator is not installed or cannot be opened.</string>
+    <string name="msg_launch_denied">Android refused to hand the game to the emulator. Pick the ROM folder again in the setup.</string>
+    <string name="msg_launch_failed">The emulator did not start.</string>
+    <string name="msg_need_folder_access">This emulator needs access to the ROM folder. Pick the folder again in the setup.</string>
+    <string name="msg_launch_error_code">The game cannot be launched (%1$s %2$s).</string>
+    <string name="msg_database">The library cannot be read.</string>
+    <string name="msg_data">The emulator list cannot be loaded (%1$s).</string>
+    <string name="msg_not_found">That item no longer exists.</string>
+    <string name="msg_invalid_input">That value is not valid.</string>
+    <string name="msg_dock_full">The dock is full. Unpin an app first.</string>
+    <string name="ob_continue">Continue</string>
+    <string name="ob_start">Start</string>
+    <string name="ob_welcome_title">Welcome to Z-Launcher</string>
+    <string name="ob_welcome_body">A launcher for handhelds, made to be used with the controller. This setup takes a minute: storage access, your ROM folders, your emulators.</string>
+    <string name="ob_perm_title">Access to your files</string>
+    <string name="ob_perm_body">Z-Launcher needs the \"All files access\" permission to find your ROMs. Open the settings, turn it on, then come back.</string>
+    <string name="ob_perm_granted">Access granted.</string>
+    <string name="ob_perm_open">Open settings</string>
+    <string name="ob_folders_title">ROM folders</string>
+    <string name="ob_folders_body">Pick the folder that holds one folder per platform. Android asks you to confirm each folder, so emulators can open the games.</string>
+    <string name="ob_folder_offer">Found on this device</string>
+    <string name="ob_folder_added">Added. Select it to choose it again.</string>
+    <string name="ob_folder_other">Choose another folder</string>
+    <string name="ob_folder_unreadable">That folder cannot be used. Pick a folder on the device storage or an SD card.</string>
+    <string name="ob_mode_title">How to show your games</string>
+    <string name="ob_mode_body">You can change this later.</string>
+    <string name="ob_mode_smart">Smart Folders</string>
+    <string name="ob_mode_smart_desc">One folder per platform on the Home.</string>
+    <string name="ob_mode_simple">Simple</string>
+    <string name="ob_mode_simple_desc">All your games together on the Home.</string>
+    <string name="ob_scan_title">Looking for games</string>
+    <string name="ob_scan_folder">%1$s (%2$d of %3$d)</string>
+    <string name="ob_emu_title">Emulators</string>
+    <string name="ob_emu_none">No installed emulator was found for your platforms. You can install some and run the setup again.</string>
+    <string name="ob_emu_accept">Use these emulators</string>
+    <string name="ob_emu_row">%1$s: %2$s</string>
+    <string name="ob_emu_with_core">%1$s (%2$s)</string>
+    <string name="ob_emu_detecting">Looking at the installed apps…</string>
+    <string name="ob_role_title">Make it your Home</string>
+    <string name="ob_role_body">Set Z-Launcher as the Home app so the Home button always brings you here.</string>
+    <string name="ob_role_already">Z-Launcher is already your Home app.</string>
+    <string name="ob_role_set">Set as Home</string>
+    <string name="ob_role_skip">Not now</string>
+    <string name="ob_done_title">All set</string>
+    <string name="ob_done_body">Your library is ready. Press A on a game to play it.</string>
+    <string name="ob_done_go">Go to the Home</string>
+    <plurals name="games_count">
+        <item quantity="one">%d game</item>
+        <item quantity="other">%d games</item>
+    </plurals>
+    <plurals name="ob_scan_files">
+        <item quantity="one">%d file looked at</item>
+        <item quantity="other">%d files looked at</item>
+    </plurals>
+    <plurals name="ob_scan_done">
+        <item quantity="one">%d game found</item>
+        <item quantity="other">%d games found</item>
+    </plurals>
+    <plurals name="ob_emu_found">
+        <item quantity="one">%d emulator found. Proposed defaults:</item>
+        <item quantity="other">%d emulators found. Proposed defaults:</item>
+    </plurals>
 </resources>

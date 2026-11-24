@@ -1,36 +1,64 @@
 package dev.zlauncher
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import dev.zlauncher.core.nativecore.coreVersion
+import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import dev.zlauncher.launch.LaunchExecutor
+import dev.zlauncher.launch.LaunchFailure
+import dev.zlauncher.nav.AppViewModel
+import dev.zlauncher.nav.Boot
+import dev.zlauncher.nav.Screen
+import dev.zlauncher.nav.UiEvent
+import dev.zlauncher.ui.LauncherRoot
+import dev.zlauncher.ui.theme.ZLauncherTheme
+import kotlinx.coroutines.launch
 
-/** The only activity: the launcher's home screen, which can also be the device Home. */
+/** The only activity: the launcher's Home, which can also be the device Home. */
 class MainActivity : ComponentActivity() {
-    /** Draws the home screen. */
+    /** Navigation, launching and messages. */
+    private val app: AppViewModel by viewModels()
+
+    /** Draws the UI and carries out the launch requests of the view model. */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { MaterialTheme { HomeScreen() } }
+        setContent { ZLauncherTheme { LauncherRoot(app) } }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) { app.events.collect(::carryOut) }
+        }
     }
-}
 
-/** A minimal screen showing the version of the Rust core; BACK is swallowed so Home never exits. */
-@Composable
-private fun HomeScreen() {
-    // As the device Home there is nothing behind this screen to go back to.
-    BackHandler(enabled = true) {}
-    Box(Modifier.fillMaxSize().background(Color.Black), contentAlignment = Alignment.Center) {
-        Text(stringResource(R.string.core_version_label, coreVersion()), color = Color.White)
+    /** Starts what the view model asked for and reports a failure. */
+    private fun carryOut(event: UiEvent) {
+        val failure: LaunchFailure? = when (event) {
+            is UiEvent.StartGame -> LaunchExecutor.launch(this, event.intent)
+            is UiEvent.StartApp -> LaunchExecutor.launchApp(this, event.packageName)
+        }
+        failure?.let(app::report)
+    }
+
+    /** Back in the foreground (also after a game): screens put their focus back. */
+    override fun onResume() {
+        super.onResume()
+        app.onResumed()
+    }
+
+    /** The system Home button while the launcher is already open: back to the Home screen. */
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        if (intent.action == Intent.ACTION_MAIN) app.goHome()
+    }
+
+    /** Gamepad buttons the focus system does not use: B is back, Start opens the app drawer. */
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean = when {
+        event.repeatCount > 0 -> super.onKeyDown(keyCode, event)
+        keyCode == KeyEvent.KEYCODE_BUTTON_B -> true.also { onBackPressedDispatcher.onBackPressed() }
+        keyCode == KeyEvent.KEYCODE_BUTTON_START && app.boot == Boot.Ready -> true.also { app.open(Screen.Drawer) }
+        else -> super.onKeyDown(keyCode, event)
     }
 }

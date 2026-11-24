@@ -36,7 +36,7 @@ Launcher Android open source, gamepad-first. Repo **pubblica**.
 ## Verifica (con `JAVA_HOME` su un JDK 17 e `ANDROID_HOME` impostati)
 ```bash
 bash scripts/gate.sh
-cd android && ./gradlew compileDebugKotlin testDebugUnitTest
+cd android && ./gradlew compileOssDebugKotlin testOssDebugUnitTest assembleOssDebug detekt
 ```
 
 ## Commit

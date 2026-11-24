@@ -5,7 +5,19 @@
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
     <uses-feature android:name="android.hardware.gamepad" android:required="false" />
 
+    <!-- "All files access": the main storage mode (RNF-10); the folder picker is used on top to hand ROMs to emulators. -->
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+
+    <!-- Only the apps with a launcher activity are visible (RF-06); QUERY_ALL_PACKAGES is not needed. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
+
     <application
+        android:name=".ZLauncherApp"
         android:allowBackup="false"
         android:label="@string/app_name"
         android:supportsRtl="true"

@@ -32,6 +32,35 @@ impl ProfileRef {
     }
 }
 
+/// Separator of the parts of a stored profile reference ([`ProfileRef::to_key`]).
+const KEY_SEPARATOR: char = '/';
+
+impl ProfileRef {
+    /// Text form kept in the database: `emulator/profile` or `emulator/profile/core`. Ids never
+    /// contain a slash (the database validation only accepts plain ids).
+    pub fn to_key(&self) -> String {
+        match &self.core {
+            Some(core) => format!(
+                "{}{KEY_SEPARATOR}{}{KEY_SEPARATOR}{core}",
+                self.emulator, self.profile
+            ),
+            None => format!("{}{KEY_SEPARATOR}{}", self.emulator, self.profile),
+        }
+    }
+
+    /// Reads the text form back; `None` when it does not have two or three non-empty parts.
+    pub fn from_key(key: &str) -> Option<ProfileRef> {
+        let parts: Vec<&str> = key.split(KEY_SEPARATOR).collect();
+        match parts.as_slice() {
+            [e, p] if !e.is_empty() && !p.is_empty() => Some(ProfileRef::new(e, p, None)),
+            [e, p, c] if !e.is_empty() && !p.is_empty() && !c.is_empty() => {
+                Some(ProfileRef::new(e, p, Some(c)))
+            }
+            _ => None,
+        }
+    }
+}
+
 /// Which step of the order picked the profile.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -133,5 +162,30 @@ impl PlatformDb {
             });
         }
         Ok(Resolution::NeedsChoice { candidates: cands })
+    }
+}
+
+#[cfg(test)]
+mod key_tests {
+    use super::ProfileRef;
+
+    /// A reference survives the text form, with and without a core.
+    #[test]
+    fn key_round_trip() {
+        for r in [
+            ProfileRef::new("ppsspp", "ppsspp", None),
+            ProfileRef::new("retroarch", "core", Some("pcsx_rearmed")),
+        ] {
+            assert_eq!(ProfileRef::from_key(&r.to_key()), Some(r));
+        }
+        assert_eq!(ProfileRef::new("a", "b", Some("c")).to_key(), "a/b/c");
+    }
+
+    /// Malformed keys are refused instead of guessed.
+    #[test]
+    fn bad_keys_are_refused() {
+        for k in ["", "a", "a/", "/b", "a/b/", "a/b/c/d"] {
+            assert_eq!(ProfileRef::from_key(k), None, "{k}");
+        }
     }
 }

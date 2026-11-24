@@ -1,0 +1,20 @@
+[package]
+name = "zl-core"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+thiserror = { workspace = true }
+zl-config = { path = "../zl-config" }
+zl-db = { path = "../zl-db" }
+zl-library = { path = "../zl-library" }
+zl-platforms = { path = "../zl-platforms" }
+
+[dev-dependencies]
+serde_json = { workspace = true }
+tempfile = { workspace = true }
+
+[lints]
+workspace = true

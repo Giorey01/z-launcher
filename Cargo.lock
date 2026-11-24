@@ -879,6 +879,19 @@ name = "zl-config"
 version = "0.0.1"
 
 [[package]]
+name = "zl-core"
+version = "0.0.1"
+dependencies = [
+ "serde_json",
+ "tempfile",
+ "thiserror",
+ "zl-config",
+ "zl-db",
+ "zl-library",
+ "zl-platforms",
+]
+
+[[package]]
 name = "zl-db"
 version = "0.0.1"
 dependencies = [
@@ -892,8 +905,13 @@ dependencies = [
 name = "zl-ffi"
 version = "0.0.1"
 dependencies = [
+ "thiserror",
  "uniffi",
  "zl-config",
+ "zl-core",
+ "zl-db",
+ "zl-library",
+ "zl-platforms",
 ]
 
 [[package]]

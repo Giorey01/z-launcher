@@ -43,7 +43,7 @@ fun ndkDir(): File = System.getenv("ANDROID_NDK_HOME")?.let(::File)
 
 // Everything the library is made of: its sources and the workspace manifests.
 val rustInputs = fileTree(workspaceDir) {
-    include("Cargo.toml", "Cargo.lock", "crates/zl-ffi/**", "crates/zl-config/**")
+    include("Cargo.toml", "Cargo.lock", "crates/**", "data/**")
     exclude("**/target/**")
 }
 

@@ -61,8 +61,18 @@ CREATE TABLE meta (
 );
 ";
 
+/// Step 2: the SAF tree the user granted for a root (needed to hand ROMs to emulators as
+/// `content://` documents) and a small key/value table for app settings.
+const STEP_2: &str = "
+ALTER TABLE rom_roots ADD COLUMN saf_tree TEXT;
+CREATE TABLE settings (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+);
+";
+
 /// All steps in order; step `n` is `MIGRATIONS[n - 1]`.
-pub const MIGRATIONS: &[&str] = &[STEP_1];
+pub const MIGRATIONS: &[&str] = &[STEP_1, STEP_2];
 
 /// Reads the schema version of the open database.
 pub fn current_version(conn: &Connection) -> Result<u32, DbError> {

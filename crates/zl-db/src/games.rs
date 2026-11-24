@@ -4,7 +4,9 @@ use rusqlite::{params, Row};
 
 use crate::db::Db;
 use crate::error::DbError;
-use crate::models::{Counts, ExistingGame, Game, GameFile, GameKind, GameQuery, NewGame};
+use crate::models::{
+    Counts, ExistingGame, Game, GameFile, GameKind, GameQuery, NewGame, PlatformCount,
+};
 
 /// Columns of [`Game`] in the order [`game_from_row`] reads them.
 const GAME_COLUMNS: &str = "id, root_id, platform_id, title, path, kind, size, mtime, missing, \
@@ -153,6 +155,29 @@ impl Db {
             platform: Some(platform_id.to_string()),
             ..GameQuery::default()
         })
+    }
+
+    /// Looks up one game by id.
+    pub fn game(&self, game_id: i64) -> Result<Option<Game>, DbError> {
+        let sql = format!("SELECT {GAME_COLUMNS} FROM games WHERE id = ?1");
+        let mut stmt = self.conn.prepare(&sql)?;
+        let mut rows = stmt.query(params![game_id])?;
+        rows.next()?.map(game_from_row).transpose()
+    }
+
+    /// Count of visible games per stored platform id, platforms without games left out.
+    pub fn platform_counts(&self) -> Result<Vec<PlatformCount>, DbError> {
+        let mut stmt = self.conn.prepare(
+            "SELECT platform_id, count(*) FROM games WHERE missing = 0
+             GROUP BY platform_id ORDER BY platform_id",
+        )?;
+        let rows = stmt.query_map([], |row| {
+            Ok(PlatformCount {
+                platform_id: row.get(0)?,
+                games: row.get(1)?,
+            })
+        })?;
+        Ok(rows.collect::<Result<_, _>>()?)
     }
 
     /// Member files of a game, ordered by path.

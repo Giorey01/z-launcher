@@ -160,3 +160,47 @@ fn emulator_overrides_roundtrip() -> TestResult {
     assert_eq!(db.game_emulator(id)?, Some(None));
     Ok(())
 }
+
+/// A root keeps the SAF tree it was added with, and a later upsert can clear it.
+#[test]
+fn root_stores_its_saf_tree() -> TestResult {
+    let db = Db::open_in_memory()?;
+    let tree = "content://com.android.externalstorage.documents/tree/primary%3AGames";
+    let id = db.upsert_root_with_saf("/storage/emulated/0/Games", true, Some(tree))?;
+    assert_eq!(db.root(id)?.and_then(|r| r.saf_tree).as_deref(), Some(tree));
+    db.upsert_root_with_saf("/storage/emulated/0/Games", true, None)?;
+    assert_eq!(db.root(id)?.map(|r| r.saf_tree), Some(None));
+    assert_eq!(db.root(id + 100)?, None);
+    Ok(())
+}
+
+/// Settings read back what was written, the last write wins, and unknown keys are `None`.
+#[test]
+fn settings_round_trip() -> TestResult {
+    let db = Db::open_in_memory()?;
+    assert_eq!(db.setting("mode")?, None);
+    db.set_setting("mode", "smart")?;
+    db.set_setting("mode", "simple")?;
+    assert_eq!(db.setting("mode")?.as_deref(), Some("simple"));
+    Ok(())
+}
+
+/// Platform counts ignore missing games and one game can be fetched by id.
+#[test]
+fn platform_counts_skip_missing_games() -> TestResult {
+    let db = Db::open_in_memory()?;
+    let root = db.upsert_root("/roms", true)?;
+    let a = db.upsert_game(&game(root, "gba", "A", "/roms/gba/a.gba"), 1)?;
+    db.upsert_game(&game(root, "gba", "B", "/roms/gba/b.gba"), 1)?;
+    let n = db.upsert_game(&game(root, "nes", "N", "/roms/nes/n.nes"), 1)?;
+    db.mark_missing(&[n])?;
+    let counts = db.platform_counts()?;
+    assert_eq!(counts.len(), 1);
+    assert_eq!(
+        (counts[0].platform_id.as_str(), counts[0].games),
+        ("gba", 2)
+    );
+    assert_eq!(db.game(a)?.map(|g| g.title), Some("A".to_string()));
+    assert!(db.game(9999)?.is_none());
+    Ok(())
+}

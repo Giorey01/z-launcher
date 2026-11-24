@@ -53,6 +53,8 @@ pub struct Root {
     pub enabled: bool,
     /// Whether sub-folders of platform folders are scanned.
     pub scan_subfolders: bool,
+    /// Storage Access Framework tree URI the user granted for this folder, if any.
+    pub saf_tree: Option<String>,
 }
 
 /// A member file of a game.
@@ -142,6 +144,15 @@ pub struct GameQuery {
     pub include_missing: bool,
     /// Maximum number of rows.
     pub limit: Option<u32>,
+}
+
+/// Number of visible (not missing) games of one platform id as stored.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PlatformCount {
+    /// Platform id as stored (the folder name in lower case).
+    pub platform_id: String,
+    /// Games not flagged missing.
+    pub games: i64,
 }
 
 /// Totals shown in settings and used by tests.

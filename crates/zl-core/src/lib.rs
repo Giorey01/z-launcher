@@ -1,0 +1,74 @@
+//! The application service of Z-Launcher: everything the apps do with the library, in one place
+//! and without any Android type. It joins the database (`zl-db`), the scanner (`zl-library`) and
+//! the platform and emulator data (`zl-platforms`): roots (with their SAF tree), scanning,
+//! platforms and games to show, the emulator assignment, launch planning for a stored game, and
+//! the small choices of the Home (library mode, onboarding, dock).
+//!
+//! `zl-ffi` only turns these types into UniFFI records; Kotlin keeps the screens, the `Intent`
+//! and the permissions. Errors are codes ([`CoreError`]), never sentences.
+#![warn(
+    missing_docs,
+    clippy::missing_docs_in_private_items,
+    clippy::too_many_lines,
+    clippy::cognitive_complexity
+)]
+
+mod detect;
+mod error;
+mod launch;
+mod library;
+mod prefs;
+mod types;
+
+use std::path::{Path, PathBuf};
+use std::sync::{Mutex, MutexGuard, PoisonError};
+
+use zl_config::app::DATABASE_FILE_NAME;
+use zl_db::Db;
+use zl_platforms::PlatformDb;
+
+pub use error::CoreError;
+pub use types::{
+    Candidate, Detection, GameEntry, InstalledView, LibraryMode, Plan, PlatformEntry,
+    ProposedDefault, RootInfo,
+};
+
+/// The service: an open library database and the platform data, shared by every call.
+pub struct Service {
+    /// Where the database file lives (a scan opens its own connection to it).
+    db_path: PathBuf,
+    /// The connection for reads and small writes.
+    db: Mutex<Db>,
+    /// Platforms, emulators and profiles (embedded copy, or a newer one found in the data folder).
+    platforms: PlatformDb,
+}
+
+impl Service {
+    /// Opens the service with its data in `data_dir` (created if needed). A newer platform or
+    /// emulator list in that folder wins over the embedded one when it is valid; a broken one
+    /// is ignored and the embedded copy is used.
+    pub fn open(data_dir: &Path) -> Result<Service, CoreError> {
+        std::fs::create_dir_all(data_dir).map_err(|_| CoreError::Database)?;
+        let db_path = data_dir.join(DATABASE_FILE_NAME);
+        let db = Db::open(&db_path)?;
+        let platforms = match PlatformDb::load_with_updates(data_dir) {
+            Ok(updated) => updated,
+            Err(_) => PlatformDb::embedded()?,
+        };
+        Ok(Service {
+            db_path,
+            db: Mutex::new(db),
+            platforms,
+        })
+    }
+
+    /// Locks the shared connection (a panic in another call does not make the data unusable).
+    fn db(&self) -> MutexGuard<'_, Db> {
+        self.db.lock().unwrap_or_else(PoisonError::into_inner)
+    }
+
+    /// The platform and emulator data in use.
+    pub fn platform_db(&self) -> &PlatformDb {
+        &self.platforms
+    }
+}

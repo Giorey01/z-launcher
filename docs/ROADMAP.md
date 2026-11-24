@@ -5,16 +5,16 @@ fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare.
 
 | ID | Area | Requisito | S. | Stato |
 | --- | --- | --- | --- | --- |
-| RF-01 | Libreria | Scansione delle cartelle per piattaforma, filtrata per estensione, su memoria interna, microSD e USB | 1 |  |
+| RF-01 | Libreria | Scansione delle cartelle per piattaforma, filtrata per estensione, su memoria interna, microSD e USB | 1 | Fatto su memoria interna (provato sul Thor); microSD e USB da provare |
 | RF-02 | Libreria | Multi-disco (`.m3u`, una cartella per gioco, `(Disc N)`) raccolto in una sola voce | 1 |  |
 | RF-03 | Libreria | Rescan incrementale per data di modifica; i giochi spariti vengono segnalati, non cancellati | 1 |  |
 | RF-04 | Libreria | Lettura dei file tag `[tag] valore` (`.steamappid`, `.localgameid`, `.dpt`, `.moonlight`, `.xcloud`) | 1 |  |
 | RF-05 | Libreria | Hash delle ROM in background, anche dentro zip, 7z e CHD | 2 |  |
-| RF-06 | Libreria | Elenco delle app Android installate, con categoria giochi | 1 |  |
-| RF-07 | Lancio | Database JSON di piattaforme, emulatori e profili di lancio, aggiornabile senza nuovo APK | 1 |  |
-| RF-08 | Lancio | Ordine di scelta dell'emulatore: gioco, poi sistema, poi estensione, poi chiedi | 1 |  |
-| RF-09 | Lancio | Variabili nei profili, come `{rom}`, `{core}` e `{tags.NOME}` | 1 |  |
-| RF-10 | Lancio | Rilevamento degli emulatori installati e proposta automatica nell'onboarding | 1 |  |
+| RF-06 | Libreria | Elenco delle app Android installate, con categoria giochi | 1 | Fatto |
+| RF-07 | Lancio | Database JSON di piattaforme, emulatori e profili di lancio, aggiornabile senza nuovo APK | 1 | Fatto |
+| RF-08 | Lancio | Ordine di scelta dell'emulatore: gioco, poi sistema, poi estensione, poi chiedi | 1 | Fatto |
+| RF-09 | Lancio | Variabili nei profili, come `{rom}`, `{core}` e `{tags.NOME}` | 1 | Fatto |
+| RF-10 | Lancio | Rilevamento degli emulatori installati e proposta automatica nell'onboarding | 1 | Fatto |
 | RF-11 | Lancio | Lancio di giochi PC con profili per GameNative, GameHub, Winlator e DroidDeck | 7 |  |
 | RF-12 | Lancio | Gestore emulatori: segnala gli aggiornamenti e scarica le release ufficiali | 7 |  |
 | RF-13 | Organizzazione | Smart Folders: Preferiti, Recenti, Più giocati, Mai giocati, Nuovi, App, Emulatori, Per piattaforma | 2 |  |
@@ -31,15 +31,15 @@ fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare.
 | RF-24 | Home | Page Mode con righe e colonne per pagina e frecce di scorrimento | 3 |  |
 | RF-25 | Home | Stili a riga singola: Standard, Carousel, Cover Flow | 3 |  |
 | RF-26 | Home | Riordino manuale (prendi e posa) | 3 |  |
-| RF-27 | Home | Dock in basso e cassetto delle app | 1 |  |
-| RF-28 | Home | Ruolo di Home del sistema | 1 |  |
-| RF-29 | Home | Onboarding: permessi, cartelle, modalità, emulatori | 1 |  |
+| RF-27 | Home | Dock in basso e cassetto delle app | 1 | Fatto (dock con pin da cassetto con Y) |
+| RF-28 | Home | Ruolo di Home del sistema | 1 | Fatto (richiesta del ruolo nel setup; l'esito dipende dall'utente) |
+| RF-29 | Home | Onboarding: permessi, cartelle, modalità, emulatori | 1 | Fatto |
 | RF-30 | Scheda gioco | Tab Info: descrizione, screenshot, trailer, badge HLTB, scelta di emulatore e display | 2 |  |
 | RF-31 | Scheda gioco | Tab Activity: ore, sessioni, media, grafico settimanale | 3 |  |
 | RF-32 | Scheda gioco | Tab Achievements | 5 |  |
 | RF-33 | Scheda gioco | Tab Saves | 5 |  |
 | RF-34 | Scheda gioco | Tab Mods | 8 |  |
-| RF-35 | Controller | Navigazione completa da D-Pad e stick, senza punti morti | 1 |  |
+| RF-35 | Controller | Navigazione completa da D-Pad e stick, senza punti morti | 1 | Parziale: D-pad, A, B, Start provati; stick sinistro non provato |
 | RF-36 | Controller | Mappa di default: A conferma, B indietro, Y menu, X scambia schermi, LB social, RB stato, Start impostazioni | 3 |  |
 | RF-37 | Controller | Glifi Nintendo, Xbox e PlayStation, automatici o manuali, e Corner Hints | 3 |  |
 | RF-38 | Controller | Remapping con profili per controller | 3 |  |
@@ -78,7 +78,7 @@ fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare.
 | RF-71 | Sistema | Backup e ripristino di tutta la configurazione | 3 |  |
 | RF-72 | Sistema | Sync in LAN verso il PC di salvataggi, screenshot e backup | 8 |  |
 | RF-73 | Estensioni | Pod esterni: una build terza può aggiungere Pod che usano tema, suoni e libreria del launcher | 4 |  |
-| RF-74 | Sistema | Interfaccia in italiano e inglese | 1 |  |
+| RF-74 | Sistema | Interfaccia in italiano e inglese | 1 | Fatto |
 
 ## Requisiti non funzionali
 

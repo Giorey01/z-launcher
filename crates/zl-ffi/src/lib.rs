@@ -1,6 +1,7 @@
 //! The foreign interface of the Z-Launcher core: what the Android app (through UniFFI) can call.
 //!
-//! Only real, implemented capabilities are exported here; each new feature adds its own module.
+//! A thin adapter: the logic is in `zl-core` (and the crates below it); this crate only turns its
+//! types into UniFFI records and enums and exposes the [`Core`] object. Errors are codes.
 #![warn(
     missing_docs,
     clippy::missing_docs_in_private_items,
@@ -8,7 +9,21 @@
     clippy::cognitive_complexity
 )]
 
+mod core_object;
+mod error;
+mod scan;
+mod types;
+
 uniffi::setup_scaffolding!();
+
+pub use core_object::Core;
+pub use error::CoreError;
+pub use scan::{ScanEvent, ScanIssue, ScanListener, ScanSummary};
+pub use types::{
+    Candidate, ClipData, Detection, Extra, ExtraValue, GameEntry, GameKind, InstalledEmulator,
+    LaunchIntent, LibraryMode, Plan, PlatformEntry, ProfileRef, ProposedDefault, RawLaunchRequest,
+    ResolvedBy, RomRoot, UriGrant,
+};
 
 /// The version of the core library, taken from the workspace package version.
 #[uniffi::export]
@@ -20,6 +35,31 @@ pub fn core_version() -> String {
 #[uniffi::export]
 pub fn data_dir_name() -> String {
     zl_config::app::DATA_DIR_NAME.to_string()
+}
+
+/// The folder suggested as ROM root at onboarding, from the shared configuration.
+#[uniffi::export]
+pub fn suggested_rom_folder() -> String {
+    zl_config::app::SUGGESTED_ROM_FOLDER.to_string()
+}
+
+/// Number of dock slots (the "All apps" button included), from the shared configuration.
+#[uniffi::export]
+pub fn dock_slots() -> u32 {
+    u32::try_from(zl_config::app::DOCK_SLOTS).unwrap_or(u32::MAX)
+}
+
+/// The tree URI the system folder picker should start at for a folder path, if it is on a
+/// storage volume.
+#[uniffi::export]
+pub fn saf_tree_for_path(path: String) -> Option<String> {
+    zl_platforms::saf::tree_uri_for_path(&path)
+}
+
+/// The folder path a granted tree URI stands for, if it can be told.
+#[uniffi::export]
+pub fn path_of_saf_tree(tree_uri: String) -> Option<String> {
+    zl_platforms::saf::tree_path(&tree_uri)
 }
 
 #[cfg(test)]
@@ -37,5 +77,25 @@ mod tests {
     #[test]
     fn data_dir_name_comes_from_config() {
         assert_eq!(data_dir_name(), zl_config::app::DATA_DIR_NAME);
+    }
+
+    /// A picked tree URI maps to the folder the core scans, and back.
+    #[test]
+    fn saf_tree_maps_to_the_scanned_folder() {
+        let tree = saf_tree_for_path("/storage/emulated/0/Games".into());
+        assert_eq!(
+            tree.as_deref(),
+            Some("content://com.android.externalstorage.documents/tree/primary%3AGames")
+        );
+        assert_eq!(
+            path_of_saf_tree(tree.unwrap_or_default()).as_deref(),
+            Some("/storage/emulated/0/Games")
+        );
+    }
+
+    /// The dock size crosses the boundary unchanged.
+    #[test]
+    fn dock_slots_come_from_config() {
+        assert_eq!(dock_slots() as usize, zl_config::app::DOCK_SLOTS);
     }
 }

@@ -10,6 +10,11 @@ crate-type = ["cdylib", "lib"]
 
 [dependencies]
 zl-config = { path = "../zl-config" }
+zl-core = { path = "../zl-core" }
+zl-db = { path = "../zl-db" }
+zl-library = { path = "../zl-library" }
+zl-platforms = { path = "../zl-platforms" }
+thiserror = { workspace = true }
 uniffi = { workspace = true }
 
 [features]
