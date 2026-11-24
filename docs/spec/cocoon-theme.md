@@ -129,8 +129,12 @@ all'intervallo; un enum sconosciuto è un avviso e la chiave viene ignorata.
 
 - `music_mode`: `TIME` | `PLAYLIST` | `DISABLED`.
 - `music_playlist`: percorsi relativi a `music/` separati da `||`.
-- `music_time_schedule`: coppie `HH:MM|file`. Il separatore tra le coppie non è documentato:
-  accettiamo `||` (come la playlist); **da confermare** su un pacchetto musica reale.
+- `music_time_schedule`: coppie `H:M|file` separate da `||`, ore e minuti **senza zeri
+  iniziali** (`0:0|music/track.mp3||4:0|music/track.mp3`). Verificato su pacchetti reali.
+- I percorsi di playlist e schedule includono il prefisso `music/` e possono contenere spazi; il
+  nome nel JSON può differire dal file solo per maiuscole (`Yotsuba dekakeru.mp3` contro
+  `yotsuba dekakeru.mp3`): la risoluzione dei file è **senza distinzione di maiuscole**.
+- Stringa vuota = nessun valore.
 - `music_playback_mode`: `IN ORDER` | `SHUFFLE` (con lo spazio; tolleriamo `IN_ORDER`).
 - `sfx_volume`, `music_volume`, `jingle_volume`: 0.0–1.0.
 
@@ -139,13 +143,37 @@ all'intervallo; un enum sconosciuto è un avviso e la chiave viene ignorata.
 Lista di `{ id, name, category, version }`, con `category` tra `icon_overlays`,
 `smart_folders`, `sounds`, `music`. Collega i pacchetti degli altri layer per id.
 
+### 3.8 Pacchetti di asset installati
+
+Verificato sui pacchetti installati da Cocoon su un dispositivo (cartella dati scelta
+dall'utente, sottocartella `assets/`):
+
+```
+assets/<categoria>/<id-pacchetto>/metadata.json
+assets/<categoria>/<id-pacchetto>/preview.png
+assets/<categoria>/<id-pacchetto>/<categoria>/…   (layout A)
+assets/<categoria>/<id-pacchetto>/…               (layout B: contenuto in radice)
+```
+
+- `metadata.json`: `id`, `name`, `author`, `category`, `version`, `description`, `file_count`,
+  `settings` (`null`, oppure per la musica `music_mode`, `music_playback_mode`, `music_playlist`,
+  `music_time_schedule`). Il JSON può essere su una riga sola.
+- Entrambi i layout esistono nei pacchetti reali: il lettore prova prima `<categoria>/`, poi la
+  radice. File estranei come `metadata (1).json` (doppioni di download) si ignorano.
+- I temi installati stanno in `themes/<id>/` accanto ad `assets/`.
+
 ## 4. Icon overlay
 
 `icon_overlays/<piattaforma>/mask.png` e/o `overlay.png`, stesse dimensioni, consigliato 512×512 o
-più. La maschera è una forma bianca su trasparente: della copertina resta visibile solo dove la
-maschera è opaca. L'overlay (cornice, decorazione, trasparente) si disegna **sopra** la copertina
-mascherata. Ordine: copertina → maschera → overlay. La wiki non precisa se la maschera usa l'alfa
-o la luminanza: usiamo l'alfa (**da confermare** su un pacchetto reale).
+più. Nei pacchetti reali sono quadrati, da 236 a 1024 px, RGBA o grigio+alfa: si scalano alla
+dimensione dell'icona. La maschera è una forma bianca su trasparente (alfa da 0 a 1 sui bordi
+antialias): della copertina resta visibile solo dove la maschera è opaca, **usando l'alfa**.
+L'overlay (cornice, decorazione, trasparente) si disegna **sopra** la copertina mascherata.
+Ordine: copertina → maschera → overlay.
+
+Oltre agli id di piattaforma esiste la cartella **`global`**: maschera e overlay applicati a
+tutte le piattaforme che non hanno una cartella propria. Ci sono anche id che non sono
+piattaforme di gioco, come `android_app`.
 
 ## 5. Suoni
 
@@ -156,15 +184,20 @@ File in `sounds/`, nome = azione, estensione tra `wav`, `mp3`, `ogg`, `m4a`, `fl
 `reorder_pickup`, `reorder_place`, `open_edit`, `pop`, `slider_increase`, `slider_decrease`,
 `saving`, `saving_end`, `retroachievements`.
 
-Un'azione senza file usa il suono di default; un file con nome sconosciuto è un avviso.
+Un'azione senza file usa il suono di default; un file con nome sconosciuto è un avviso. I
+pacchetti reali contengono nomi sbagliati (`grido_zoom_in`, `edit`, `swap`, `pickup`) e usano
+sia `sounds/<azione>.<ext>` sia `<azione>.<ext>` in radice: niente alias, si segnalano e basta.
 
 ## 6. Smart Folders
 
-`smart_folders/<tipo>/{icon,hero,logo}.png`, varianti per piattaforma in
-`smart_folders/by_platform/<piattaforma>/`. I nomi dei tipi documentati sono `favorites` e
-`recent`; gli altri (più giocati, mai giocati, nuovi, giochi Android, emulatori) **vanno
-ricavati** da un pacchetto reale. Fino ad allora il lettore accetta qualsiasi nome di cartella e
-lo riporta nel risultato.
+`smart_folders/<tipo>/{icon,hero,logo}.<ext>`, varianti per piattaforma in
+`smart_folders/by_platform/<piattaforma>/`. Estensioni viste: `png`, `gif` (animata), `webp`,
+`jpg`. Non tutti i pezzi ci sono: molti pacchetti hanno solo `hero`.
+
+Tipi visti nei pacchetti reali: `favorites`, `recent`, `lastplayed`, `emulators`,
+`androidgames`, `android_app`, `cloud`. Alcuni autori mettono i tipi speciali dentro
+`by_platform/` (`by_platform/favorites/`): il lettore li accetta in entrambe le posizioni,
+con precedenza a quella fuori da `by_platform`. Nomi sconosciuti si conservano.
 
 ## 7. Validatore
 
@@ -182,9 +215,7 @@ Cocoon puro. Il contenuto di `zl` si definisce quando serve, con un numero di ve
 
 ## 9. Domande aperte
 
-1. Ordine delle 8 cifre esadecimali (3.3).
-2. Separatore di `music_time_schedule` (3.6).
-3. Maschera per alfa o per luminanza (4).
-4. Nomi delle cartelle dei tipi di Smart Folder (6).
-5. Layout interno degli ZIP dei pacchetti `icon_overlays`, `smart_folders`, `sounds`, `music`:
-   servono pacchetti reali esportati.
+1. Ordine delle 8 cifre esadecimali (3.3): nessun pacchetto reale lo distingue ancora.
+
+Chiuse il 24 novembre 2026 sui pacchetti installati su un dispositivo: separatore della
+schedule (3.6), maschera per alfa (4), nomi delle Smart Folder (6), layout dei pacchetti (3.8).
