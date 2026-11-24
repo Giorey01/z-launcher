@@ -13,24 +13,39 @@
     clippy::cognitive_complexity
 )]
 
+mod appearance_types;
 mod detect;
 mod error;
 mod launch;
 mod library;
+mod media;
+mod platform_settings;
 mod prefs;
+mod theme_files;
+mod theme_resolve;
+mod theme_select;
+mod theme_store;
 mod types;
+mod user_settings;
 
 use std::path::{Path, PathBuf};
-use std::sync::{Mutex, MutexGuard, PoisonError};
+use std::sync::{Arc, Mutex, MutexGuard, PoisonError};
 
 use zl_config::app::DATABASE_FILE_NAME;
 use zl_db::Db;
 use zl_platforms::PlatformDb;
 
+pub use appearance_types::{
+    argb, CocoonDataDir, ExternalDisplayDocking, FolderArt, FolderSlot, ImportReport,
+    InstalledPack, InstalledTheme, LayerChoice, MusicSetup, OverlayArt, PackRef, ResolvedTheme,
+    ScheduleTrack, ScreenMode, SingleRowStyle, SoundEntry, ThemeColors, ThemeIssue, ThemeSelection,
+    UserSettings, Wallpaper, WallpaperKind,
+};
 pub use error::CoreError;
+pub use media::{GameMedia, MediaCount, MediaImportReport, MediaItem, MediaSources};
 pub use types::{
-    Candidate, Detection, GameEntry, InstalledView, LibraryMode, Plan, PlatformEntry,
-    ProposedDefault, RootInfo,
+    Candidate, Detection, GameEntry, InstalledView, LibraryMode, Plan, PlatformEmulatorSetting,
+    PlatformEntry, ProposedDefault, RootInfo,
 };
 
 /// The service: an open library database and the platform data, shared by every call.
@@ -41,6 +56,11 @@ pub struct Service {
     db: Mutex<Db>,
     /// Platforms, emulators and profiles (embedded copy, or a newer one found in the data folder).
     platforms: PlatformDb,
+    /// The app data folder: database, `themes/`, `assets/` and the user's own art.
+    data_dir: PathBuf,
+    /// The files of the selected theme, loaded on first use and dropped when the selection or
+    /// the installed themes change.
+    theme_cache: Mutex<Option<Arc<theme_files::ThemeFiles>>>,
 }
 
 impl Service {
@@ -59,6 +79,8 @@ impl Service {
             db_path,
             db: Mutex::new(db),
             platforms,
+            data_dir: data_dir.to_path_buf(),
+            theme_cache: Mutex::new(None),
         })
     }
 

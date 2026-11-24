@@ -42,6 +42,27 @@ pub struct GameEntry {
     pub kind: GameKind,
     /// Not found by the last scan.
     pub missing: bool,
+    /// The title to show: `title` without the tags of the file name (`(Europe)`, `[v0]`).
+    pub display_title: String,
+    /// Best cover, if the game has media.
+    pub icon: Option<String>,
+    /// Best hero image.
+    pub hero: Option<String>,
+    /// Best logo.
+    pub logo: Option<String>,
+}
+
+/// A platform of the library with its default emulator, for the settings screen.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PlatformEmulatorSetting {
+    /// Canonical platform id.
+    pub platform_id: String,
+    /// English platform name.
+    pub platform_name: String,
+    /// The default set for the platform, if any (it may not be installed any more).
+    pub current: Option<Candidate>,
+    /// Emulators installed on the device that can launch the platform, preferred first.
+    pub candidates: Vec<Candidate>,
 }
 
 /// An emulator choice shown to the user, with the names the screen needs.

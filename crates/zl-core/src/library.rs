@@ -4,8 +4,9 @@ use std::collections::BTreeMap;
 use std::path::PathBuf;
 
 use zl_config::platforms::FOLDER_GAME_RULES;
-use zl_db::{Db, GameQuery, Root};
+use zl_db::{Db, GameQuery, MediaKind, Root};
 use zl_library::{scan, ExtensionRules, FolderGameRule, RootSpec, ScanProgress, ScanSummary};
+use zl_media::display_title;
 
 use crate::error::CoreError;
 use crate::types::{GameEntry, PlatformEntry, RootInfo};
@@ -118,6 +119,7 @@ impl Service {
     /// Missing games are left out.
     pub fn games(&self, platform: Option<&str>) -> Result<Vec<GameEntry>, CoreError> {
         let wanted = platform.map(|p| self.canonical_id(p));
+        let art = self.best_art()?;
         let db = self.db();
         let games = db.query_games(&GameQuery::default())?;
         let mut out: Vec<GameEntry> = games
@@ -129,6 +131,10 @@ impl Service {
             .filter(|(_, c)| wanted.as_ref().is_none_or(|w| w == c))
             .map(|(g, canonical)| GameEntry {
                 id: g.id,
+                display_title: display_title(&g.title),
+                icon: art.get(&(g.id, MediaKind::Icon)).cloned(),
+                hero: art.get(&(g.id, MediaKind::Hero)).cloned(),
+                logo: art.get(&(g.id, MediaKind::Logo)).cloned(),
                 title: g.title,
                 platform_name: self.platform_name(&canonical),
                 platform_id: canonical,

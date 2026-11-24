@@ -1,0 +1,120 @@
+{
+ "_comment": "Shared media cases. roms/ is a library root (one folder per platform; sfc and megadrive are aliases of snes and genesis); esde/ is an ES-DE data folder (empty MediaDirectory); cocoon/ is a Cocoon data folder; user/my-cover.png is the file a user picks. Paths are relative to this folder. Import with the user's choice for Zelda's icon already stored: it must survive the import (and a second one). 'unmatched' is the ES-DE cover of a game that is not in the library. File names inside cocoon/gba/icon: the highest __cocoon_edit_ number (3) wins over 2, 1 and the plain file. The wrong-type file gba/videos/*.png and the unknown folders are not media.",
+ "esde_scan": [
+  "gba|3dbox|advance wars (usa)",
+  "gba|hero|advance wars (usa)",
+  "gba|icon|advance wars (usa)",
+  "gba|logo|advance wars (usa)",
+  "gba|manual|advance wars (usa)",
+  "gba|screenshot|advance wars (usa)",
+  "gba|titlescreen|advance wars (usa)",
+  "gba|video|advance wars (usa)",
+  "megadrive|icon|sonic (europe)",
+  "nes|icon|lonely",
+  "psx|icon|ff7",
+  "psx|icon|nobody (usa)",
+  "snes|icon|zelda (usa)",
+  "snes|miximage|zelda (usa)",
+  "wiiu|icon|mario kart 8 [0005000010145000]"
+ ],
+ "cocoon_scan": [
+  "gba|hero|advance wars (usa)|-",
+  "gba|icon|advance wars (usa)|-",
+  "gba|icon|advance wars (usa)|1",
+  "gba|icon|advance wars (usa)|2",
+  "gba|icon|advance wars (usa)|3",
+  "gba|screenshot|advance wars (usa)|-",
+  "gba|titlescreen|advance wars (usa)|-",
+  "genesis|logo|sonic (europe)|-",
+  "psx|icon|ff7 (disc 1)|-",
+  "snes|icon|zelda (usa)|-",
+  "wiiu|logo|mario kart 8 [0005000010145000]|-"
+ ],
+ "user_override": {
+  "game": "Zelda (USA)",
+  "kind": "icon",
+  "path": "user/my-cover.png"
+ },
+ "counts": {
+  "cocoon": {
+   "icon": 6,
+   "hero": 1,
+   "logo": 2,
+   "screenshot": 1,
+   "titlescreen": 1
+  },
+  "esde": {
+   "icon": 6,
+   "hero": 1,
+   "logo": 1,
+   "screenshot": 1,
+   "titlescreen": 1,
+   "video": 1,
+   "3dbox": 1,
+   "manual": 1,
+   "miximage": 1
+  }
+ },
+ "unmatched": 1,
+ "games": {
+  "Advance Wars (USA)": {
+   "display_title": "Advance Wars",
+   "best": {
+    "icon": "cocoon/downloaded_media/gba/icon/Advance Wars (USA)__cocoon_edit_3_fedcba9876543210fedcba9876543210.png",
+    "hero": "cocoon/downloaded_media/gba/hero/Advance Wars (USA).webp",
+    "logo": "esde/downloaded_media/gba/marquees/Advance Wars (USA).png",
+    "titlescreen": "cocoon/downloaded_media/gba/screenshot_title/Advance Wars (USA).png",
+    "video": "esde/downloaded_media/gba/videos/Advance Wars (USA).mp4",
+    "3dbox": "esde/downloaded_media/gba/3dboxes/Advance Wars (USA).png",
+    "manual": "esde/downloaded_media/gba/manuals/Advance Wars (USA).pdf"
+   },
+   "screenshots": [
+    "cocoon/downloaded_media/gba/screenshot_gameplay/Advance Wars (USA).png",
+    "esde/downloaded_media/gba/screenshots/Advance Wars (USA).png"
+   ]
+  },
+  "No Media (Europe)": {
+   "display_title": "No Media",
+   "best": {},
+   "screenshots": []
+  },
+  "Zelda (USA)": {
+   "display_title": "Zelda",
+   "best": {
+    "icon": "cocoon/downloaded_media/snes/icon/zelda (usa).png",
+    "miximage": "esde/downloaded_media/snes/miximages/Zelda (USA).png"
+   },
+   "screenshots": []
+  },
+  "Sonic (Europe)": {
+   "display_title": "Sonic",
+   "best": {
+    "icon": "esde/downloaded_media/megadrive/covers/Sonic (Europe).png",
+    "logo": "cocoon/downloaded_media/genesis/logo/Sonic (Europe).png"
+   },
+   "screenshots": []
+  },
+  "FF7": {
+   "display_title": "FF7",
+   "best": {
+    "icon": "cocoon/downloaded_media/psx/icon/FF7 (Disc 1).png"
+   },
+   "screenshots": []
+  },
+  "Mario Kart 8 [0005000010145000]": {
+   "display_title": "Mario Kart 8",
+   "best": {
+    "icon": "esde/downloaded_media/wiiu/covers/Mario Kart 8 [0005000010145000].png",
+    "logo": "cocoon/downloaded_media/wiiu/logo/Mario Kart 8 [0005000010145000].png"
+   },
+   "screenshots": []
+  },
+  "Lonely": {
+   "display_title": "Lonely",
+   "best": {
+    "icon": "esde/downloaded_media/nes/covers/sub/Lonely.png"
+   },
+   "screenshots": []
+  }
+ }
+}

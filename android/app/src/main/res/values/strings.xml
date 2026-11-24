@@ -22,6 +22,7 @@
     <string name="msg_data">The emulator list cannot be loaded (%1$s).</string>
     <string name="msg_not_found">That item no longer exists.</string>
     <string name="msg_invalid_input">That value is not valid.</string>
+    <string name="msg_theme_import">Could not import the theme (%1$s).</string>
     <string name="msg_dock_full">The dock is full. Unpin an app first.</string>
     <string name="ob_continue">Continue</string>
     <string name="ob_start">Start</string>

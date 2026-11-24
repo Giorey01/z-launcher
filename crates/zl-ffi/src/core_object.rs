@@ -21,6 +21,13 @@ pub struct Core {
     svc: Service,
 }
 
+impl Core {
+    /// The service behind the object (for the other halves of the interface).
+    pub(crate) fn service(&self) -> &Service {
+        &self.svc
+    }
+}
+
 #[uniffi::export]
 impl Core {
     /// Opens the core with its data (the library database, updated platform lists) in `data_dir`.

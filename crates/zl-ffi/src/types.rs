@@ -129,6 +129,14 @@ pub struct GameEntry {
     pub kind: GameKind,
     /// Not found by the last scan.
     pub missing: bool,
+    /// Title without the tags of the file name: the one to show.
+    pub display_title: String,
+    /// Best cover (absolute path), if the game has media.
+    pub icon: Option<String>,
+    /// Best hero image.
+    pub hero: Option<String>,
+    /// Best logo.
+    pub logo: Option<String>,
 }
 
 impl From<core::GameEntry> for GameEntry {
@@ -141,6 +149,10 @@ impl From<core::GameEntry> for GameEntry {
             platform_name: g.platform_name,
             kind: g.kind.into(),
             missing: g.missing,
+            display_title: g.display_title,
+            icon: g.icon,
+            hero: g.hero,
+            logo: g.logo,
         }
     }
 }
@@ -160,6 +172,17 @@ impl From<core::Candidate> for Candidate {
     /// One to one.
     fn from(c: core::Candidate) -> Self {
         Candidate {
+            profile: c.profile.into(),
+            emulator_name: c.emulator_name,
+            core_name: c.core_name,
+        }
+    }
+}
+
+impl From<Candidate> for core::Candidate {
+    /// One to one (used by the mirrored records).
+    fn from(c: Candidate) -> Self {
+        core::Candidate {
             profile: c.profile.into(),
             emulator_name: c.emulator_name,
             core_name: c.core_name,

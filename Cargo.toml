@@ -5,6 +5,7 @@ members = [
     "crates/zl-core",
     "crates/zl-db",
     "crates/zl-library",
+    "crates/zl-media",
     "crates/zl-platforms",
     "crates/zl-tags",
     "crates/zl-theme",

@@ -18,6 +18,9 @@
 //! - `platform_emulator` and `game_emulator` hold the emulator assignment overrides; a NULL
 //!   profile id means "explicitly none", an absent row means "use the default".
 //!
+//! - `game_media` holds the media files of each game (cover, hero, logo, screenshots, video) with
+//!   their source; a `protected` row is the user's choice and imports leave it alone.
+//!
 //! Timestamps are Unix time, `added_at` in seconds and file modification times in milliseconds.
 #![warn(
     missing_docs,
@@ -30,6 +33,7 @@ mod db;
 mod emulators;
 mod error;
 mod games;
+mod media;
 pub mod migrations;
 mod models;
 mod roots;
@@ -38,5 +42,6 @@ mod settings;
 pub use db::Db;
 pub use error::DbError;
 pub use models::{
-    Counts, ExistingGame, Game, GameFile, GameKind, GameQuery, NewGame, PlatformCount, Root,
+    Counts, ExistingGame, Game, GameFile, GameKind, GameQuery, MediaKind, MediaRow, MediaSource,
+    NewGame, NewMedia, PlatformCount, Root,
 };

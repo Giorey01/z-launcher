@@ -3,6 +3,7 @@
 use zl_db::DbError;
 use zl_library::LibraryError;
 use zl_platforms::{DbError as DataError, LaunchError};
+use zl_theme::ThemeError;
 
 /// Everything the service can fail with.
 #[derive(Debug, Clone, PartialEq, Eq, thiserror::Error)]
@@ -33,6 +34,14 @@ pub enum CoreError {
     /// An argument is not usable (empty path, malformed profile reference).
     #[error("invalid_input")]
     InvalidInput,
+    /// A theme file or archive could not be imported; `code` says why (`zip`, `io`, `no_theme`,
+    /// `unsafe_path`, `symlink`, `too_many_entries`, `too_large`, `compression_ratio`,
+    /// `missing_manifest`).
+    #[error("theme {code}")]
+    Theme {
+        /// Stable code of the problem.
+        code: String,
+    },
     /// The dock already holds the maximum number of shortcuts.
     #[error("dock_full")]
     DockFull,
@@ -77,6 +86,26 @@ impl From<LaunchError> for CoreError {
         CoreError::Launch {
             code: code.to_string(),
             detail: detail.to_string(),
+        }
+    }
+}
+
+impl From<ThemeError> for CoreError {
+    /// Maps the failure of an import to its code.
+    fn from(e: ThemeError) -> Self {
+        let code = match e {
+            ThemeError::Io(_) => "io",
+            ThemeError::Zip(_) => "zip",
+            ThemeError::MissingManifest => "missing_manifest",
+            ThemeError::NoThemeInArchive => "no_theme",
+            ThemeError::UnsafePath(_) => "unsafe_path",
+            ThemeError::SymlinkEntry(_) => "symlink",
+            ThemeError::TooManyEntries => "too_many_entries",
+            ThemeError::TooLarge => "too_large",
+            ThemeError::CompressionRatio(_) => "compression_ratio",
+        };
+        CoreError::Theme {
+            code: code.to_string(),
         }
     }
 }

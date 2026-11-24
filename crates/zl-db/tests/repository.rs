@@ -1,6 +1,8 @@
 //! Tests of migrations, WAL and the repository API.
 
-use zl_db::{Db, DbError, GameFile, GameKind, GameQuery, NewGame};
+use zl_db::{
+    Db, DbError, GameFile, GameKind, GameQuery, MediaKind, MediaSource, NewGame, NewMedia,
+};
 
 /// Result type of the tests: any error fails the test.
 type TestResult = Result<(), Box<dyn std::error::Error>>;
@@ -202,5 +204,50 @@ fn platform_counts_skip_missing_games() -> TestResult {
     );
     assert_eq!(db.game(a)?.map(|g| g.title), Some("A".to_string()));
     assert!(db.game(9999)?.is_none());
+    Ok(())
+}
+
+/// A media row to store.
+fn media(game_id: i64, path: &str, source: MediaSource, edit: Option<u32>) -> NewMedia {
+    NewMedia {
+        game_id,
+        kind: MediaKind::Icon,
+        path: path.to_string(),
+        source,
+        edit,
+    }
+}
+
+/// Best file: protected, then Cocoon edit (highest number), plain Cocoon, ES-DE; a re-import
+/// replaces unprotected rows only; a game's deletion takes its media along.
+#[test]
+fn media_precedence_and_protection() -> TestResult {
+    let db = Db::open_in_memory()?;
+    let root = db.upsert_root("/roms", true)?;
+    let id = db.upsert_game(&game(root, "gba", "A", "/roms/gba/a.gba"), 1)?;
+    let items = [
+        media(id, "/m/esde.png", MediaSource::Esde, None),
+        media(id, "/m/cocoon.png", MediaSource::Cocoon, None),
+        media(id, "/m/edit1.png", MediaSource::Cocoon, Some(1)),
+        media(id, "/m/edit9.png", MediaSource::Cocoon, Some(9)),
+    ];
+    db.replace_media(&[MediaSource::Cocoon, MediaSource::Esde], &items)?;
+    let best = |db: &Db| -> Result<String, DbError> {
+        Ok(db.best_media(&[MediaKind::Icon])?.remove(0).path)
+    };
+    assert_eq!(best(&db)?, "/m/edit9.png");
+    db.set_user_media(id, MediaKind::Icon, Some("/u/mine.png"))?;
+    db.replace_media(&[MediaSource::Cocoon, MediaSource::Esde], &items[..1])?;
+    assert_eq!(best(&db)?, "/u/mine.png");
+    let rows = db.game_media(id)?;
+    assert_eq!(
+        rows.len(),
+        2,
+        "unprotected Cocoon rows were replaced: {rows:?}"
+    );
+    db.set_user_media(id, MediaKind::Icon, None)?;
+    assert_eq!(best(&db)?, "/m/esde.png");
+    db.delete_root(root)?;
+    assert!(db.game_media(id)?.is_empty());
     Ok(())
 }

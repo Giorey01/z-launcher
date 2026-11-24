@@ -9,6 +9,10 @@
     clippy::cognitive_complexity
 )]
 
+#[macro_use]
+mod mirror;
+mod appearance;
+mod appearance_api;
 mod core_object;
 mod error;
 mod scan;
@@ -16,6 +20,7 @@ mod types;
 
 uniffi::setup_scaffolding!();
 
+pub use appearance::*;
 pub use core_object::Core;
 pub use error::CoreError;
 pub use scan::{ScanEvent, ScanIssue, ScanListener, ScanSummary};

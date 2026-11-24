@@ -885,10 +885,13 @@ dependencies = [
  "serde_json",
  "tempfile",
  "thiserror",
+ "zip",
  "zl-config",
  "zl-db",
  "zl-library",
+ "zl-media",
  "zl-platforms",
+ "zl-theme",
 ]
 
 [[package]]
@@ -911,7 +914,9 @@ dependencies = [
  "zl-core",
  "zl-db",
  "zl-library",
+ "zl-media",
  "zl-platforms",
+ "zl-theme",
 ]
 
 [[package]]
@@ -924,6 +929,16 @@ dependencies = [
  "zl-config",
  "zl-db",
  "zl-tags",
+]
+
+[[package]]
+name = "zl-media"
+version = "0.0.1"
+dependencies = [
+ "serde_json",
+ "tempfile",
+ "zl-config",
+ "zl-db",
 ]
 
 [[package]]

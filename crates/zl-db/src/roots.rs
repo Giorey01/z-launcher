@@ -48,6 +48,18 @@ impl Db {
         Ok(())
     }
 
+    /// Removes a root and every game found under it (their files, tags, emulator overrides and
+    /// media go with them). Platform defaults are kept.
+    pub fn delete_root(&self, root_id: i64) -> Result<(), DbError> {
+        self.transaction::<(), DbError>(|db| {
+            db.conn
+                .execute("DELETE FROM games WHERE root_id = ?1", params![root_id])?;
+            db.conn
+                .execute("DELETE FROM rom_roots WHERE id = ?1", params![root_id])?;
+            Ok(())
+        })
+    }
+
     /// Lists all roots in insertion order.
     pub fn list_roots(&self) -> Result<Vec<Root>, DbError> {
         let mut stmt = self.conn.prepare(

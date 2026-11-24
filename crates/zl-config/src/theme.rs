@@ -27,3 +27,18 @@ pub const ZIP_RATIO_CHECK_MIN_BYTES: u64 = 1024 * 1024;
 /// music files. Real packs keep tracks in `music/` or `music/music/`; a small depth also stops a
 /// malformed pack with a deep tree from making the scan slow.
 pub const PACK_MUSIC_SCAN_DEPTH: usize = 4;
+
+/// Folders where Cocoon's data folder (its `themes/`, `assets/` and `downloaded_media/`) may be
+/// on a device, tried in order by the "find the Cocoon data" helper. The first entry is the
+/// folder Cocoon asks its users to pick on a handheld; add the others seen in the field.
+pub const COCOON_DATA_DIR_CANDIDATES: [&str; 1] = ["/storage/emulated/0/Documents"];
+
+/// Name of the folder (inside the app data folder) that holds the user's own artwork for smart
+/// folders and icon overlays. It has the layout of a theme folder (`smart_folders/<type>/icon.png`,
+/// `smart_folders/by_platform/<id>/hero.png`, ...), so the same reader serves it, and it wins
+/// over every pack and theme.
+pub const USER_ART_DIR_NAME: &str = "user";
+
+/// Name of the folder (inside the app data folder) where a theme ZIP is extracted before its
+/// themes are moved to `themes/`; deleted right after.
+pub const IMPORT_STAGING_DIR_NAME: &str = "import-staging";

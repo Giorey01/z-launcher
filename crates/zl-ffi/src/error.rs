@@ -32,6 +32,14 @@ pub enum CoreError {
     /// An argument is not usable.
     #[error("invalid_input")]
     InvalidInput,
+    /// A theme file or archive could not be imported; `code` is `zip`, `io`, `no_theme`,
+    /// `unsafe_path`, `symlink`, `too_many_entries`, `too_large`, `compression_ratio` or
+    /// `missing_manifest`.
+    #[error("theme {code}")]
+    Theme {
+        /// Stable code of the problem.
+        code: String,
+    },
     /// The dock has no free slot.
     #[error("dock_full")]
     DockFull,
@@ -47,6 +55,7 @@ impl From<ServiceError> for CoreError {
             ServiceError::Launch { code, detail } => CoreError::Launch { code, detail },
             ServiceError::NotFound => CoreError::NotFound,
             ServiceError::InvalidInput => CoreError::InvalidInput,
+            ServiceError::Theme { code } => CoreError::Theme { code },
             ServiceError::DockFull => CoreError::DockFull,
         }
     }

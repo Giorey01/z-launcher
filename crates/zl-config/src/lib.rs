@@ -14,7 +14,9 @@
 )]
 
 pub mod app;
+pub mod appearance;
 pub mod db;
 pub mod library;
+pub mod media;
 pub mod platforms;
 pub mod theme;

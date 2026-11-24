@@ -42,6 +42,8 @@ pub struct PackMeta {
 pub struct AssetPack {
     /// Pack id: the folder name.
     pub id: String,
+    /// The pack folder itself (`assets/<category>/<id>/`).
+    pub dir: PathBuf,
     /// The category, taken from the `assets/<category>/` folder name.
     pub category: AssetCategory,
     /// The parsed `metadata.json`, `None` when absent or not a JSON object.
@@ -105,6 +107,7 @@ fn read_pack(dir: &Path, id: &str, category: AssetCategory) -> AssetPack {
         .find(|e| e.is_dir && e.name.eq_ignore_ascii_case(category.as_str()));
     AssetPack {
         id: id.to_string(),
+        dir: dir.to_path_buf(),
         category,
         meta,
         root_of_content: sub.map_or_else(|| dir.to_path_buf(), |e| e.path.clone()),

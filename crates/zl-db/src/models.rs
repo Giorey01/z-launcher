@@ -165,3 +165,136 @@ pub struct Counts {
     /// Platforms seen.
     pub platforms: i64,
 }
+
+/// What a media file shows. The spelling is the one stored in the database.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum MediaKind {
+    /// The cover (ES-DE `covers`, Cocoon `icon`): the square image of the game in the grid.
+    Icon,
+    /// The big background image (ES-DE `fanart`, Cocoon `hero`).
+    Hero,
+    /// The logo or marquee (ES-DE `marquees`, Cocoon `logo`).
+    Logo,
+    /// A gameplay screenshot (ES-DE `screenshots`, Cocoon `screenshot_gameplay`).
+    Screenshot,
+    /// A video (ES-DE `videos`).
+    Video,
+    /// A 3D box render (ES-DE `3dboxes`).
+    Box3d,
+    /// The title screen (ES-DE `titlescreens`, Cocoon `screenshot_title`).
+    TitleScreen,
+    /// The back of the box (ES-DE `backcovers`).
+    BackCover,
+    /// A composed image of screenshot, cover and logo (ES-DE `miximages`).
+    MixImage,
+    /// The cartridge or disc (ES-DE `physicalmedia`).
+    PhysicalMedia,
+    /// The manual, a PDF (ES-DE `manuals`).
+    Manual,
+}
+
+impl MediaKind {
+    /// Every kind, in declaration order.
+    pub const ALL: [MediaKind; 11] = [
+        MediaKind::Icon,
+        MediaKind::Hero,
+        MediaKind::Logo,
+        MediaKind::Screenshot,
+        MediaKind::Video,
+        MediaKind::Box3d,
+        MediaKind::TitleScreen,
+        MediaKind::BackCover,
+        MediaKind::MixImage,
+        MediaKind::PhysicalMedia,
+        MediaKind::Manual,
+    ];
+
+    /// Stable spelling stored in the database and used in the fixtures.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            MediaKind::Icon => "icon",
+            MediaKind::Hero => "hero",
+            MediaKind::Logo => "logo",
+            MediaKind::Screenshot => "screenshot",
+            MediaKind::Video => "video",
+            MediaKind::Box3d => "3dbox",
+            MediaKind::TitleScreen => "titlescreen",
+            MediaKind::BackCover => "backcover",
+            MediaKind::MixImage => "miximage",
+            MediaKind::PhysicalMedia => "physicalmedia",
+            MediaKind::Manual => "manual",
+        }
+    }
+
+    /// Reads the stored spelling back.
+    pub fn parse(text: &str) -> Result<MediaKind, DbError> {
+        MediaKind::ALL
+            .into_iter()
+            .find(|k| k.as_str() == text)
+            .ok_or_else(|| DbError::InvalidValue(text.to_string()))
+    }
+}
+
+/// Where a media file comes from.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum MediaSource {
+    /// Cocoon's `downloaded_media` folder.
+    Cocoon,
+    /// ES-DE's `downloaded_media` folder.
+    Esde,
+    /// A file the user picked.
+    User,
+}
+
+impl MediaSource {
+    /// Stable spelling stored in the database and used in the fixtures.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            MediaSource::Cocoon => "cocoon",
+            MediaSource::Esde => "esde",
+            MediaSource::User => "user",
+        }
+    }
+
+    /// Reads the stored spelling back.
+    pub fn parse(text: &str) -> Result<MediaSource, DbError> {
+        match text {
+            "cocoon" => Ok(MediaSource::Cocoon),
+            "esde" => Ok(MediaSource::Esde),
+            "user" => Ok(MediaSource::User),
+            other => Err(DbError::InvalidValue(other.to_string())),
+        }
+    }
+}
+
+/// A media file to store for a game.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct NewMedia {
+    /// The game.
+    pub game_id: i64,
+    /// What the file shows.
+    pub kind: MediaKind,
+    /// Absolute path of the file.
+    pub path: String,
+    /// Where it comes from.
+    pub source: MediaSource,
+    /// Number of the Cocoon edit the file is, `None` for a plain file.
+    pub edit: Option<u32>,
+}
+
+/// A stored media file.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MediaRow {
+    /// The game.
+    pub game_id: i64,
+    /// What the file shows.
+    pub kind: MediaKind,
+    /// Absolute path of the file.
+    pub path: String,
+    /// Where it comes from.
+    pub source: MediaSource,
+    /// Number of the Cocoon edit, if the file is one.
+    pub edit: Option<u32>,
+    /// The user's choice: an import never removes or replaces it, and it wins over all others.
+    pub protected: bool,
+}

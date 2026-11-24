@@ -51,8 +51,9 @@ pub struct LayerSet {
     pub music: Vec<PathBuf>,
 }
 
-/// Reads the layers of a theme folder: `icon_overlays/`, `smart_folders/`, `sounds/`, `music/`.
-pub(crate) fn read_theme_layers(root: &Path) -> LayerSet {
+/// Reads the layers of a theme-shaped folder: `icon_overlays/`, `smart_folders/`, `sounds/`,
+/// `music/`. A theme folder, and a folder of the user's own files, both have this layout.
+pub fn read_theme_layers(root: &Path) -> LayerSet {
     let mut set = LayerSet::default();
     read_icon_overlays(&mut set, &root.join("icon_overlays"));
     read_smart_folders(&mut set, &root.join("smart_folders"));

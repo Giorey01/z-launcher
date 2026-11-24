@@ -71,8 +71,24 @@ CREATE TABLE settings (
 );
 ";
 
+/// Step 3: per-game media (covers, heroes, logos, screenshots, videos). One row per file found
+/// or chosen; `edit` is the number of a Cocoon user edit (NULL for a plain file); `protected`
+/// rows are the user's choices and are never touched by an import.
+const STEP_3: &str = "
+CREATE TABLE game_media (
+    game_id INTEGER NOT NULL REFERENCES games(id) ON DELETE CASCADE,
+    kind TEXT NOT NULL CHECK (kind IN ('icon','hero','logo','screenshot','video','3dbox',
+        'titlescreen','backcover','miximage','physicalmedia','manual')),
+    path TEXT NOT NULL,
+    source TEXT NOT NULL CHECK (source IN ('cocoon','esde','user')),
+    edit INTEGER,
+    protected INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (game_id, kind, path)
+) WITHOUT ROWID;
+";
+
 /// All steps in order; step `n` is `MIGRATIONS[n - 1]`.
-pub const MIGRATIONS: &[&str] = &[STEP_1, STEP_2];
+pub const MIGRATIONS: &[&str] = &[STEP_1, STEP_2, STEP_3];
 
 /// Reads the schema version of the open database.
 pub fn current_version(conn: &Connection) -> Result<u32, DbError> {

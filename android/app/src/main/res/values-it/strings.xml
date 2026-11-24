@@ -22,6 +22,7 @@
     <string name="msg_data">L\'elenco degli emulatori non si può caricare (%1$s).</string>
     <string name="msg_not_found">Questo elemento non esiste più.</string>
     <string name="msg_invalid_input">Valore non valido.</string>
+    <string name="msg_theme_import">Impossibile importare il tema (%1$s).</string>
     <string name="msg_dock_full">Il dock è pieno. Togli prima un\'app.</string>
     <string name="ob_continue">Continua</string>
     <string name="ob_start">Inizia</string>

@@ -40,7 +40,8 @@ pub use enums::StringEnum;
 pub use error::ThemeError;
 pub use issue::{Issue, IssueCode, Severity};
 pub use layer_set::{
-    LayerSet, FOLDER_ART_EXTENSIONS, GLOBAL_OVERLAY_ID, SPECIAL_SMART_FOLDER_TYPES,
+    read_theme_layers, LayerSet, FOLDER_ART_EXTENSIONS, GLOBAL_OVERLAY_ID,
+    SPECIAL_SMART_FOLDER_TYPES,
 };
 pub use layers::{resolve_slot, slots_of_package, LayerSource, Resolution, SourceLevel};
 pub use manifest::{
