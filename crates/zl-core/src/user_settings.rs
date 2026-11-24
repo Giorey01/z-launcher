@@ -342,4 +342,73 @@ mod tests {
         assert_eq!((rows.single_screen_rows, rows.hero_split), (5, 1.0));
     }
 
+    /// User settings roundtrip through a real database.
+    #[test]
+    fn settings_database_roundtrip() -> Result<(), Box<dyn std::error::Error>> {
+        let dir = tempfile::tempdir()?;
+        let svc = Service::open(dir.path())?;
+        let initial = svc.user_settings()?;
+        assert_eq!(initial.screen_mode, ScreenMode::Dual);
+        assert!(initial.discrete_paging);
+
+        let modified = UserSettings {
+            screen_mode: ScreenMode::Single,
+            discrete_paging: false,
+            single_screen_rows: 4,
+            animation_speed: AnimationSpeed::Fast,
+            retroachievements_enabled: true,
+            discord_presence_enabled: true,
+            app_icon_pack: Some("org.example.pack".to_string()),
+            now_playing_dimming: 0.75,
+            now_playing_saturation: 0.25,
+            ..initial
+        };
+        svc.set_user_settings(&modified)?;
+
+        let loaded = svc.user_settings()?;
+        assert_eq!(loaded.screen_mode, ScreenMode::Single);
+        assert!(!loaded.discrete_paging);
+        assert_eq!(loaded.single_screen_rows, 4);
+        assert_eq!(loaded.animation_speed, AnimationSpeed::Fast);
+        assert!(loaded.retroachievements_enabled);
+        assert!(loaded.discord_presence_enabled);
+        assert_eq!(loaded.app_icon_pack.as_deref(), Some("org.example.pack"));
+        assert!((loaded.now_playing_dimming - 0.75).abs() < 1e-4);
+        assert!((loaded.now_playing_saturation - 0.25).abs() < 1e-4);
+        Ok(())
+    }
+
+    /// update_user_settings modifies settings through a closure and persists.
+    #[test]
+    fn update_user_settings_helper() -> Result<(), Box<dyn std::error::Error>> {
+        let dir = tempfile::tempdir()?;
+        let svc = Service::open(dir.path())?;
+        let updated = svc.update_user_settings(|s| {
+            s.glass_blur = 8.0;
+            s.dock_on_top = true;
+            s.music_volume = 0.65;
+        })?;
+        assert_eq!(updated.glass_blur, 8.0);
+        assert!(updated.dock_on_top);
+        assert!((updated.music_volume - 0.65).abs() < 1e-4);
+
+        let reloaded = svc.user_settings()?;
+        assert_eq!(reloaded.glass_blur, 8.0);
+        assert!(reloaded.dock_on_top);
+        assert!((reloaded.music_volume - 0.65).abs() < 1e-4);
+        Ok(())
+    }
+
+    /// Empty app icon pack strings are parsed as None.
+    #[test]
+    fn empty_icon_pack_is_none() -> Result<(), Box<dyn std::error::Error>> {
+        let dir = tempfile::tempdir()?;
+        let svc = Service::open(dir.path())?;
+        svc.update_user_settings(|s| {
+            s.app_icon_pack = Some(String::new());
+        })?;
+        let loaded = svc.user_settings()?;
+        assert_eq!(loaded.app_icon_pack, None);
+        Ok(())
+    }
 }

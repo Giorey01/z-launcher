@@ -491,3 +491,76 @@ impl Core {
     }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Tests that the newly created core exports the default active theme.
+    #[test]
+    fn core_active_theme_defaults() -> Result<(), Box<dyn std::error::Error>> {
+        let dir = tempfile::tempdir()?;
+        let core = Core::new(dir.path().to_string_lossy().into_owned())?;
+        let theme = core.active_theme()?;
+        assert_eq!(theme.settings.screen_mode, ScreenMode::Dual);
+        assert_eq!(theme.settings.single_screen_rows, 3);
+        assert!(theme.settings.discrete_paging);
+        Ok(())
+    }
+
+    /// Tests setting screen mode and row parameters.
+    #[test]
+    fn core_set_screen_mode_and_rows() -> Result<(), Box<dyn std::error::Error>> {
+        let dir = tempfile::tempdir()?;
+        let core = Core::new(dir.path().to_string_lossy().into_owned())?;
+        core.set_screen_mode(ScreenMode::Single)?;
+        core.set_single_screen_rows(4)?;
+        let theme = core.active_theme()?;
+        assert_eq!(theme.settings.screen_mode, ScreenMode::Single);
+        assert_eq!(theme.settings.single_screen_rows, 4);
+        Ok(())
+    }
+
+    /// Tests modifying glass effect parameters.
+    #[test]
+    fn core_set_glass_parameters() -> Result<(), Box<dyn std::error::Error>> {
+        let dir = tempfile::tempdir()?;
+        let core = Core::new(dir.path().to_string_lossy().into_owned())?;
+        core.set_glass_blur(7.5)?;
+        core.set_glass_refraction(0.8)?;
+        core.set_glass_highlight(0.3)?;
+        let theme = core.active_theme()?;
+        assert!((theme.settings.glass_blur - 7.5).abs() < 1e-4);
+        assert!((theme.settings.glass_refraction - 0.8).abs() < 1e-4);
+        assert!((theme.settings.glass_highlight - 0.3).abs() < 1e-4);
+        Ok(())
+    }
+
+    /// Tests toggling dock position, paging and animation speed.
+    #[test]
+    fn core_set_dock_and_paging() -> Result<(), Box<dyn std::error::Error>> {
+        let dir = tempfile::tempdir()?;
+        let core = Core::new(dir.path().to_string_lossy().into_owned())?;
+        core.set_dock_on_top(true)?;
+        core.set_discrete_paging(false)?;
+        core.set_animation_speed(AnimationSpeed::Fast)?;
+        let theme = core.active_theme()?;
+        assert!(theme.settings.dock_on_top);
+        assert!(!theme.settings.discrete_paging);
+        assert_eq!(theme.settings.animation_speed, AnimationSpeed::Fast);
+        Ok(())
+    }
+
+    /// Tests setting and clearing custom accent colour override.
+    #[test]
+    fn core_set_accent_override() -> Result<(), Box<dyn std::error::Error>> {
+        let dir = tempfile::tempdir()?;
+        let core = Core::new(dir.path().to_string_lossy().into_owned())?;
+        core.set_accent_override(Some(0xFFFF_5376))?;
+        let theme = core.active_theme()?;
+        assert_eq!(theme.settings.accent_override, Some(0xFFFF_5376));
+        core.set_accent_override(None)?;
+        let cleared = core.active_theme()?;
+        assert_eq!(cleared.settings.accent_override, None);
+        Ok(())
+    }
+}

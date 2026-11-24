@@ -151,7 +151,7 @@ class LaunchFixtureTest {
     /** Creates an empty file and its folders. */
     private fun touch(root: File, relative: String) {
         val file = File(root, relative)
-        file.parentFile.mkdirs()
+        file.parentFile?.mkdirs()
         file.writeText("x")
     }
 

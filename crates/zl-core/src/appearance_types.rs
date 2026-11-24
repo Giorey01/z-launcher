@@ -597,3 +597,104 @@ pub struct CocoonDataDir {
     pub has_media: bool,
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use zl_theme::Rgba;
+
+    /// Tests that 8-bit rgba channels are packed into 0xAARRGGBB format.
+    #[test]
+    fn argb_packing() {
+        let red = Rgba {
+            r: 255,
+            g: 0,
+            b: 0,
+            a: 255,
+        };
+        assert_eq!(argb(red), 0xFFFF_0000);
+        let semi_green = Rgba {
+            r: 0,
+            g: 255,
+            b: 0,
+            a: 128,
+        };
+        assert_eq!(argb(semi_green), 0x8000_FF00);
+    }
+
+    /// Tests that default colors match config constants.
+    #[test]
+    fn theme_colors_defaults() {
+        let defaults = ThemeColors::defaults();
+        assert_eq!(defaults.text_primary, defaults::TEXT_PRIMARY);
+        assert_eq!(defaults.text_secondary, defaults::TEXT_SECONDARY);
+        assert_eq!(
+            defaults.background_gradient_start,
+            defaults::BACKGROUND_GRADIENT_START
+        );
+    }
+
+    /// Tests text parsing and roundtrip for ScreenMode.
+    #[test]
+    fn screen_mode_roundtrip() {
+        assert_eq!(ScreenMode::parse_text("DUAL"), Some(ScreenMode::Dual));
+        assert_eq!(ScreenMode::parse_text("single"), Some(ScreenMode::Single));
+        assert_eq!(ScreenMode::parse_text("  Dual  "), Some(ScreenMode::Dual));
+        assert_eq!(ScreenMode::parse_text("invalid"), None);
+        assert_eq!(ScreenMode::Dual.as_str(), "DUAL");
+        assert_eq!(ScreenMode::Single.as_str(), "SINGLE");
+    }
+
+    /// Tests text parsing and roundtrip for ExternalDisplayDocking.
+    #[test]
+    fn external_display_docking_roundtrip() {
+        assert_eq!(
+            ExternalDisplayDocking::parse_text("AUTOMATIC"),
+            Some(ExternalDisplayDocking::Automatic)
+        );
+        assert_eq!(
+            ExternalDisplayDocking::parse_text("ALWAYS_DOCK"),
+            Some(ExternalDisplayDocking::AlwaysDock)
+        );
+        assert_eq!(
+            ExternalDisplayDocking::parse_text("NEVER_DOCK"),
+            Some(ExternalDisplayDocking::NeverDock)
+        );
+        assert_eq!(ExternalDisplayDocking::parse_text("unknown"), None);
+        assert_eq!(ExternalDisplayDocking::Automatic.as_str(), "AUTOMATIC");
+    }
+
+    /// Tests text parsing and roundtrip for SingleRowStyle.
+    #[test]
+    fn single_row_style_roundtrip() {
+        assert_eq!(
+            SingleRowStyle::parse_text("STANDARD"),
+            Some(SingleRowStyle::Standard)
+        );
+        assert_eq!(
+            SingleRowStyle::parse_text("CAROUSEL"),
+            Some(SingleRowStyle::Carousel)
+        );
+        assert_eq!(
+            SingleRowStyle::parse_text("COVER_FLOW"),
+            Some(SingleRowStyle::CoverFlow)
+        );
+        assert_eq!(SingleRowStyle::parse_text("bad"), None);
+        assert_eq!(SingleRowStyle::Standard.as_str(), "STANDARD");
+    }
+
+    /// Tests text parsing and roundtrip for AnimationSpeed.
+    #[test]
+    fn animation_speed_roundtrip() {
+        assert_eq!(
+            AnimationSpeed::parse_text("NORMAL"),
+            Some(AnimationSpeed::Normal)
+        );
+        assert_eq!(
+            AnimationSpeed::parse_text("FAST"),
+            Some(AnimationSpeed::Fast)
+        );
+        assert_eq!(AnimationSpeed::parse_text("OFF"), Some(AnimationSpeed::Off));
+        assert_eq!(AnimationSpeed::parse_text("none"), None);
+        assert_eq!(AnimationSpeed::Normal.as_str(), "NORMAL");
+    }
+}
