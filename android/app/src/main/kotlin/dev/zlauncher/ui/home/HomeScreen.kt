@@ -3,13 +3,16 @@ package dev.zlauncher.ui.home
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,12 +24,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.zlauncher.R
+import dev.zlauncher.core.nativecore.GameEntry
 import dev.zlauncher.core.nativecore.LibraryMode
 import dev.zlauncher.nav.AppViewModel
+import dev.zlauncher.nav.HeroTarget
+import dev.zlauncher.nav.Overlay
 import dev.zlauncher.nav.Screen
+import dev.zlauncher.ui.pad.FocusMemory
 import dev.zlauncher.ui.pad.FocusRestorer
 import dev.zlauncher.ui.pad.PadButton
-import dev.zlauncher.ui.theme.TextSecondary
+import dev.zlauncher.ui.theme.LocalZTheme
 
 /** Id of the Home in the focus memories. */
 private const val HOME_ID = "home"
@@ -34,75 +41,131 @@ private const val HOME_ID = "home"
 /** Columns of the platform grid. */
 private const val PLATFORM_COLUMNS = 3
 
-/** Columns of the game grid of the Simple mode. */
-private const val GAME_COLUMNS = 4
-
 /** Focus key of a platform tile. */
 private fun platformKey(id: String) = "p:$id"
 
 /** Focus key of a game tile. */
-private fun gameKey(id: Long) = "g:$id"
+fun gameKey(id: Long) = "g:$id"
+
+/** Finds the default focus key for the library state. */
+private fun initialHomeKey(ui: HomeUi): String? = when (ui.mode) {
+    LibraryMode.SIMPLE -> ui.games.firstOrNull()?.let { gameKey(it.id) }
+    else -> ui.platforms.firstOrNull()?.let { platformKey(it.id) }
+}
 
 /**
- * The Home (RF-27, RF-35): the dock on top and the library below, as one tile per platform (Smart
- * Folders) or as all games (Simple). A opens or launches, Start opens the app drawer.
+ * The Home: the dock on top and the library below, as one folder icon per platform (Smart Folders, three
+ * columns, no labels) or as all the games (Simple). A opens or launches, Y on a game opens its menu,
+ * Start opens the Start menu. What is focused is shown in the hero area of the other display.
  */
 @Composable
 fun HomeScreen(app: AppViewModel, vm: HomeViewModel = viewModel()) {
     val ui by vm.ui.collectAsState()
     val memory = app.memory(HOME_ID)
     LaunchedEffect(app.resumeTick) { vm.refresh() }
-    val firstKey = when {
-        ui.mode == LibraryMode.SIMPLE -> ui.games.firstOrNull()?.let { gameKey(it.id) }
-        else -> ui.platforms.firstOrNull()?.let { platformKey(it.id) }
-    }
+    LaunchedEffect(ui.platforms) { app.platforms = ui.platforms.map { it.id to it.name } }
+    val firstKey = initialHomeKey(ui)
     val gridState = rememberLazyGridState()
-    Column(Modifier.fillMaxSize().systemBarsPadding().padding(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        Dock(ui.dock, memory, { app.open(Screen.Drawer) }, { app.launchApp(it.packageName) }, app::reopenSetup)
-        when {
-            ui.loading -> Box(Modifier.fillMaxSize())
-            firstKey == null -> EmptyLibrary(app::reopenSetup)
-            ui.mode == LibraryMode.SIMPLE -> LibraryGrid(GAME_COLUMNS, gridState, ui.games, { gameKey(it.id) }) { game, modifier ->
-                GameTile(game, true, { app.launchGame(game) }, modifier.then(memory.track(gameKey(game.id))))
-            }
-            else -> LibraryGrid(PLATFORM_COLUMNS, gridState, ui.platforms, { platformKey(it.id) }) { platform, modifier ->
-                PlatformTile(platform, { app.open(Screen.Platform(platform.id, platform.name)) }, modifier.then(memory.track(platformKey(platform.id))))
-            }
-        }
+    val dockOnTop = LocalZTheme.current.settings.dockOnTop
+    val dock: @Composable () -> Unit = {
+        Dock(
+            ui.dock,
+            memory,
+            { app.open(Screen.Drawer) },
+            { app.launchApp(it.packageName) },
+            { app.hero = HeroTarget.None },
+            dockOnTop
+        )
+    }
+    Column(Modifier.fillMaxSize()) {
+        if (dockOnTop) dock()
+        HomeContent(ui, app, firstKey, gridState, memory, Modifier.weight(1f))
+        if (!dockOnTop) dock()
     }
     val target = firstKey ?: DOCK_ALL_APPS_KEY
-    FocusRestorer(memory, app.resumeTick, !ui.loading, target) { key ->
+    FocusRestorer(memory, app.resumeTick, !ui.loading && app.overlay == null, target) { key ->
         val keys = if (ui.mode == LibraryMode.SIMPLE) ui.games.map { gameKey(it.id) } else ui.platforms.map { platformKey(it.id) }
         keys.indexOf(key).takeIf { it >= 0 }?.let { gridState.scrollToItem(it) }
     }
 }
 
-/** The grid of the library: [items] in [columns] columns, each drawn by [tile] with the grid cell modifier. */
+/** The body of the Home: loading spinner, empty library prompt, or game/platform grid. */
 @Composable
-private fun <T> LibraryGrid(
-    columns: Int,
-    state: androidx.compose.foundation.lazy.grid.LazyGridState,
-    items: List<T>,
-    key: (T) -> String,
-    tile: @Composable (T, Modifier) -> Unit,
+private fun HomeContent(
+    ui: HomeUi,
+    app: AppViewModel,
+    firstKey: String?,
+    gridState: LazyGridState,
+    memory: FocusMemory,
+    modifier: Modifier = Modifier
 ) {
+    Box(modifier) {
+        when {
+            ui.loading -> Box(Modifier.fillMaxSize())
+            firstKey == null -> EmptyLibrary { app.open(Screen.Settings) }
+            ui.mode == LibraryMode.SIMPLE -> SimpleGames(app, ui.games, gridState, memory)
+            else -> PlatformGrid(app, ui.platforms, gridState, memory)
+        }
+    }
+}
+
+/** The platform folders in three full-width columns, each cell as tall as it is wide. */
+@Composable
+private fun PlatformGrid(
+    app: AppViewModel,
+    platforms: List<dev.zlauncher.core.nativecore.PlatformEntry>,
+    state: LazyGridState,
+    memory: FocusMemory
+) {
+    val spec = LocalGridSpec.current
+    val tile: @Composable (dev.zlauncher.core.nativecore.PlatformEntry, Modifier) -> Unit = { platform, modifier ->
+        PlatformTile(
+            platform,
+            {
+                app.play(dev.zlauncher.core.nativecore.SoundAction.FOLDER_OPEN)
+                app.open(Screen.Platform(platform.id, platform.name))
+            },
+            modifier.then(memory.track(platformKey(platform.id))),
+            onFocused = { app.hero = HeroTarget.Platform(platform.id, platform.name) },
+        )
+    }
+    if (spec.rows == 1) {
+        OneRow(platforms, spec, Modifier.padding(top = 4.dp), tile)
+        return
+    }
+    val columns = if (spec.rows == 0) PLATFORM_COLUMNS else spec.platformColumns
+    val topPadding = if (spec.rows == 0) 29.dp else 4.dp
     LazyVerticalGrid(
         GridCells.Fixed(columns),
         Modifier.fillMaxSize(),
         state,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(top = topPadding)
     ) {
-        items(items, key = key) { item -> tile(item, Modifier) }
+        items(platforms, key = { it.id }) { platform -> tile(platform, Modifier) }
     }
 }
 
-/** What the Home shows when the library has no games: a hint and a button that runs the setup again. */
+/** Simple library mode: all games in the folder-style grid, without a header. */
 @Composable
-private fun EmptyLibrary(onSetup: () -> Unit) {
-    Column(Modifier.fillMaxSize(), Arrangement.Center, Alignment.CenterHorizontally) {
-        Text(stringResource(R.string.home_empty_title), style = androidx.compose.material3.MaterialTheme.typography.titleLarge)
-        Text(stringResource(R.string.home_empty_hint), color = TextSecondary, modifier = Modifier.padding(vertical = 12.dp))
-        PadButton(stringResource(R.string.home_open_setup), onSetup)
+private fun SimpleGames(app: AppViewModel, games: List<GameEntry>, state: LazyGridState, memory: FocusMemory) {
+    Column(Modifier.fillMaxSize().padding(top = 36.dp)) {
+        GameGrid(app, games, state, memory)
     }
+}
+
+/** What the Home shows when the library has no games: a hint and a button to the settings. */
+@Composable
+private fun EmptyLibrary(onSettings: () -> Unit) {
+    val theme = LocalZTheme.current
+    Column(Modifier.fillMaxSize(), Arrangement.Center, Alignment.CenterHorizontally) {
+        Text(stringResource(R.string.home_empty_title), color = theme.textPrimary, style = androidx.compose.material3.MaterialTheme.typography.titleLarge)
+        Text(stringResource(R.string.home_empty_hint), color = theme.textSecondary, modifier = Modifier.padding(vertical = 12.dp).fillMaxWidth(0.8f))
+        PadButton(stringResource(R.string.home_open_settings), onSettings)
+        Box(Modifier.height(1.dp))
+    }
+}
+
+/** Opens the Y menu of [game], remembering the tile it came from. */
+fun openGameMenu(app: AppViewModel, game: GameEntry) {
+    app.overlay = Overlay.GameMenu(game, gameKey(game.id))
 }

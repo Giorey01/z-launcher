@@ -41,6 +41,7 @@ fun OnboardingScreen(app: AppViewModel, vm: OnboardingViewModel = viewModel()) {
         Step.Scan -> ScanStep(ui, vm::startScan, vm::next)
         Step.Emulators -> EmulatorsStep(ui, vm::detect, vm::acceptDefaults, vm::next)
         Step.HomeRole -> HomeRoleStep(ui.roleHeld, { role(context) }, vm::next)
+        Step.Cocoon -> CocoonStep(ui.cocoon?.path.orEmpty(), ui.importing, vm::importCocoon, vm::skipCocoon)
         Step.Done -> DoneStep { vm.finish(app::finishOnboarding) }
     }
 }

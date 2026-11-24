@@ -1,5 +1,6 @@
 package dev.zlauncher.ui.onboarding
 
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -39,5 +40,19 @@ fun DoneStep(onFinish: () -> Unit) {
     val focus = remember { FocusRequester() }
     StepFrame(stringResource(R.string.ob_done_title), stringResource(R.string.ob_done_body), focus) {
         PadButton(stringResource(R.string.ob_done_go), onFinish, Modifier.focusRequester(focus))
+    }
+}
+
+/** The offer to import a Cocoon data folder: its themes and media are copied, the user's files only read. */
+@Composable
+fun CocoonStep(path: String, importing: Boolean, onImport: () -> Unit, onSkip: () -> Unit) {
+    val focus = remember { FocusRequester() }
+    StepFrame(stringResource(R.string.ob_cocoon_title), stringResource(R.string.ob_cocoon_body, path), focus, importing) {
+        if (importing) {
+            Text(stringResource(R.string.ob_cocoon_working))
+        } else {
+            PadButton(stringResource(R.string.ob_cocoon_import), onImport, Modifier.focusRequester(focus))
+            PadButton(stringResource(R.string.ob_cocoon_skip), onSkip)
+        }
     }
 }

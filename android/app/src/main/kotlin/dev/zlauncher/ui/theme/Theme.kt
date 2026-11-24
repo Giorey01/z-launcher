@@ -4,6 +4,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 
 /** Background of every screen. */
@@ -30,11 +31,18 @@ val TextSecondary = Color(0xFF9AA3BC)
 /** Colour of error messages. */
 val ErrorColor = Color(0xFFFF8A8A)
 
-/** The launcher is always dark: it sits on top of wallpapers and game art. */
+/** The launcher's Material theme with Poppins; with a [theme] the colours come from it and [LocalZTheme] is provided. */
 @Composable
-fun ZLauncherTheme(content: @Composable () -> Unit) {
+fun ZLauncherTheme(theme: ZTheme? = null, content: @Composable () -> Unit) {
     // The launcher has one look; the system setting is read only so that it is an explicit decision.
     @Suppress("UNUSED_VARIABLE") val system = isSystemInDarkTheme()
-    val colors = darkColorScheme(primary = AccentA, background = Backdrop, surface = Surface, onSurface = TextPrimary)
-    MaterialTheme(colorScheme = colors, content = content)
+    val colors = darkColorScheme(
+        primary = theme?.accentStart ?: AccentA,
+        background = theme?.backgroundEnd ?: Backdrop,
+        surface = theme?.cardEnd ?: Surface,
+        onSurface = theme?.textPrimary ?: TextPrimary,
+    )
+    MaterialTheme(colorScheme = colors, typography = ZTypography) {
+        if (theme == null) content() else CompositionLocalProvider(LocalZTheme provides theme, content = content)
+    }
 }

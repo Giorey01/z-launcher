@@ -2,23 +2,31 @@ package dev.zlauncher.ui.home
 
 import android.app.Application
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.background
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.Sort
+import androidx.compose.material.icons.rounded.Tune
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -26,70 +34,91 @@ import dev.zlauncher.R
 import dev.zlauncher.ZLauncherApp
 import dev.zlauncher.core.nativecore.CoreException
 import dev.zlauncher.core.nativecore.GameEntry
-import dev.zlauncher.nav.AppViewModel
-import dev.zlauncher.nav.Screen
 import dev.zlauncher.launch.toMessage
+import dev.zlauncher.nav.AppViewModel
+import dev.zlauncher.nav.HeroTarget
+import dev.zlauncher.nav.Screen
+import dev.zlauncher.ui.common.BackPill
+import dev.zlauncher.ui.common.ButtonChip
+import dev.zlauncher.ui.common.FaintPill
+import dev.zlauncher.ui.common.HeaderTitle
 import dev.zlauncher.ui.pad.FocusRestorer
-import dev.zlauncher.ui.theme.TextSecondary
+import dev.zlauncher.ui.theme.LocalZTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-/** Columns of the game grid inside a platform folder. */
-private const val COLUMNS = 4
-
-/** The games of one platform. */
-class PlatformViewModel(application: Application) : AndroidViewModel(application) {
-    /** The shared application object. */
-    private val zl = application as ZLauncherApp
-
-    /** Backing state: `null` until loaded. */
-    private val state = MutableStateFlow<List<GameEntry>?>(null)
-
-    /** The games, `null` while loading. */
-    val games: StateFlow<List<GameEntry>?> = state.asStateFlow()
-
-    /** Reads the games of [platformId]; a core error is reported through [onError]. */
-    fun load(platformId: String, onError: (CoreException) -> Unit) {
-        viewModelScope.launch {
-            state.value = try {
-                zl.core.call { it.games(platformId) }
-            } catch (e: CoreException) {
-                onError(e)
-                emptyList()
-            }
-        }
+/**
+ * The folder of a platform: the dock, a header (back pill, name, sort label) and the games in a grid with the
+ * covers framed by the theme's overlay. A launches a game, Y opens its menu, LB and RB go to the previous and
+ * next platform, B goes back.
+ */
+@Composable
+fun PlatformScreen(
+    app: AppViewModel,
+    screen: Screen.Platform,
+    vm: PlatformViewModel = viewModel(),
+    home: HomeViewModel = viewModel()
+) {
+    val games by vm.games.collectAsState()
+    val homeUi by home.ui.collectAsState()
+    val memory = app.memory("platform:${screen.id}")
+    LaunchedEffect(screen.id, app.resumeTick) { vm.load(screen.id) { app.message = it.toMessage() } }
+    LaunchedEffect(screen.id) { app.hero = HeroTarget.Platform(screen.id, screen.name) }
+    val list = games.orEmpty()
+    val gridState = rememberLazyGridState()
+    val dockOnTop = LocalZTheme.current.settings.dockOnTop
+    val dock: @Composable () -> Unit = {
+        Dock(
+            homeUi.dock,
+            memory,
+            { app.open(Screen.Drawer) },
+            { app.launchApp(it.packageName) },
+            { app.hero = HeroTarget.Platform(screen.id, screen.name) },
+            dockOnTop
+        )
+    }
+    Column(Modifier.fillMaxSize()) {
+        if (dockOnTop) dock()
+        FolderHeader(screen.name, Modifier.padding(top = if (dockOnTop) 6.dp else 20.dp, bottom = 6.dp))
+        Box(Modifier.weight(1f)) { GameGrid(app, list, gridState, memory) }
+        if (!dockOnTop) dock()
+    }
+    FocusRestorer(memory, app.resumeTick, games != null && app.overlay == null, list.firstOrNull()?.let { gameKey(it.id) }) { focused ->
+        list.indexOfFirst { gameKey(it.id) == focused }.takeIf { it >= 0 }?.let { gridState.scrollToItem(it) }
     }
 }
 
-/** Focus key of a game tile. */
-private fun key(id: Long) = "g:$id"
-
-/** The folder of a platform (RF-27): its games in a grid; A launches a game, B goes back. */
+/** The header of a folder: back hint, the folder name, and on the right the sort label with the bumper hint. */
 @Composable
-fun PlatformScreen(app: AppViewModel, screen: Screen.Platform, vm: PlatformViewModel = viewModel()) {
-    val games by vm.games.collectAsState()
-    val memory = app.memory("platform:${screen.id}")
-    LaunchedEffect(screen.id, app.resumeTick) { vm.load(screen.id) { app.message = it.toMessage() } }
-    val list = games.orEmpty()
-    val gridState = rememberLazyGridState()
-    Column(Modifier.fillMaxSize().systemBarsPadding().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text(screen.name, style = MaterialTheme.typography.headlineSmall)
-        Text(stringResource(R.string.hint_platform), color = TextSecondary)
-        LazyVerticalGrid(
-            GridCells.Fixed(COLUMNS),
-            Modifier.fillMaxSize(),
-            gridState,
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            items(list, key = { it.id }) { game ->
-                GameTile(game, false, { app.launchGame(game) }, Modifier.then(memory.track(key(game.id))))
-            }
+private fun FolderHeader(title: String, modifier: Modifier = Modifier) {
+    val theme = LocalZTheme.current
+    Row(modifier.fillMaxWidth().padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+        if (theme.settings.cornerHints) FaintPill { ButtonChip("LB") }
+        BackPill(Modifier.padding(start = 6.dp))
+        HeaderTitle(title, Modifier.padding(start = 14.dp).weight(1f))
+        FaintPill(Modifier.padding(end = 6.dp)) {
+            Icon(Icons.AutoMirrored.Rounded.Sort, null, Modifier.size(20.dp), tint = theme.textPrimary.copy(alpha = 0.5f))
+            Text(
+                stringResource(R.string.sort_manual),
+                color = theme.textPrimary.copy(alpha = 0.6f),
+                fontSize = 15.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(end = 6.dp)
+            )
         }
-    }
-    FocusRestorer(memory, app.resumeTick, games != null, list.firstOrNull()?.let { key(it.id) }) { focused ->
-        list.indexOfFirst { key(it.id) == focused }.takeIf { it >= 0 }?.let { gridState.scrollToItem(it) }
+        Box(
+            Modifier
+                .padding(end = 6.dp)
+                .size(31.dp)
+                .background(theme.textPrimary.copy(alpha = 0.10f), CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(Icons.Rounded.Tune, null, Modifier.size(17.dp), tint = theme.textPrimary.copy(alpha = 0.6f))
+        }
+        if (theme.settings.cornerHints) {
+            ButtonChip("RB", Modifier.background(theme.textPrimary.copy(alpha = 0.10f), CircleShape), 31.dp)
+        }
     }
 }

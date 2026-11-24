@@ -1,10 +1,12 @@
 package dev.zlauncher.ui.onboarding
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zlauncher.R
 import dev.zlauncher.ZLauncherApp
+import dev.zlauncher.core.nativecore.CocoonDataDir
 import dev.zlauncher.core.nativecore.Core
 import dev.zlauncher.core.nativecore.CoreException
 import dev.zlauncher.core.nativecore.Detection
@@ -23,6 +25,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+
+/** Name of the preferences file that remembers the Cocoon offer. */
+private const val PREFS = "setup"
+
+/** Key: the Cocoon import was already offered. */
+private const val KEY_OFFERED = "cocoon_offered"
 
 /** The steps of the setup (RF-29), in order. */
 enum class Step {
@@ -46,6 +54,9 @@ enum class Step {
 
     /** Offer to become the Home. */
     HomeRole,
+
+    /** Offer to import the themes and media of a Cocoon data folder found on the device. */
+    Cocoon,
 
     /** Finished. */
     Done,
@@ -85,6 +96,10 @@ data class OnboardingUi(
     val detection: Detection? = null,
     /** The app already is the device's Home. */
     val roleHeld: Boolean = false,
+    /** The Cocoon data folder on offer, `null` when there is none or it was offered before. */
+    val cocoon: CocoonDataDir? = null,
+    /** The Cocoon import is running. */
+    val importing: Boolean = false,
     /** Last problem, as a translated message. */
     val error: UiMessage? = null,
 )
@@ -127,6 +142,11 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
         state.value = OnboardingUi()
         refreshPermission()
         viewModelScope.launch {
+            val offered = zl.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getBoolean(KEY_OFFERED, false)
+            val found = if (offered) null else core { it.detectCocoonDataDirs() }?.firstOrNull()
+            state.update { it.copy(cocoon = found) }
+        }
+        viewModelScope.launch {
             core { it.roots() }?.let { roots -> state.update { s -> s.copy(roots = roots) } }
         }
     }
@@ -141,7 +161,13 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
     fun next() {
         val current = state.value
         val target = Step.entries[(current.step.ordinal + 1).coerceAtMost(Step.Done.ordinal)]
-        go(if (target == Step.Permission && current.allFiles) Step.Folders else target)
+        go(
+            when {
+                target == Step.Permission && current.allFiles -> Step.Folders
+                target == Step.Cocoon && current.cocoon == null -> Step.Done
+                else -> target
+            },
+        )
     }
 
     /** Back one step; `false` at the first step or while the scan runs. */
@@ -149,7 +175,13 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
         val current = state.value
         if (current.step == Step.Welcome || current.scan.running) return false
         val target = Step.entries[current.step.ordinal - 1]
-        go(if (target == Step.Permission && current.allFiles) Step.Welcome else target)
+        go(
+            when {
+                target == Step.Permission && current.allFiles -> Step.Welcome
+                target == Step.Cocoon && current.cocoon == null -> Step.HomeRole
+                else -> target
+            },
+        )
         return true
     }
 
@@ -218,6 +250,43 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
         viewModelScope.launch {
             val packages = zl.apps.list().map { it.packageName }
             core { it.acceptProposedDefaults(packages) } ?: return@launch
+            next()
+        }
+    }
+
+    /** Remembers that the Cocoon import was offered, so it is not offered again. */
+    private fun markOffered() {
+        zl.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY_OFFERED, true).apply()
+    }
+
+    /** The user declined the Cocoon import. */
+    fun skipCocoon() {
+        markOffered()
+        next()
+    }
+
+    /**
+     * Imports the themes and the media of the Cocoon folder, applies the first installed theme (the core cannot know
+     * which one Cocoon had active; the user can change it in the settings) and moves on.
+     */
+    fun importCocoon() {
+        val dir = state.value.cocoon ?: return
+        state.update { it.copy(importing = true) }
+        viewModelScope.launch {
+            val done = core { c ->
+                c.importFromCocoon(dir.path)
+                c.importMedia()
+                c.installedThemes().firstOrNull()?.let { c.applyTheme(it.id, true) }
+            }
+            markOffered()
+            if (done != null) {
+                try {
+                    zl.themeStore.reload()
+                } catch (e: CoreException) {
+                    state.update { it.copy(error = e.toMessage()) }
+                }
+            }
+            state.update { it.copy(importing = false) }
             next()
         }
     }

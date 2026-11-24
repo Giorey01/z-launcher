@@ -30,6 +30,9 @@ data class HomeUi(
     val error: CoreException? = null,
 )
 
+/** Default number of apps to populate in the dock when empty. */
+private const val DEFAULT_DOCK_SIZE = 5
+
 /** Loads the Home from the core; every call runs off the main thread. */
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     /** The shared application object. */
@@ -44,16 +47,25 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     /** Reads the library mode, the platforms or games, and the dock again. */
     fun refresh() {
         viewModelScope.launch {
-            val apps = zl.apps.list().associateBy { it.packageName }
+            val allApps = zl.apps.list()
+            val apps = allApps.associateBy { it.packageName }
             state.value = try {
                 zl.core.call { core ->
                     val mode = core.libraryMode()
+                    val pinned = core.dock().mapNotNull { apps[it] }
+                    val dockApps = if (pinned.isNotEmpty()) {
+                        pinned
+                    } else {
+                        val recents = zl.recent.list().mapNotNull { apps[it] }
+                        val others = allApps.filter { it.packageName != getApplication<Application>().packageName && it !in recents }
+                        (recents + others).take(DEFAULT_DOCK_SIZE)
+                    }
                     HomeUi(
                         loading = false,
                         mode = mode,
                         platforms = if (mode == LibraryMode.SMART) core.platforms() else emptyList(),
                         games = if (mode == LibraryMode.SIMPLE) core.games(null) else emptyList(),
-                        dock = core.dock().mapNotNull { apps[it] },
+                        dock = dockApps,
                     )
                 }
             } catch (e: CoreException) {

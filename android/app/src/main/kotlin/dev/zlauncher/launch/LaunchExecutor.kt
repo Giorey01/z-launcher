@@ -1,5 +1,6 @@
 package dev.zlauncher.launch
 
+import android.app.ActivityOptions
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -20,10 +21,14 @@ enum class LaunchFailure {
 
 /** Grants the URIs a launch needs and starts the activity. */
 object LaunchExecutor {
-    /** Starts [spec] from [context]; returns why it failed, or `null` when the activity started. */
-    fun launch(context: Context, spec: LaunchIntent): LaunchFailure? = run {
+    /**
+     * Starts [spec] from [context], on [displayId] when given; returns why it failed, or `null` when the
+     * activity started.
+     */
+    fun launch(context: Context, spec: LaunchIntent, displayId: Int? = null): LaunchFailure? = run {
         grant(context, spec)
-        context.startActivity(IntentBuilder.build(spec))
+        val options = displayId?.let { ActivityOptions.makeBasic().setLaunchDisplayId(it).toBundle() }
+        context.startActivity(IntentBuilder.build(spec), options)
     }
 
     /** Starts the launcher activity of [packageName] (an app from the drawer or the dock). */

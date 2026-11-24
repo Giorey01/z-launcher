@@ -4,38 +4,59 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Text
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Apps
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import dev.zlauncher.R
 import dev.zlauncher.apps.AppEntry
+import dev.zlauncher.core.nativecore.DockIconShape
 import dev.zlauncher.ui.AppIcon
 import dev.zlauncher.ui.pad.FocusMemory
 import dev.zlauncher.ui.pad.PadTile
-import dev.zlauncher.ui.theme.TextPrimary
+import dev.zlauncher.ui.pad.TileSurface
+import dev.zlauncher.ui.theme.LocalZTheme
 
 /** Focus key of the "All apps" slot. */
 const val DOCK_ALL_APPS_KEY = "dock:all"
 
-/** Focus key of the setup slot. */
-const val DOCK_SETUP_KEY = "dock:setup"
+/** Size of a dock icon. */
+private val DOCK_ICON = 32.dp
 
-/** Size of a dock slot. */
-private val SLOT_SIZE = 56.dp
+/** Space between dock icons. */
+private val DOCK_GAP = 12.dp
 
-/** Size of the icons inside a slot. */
-private val ICON_SIZE = 40.dp
+/** Corner size of the squircle shape, as a fraction of the side. */
+private const val SQUIRCLE_PERCENT = 32
+
+/** Corner size of the rounded-square shape, as a fraction of the side. */
+private const val ROUNDED_PERCENT = 22
+
+/** The shape of the dock icons from the `dock_icon_shape` setting. */
+@Composable
+private fun dockShape(): Shape = when (LocalZTheme.current.settings.dockIconShape) {
+    DockIconShape.CIRCLE -> CircleShape
+    DockIconShape.SQUIRCLE -> RoundedCornerShape(SQUIRCLE_PERCENT)
+    DockIconShape.ROUNDED_SQUARE -> RoundedCornerShape(ROUNDED_PERCENT)
+    DockIconShape.SQUARE -> RoundedCornerShape(4.dp)
+}
 
 /**
- * The dock (RF-27): "All apps" first, then the pinned apps, and at the end the button that runs the setup again.
- * The slots are focusable tiles reached with the D-pad like the rest of the Home.
+ * The dock: a row of small app icons centred at the top of the grid screen, starting with "All apps" then the
+ * pinned apps. The slots are focusable and reached with the D-pad like the rest of the Home; focusing one
+ * clears the hero area.
  */
 @Composable
 fun Dock(
@@ -43,26 +64,42 @@ fun Dock(
     memory: FocusMemory,
     onAllApps: () -> Unit,
     onApp: (AppEntry) -> Unit,
-    onSetup: () -> Unit,
+    onFocused: () -> Unit,
+    onTop: Boolean = true,
 ) {
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
-        DockGlyph("▦", stringResource(R.string.dock_all_apps), memory, DOCK_ALL_APPS_KEY, onAllApps)
-        apps.forEach { app ->
-            PadTile({ onApp(app) }, Modifier.size(SLOT_SIZE).then(memory.track("dock:${app.packageName}"))) {
-                Box(Modifier.size(SLOT_SIZE), contentAlignment = Alignment.Center) { AppIcon(app.packageName, ICON_SIZE) }
+    val theme = LocalZTheme.current
+    val shape = dockShape()
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(top = if (onTop) 28.dp else 0.dp, bottom = if (onTop) 0.dp else 20.dp),
+        horizontalArrangement = Arrangement.spacedBy(DOCK_GAP, Alignment.CenterHorizontally),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        val allApps = stringResource(R.string.dock_all_apps)
+        PadTile(
+            onAllApps,
+            Modifier.size(DOCK_ICON).then(memory.track(DOCK_ALL_APPS_KEY)).semantics { contentDescription = allApps },
+            shape = shape,
+            surface = TileSurface.NONE,
+            cursorOutset = 3.dp,
+            onFocused = onFocused
+        ) {
+            Box(Modifier.size(DOCK_ICON).clip(shape), contentAlignment = Alignment.Center) {
+                Icon(Icons.Rounded.Apps, null, Modifier.size(DOCK_ICON), tint = theme.accentStart)
             }
         }
-        Box(Modifier.weight(1f))
-        DockGlyph("⚙", stringResource(R.string.dock_setup), memory, DOCK_SETUP_KEY, onSetup)
-    }
-}
-
-/** A dock slot drawn with a text glyph. */
-@Composable
-private fun DockGlyph(glyph: String, description: String, memory: FocusMemory, key: String, onClick: () -> Unit) {
-    PadTile(onClick, Modifier.size(SLOT_SIZE).then(memory.track(key)).semantics { contentDescription = description }) {
-        Box(Modifier.size(SLOT_SIZE), contentAlignment = Alignment.Center) {
-            Text(glyph, color = TextPrimary, fontSize = 26.sp)
+        apps.forEach { app ->
+            PadTile(
+                { onApp(app) },
+                Modifier.size(DOCK_ICON).then(memory.track("dock:${app.packageName}")),
+                shape = shape,
+                surface = TileSurface.NONE,
+                cursorOutset = 3.dp,
+                onFocused = onFocused
+            ) {
+                AppIcon(app.packageName, DOCK_ICON, Modifier.clip(shape))
+            }
         }
     }
 }
