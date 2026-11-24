@@ -778,12 +778,24 @@ name = "zl-config"
 version = "0.0.1"
 
 [[package]]
+name = "zl-db"
+version = "0.0.1"
+
+[[package]]
 name = "zl-ffi"
 version = "0.0.1"
 dependencies = [
  "uniffi",
  "zl-config",
 ]
+
+[[package]]
+name = "zl-library"
+version = "0.0.1"
+
+[[package]]
+name = "zl-platforms"
+version = "0.0.1"
 
 [[package]]
 name = "zl-tags"

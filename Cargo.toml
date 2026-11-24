@@ -2,6 +2,9 @@
 resolver = "2"
 members = [
     "crates/zl-config",
+    "crates/zl-db",
+    "crates/zl-library",
+    "crates/zl-platforms",
     "crates/zl-tags",
     "crates/zl-theme",
     "crates/zl-ffi",
