@@ -1,0 +1,66 @@
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.zl.detekt)
+}
+
+android {
+    namespace = "dev.zlauncher"
+    compileSdk = 35
+    defaultConfig {
+        applicationId = "dev.zlauncher"
+        minSdk = 29
+        targetSdk = 35
+        versionCode = 1
+        versionName = "0.0.1"
+        // Only the languages the app is translated into.
+        resourceConfigurations += listOf("en", "it")
+        // The Rust core (core/native) is built for arm64 only.
+        ndk { abiFilters += "arm64-v8a" }
+    }
+    // `oss` is the default build. `full` adds nothing yet: the dimension exists so a build with
+    // extra modules can add its own sources and dependencies to that flavor without touching `oss`.
+    flavorDimensions += "distribution"
+    productFlavors {
+        create("oss") { dimension = "distribution"; isDefault = true }
+        create("full") { dimension = "distribution" }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    buildFeatures { compose = true }
+    // libzl_ffi.so, built by :core:native (cargo-ndk) before the native libraries are merged.
+    sourceSets.getByName("main").jniLibs.srcDir(project(":core:native").layout.buildDirectory.dir("jniLibs"))
+}
+
+tasks.configureEach {
+    if (name.startsWith("merge") && name.endsWith("JniLibFolders")) dependsOn(":core:native:cargoNdkArm64")
+}
+
+kotlin { compilerOptions { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17) } }
+
+dependencies {
+    implementation(project(":core:native"))
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.ui)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.material3)
+    // JNA with its Android runtime (libjnidispatch.so): the UniFFI bindings of the Rust core load through it.
+    implementation(libs.jna) { artifact { type = "aar" } }
+    testImplementation(libs.junit)
+    testImplementation(libs.jna)
+    testImplementation(libs.kotlinx.coroutines.core)
+}
+
+// JVM tests run against the real Rust library built for this machine (cargo build, release-ffi):
+// the bindings find it through jna.library.path. `cargo` and the Rust toolchain must be installed.
+tasks.withType<Test>().configureEach {
+    dependsOn(":core:native:cargoHost")
+    systemProperty("jna.library.path", project(":core:native").layout.buildDirectory.dir("hostLib").get().asFile.absolutePath)
+    // The workspace manifest, so the test compares against the real version instead of a copy of it.
+    systemProperty("zl.workspaceManifest", rootProject.projectDir.resolve("../Cargo.toml").absolutePath)
+}

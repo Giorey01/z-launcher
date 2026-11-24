@@ -1,0 +1,4 @@
+[bindings.kotlin]
+package_name = "dev.zlauncher.core.nativecore"
+cdylib_name = "zl_ffi"
+generate_immutable_records = true

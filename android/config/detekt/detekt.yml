@@ -1,0 +1,51 @@
+# Shared detekt rules (on top of the defaults). Modules with a detekt-baseline.xml tolerate their recorded legacy findings.
+complexity:
+  LongMethod:
+    active: true
+    threshold: 50
+  CyclomaticComplexMethod:
+    active: true
+    threshold: 15
+  LongParameterList:
+    active: true
+    functionThreshold: 6
+    constructorThreshold: 7
+    ignoreDefaultParameters: true
+    ignoreAnnotated: ['Composable']
+  LargeClass:
+    active: true
+    threshold: 600
+  TooManyFunctions:
+    active: true
+    thresholdInFiles: 25
+    thresholdInClasses: 25
+    thresholdInObjects: 15
+    ignoreAnnotated: ['Composable']
+comments:
+  UndocumentedPublicClass:
+    active: true
+  UndocumentedPublicFunction:
+    active: true
+  UndocumentedPublicProperty:
+    active: true
+naming:
+  FunctionNaming:
+    active: true
+    ignoreAnnotated: ['Composable']
+style:
+  MaxLineLength:
+    active: true
+    maxLineLength: 160
+    excludeCommentStatements: true
+  MagicNumber:
+    active: true
+    ignoreAnnotated: ['Composable']
+    ignoreNamedArgument: true
+    ignorePropertyDeclaration: true
+    ignoreCompanionObjectPropertyDeclaration: true
+    ignoreExtensionFunctions: true
+    ignoreRanges: true
+    ignoreEnums: true
+    ignoreAnnotation: true
+    ignoreHashCodeFunction: true
+    excludes: ['**/test/**']

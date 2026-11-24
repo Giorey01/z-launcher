@@ -5,7 +5,21 @@ edition.workspace = true
 authors.workspace = true
 license.workspace = true
 
+[lib]
+crate-type = ["cdylib", "lib"]
+
 [dependencies]
+zl-config = { path = "../zl-config" }
+uniffi = { workspace = true }
+
+[features]
+# The binding generator (cargo run --features bindgen --bin uniffi-bindgen): not part of the library.
+bindgen = ["uniffi/cli"]
+
+[[bin]]
+name = "uniffi-bindgen"
+path = "src/bin/uniffi-bindgen.rs"
+required-features = ["bindgen"]
 
 [lints]
 workspace = true
