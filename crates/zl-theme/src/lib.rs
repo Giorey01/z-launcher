@@ -12,11 +12,13 @@
 
 #[macro_use]
 mod enums;
+mod asset_pack;
 mod color_scheme;
 mod colour;
 mod error;
 mod fsutil;
 mod issue;
+mod layer_set;
 mod layers;
 mod manifest;
 mod music;
@@ -28,11 +30,18 @@ mod validate;
 mod wallpaper;
 mod zip_import;
 
+pub use asset_pack::{
+    list_installed, read_pack_content, resolve_music_file, validate_pack, AssetPack,
+    InstalledContent, PackMeta,
+};
 pub use color_scheme::{ColorKey, ColorScheme};
 pub use colour::{ColourError, Rgba};
 pub use enums::StringEnum;
 pub use error::ThemeError;
 pub use issue::{Issue, IssueCode, Severity};
+pub use layer_set::{
+    LayerSet, FOLDER_ART_EXTENSIONS, GLOBAL_OVERLAY_ID, SPECIAL_SMART_FOLDER_TYPES,
+};
 pub use layers::{resolve_slot, slots_of_package, LayerSource, Resolution, SourceLevel};
 pub use manifest::{
     parse_manifest, AssetCategory, AssetRef, ManifestOutcome, ThemeManifest, ThemeMode,

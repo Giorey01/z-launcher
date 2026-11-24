@@ -1,0 +1,27 @@
+{
+  "name": "Demo Theme",
+  "author": "Synthetic Author",
+  "version": "1.0",
+  "theme_mode": "dark",
+  "wallpaper_main": "main.png",
+  "asset_refs": [
+    {
+      "id": "ovl-a-111111",
+      "name": "Overlays A",
+      "category": "icon_overlays",
+      "version": "1.0"
+    },
+    {
+      "id": "mus-a-444444",
+      "name": "Music A",
+      "category": "music",
+      "version": "1.0"
+    },
+    {
+      "id": "absent-999999",
+      "name": "Absent",
+      "category": "sounds",
+      "version": "1.0"
+    }
+  ]
+}

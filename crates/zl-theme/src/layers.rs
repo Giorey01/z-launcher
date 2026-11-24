@@ -60,7 +60,7 @@ pub fn resolve_slot(sources: &[LayerSource<'_>], slot: &str) -> Resolution {
 }
 
 /// Flattens a package into slots. Keys: `wallpaper/main`, `wallpaper/external`, `preview`,
-/// `icon_overlay/<platform>/{mask,overlay}`, `smart_folder/<type>/{icon,hero,logo}`,
+/// `icon_overlay/<platform>/{mask,overlay}`, `icon_overlay_global/{mask,overlay}`, `smart_folder/<type>/{icon,hero,logo}`,
 /// `smart_folder_platform/<platform>/{icon,hero,logo}`, `sound/<action>`.
 pub fn slots_of_package(pkg: &ThemePackage) -> BTreeMap<String, PathBuf> {
     let mut slots = BTreeMap::new();
@@ -75,6 +75,10 @@ pub fn slots_of_package(pkg: &ThemePackage) -> BTreeMap<String, PathBuf> {
     for (platform, art) in &pkg.icon_overlays {
         put(format!("icon_overlay/{platform}/mask"), &art.mask);
         put(format!("icon_overlay/{platform}/overlay"), &art.overlay);
+    }
+    if let Some(art) = &pkg.icon_overlay_global {
+        put("icon_overlay_global/mask".into(), &art.mask);
+        put("icon_overlay_global/overlay".into(), &art.overlay);
     }
     for (name, art) in &pkg.smart_folders {
         put_folder(&mut put, "smart_folder", name, art);

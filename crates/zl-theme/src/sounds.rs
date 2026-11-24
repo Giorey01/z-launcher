@@ -63,3 +63,10 @@ pub(crate) fn action_of_file(file_name: &str) -> Option<crate::sounds::SoundActi
     }
     SoundAction::parse_text(stem)
 }
+
+/// Whether a file name has an extension a sound may have (the name itself is not looked at).
+pub(crate) fn is_sound_extension(file_name: &str) -> bool {
+    file_name
+        .rsplit_once('.')
+        .is_some_and(|(_, ext)| SOUND_EXTENSIONS.contains(&ext.to_ascii_lowercase().as_str()))
+}

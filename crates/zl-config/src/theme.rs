@@ -22,3 +22,8 @@ pub const MAX_ZIP_COMPRESSION_RATIO: u64 = 200;
 /// Entries smaller than this many expanded bytes are exempt from the ratio check, because tiny
 /// files (a few hundred zero bytes) can legitimately compress by a large factor.
 pub const ZIP_RATIO_CHECK_MIN_BYTES: u64 = 1024 * 1024;
+
+/// How many folder levels below the content root of an installed asset pack are searched for
+/// music files. Real packs keep tracks in `music/` or `music/music/`; a small depth also stops a
+/// malformed pack with a deep tree from making the scan slow.
+pub const PACK_MUSIC_SCAN_DEPTH: usize = 4;

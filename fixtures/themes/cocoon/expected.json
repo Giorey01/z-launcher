@@ -53,6 +53,7 @@
       "layers": {
         "preview": true,
         "icon_overlays": {"gba": ["mask.png", "overlay.png"], "snes": ["mask.png", null]},
+        "icon_overlay_global": [null, "overlay.png"],
         "smart_folders": {"favorites": ["icon.png", "hero.png", null], "recent": [null, null, "logo.png"]},
         "smart_folders_by_platform": {"psx": ["icon.png", "hero.png", "logo.png"]},
         "sounds": {"navigate": "navigate.wav", "saving_end": "saving_end.mp3", "select": "select.OGG"},
@@ -122,6 +123,98 @@
         {"severity": "warning", "code": "bad_color", "location": "$.color_scheme.text_secondary"},
         {"severity": "warning", "code": "bad_color", "location": "$.color_scheme.divider"}
       ]
+    }
+  ],
+  "data_dirs": [
+    {
+      "case": "data_dir_packs",
+      "themes": ["demo-theme-123abc"],
+      "pack_ids": ["ovl-a-111111", "ovl-b-222222", "mus-a-444444", "mus-b-444445", "mus-c-444446", "fold-a-333333", "fold-b-333334", "snd-a-555556", "snd-b-555555"],
+      "theme_issues": [{"severity": "warning", "code": "missing_asset_pack", "location": "$.asset_refs[2]"}],
+      "packs": {
+        "ovl-a-111111": {
+          "category": "icon_overlays", "content_root": "icon_overlays",
+          "meta": {"name": "Overlays A", "author": "Synthetic Author", "version": "1.0", "file_count": 5, "settings": null},
+          "icon_overlays": {"android_app": [null, "overlay.png"], "gba": ["mask.png", "overlay.png"], "snes": ["Mask.PNG", null]},
+          "icon_overlay_global": ["mask.png", "overlay.png"],
+          "issues": []
+        },
+        "ovl-b-222222": {
+          "category": "icon_overlays", "content_root": ".",
+          "meta": {"name": "Overlays B", "settings": null},
+          "icon_overlays": {"psx": ["mask.png", "overlay.png"]},
+          "icon_overlay_global": ["mask.png", null],
+          "issues": []
+        },
+        "fold-a-333333": {
+          "category": "smart_folders", "content_root": "smart_folders",
+          "meta": {"name": "Folders A", "settings": null},
+          "smart_folders": {
+            "favorites": ["icon.gif", "hero.webp", null],
+            "recent": [null, "hero.jpg", null],
+            "lastplayed": [null, null, "logo.jpeg"],
+            "cloud": ["icon.png", null, null],
+            "weird_type": [null, "hero.png", null]
+          },
+          "smart_folders_by_platform": {"psx": [null, "hero.webp", "logo.png"]},
+          "issues": []
+        },
+        "fold-b-333334": {
+          "category": "smart_folders", "content_root": ".",
+          "meta": {"name": "Folders B", "settings": null},
+          "smart_folders": {"androidgames": [null, "hero.png", null], "emulators": ["icon.gif", null, null]},
+          "smart_folders_by_platform": {},
+          "issues": []
+        },
+        "snd-b-555555": {
+          "category": "sounds", "content_root": ".",
+          "meta": {"name": "Sounds B", "settings": null},
+          "sounds": {"navigate": "navigate.wav", "select": "select.OGG"},
+          "unknown_sounds": ["edit.ogg", "grido_zoom_in.wav", "swap.mp3"],
+          "issues": [
+            {"severity": "warning", "code": "unknown_sound_name", "location": "sounds/edit.ogg"},
+            {"severity": "warning", "code": "unknown_sound_name", "location": "sounds/grido_zoom_in.wav"},
+            {"severity": "warning", "code": "unknown_sound_name", "location": "sounds/swap.mp3"}
+          ]
+        },
+        "snd-a-555556": {
+          "category": "sounds", "content_root": "sounds",
+          "meta": {"name": "Sounds A", "settings": null},
+          "sounds": {"back": "back.wav"},
+          "unknown_sounds": ["pickup.wav"],
+          "issues": [{"severity": "warning", "code": "unknown_sound_name", "location": "sounds/pickup.wav"}]
+        },
+        "mus-a-444444": {
+          "category": "music", "content_root": "music",
+          "meta": {"name": "Music A", "settings": {
+            "mode": "TIME", "playback_mode": "IN ORDER",
+            "playlist": ["music/Yotsuba dekakeru.mp3", "music/missing track.mp3"],
+            "schedule": [[0, 0, "music/Yotsuba dekakeru.mp3"], [4, 0, "music/Night.OGG"], [12, 30, "music/gone.mp3"]]
+          }},
+          "music": ["night.ogg", "yotsuba dekakeru.mp3"],
+          "resolved_music": {"music/Yotsuba dekakeru.mp3": "yotsuba dekakeru.mp3", "music/Night.OGG": "night.ogg", "music/gone.mp3": null, "music/missing track.mp3": null},
+          "issues": [
+            {"severity": "warning", "code": "missing_music_file", "location": "$.settings.music_playlist[1]"},
+            {"severity": "warning", "code": "missing_music_file", "location": "$.settings.music_time_schedule[2]"}
+          ]
+        },
+        "mus-b-444445": {
+          "category": "music", "content_root": ".",
+          "meta": {"name": "Music B", "settings": {
+            "mode": "PLAYLIST", "playback_mode": "SHUFFLE",
+            "playlist": ["music/one.mp3", "music/two.mp3"], "schedule": null
+          }},
+          "music": ["one.mp3", "two.mp3"],
+          "resolved_music": {"music/one.mp3": "one.mp3", "music/TWO.mp3": "two.mp3"},
+          "issues": []
+        },
+        "mus-c-444446": {
+          "category": "music", "content_root": ".",
+          "meta": {"name": "Music C", "settings": {"mode": "DISABLED", "playback_mode": null, "playlist": null, "schedule": null}},
+          "music": [],
+          "issues": []
+        }
+      }
     }
   ]
 }

@@ -181,6 +181,17 @@ fn check_layers(name: &str, pkg: &ThemePackage, want: &Value) {
         want["icon_overlays"],
         "{name}: icon_overlays"
     );
+    let global = pkg
+        .icon_overlay_global
+        .as_ref()
+        .map(|a| json!([file_name(&a.mask), file_name(&a.overlay)]));
+    assert_eq!(
+        global.unwrap_or(Value::Null),
+        want.get("icon_overlay_global")
+            .cloned()
+            .unwrap_or(Value::Null),
+        "{name}: icon_overlay_global"
+    );
     let art = |m: &BTreeMap<String, zl_theme::FolderArt>| -> Value {
         json!(m
             .iter()

@@ -36,6 +36,8 @@ string_enum! {
         MissingAssetPack => "missing_asset_pack",
         /// A file in `sounds/` that does not match an action name and extension.
         UnknownSoundName => "unknown_sound_name",
+        /// A music file named in a pack's playlist or schedule that is not in the pack.
+        MissingMusicFile => "missing_music_file",
     }
 }
 

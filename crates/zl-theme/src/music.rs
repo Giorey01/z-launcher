@@ -31,7 +31,7 @@ string_enum! {
 /// A track that starts at a time of day.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ScheduleEntry {
-    /// Hour, 0-23.
+    /// Hour, 0-23 (written without a leading zero in real packs).
     pub hour: u8,
     /// Minute, 0-59.
     pub minute: u8,
@@ -46,7 +46,7 @@ pub struct MusicConfig {
     pub mode: Option<MusicMode>,
     /// `music_playlist`, split on `||`.
     pub playlist: Option<Vec<String>>,
-    /// `music_time_schedule`, split on `||` into `HH:MM|file` entries.
+    /// `music_time_schedule`, split on `||` into `H:M|file` entries.
     pub schedule: Option<Vec<ScheduleEntry>>,
     /// `music_playback_mode`.
     pub playback_mode: Option<PlaybackMode>,
@@ -69,6 +69,7 @@ pub(crate) fn parse_music(obj: &Map<String, Value>, reader: &mut Reader) -> Musi
         mode: reader.enum_value(obj, "$", "music_mode"),
         playlist: reader
             .string(obj, "$", "music_playlist")
+            .filter(|s| !s.trim().is_empty())
             .map(|s| split_list(&s)),
         schedule: parse_schedule(obj, reader),
         playback_mode: parse_playback_mode(obj, reader),
@@ -100,9 +101,11 @@ fn parse_playback_mode(obj: &Map<String, Value>, reader: &mut Reader) -> Option<
     parsed
 }
 
-/// Reads `music_time_schedule`, skipping entries that are not `HH:MM|file`.
+/// Reads `music_time_schedule`, skipping entries that are not `H:M|file`.
 fn parse_schedule(obj: &Map<String, Value>, reader: &mut Reader) -> Option<Vec<ScheduleEntry>> {
-    let text = reader.string(obj, "$", "music_time_schedule")?;
+    let text = reader
+        .string(obj, "$", "music_time_schedule")
+        .filter(|s| !s.trim().is_empty())?;
     let mut entries = Vec::new();
     for item in split_list(&text) {
         match parse_entry(&item) {
@@ -113,7 +116,7 @@ fn parse_schedule(obj: &Map<String, Value>, reader: &mut Reader) -> Option<Vec<S
     Some(entries)
 }
 
-/// Parses one `HH:MM|file` entry.
+/// Parses one `H:M|file` entry.
 fn parse_entry(item: &str) -> Option<ScheduleEntry> {
     let (time, file) = item.split_once('|')?;
     let (h, m) = time.trim().split_once(':')?;
@@ -143,6 +146,18 @@ mod tests {
                 minute: 30,
                 file: "a/b.mp3".into()
             })
+        );
+        assert_eq!(
+            parse_entry("0:0|music/Yotsuba dekakeru.mp3"),
+            Some(ScheduleEntry {
+                hour: 0,
+                minute: 0,
+                file: "music/Yotsuba dekakeru.mp3".into()
+            })
+        );
+        assert_eq!(
+            parse_entry("4:0|m.mp3").map(|e| (e.hour, e.minute)),
+            Some((4, 0))
         );
         assert_eq!(parse_entry("24:00|x.mp3"), None);
         assert_eq!(parse_entry("12:60|x.mp3"), None);

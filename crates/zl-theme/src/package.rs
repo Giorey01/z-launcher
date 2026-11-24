@@ -6,8 +6,9 @@ use std::path::{Path, PathBuf};
 use crate::error::ThemeError;
 use crate::fsutil::{find_file, list_dir};
 use crate::issue::Issue;
+use crate::layer_set::read_theme_layers;
 use crate::manifest::{parse_manifest, ThemeManifest};
-use crate::sounds::{action_of_file, SoundAction};
+use crate::sounds::SoundAction;
 use crate::wallpaper::{resolve, EXTERNAL_FALLBACKS, MAIN_FALLBACKS};
 
 /// Mask and overlay images of one platform (`icon_overlays/<platform>/`).
@@ -19,14 +20,15 @@ pub struct OverlayArt {
     pub overlay: Option<PathBuf>,
 }
 
-/// Images of one smart folder type or platform.
+/// Images of one smart folder type or platform (`png`, `gif`, `webp`, `jpg` or `jpeg`; the
+/// path keeps its extension).
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct FolderArt {
-    /// `icon.png`, if present.
+    /// `icon.<ext>`, if present.
     pub icon: Option<PathBuf>,
-    /// `hero.png`, if present.
+    /// `hero.<ext>`, if present.
     pub hero: Option<PathBuf>,
-    /// `logo.png`, if present.
+    /// `logo.<ext>`, if present.
     pub logo: Option<PathBuf>,
 }
 
@@ -49,6 +51,8 @@ pub struct ThemePackage {
     pub preview: Option<PathBuf>,
     /// Overlay art by platform id (lower-case folder name).
     pub icon_overlays: BTreeMap<String, OverlayArt>,
+    /// The `global` overlay folder: applies to platforms without a folder of their own.
+    pub icon_overlay_global: Option<OverlayArt>,
     /// Smart folder art by type name (any folder name is accepted).
     pub smart_folders: BTreeMap<String, FolderArt>,
     /// Smart folder art by platform id (`smart_folders/by_platform/<platform>/`).
@@ -110,67 +114,13 @@ pub fn read_package(root: &Path) -> Result<ThemePackage, ThemeError> {
         manifest_issues: outcome.issues,
         ..ThemePackage::default()
     };
-    read_layers(&mut pkg);
+    let layers = read_theme_layers(root);
+    pkg.icon_overlays = layers.icon_overlays;
+    pkg.icon_overlay_global = layers.icon_overlay_global;
+    pkg.smart_folders = layers.smart_folders;
+    pkg.smart_folders_by_platform = layers.smart_folders_by_platform;
+    pkg.sounds = layers.sounds;
+    pkg.unknown_sounds = layers.unknown_sounds;
+    pkg.music = layers.music;
     Ok(pkg)
-}
-
-/// Fills the folder-based layers of the package.
-fn read_layers(pkg: &mut ThemePackage) {
-    let root = pkg.root.clone();
-    for e in list_dir(&root.join("icon_overlays"))
-        .into_iter()
-        .filter(|e| e.is_dir)
-    {
-        let files = list_dir(&e.path);
-        let art = OverlayArt {
-            mask: find_file(&files, "mask.png"),
-            overlay: find_file(&files, "overlay.png"),
-        };
-        pkg.icon_overlays.insert(e.name.to_ascii_lowercase(), art);
-    }
-    read_smart_folders(pkg, &root.join("smart_folders"));
-    read_sounds(pkg, &root.join("sounds"));
-    pkg.music = list_dir(&root.join("music"))
-        .into_iter()
-        .filter(|e| !e.is_dir)
-        .map(|e| e.path)
-        .collect();
-}
-
-/// Reads one folder of `{icon,hero,logo}.png`.
-fn read_folder_art(dir: &Path) -> FolderArt {
-    let files = list_dir(dir);
-    FolderArt {
-        icon: find_file(&files, "icon.png"),
-        hero: find_file(&files, "hero.png"),
-        logo: find_file(&files, "logo.png"),
-    }
-}
-
-/// Reads `smart_folders/<type>/` and `smart_folders/by_platform/<platform>/`.
-fn read_smart_folders(pkg: &mut ThemePackage, dir: &Path) {
-    for e in list_dir(dir).into_iter().filter(|e| e.is_dir) {
-        if e.name.eq_ignore_ascii_case("by_platform") {
-            for p in list_dir(&e.path).into_iter().filter(|p| p.is_dir) {
-                pkg.smart_folders_by_platform
-                    .insert(p.name.to_ascii_lowercase(), read_folder_art(&p.path));
-            }
-        } else {
-            pkg.smart_folders
-                .insert(e.name.to_ascii_lowercase(), read_folder_art(&e.path));
-        }
-    }
-}
-
-/// Reads `sounds/`: files named after an action go in the map (the first by name wins), the
-/// rest are listed as unknown.
-fn read_sounds(pkg: &mut ThemePackage, dir: &Path) {
-    for e in list_dir(dir).into_iter().filter(|e| !e.is_dir) {
-        match action_of_file(&e.name) {
-            Some(action) => {
-                pkg.sounds.entry(action).or_insert(e.path);
-            }
-            None => pkg.unknown_sounds.push(e.name),
-        }
-    }
 }
