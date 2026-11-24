@@ -1,0 +1,40 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/zl-config",
+    "crates/zl-tags",
+    "crates/zl-theme",
+    "crates/zl-ffi",
+]
+
+[workspace.package]
+version = "0.0.1"
+edition = "2021"
+authors = ["Giorey01 <61801344+Giorey01@users.noreply.github.com>"]
+license = "Apache-2.0"
+repository = "https://github.com/Giorey01/z-launcher"
+
+[workspace.dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "2.0"
+tempfile = "3.12"
+
+[workspace.lints.clippy]
+unwrap_used = "deny"
+expect_used = "warn"
+
+[profile.release]
+opt-level = "s"
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = "symbols"
+
+# The library the Android app loads: panics unwind (UniFFI turns one into an exception instead of
+# aborting the process) and symbols stay (uniffi-bindgen reads the metadata from the .so; Gradle
+# strips the packaged copy).
+[profile.release-ffi]
+inherits = "release"
+panic = "unwind"
+strip = "none"

@@ -1,0 +1,5 @@
+# Functions do one thing: long or tangled ones fail clippy in the crates that opt into the
+# strict attributes (see scripts/strict-check.sh).
+too-many-lines-threshold = 50
+cognitive-complexity-threshold = 15
+too-many-arguments-threshold = 6

@@ -1,0 +1,93 @@
+# Roadmap
+
+Requisiti funzionali del launcher. **S.** è la settimana prevista (8 settimane: release 0.1 alla
+fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare.
+
+| ID | Area | Requisito | S. | Stato |
+| --- | --- | --- | --- | --- |
+| RF-01 | Libreria | Scansione delle cartelle per piattaforma, filtrata per estensione, su memoria interna, microSD e USB | 1 |  |
+| RF-02 | Libreria | Multi-disco (`.m3u`, una cartella per gioco, `(Disc N)`) raccolto in una sola voce | 1 |  |
+| RF-03 | Libreria | Rescan incrementale per data di modifica; i giochi spariti vengono segnalati, non cancellati | 1 |  |
+| RF-04 | Libreria | Lettura dei file tag `[tag] valore` (`.steamappid`, `.localgameid`, `.dpt`, `.moonlight`, `.xcloud`) | 1 |  |
+| RF-05 | Libreria | Hash delle ROM in background, anche dentro zip, 7z e CHD | 2 |  |
+| RF-06 | Libreria | Elenco delle app Android installate, con categoria giochi | 1 |  |
+| RF-07 | Lancio | Database JSON di piattaforme, emulatori e profili di lancio, aggiornabile senza nuovo APK | 1 |  |
+| RF-08 | Lancio | Ordine di scelta dell'emulatore: gioco, poi sistema, poi estensione, poi chiedi | 1 |  |
+| RF-09 | Lancio | Variabili nei profili, come `{rom}`, `{core}` e `{tags.NOME}` | 1 |  |
+| RF-10 | Lancio | Rilevamento degli emulatori installati e proposta automatica nell'onboarding | 1 |  |
+| RF-11 | Lancio | Lancio di giochi PC con profili per GameNative, GameHub, Winlator e DroidDeck | 7 |  |
+| RF-12 | Lancio | Gestore emulatori: segnala gli aggiornamenti e scarica le release ufficiali | 7 |  |
+| RF-13 | Organizzazione | Smart Folders: Preferiti, Recenti, Più giocati, Mai giocati, Nuovi, App, Emulatori, Per piattaforma | 2 |  |
+| RF-14 | Organizzazione | Simple Mode, con tutti i giochi nella Home | 2 |  |
+| RF-15 | Organizzazione | Cartelle manuali e lo stesso gioco in più cartelle | 2 |  |
+| RF-16 | Organizzazione | Ricerca e ordinamenti; selezione multipla con sposta e rimuovi | 2 |  |
+| RF-17 | Organizzazione | Nascondi gioco, preferito, valutazione | 2 |  |
+| RF-18 | Metadati | Orchestratore con fonti in ordine scelto: libretro-db, ScreenScraper, SteamGridDB, IGDB, LaunchBox, HLTB | 2 |  |
+| RF-19 | Metadati | Tre modalità: solo mancanti, campi scelti, forza tutto | 2 |  |
+| RF-20 | Metadati | Campi protetti: una modifica manuale non viene sovrascritta | 2 |  |
+| RF-21 | Metadati | Import dei media già scaricati da ES-DE | 2 |  |
+| RF-22 | Metadati | Modifica di nome, descrizione e artwork, con scelta tra le alternative | 2 |  |
+| RF-23 | Home | Griglia con zoom continuo e un layout salvato per ogni livello | 3 |  |
+| RF-24 | Home | Page Mode con righe e colonne per pagina e frecce di scorrimento | 3 |  |
+| RF-25 | Home | Stili a riga singola: Standard, Carousel, Cover Flow | 3 |  |
+| RF-26 | Home | Riordino manuale (prendi e posa) | 3 |  |
+| RF-27 | Home | Dock in basso e cassetto delle app | 1 |  |
+| RF-28 | Home | Ruolo di Home del sistema | 1 |  |
+| RF-29 | Home | Onboarding: permessi, cartelle, modalità, emulatori | 1 |  |
+| RF-30 | Scheda gioco | Tab Info: descrizione, screenshot, trailer, badge HLTB, scelta di emulatore e display | 2 |  |
+| RF-31 | Scheda gioco | Tab Activity: ore, sessioni, media, grafico settimanale | 3 |  |
+| RF-32 | Scheda gioco | Tab Achievements | 5 |  |
+| RF-33 | Scheda gioco | Tab Saves | 5 |  |
+| RF-34 | Scheda gioco | Tab Mods | 8 |  |
+| RF-35 | Controller | Navigazione completa da D-Pad e stick, senza punti morti | 1 |  |
+| RF-36 | Controller | Mappa di default: A conferma, B indietro, Y menu, X scambia schermi, LB social, RB stato, Start impostazioni | 3 |  |
+| RF-37 | Controller | Glifi Nintendo, Xbox e PlayStation, automatici o manuali, e Corner Hints | 3 |  |
+| RF-38 | Controller | Remapping con profili per controller | 3 |  |
+| RF-39 | Controller | Tastiera, touch e pinch come alternative | 3 |  |
+| RF-40 | Sessioni | Tracciamento delle sessioni dall'uso delle app, al secondo, con pausa e ripresa | 3 |  |
+| RF-41 | Sessioni | Modifica manuale delle sessioni ed esclusione di un'app | 3 |  |
+| RF-42 | Sessioni | Pod Log: totali, calendario, classifica | 3 |  |
+| RF-43 | Sessioni | Now Playing sullo schermo secondario | 6 |  |
+| RF-44 | Temi | Formato temi proprio e import dei temi Cocoon senza conversione manuale | 4 |  |
+| RF-45 | Temi | Cinque layer componibili da pacchetti diversi; i file dell'utente hanno la precedenza | 4 |  |
+| RF-46 | Temi | Sfondi statici e animati (webp, png, gif, mp4), separati per schermo principale ed esterno | 4 |  |
+| RF-47 | Temi | Superficie solida o in vetro, con parametri; ripiego sotto API 33 | 4 |  |
+| RF-48 | Temi | Quattro stili di cursore con gradiente proprio; maschere e cornici delle icone per piattaforma | 4 |  |
+| RF-49 | Temi | Validatore con errori comprensibili | 4 |  |
+| RF-50 | Temi | Theme Hub: catalogo da un indice su GitHub, anteprima, installazione, import ZIP | 4 |  |
+| RF-51 | Audio | Effetti sonori a bassa latenza per le 22 azioni | 4 |  |
+| RF-52 | Audio | Musica in playlist, per ora del giorno o spenta; jingle per gioco; sfumatura quando parte un gioco | 4 |  |
+| RF-53 | Achievement | Hash compatibile con RetroAchievements per le piattaforme supportate | 5 |  |
+| RF-54 | Achievement | Trofei, percentuale, Hardcore e Softcore; abbinamento manuale | 5 |  |
+| RF-55 | Achievement | Avviso con suono al rientro dalla sessione | 5 |  |
+| RF-56 | Achievement | Achievement Steam dall'appid | 7 |  |
+| RF-57 | Salvataggi | Posizione dei salvataggi per emulatore nel database dei profili | 5 |  |
+| RF-58 | Salvataggi | Snapshot versionati con SHA-256, versioni fissate, snapshot a fine sessione | 5 |  |
+| RF-59 | Salvataggi | Ripristino sicuro (backup prima di sovrascrivere); import ed export ZIP o grezzi | 5 |  |
+| RF-60 | Salvataggi | Pod Vault con vista per console; avviso per gli emulatori non raggiungibili | 5 |  |
+| RF-61 | Dual-screen | Schermo sopra con wallpaper, hero e logo del gioco selezionato | 6 |  |
+| RF-62 | Dual-screen | Docking automatico, sempre o mai; scambio con X; display preferito per gioco, cartella o app | 6 |  |
+| RF-63 | Dual-screen | Display esterno con fino a 5 righe | 6 |  |
+| RF-64 | Widget | Orologio, Recenti, Ultimo giocato, Musica, Immagine, Log, Gioco casuale nella griglia | 6 |  |
+| RF-65 | Widget | Host di AppWidget Android di terze parti | 6 |  |
+| RF-66 | Widget | Pod Picnic: screenshot per gioco | 6 |  |
+| RF-67 | Steam e PC | Libreria Steam, ore e artwork con la Web API ufficiale | 7 |  |
+| RF-68 | Pannelli | Pannello stato (RB): Wi-Fi, Bluetooth, Non disturbare, luminosità, volume, notifiche | 3 |  |
+| RF-69 | Pannelli | Pannello social (LB): amici Steam e Discord in sola lettura, conversazioni Android con risposta rapida | 8 |  |
+| RF-70 | Mod | Mod da GameBanana e cartelle mod degli emulatori; attiva o disattiva; conflitti | 8 |  |
+| RF-71 | Sistema | Backup e ripristino di tutta la configurazione | 3 |  |
+| RF-72 | Sistema | Sync in LAN verso il PC di salvataggi, screenshot e backup | 8 |  |
+| RF-73 | Estensioni | Pod esterni: una build terza può aggiungere Pod che usano tema, suoni e libreria del launcher | 4 |  |
+| RF-74 | Sistema | Interfaccia in italiano e inglese | 1 |  |
+
+## Requisiti non funzionali
+
+- Avvio a freddo della Home sotto 1 s su Snapdragon 865; navigazione a 60 fps.
+- Scansione di 5000 ROM sotto 10 s; rescan incrementale sotto 2 s.
+- Suono di navigazione con latenza sotto 50 ms.
+- Nessun servizio in primo piano mentre si gioca; sessioni ricostruite dagli eventi di sistema.
+- Android 10 (API 29) o superiore, arm64; effetti in vetro pieni da API 33.
+- Nessuna telemetria; chiavi API nel Keystore; tutto offline tranne scraping e servizi online.
+- "Accesso a tutti i file" come modalità principale, SAF come ripiego.
+- Legge e scrive formati aperti: temi Cocoon, media ES-DE, `.dpt` di Daijishō, `.m3u`.
+- Distribuzione: APK firmato su GitHub Releases e Obtainium; F-Droid.

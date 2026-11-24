@@ -1,0 +1,10 @@
+/target/
+**/build/
+.gradle/
+local.properties
+*.apk
+*.aab
+.idea/
+.kotlin/
+android/core/native/src/main/jniLibs/
+android/core/native/src/main/kotlin/uniffi/
