@@ -6,6 +6,14 @@ authors.workspace = true
 license.workspace = true
 
 [dependencies]
+thiserror = { workspace = true }
+zl-config = { path = "../zl-config" }
+zl-db = { path = "../zl-db" }
+zl-tags = { path = "../zl-tags" }
+
+[dev-dependencies]
+serde_json = { workspace = true }
+tempfile = { workspace = true }
 
 [lints]
 workspace = true

@@ -1,0 +1,4 @@
+FILE "Single (Track 1).bin" BINARY
+ TRACK 01 MODE2/2352
+FILE "Single (Track 2).bin" BINARY
+ TRACK 02 AUDIO

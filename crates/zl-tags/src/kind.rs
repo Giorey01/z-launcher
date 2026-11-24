@@ -24,6 +24,14 @@ pub enum TagKind {
 /// Platform folder that disambiguates a `.dpt` file holding a Vita id.
 const PLATFORM_PSVITA: &str = "psvita";
 
+/// Extensions (lower-case, no dot) of the files that are tag files.
+pub const TAG_EXTENSIONS: [&str; 5] = ["steamappid", "localgameid", "dpt", "moonlight", "xcloud"];
+
+/// Whether `extension` (lower-case, no dot) belongs to a tag file.
+pub fn is_tag_extension(extension: &str) -> bool {
+    TAG_EXTENSIONS.contains(&extension)
+}
+
 impl TagKind {
     /// Returns the key (as the format spells it) whose value identifies the game, if any.
     pub fn key(self) -> Option<&'static str> {

@@ -24,6 +24,7 @@ thiserror = "2.0"
 tempfile = "3.12"
 zip = { version = "2.6", default-features = false, features = ["deflate"] }
 uniffi = "0.29"
+rusqlite = { version = "0.37", features = ["bundled"] }
 
 [workspace.lints.clippy]
 unwrap_used = "deny"

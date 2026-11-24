@@ -1,0 +1,310 @@
+{
+  "comment": "Cases read by the Rust test of zl-platforms and, through the FFI, by the Kotlin tests. Expected values are written by hand from the data files and docs/reference/launch-observed.md, not generated.",
+  "thor_packages": [
+    "com.retroarch.aarch64", "org.dolphinemu.dolphinemu", "org.ppsspp.ppsspp",
+    "dev.eden.eden_emulator", "me.magnum.melonds", "me.magnum.melondualds",
+    "io.github.lime3ds.android", "org.vita3k.emulator", "info.cemu.cemu",
+    "xyz.aethersx2.android", "com.armsx2", "app.gamenative", "gamehub.lite",
+    "com.limelight.noir", "org.es_de.frontend", "com.magneticchen.daijishou"
+  ],
+  "detect_cases": [
+    {
+      "name": "thor installed list",
+      "installed_packages": "thor_packages",
+      "expected_installed": {
+        "retroarch": ["com.retroarch.aarch64"],
+        "dolphin": ["org.dolphinemu.dolphinemu"],
+        "ppsspp": ["org.ppsspp.ppsspp"],
+        "eden": ["dev.eden.eden_emulator"],
+        "melonds": ["me.magnum.melonds", "me.magnum.melondualds"],
+        "azahar": ["io.github.lime3ds.android"],
+        "lime3ds": ["io.github.lime3ds.android"],
+        "vita3k": ["org.vita3k.emulator"],
+        "cemu": ["info.cemu.cemu"],
+        "nethersx2": ["xyz.aethersx2.android"],
+        "armsx2": ["com.armsx2"],
+        "gamenative": ["app.gamenative"],
+        "gamehub-lite": ["gamehub.lite"],
+        "watermelonds": ["me.magnum.melondualds"],
+        "moonlight": ["com.limelight.noir"]
+      },
+      "expected_defaults": {
+        "ps2": {"emulator": "nethersx2", "profile": "nethersx2"},
+        "psp": {"emulator": "ppsspp", "profile": "ppsspp"},
+        "switch": {"emulator": "eden", "profile": "eden"},
+        "gc": {"emulator": "dolphin", "profile": "dolphin"},
+        "wiiu": {"emulator": "cemu", "profile": "cemu"},
+        "n3ds": {"emulator": "azahar", "profile": "azahar"},
+        "nds": {"emulator": "melonds", "profile": "melonds"},
+        "psvita": {"emulator": "vita3k", "profile": "vita3k"},
+        "steam": {"emulator": "gamenative", "profile": "gamenative"},
+        "nes": {"emulator": "retroarch", "profile": "core", "core": "mesen"},
+        "psx": {"emulator": "retroarch", "profile": "core", "core": "pcsx_rearmed"}
+      },
+      "expected_no_default": ["xcloud", "xbox360"]
+    }
+  ],
+  "cases": [
+    {
+      "name": "retroarch psx with a core chosen as platform default",
+      "installed_packages": ["com.retroarch.aarch64"],
+      "request": {
+        "context": {
+          "rom_path": "/storage/emulated/0/Games/psx/Crash.cue",
+          "platform": "psx"
+        },
+        "platform_default": {"emulator": "retroarch", "profile": "core", "core": "pcsx_rearmed"}
+      },
+      "expected": {
+        "launch": {
+          "intent": {
+            "action": "android.intent.action.VIEW",
+            "package": "com.retroarch.aarch64",
+            "activity": "com.retroarch.browser.retroactivity.RetroActivityFuture",
+            "extras": [
+              {"key": "ROM", "type": "string", "value": "/storage/emulated/0/Games/psx/Crash.cue"},
+              {"key": "LIBRETRO", "type": "string", "value": "/data/data/com.retroarch.aarch64/cores/pcsx_rearmed_libretro_android.so"},
+              {"key": "CONFIGFILE", "type": "string", "value": "/storage/emulated/0/Android/data/com.retroarch.aarch64/files/retroarch.cfg"}
+            ]
+          },
+          "profile": {"emulator": "retroarch", "profile": "core", "core": "pcsx_rearmed"},
+          "by": "platform_default"
+        }
+      }
+    },
+    {
+      "name": "retroarch core override in the context, platform id in upper case",
+      "installed_packages": ["com.retroarch.aarch64"],
+      "request": {
+        "context": {
+          "rom_path": "/storage/emulated/0/Games/snes/Zelda.sfc",
+          "platform": "SFC",
+          "core": "snes9x"
+        },
+        "game_override": {"emulator": "retroarch", "profile": "core"}
+      },
+      "expected": {
+        "launch": {
+          "intent": {
+            "action": "android.intent.action.VIEW",
+            "package": "com.retroarch.aarch64",
+            "activity": "com.retroarch.browser.retroactivity.RetroActivityFuture",
+            "extras": [
+              {"key": "ROM", "type": "string", "value": "/storage/emulated/0/Games/snes/Zelda.sfc"},
+              {"key": "LIBRETRO", "type": "string", "value": "/data/data/com.retroarch.aarch64/cores/snes9x_libretro_android.so"},
+              {"key": "CONFIGFILE", "type": "string", "value": "/storage/emulated/0/Android/data/com.retroarch.aarch64/files/retroarch.cfg"}
+            ]
+          },
+          "profile": {"emulator": "retroarch", "profile": "core", "core": "snes9x"},
+          "by": "game_override"
+        }
+      }
+    },
+    {
+      "name": "dolphin game override with SAF uri and tree grant",
+      "installed_packages": ["org.dolphinemu.dolphinemu", "com.retroarch.aarch64"],
+      "request": {
+        "context": {
+          "rom_path": "/storage/emulated/0/Games/gc/Melee.rvz",
+          "rom_uris": {
+            "saf": "content://com.android.externalstorage.documents/tree/primary%3AGames/document/primary%3AGames%2Fgc%2FMelee.rvz",
+            "saf_tree": "content://com.android.externalstorage.documents/tree/primary%3AGames"
+          },
+          "platform": "GC"
+        },
+        "game_override": {"emulator": "dolphin", "profile": "dolphin"}
+      },
+      "expected": {
+        "launch": {
+          "intent": {
+            "action": "android.intent.action.MAIN",
+            "package": "org.dolphinemu.dolphinemu",
+            "activity": "org.dolphinemu.dolphinemu.ui.main.MainActivity",
+            "extras": [
+              {"key": "AutoStartFile", "type": "string", "value": "content://com.android.externalstorage.documents/tree/primary%3AGames/document/primary%3AGames%2Fgc%2FMelee.rvz"}
+            ],
+            "flags": ["grant_read_uri_permission"],
+            "uri_grants": [
+              {"uri": "content://com.android.externalstorage.documents/tree/primary%3AGames/document/primary%3AGames%2Fgc%2FMelee.rvz", "read": true, "write": false},
+              {"uri": "content://com.android.externalstorage.documents/tree/primary%3AGames", "read": true, "write": false}
+            ]
+          },
+          "profile": {"emulator": "dolphin", "profile": "dolphin"},
+          "by": "game_override"
+        }
+      }
+    },
+    {
+      "name": "ppsspp as the only installed candidate, no tree available so that grant is skipped",
+      "installed_packages": ["org.ppsspp.ppsspp"],
+      "request": {
+        "context": {
+          "rom_path": "/storage/emulated/0/Games/psp/GTA.iso",
+          "rom_uris": {"saf": "content://saf/GTA.iso"},
+          "platform": "psp"
+        }
+      },
+      "expected": {
+        "launch": {
+          "intent": {
+            "action": "android.intent.action.VIEW",
+            "package": "org.ppsspp.ppsspp",
+            "activity": "org.ppsspp.ppsspp.PpssppActivity",
+            "categories": ["android.intent.category.DEFAULT"],
+            "data": "content://saf/GTA.iso",
+            "flags": ["grant_read_uri_permission"],
+            "uri_grants": [{"uri": "content://saf/GTA.iso", "read": true, "write": false}]
+          },
+          "profile": {"emulator": "ppsspp", "profile": "ppsspp"},
+          "by": "only_candidate"
+        }
+      }
+    },
+    {
+      "name": "steam tag file with an integer extra from {tags.steamappid}",
+      "installed_packages": ["app.gamenative"],
+      "request": {
+        "context": {
+          "rom_path": "/storage/emulated/0/Games/steam/Hades.steamappid",
+          "platform": "steam",
+          "tags": {"steamappid": "1145360"}
+        }
+      },
+      "expected": {
+        "launch": {
+          "intent": {
+            "action": "app.gamenative.LAUNCH_GAME",
+            "package": "app.gamenative",
+            "activity": "app.gamenative.MainActivity",
+            "extras": [
+              {"key": "game_source", "type": "string", "value": "STEAM"},
+              {"key": "app_id", "type": "int", "value": 1145360}
+            ]
+          },
+          "profile": {"emulator": "gamenative", "profile": "gamenative"},
+          "by": "only_candidate"
+        }
+      }
+    },
+    {
+      "name": "eden with ClipData and the flags observed on a device",
+      "installed_packages": ["dev.eden.eden_emulator"],
+      "request": {
+        "context": {
+          "rom_path": "/storage/emulated/0/Games/switch/Zelda.nsp",
+          "rom_uris": {"saf": "content://saf/Zelda.nsp", "saf_tree": "content://saf/tree"},
+          "platform": "switch"
+        }
+      },
+      "expected": {
+        "launch": {
+          "intent": {
+            "action": "android.nfc.action.TECH_DISCOVERED",
+            "package": "dev.eden.eden_emulator",
+            "activity": "org.yuzu.yuzu_emu.activities.EmulationActivity",
+            "data": "content://saf/Zelda.nsp",
+            "flags": ["new_task", "no_animation", "grant_read_uri_permission"],
+            "clip_data": {"uri": "content://saf/Zelda.nsp", "mime": "application/octet-stream"},
+            "uri_grants": [
+              {"uri": "content://saf/Zelda.nsp", "read": true, "write": false},
+              {"uri": "content://saf/tree", "read": true, "write": false}
+            ]
+          },
+          "profile": {"emulator": "eden", "profile": "eden"},
+          "by": "only_candidate"
+        }
+      }
+    },
+    {
+      "name": "extension rule picks the RetroArch core for .cso",
+      "installed_packages": ["org.ppsspp.ppsspp", "com.retroarch.aarch64"],
+      "request": {
+        "context": {
+          "rom_path": "/storage/emulated/0/Games/psp/Game.CSO",
+          "platform": "psp",
+          "rom_uris": {"saf": "content://saf/Game.CSO"}
+        },
+        "extension_defaults": {"cso": {"emulator": "retroarch", "profile": "core", "core": "ppsspp"}}
+      },
+      "expected": {
+        "launch": {
+          "intent": {
+            "action": "android.intent.action.VIEW",
+            "package": "com.retroarch.aarch64",
+            "activity": "com.retroarch.browser.retroactivity.RetroActivityFuture",
+            "extras": [
+              {"key": "ROM", "type": "string", "value": "/storage/emulated/0/Games/psp/Game.CSO"},
+              {"key": "LIBRETRO", "type": "string", "value": "/data/data/com.retroarch.aarch64/cores/ppsspp_libretro_android.so"},
+              {"key": "CONFIGFILE", "type": "string", "value": "/storage/emulated/0/Android/data/com.retroarch.aarch64/files/retroarch.cfg"}
+            ]
+          },
+          "profile": {"emulator": "retroarch", "profile": "core", "core": "ppsspp"},
+          "by": "extension_rule"
+        }
+      }
+    },
+    {
+      "name": "nothing configured and two installed candidates: ask, standalone first",
+      "installed_packages": ["org.ppsspp.ppsspp", "com.retroarch.aarch64"],
+      "request": {
+        "context": {"rom_path": "/storage/emulated/0/Games/psp/Game.iso", "platform": "psp"}
+      },
+      "expected": {
+        "needs_choice": {
+          "candidates": [
+            {"emulator": "ppsspp", "profile": "ppsspp"},
+            {"emulator": "retroarch", "profile": "core", "core": "ppsspp"}
+          ]
+        }
+      }
+    },
+    {
+      "name": "an override pointing to an emulator that is not installed is skipped, then RetroArch cores are offered",
+      "installed_packages": ["com.retroarch.aarch64"],
+      "request": {
+        "context": {"rom_path": "/storage/emulated/0/Games/nes/Mario.nes", "platform": "nes"},
+        "game_override": {"emulator": "nes-emu", "profile": "nes-emu"}
+      },
+      "expected": {
+        "needs_choice": {
+          "candidates": [
+            {"emulator": "retroarch", "profile": "core", "core": "mesen"},
+            {"emulator": "retroarch", "profile": "core", "core": "mesen2"},
+            {"emulator": "retroarch", "profile": "core", "core": "nestopia"},
+            {"emulator": "retroarch", "profile": "core", "core": "fceumm"},
+            {"emulator": "retroarch", "profile": "core", "core": "quicknes"},
+            {"emulator": "retroarch", "profile": "core", "core": "rustynes"}
+          ]
+        }
+      }
+    },
+    {
+      "name": "no installed emulator for the platform: empty choice",
+      "installed_packages": ["org.ppsspp.ppsspp"],
+      "request": {
+        "context": {"rom_path": "/storage/emulated/0/Games/psx/Crash.cue", "platform": "psx"}
+      },
+      "expected": {"needs_choice": {"candidates": []}}
+    }
+  ],
+  "error_cases": [
+    {
+      "name": "tag missing",
+      "installed_packages": ["app.gamenative"],
+      "request": {"context": {"rom_path": "/g/steam/X.steamappid", "platform": "steam"}},
+      "expected_error": "missing_tag steamappid"
+    },
+    {
+      "name": "saf uri not supplied by the caller",
+      "installed_packages": ["org.ppsspp.ppsspp"],
+      "request": {"context": {"rom_path": "/g/psp/X.iso", "platform": "psp"}},
+      "expected_error": "missing_variable rom_saf"
+    },
+    {
+      "name": "unknown platform",
+      "installed_packages": ["org.ppsspp.ppsspp"],
+      "request": {"context": {"rom_path": "/g/x/X.iso", "platform": "nonexistent"}},
+      "expected_error": "unknown_platform nonexistent"
+    }
+  ]
+}

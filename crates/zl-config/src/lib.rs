@@ -14,4 +14,7 @@
 )]
 
 pub mod app;
+pub mod db;
+pub mod library;
+pub mod platforms;
 pub mod theme;

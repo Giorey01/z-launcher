@@ -1,0 +1,221 @@
+{
+ "_comment": "Shared library scanner cases. Scan fixtures/library/tree as one root with scan_subfolders on. Paths are relative to tree/. Not games: systeminfo.txt, dot files, docs/ (no rules), Switch Updates_DLC and dlc folders, Bad.steamappid (invalid tag, 1 issue), Wiiu/Empty Folder (no launch file), pico8/preview.png.",
+ "rules": {
+  "gba": [
+   "gba",
+   "zip"
+  ],
+  "nes": [
+   "nes",
+   "zip"
+  ],
+  "psx": [
+   "cue",
+   "bin",
+   "chd",
+   "m3u",
+   "iso"
+  ],
+  "dreamcast": [
+   "gdi",
+   "chd",
+   "cdi"
+  ],
+  "ps2": [
+   "iso",
+   "chd"
+  ],
+  "switch": [
+   "nsp",
+   "xci"
+  ],
+  "wiiu": [
+   "wua"
+  ],
+  "pico8": [
+   "p8",
+   "p8.png"
+  ],
+  "steam": [
+   "steamappid"
+  ]
+ },
+ "folder_rules": [
+  {
+   "platform": "wiiu",
+   "launch_glob": "code/*.rpx"
+  }
+ ],
+ "expected_errors": 1,
+ "games": [
+  {
+   "platform": "gba",
+   "title": "Advance Wars (USA)",
+   "kind": "rom",
+   "primary": "GBA/Advance Wars (USA).gba",
+   "files": [
+    "GBA/Advance Wars (USA).gba"
+   ]
+  },
+  {
+   "platform": "nes",
+   "title": "Game (Europe)",
+   "kind": "rom",
+   "primary": "nes/Game (Europe).nes",
+   "files": [
+    "nes/Game (Europe).nes"
+   ]
+  },
+  {
+   "platform": "nes",
+   "title": "Hack",
+   "kind": "rom",
+   "primary": "nes/Hack.zip",
+   "files": [
+    "nes/Hack.zip"
+   ]
+  },
+  {
+   "platform": "psx",
+   "title": "FF7",
+   "kind": "multidisc",
+   "primary": "psx/FF7 (Disc 1).cue",
+   "files": [
+    "psx/FF7 (Disc 1).bin",
+    "psx/FF7 (Disc 1).cue",
+    "psx/FF7 (Disc 2).bin",
+    "psx/FF7 (Disc 2).cue"
+   ]
+  },
+  {
+   "platform": "psx",
+   "title": "Single",
+   "kind": "rom",
+   "primary": "psx/Single.cue",
+   "files": [
+    "psx/Single (Track 1).bin",
+    "psx/Single (Track 2).bin",
+    "psx/Single.cue"
+   ]
+  },
+  {
+   "platform": "psx",
+   "title": "Lonely (Disc 1)",
+   "kind": "rom",
+   "primary": "psx/Lonely (Disc 1).chd",
+   "files": [
+    "psx/Lonely (Disc 1).chd"
+   ]
+  },
+  {
+   "platform": "psx",
+   "title": "Orphan",
+   "kind": "rom",
+   "primary": "psx/Orphan.bin",
+   "files": [
+    "psx/Orphan.bin"
+   ]
+  },
+  {
+   "platform": "psx",
+   "title": "Chrono",
+   "kind": "m3u",
+   "primary": "psx/Chrono.m3u",
+   "files": [
+    "psx/Chrono (Disc 1).chd",
+    "psx/Chrono (Disc 2).chd",
+    "psx/Chrono.m3u"
+   ]
+  },
+  {
+   "platform": "psx",
+   "title": "Legend",
+   "kind": "folder",
+   "primary": "psx/Legend/Disc 1.cue",
+   "files": [
+    "psx/Legend/Disc 1.bin",
+    "psx/Legend/Disc 1.cue",
+    "psx/Legend/Disc 2.bin",
+    "psx/Legend/Disc 2.cue"
+   ]
+  },
+  {
+   "platform": "psx",
+   "title": "Vagrant",
+   "kind": "m3u",
+   "primary": "psx/Sets/Vagrant.m3u",
+   "files": [
+    "psx/Sets/A.bin",
+    "psx/Sets/B.bin",
+    "psx/Sets/Disc A.cue",
+    "psx/Sets/Disc B.cue",
+    "psx/Sets/Vagrant.m3u"
+   ]
+  },
+  {
+   "platform": "dreamcast",
+   "title": "Skies",
+   "kind": "rom",
+   "primary": "dreamcast/Skies.gdi",
+   "files": [
+    "dreamcast/Skies.gdi",
+    "dreamcast/track 02.raw",
+    "dreamcast/track01.bin",
+    "dreamcast/track03.bin"
+   ]
+  },
+  {
+   "platform": "ps2",
+   "title": "Ratchet_ Deadlocked",
+   "kind": "rom",
+   "primary": "Ps2/Ratchet_ Deadlocked/Ratchet_ Deadlocked.iso",
+   "files": [
+    "Ps2/Ratchet_ Deadlocked/Ratchet_ Deadlocked.iso"
+   ]
+  },
+  {
+   "platform": "switch",
+   "title": "Mario Kart",
+   "kind": "rom",
+   "primary": "Switch/Games/Mario Kart.nsp",
+   "files": [
+    "Switch/Games/Mario Kart.nsp"
+   ]
+  },
+  {
+   "platform": "wiiu",
+   "title": "Mario Kart 8 [0005000010145000]",
+   "kind": "folder",
+   "primary": "Wiiu/Mario Kart 8 [0005000010145000]/code/mk8.rpx",
+   "files": [
+    "Wiiu/Mario Kart 8 [0005000010145000]/code/mk8.rpx",
+    "Wiiu/Mario Kart 8 [0005000010145000]/content/a.bin",
+    "Wiiu/Mario Kart 8 [0005000010145000]/meta/meta.xml"
+   ]
+  },
+  {
+   "platform": "pico8",
+   "title": "Cart",
+   "kind": "rom",
+   "primary": "pico8/Cart.p8.png",
+   "files": [
+    "pico8/Cart.p8.png"
+   ]
+  },
+  {
+   "platform": "steam",
+   "title": "Half-Life",
+   "kind": "tagfile",
+   "primary": "steam/Half-Life.steamappid",
+   "files": [
+    "steam/Half-Life.steamappid"
+   ],
+   "tags": [
+    [
+     "steamappid",
+     "70"
+    ]
+   ]
+  }
+ ]
+}

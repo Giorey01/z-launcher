@@ -1,0 +1,9258 @@
+{
+ "schema": 1,
+ "version": 1,
+ "sources": [
+  "ES-DE (MIT) es_systems.xml / es_find_rules.xml for Android"
+ ],
+ "default_preference": [
+  {
+   "emulator": "retroarch"
+  }
+ ],
+ "preferences": {
+  "ps2": [
+   {
+    "emulator": "nethersx2"
+   },
+   {
+    "emulator": "armsx2"
+   },
+   {
+    "emulator": "emucorex"
+   },
+   {
+    "emulator": "play!"
+   }
+  ],
+  "psp": [
+   {
+    "emulator": "ppsspp"
+   },
+   {
+    "emulator": "retroarch",
+    "core": "ppsspp"
+   }
+  ],
+  "psx": [
+   {
+    "emulator": "duckstation"
+   },
+   {
+    "emulator": "retroarch",
+    "core": "pcsx_rearmed"
+   },
+   {
+    "emulator": "epsxe"
+   }
+  ],
+  "psvita": [
+   {
+    "emulator": "vita3k"
+   }
+  ],
+  "n3ds": [
+   {
+    "emulator": "azahar"
+   },
+   {
+    "emulator": "lime3ds"
+   },
+   {
+    "emulator": "citra"
+   },
+   {
+    "emulator": "retroarch",
+    "core": "azahar"
+   }
+  ],
+  "nds": [
+   {
+    "emulator": "melonds"
+   },
+   {
+    "emulator": "drastic"
+   },
+   {
+    "emulator": "retroarch",
+    "core": "melondsds"
+   }
+  ],
+  "gc": [
+   {
+    "emulator": "dolphin"
+   },
+   {
+    "emulator": "dolphin-mmjr2"
+   },
+   {
+    "emulator": "dolphin-mmjr"
+   },
+   {
+    "emulator": "retroarch",
+    "core": "dolphin"
+   }
+  ],
+  "wii": [
+   {
+    "emulator": "dolphin"
+   },
+   {
+    "emulator": "dolphin-mmjr2"
+   },
+   {
+    "emulator": "dolphin-mmjr"
+   },
+   {
+    "emulator": "retroarch",
+    "core": "dolphin"
+   }
+  ],
+  "wiiu": [
+   {
+    "emulator": "cemu"
+   }
+  ],
+  "switch": [
+   {
+    "emulator": "eden"
+   },
+   {
+    "emulator": "eden-nightly"
+   },
+   {
+    "emulator": "kenji-nx"
+   },
+   {
+    "emulator": "skyline"
+   }
+  ],
+  "dreamcast": [
+   {
+    "emulator": "flycast"
+   },
+   {
+    "emulator": "redream"
+   },
+   {
+    "emulator": "retroarch",
+    "core": "flycast"
+   }
+  ],
+  "n64": [
+   {
+    "emulator": "m64plus-fz"
+   },
+   {
+    "emulator": "mupen64plus-ae"
+   },
+   {
+    "emulator": "retroarch",
+    "core": "mupen64plus_next_gles3"
+   }
+  ],
+  "saturn": [
+   {
+    "emulator": "yabasanshiro-2"
+   },
+   {
+    "emulator": "retroarch",
+    "core": "yabasanshiro"
+   }
+  ],
+  "steam": [
+   {
+    "emulator": "gamenative"
+   },
+   {
+    "emulator": "gamehub-lite"
+   },
+   {
+    "emulator": "winnative"
+   }
+  ],
+  "windows": [
+   {
+    "emulator": "gamenative"
+   },
+   {
+    "emulator": "winlator-cmod"
+   },
+   {
+    "emulator": "gamehub-lite"
+   },
+   {
+    "emulator": "winnative"
+   }
+  ],
+  "scummvm": [
+   {
+    "emulator": "scummvm"
+   },
+   {
+    "emulator": "retroarch",
+    "core": "scummvm"
+   }
+  ],
+  "ps3": [
+   {
+    "emulator": "aps3e"
+   },
+   {
+    "emulator": "armsx3"
+   },
+   {
+    "emulator": "emucorec"
+   }
+  ]
+ },
+ "emulators": [
+  {
+   "id": "2600-emu",
+   "name": "2600.emu",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.explusalpha.A2600Emu",
+     "activity": "com.imagine.BaseActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "atari2600"
+   ],
+   "profiles": [
+    {
+     "id": "2600-emu",
+     "label": "2600.emu (Standalone)",
+     "platforms": [
+      "atari2600"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "data": "{rom_provider}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "aps3e",
+   "name": "aPS3e",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "aenu.aps3e.premium",
+     "activity": "aenu.aps3e.EmulatorActivity",
+     "verified": true
+    },
+    {
+     "package": "aenu.aps3e",
+     "activity": "aenu.aps3e.EmulatorActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "consolearcade",
+    "ps3"
+   ],
+   "profiles": [
+    {
+     "id": "aps3e-game-serial",
+     "label": "aPS3e Game Serial (Standalone)",
+     "platforms": [
+      "consolearcade",
+      "ps3"
+     ],
+     "rom_access": "none",
+     "intent": {
+      "action": "aenu.intent.action.APS3E",
+      "extras": [
+       {
+        "key": "game_dir",
+        "type": "string",
+        "value": "/storage/emulated/0/Android/data/{package}/files/aps3e/config/dev_hdd0/game/{tags.ps3_serial}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "aps3e-directory",
+     "label": "aPS3e Directory (Standalone)",
+     "platforms": [
+      "consolearcade",
+      "ps3"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "aenu.intent.action.APS3E",
+      "extras": [
+       {
+        "key": "game_dir",
+        "type": "string",
+        "value": "{rom}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "aps3e-iso",
+     "label": "aPS3e ISO (Standalone)",
+     "platforms": [
+      "consolearcade",
+      "ps3"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "aenu.intent.action.APS3E",
+      "extras": [
+       {
+        "key": "iso_uri",
+        "type": "string",
+        "value": "{rom_saf}"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "armsx1",
+   "name": "ARMSX1",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.nanodata.armsx",
+     "activity": "com.armsx2.Main",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "psx"
+   ],
+   "profiles": [
+    {
+     "id": "armsx1",
+     "label": "ARMSX1 (Standalone)",
+     "platforms": [
+      "psx"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "armsx2",
+   "name": "ARMSX2",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "come.nanodata.armsx2",
+     "activity": "com.armsx2.MainActivity",
+     "verified": true
+    },
+    {
+     "package": "com.armsx2",
+     "activity": "com.armsx2.MainActivity",
+     "verified": true
+    },
+    {
+     "package": "com.armsx2.nightly",
+     "activity": "com.armsx2.MainActivity",
+     "verified": true
+    },
+    {
+     "package": "come.nanodata.armsx2",
+     "activity": "kr.co.iefriends.pcsx2.MainActivity",
+     "verified": true
+    },
+    {
+     "package": "come.nanodata.armsx2.debug",
+     "activity": "kr.co.iefriends.pcsx2.MainActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "ps2"
+   ],
+   "profiles": [
+    {
+     "id": "armsx2",
+     "label": "ARMSX2 (Standalone)",
+     "platforms": [
+      "ps2"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "armsx3",
+   "name": "ARMSX3",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.armsx3",
+     "activity": "com.armsx2.Main",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "consolearcade",
+    "ps3"
+   ],
+   "profiles": [
+    {
+     "id": "armsx3-game-serial",
+     "label": "ARMSX3 Game Serial (Standalone)",
+     "platforms": [
+      "consolearcade",
+      "ps3"
+     ],
+     "rom_access": "none",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "extras": [
+       {
+        "key": "title_id",
+        "type": "string",
+        "value": "{tags.ps3_serial}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "armsx3-directory-or-iso",
+     "label": "ARMSX3 Directory or ISO (Standalone)",
+     "platforms": [
+      "consolearcade",
+      "ps3"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "extras": [
+       {
+        "key": "path",
+        "type": "string",
+        "value": "{rom}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "ax360e",
+   "name": "aX360e",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "aenu.ax360e",
+     "activity": "aenu.ax360e.EmulatorActivity",
+     "verified": true
+    },
+    {
+     "package": "aenu.ax360e.free",
+     "activity": "aenu.ax360e.EmulatorActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "xbox360"
+   ],
+   "profiles": [
+    {
+     "id": "ax360e",
+     "label": "aX360e (Standalone)",
+     "platforms": [
+      "xbox360"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "aenu.intent.action.AX360E",
+      "extras": [
+       {
+        "key": "game_uri",
+        "type": "string",
+        "value": "{rom_saf}"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "azahar",
+   "name": "Azahar",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "org.azahar_emu.azahar",
+     "activity": "org.citra.citra_emu.activities.EmulationActivity",
+     "verified": true
+    },
+    {
+     "package": "io.github.lime3ds.android",
+     "activity": "org.citra.citra_emu.activities.EmulationActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "n3ds"
+   ],
+   "profiles": [
+    {
+     "id": "azahar",
+     "label": "Azahar (Standalone)",
+     "platforms": [
+      "n3ds"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "action": "android.intent.action.VIEW",
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de+device",
+     "verified_on": "2026-11-24",
+     "note": "device: action VIEW"
+    }
+   ]
+  },
+  {
+   "id": "azaharplus",
+   "name": "AzaharPlus",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "io.github.azaharplus.android",
+     "activity": "org.citra.citra_emu.activities.EmulationActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "n3ds"
+   ],
+   "profiles": [
+    {
+     "id": "azaharplus",
+     "label": "AzaharPlus (Standalone)",
+     "platforms": [
+      "n3ds"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "c64-emu",
+   "name": "C64.emu",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.explusalpha.C64Emu",
+     "activity": "com.imagine.BaseActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "c64"
+   ],
+   "profiles": [
+    {
+     "id": "c64-emu",
+     "label": "C64.emu (Standalone)",
+     "platforms": [
+      "c64"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "cemu",
+   "name": "Cemu",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "info.cemu.cemu",
+     "activity": "info.cemu.cemu.emulation.EmulationActivity",
+     "verified": true
+    },
+    {
+     "package": "info.cemu.Cemu",
+     "activity": "info.cemu.Cemu.emulation.EmulationActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "wiiu"
+   ],
+   "profiles": [
+    {
+     "id": "cemu",
+     "label": "Cemu (Standalone)",
+     "platforms": [
+      "wiiu"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "action": "android.intent.action.VIEW",
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de+device",
+     "verified_on": "2026-11-24",
+     "note": "device: VIEW; the game is the code/*.rpx file"
+    }
+   ]
+  },
+  {
+   "id": "citra",
+   "name": "Citra",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "org.citra.citra_emu",
+     "activity": "org.citra.citra_emu.activities.EmulationActivity",
+     "verified": true
+    },
+    {
+     "package": "org.citra.citra_emu",
+     "activity": "org.citra.citra_emu.ui.main.MainActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "n3ds"
+   ],
+   "profiles": [
+    {
+     "id": "citra",
+     "label": "Citra (Standalone)",
+     "platforms": [
+      "n3ds"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "citra-canary",
+   "name": "Citra Canary",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "org.citra.citra_emu.canary",
+     "activity": "org.citra.citra_emu.activities.EmulationActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "n3ds"
+   ],
+   "profiles": [
+    {
+     "id": "citra-canary",
+     "label": "Citra Canary (Standalone)",
+     "platforms": [
+      "n3ds"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "citra-mmj",
+   "name": "Citra MMJ",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "org.citra.emu",
+     "activity": "org.citra.emu.ui.EmulationActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "n3ds"
+   ],
+   "profiles": [
+    {
+     "id": "citra-mmj",
+     "label": "Citra MMJ (Standalone)",
+     "platforms": [
+      "n3ds"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "extras": [
+       {
+        "key": "GamePath",
+        "type": "string",
+        "value": "{rom}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "colem",
+   "name": "ColEm",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.fms.colem.deluxe",
+     "activity": "com.fms.emulib.TVActivity",
+     "verified": true
+    },
+    {
+     "package": "com.fms.colem",
+     "activity": "com.fms.emulib.TVActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "adam",
+    "colecovision"
+   ],
+   "profiles": [
+    {
+     "id": "colem",
+     "label": "ColEm (Standalone)",
+     "platforms": [
+      "adam",
+      "colecovision"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "dolphin",
+   "name": "Dolphin",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "org.dolphinemu.dolphinemu",
+     "verified": true,
+     "activity": "org.dolphinemu.dolphinemu.ui.main.MainActivity"
+    }
+   ],
+   "platforms": [
+    "consolearcade",
+    "gc",
+    "triforce",
+    "wii"
+   ],
+   "profiles": [
+    {
+     "id": "dolphin",
+     "label": "Dolphin (Standalone)",
+     "platforms": [
+      "consolearcade",
+      "gc",
+      "triforce",
+      "wii"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.MAIN",
+      "extras": [
+       {
+        "key": "AutoStartFile",
+        "type": "string",
+        "value": "{rom_saf}"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de+device",
+     "verified_on": "2026-11-24",
+     "note": "device: MainActivity, MAIN, no LEANBACK category (ES-DE has TvMainActivity)"
+    }
+   ]
+  },
+  {
+   "id": "dolphin-mmjr",
+   "name": "Dolphin MMJR",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "org.mm.jr",
+     "activity": "org.dolphinemu.dolphinemu.ui.main.MainActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "gc",
+    "wii"
+   ],
+   "profiles": [
+    {
+     "id": "dolphin-mmjr",
+     "label": "Dolphin MMJR (Standalone)",
+     "platforms": [
+      "gc",
+      "wii"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "extras": [
+       {
+        "key": "AutoStartFile",
+        "type": "string",
+        "value": "{rom_saf}"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "dolphin-mmjr2",
+   "name": "Dolphin MMJR2",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "org.dolphinemu.mmjr",
+     "activity": "org.dolphinemu.dolphinemu.ui.main.MainActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "gc",
+    "wii"
+   ],
+   "profiles": [
+    {
+     "id": "dolphin-mmjr2",
+     "label": "Dolphin MMJR2 (Standalone)",
+     "platforms": [
+      "gc",
+      "wii"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "extras": [
+       {
+        "key": "AutoStartFile",
+        "type": "string",
+        "value": "{rom_saf}"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "drastic",
+   "name": "DraStic",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.dsemu.drastic",
+     "activity": "com.dsemu.drastic.DraSticActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "nds"
+   ],
+   "profiles": [
+    {
+     "id": "drastic",
+     "label": "DraStic (Standalone)",
+     "platforms": [
+      "nds"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "droidarcadia",
+   "name": "DroidArcadia",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.amigan.droidarcadia",
+     "activity": "com.amigan.droidarcadia.MainActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "arcadia"
+   ],
+   "profiles": [
+    {
+     "id": "droidarcadia",
+     "label": "DroidArcadia",
+     "platforms": [
+      "arcadia"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "mime": "application/zip",
+      "data": "{rom_provider}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "dsmile",
+   "name": "D.Smile",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.dsmile.emulator",
+     "activity": "com.dsmile.emulator.ui.EmuActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "vsmile"
+   ],
+   "profiles": [
+    {
+     "id": "d-smile",
+     "label": "D.Smile (Standalone)",
+     "platforms": [
+      "vsmile"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "duckstation",
+   "name": "DuckStation",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.github.stenzek.duckstation",
+     "activity": "com.github.stenzek.duckstation.EmulationActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "psx"
+   ],
+   "profiles": [
+    {
+     "id": "duckstation",
+     "label": "DuckStation (Standalone)",
+     "platforms": [
+      "psx"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "extras": [
+       {
+        "key": "resumeState",
+        "type": "bool",
+        "value": false
+       },
+       {
+        "key": "bootPath",
+        "type": "string",
+        "value": "{rom_saf}"
+       }
+      ],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "eden",
+   "name": "Eden",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "dev.eden.eden_emulator",
+     "activity": "org.yuzu.yuzu_emu.activities.EmulationActivity",
+     "verified": true
+    },
+    {
+     "package": "dev.legacy.eden_emulator",
+     "activity": "org.yuzu.yuzu_emu.activities.EmulationActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "switch"
+   ],
+   "profiles": [
+    {
+     "id": "eden",
+     "label": "Eden (Standalone)",
+     "platforms": [
+      "switch"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.nfc.action.TECH_DISCOVERED",
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "new_task",
+       "no_animation",
+       "grant_read_uri_permission"
+      ],
+      "clip_data": {
+       "uri": "{rom_saf}",
+       "mime": "application/octet-stream"
+      },
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de+device",
+     "verified_on": "2026-11-24",
+     "note": "device: ROM as SAF URI plus ClipData"
+    }
+   ]
+  },
+  {
+   "id": "eden-nightly",
+   "name": "Eden Nightly",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "dev.eden.eden_emulator.nightly",
+     "activity": "org.yuzu.yuzu_emu.activities.EmulationActivity",
+     "verified": true
+    },
+    {
+     "package": "dev.legacy.eden_emulator.nightly",
+     "activity": "org.yuzu.yuzu_emu.activities.EmulationActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "switch"
+   ],
+   "profiles": [
+    {
+     "id": "eden-nightly",
+     "label": "Eden Nightly (Standalone)",
+     "platforms": [
+      "switch"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.nfc.action.TECH_DISCOVERED",
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "new_task",
+       "no_animation",
+       "grant_read_uri_permission"
+      ],
+      "clip_data": {
+       "uri": "{rom_saf}",
+       "mime": "application/octet-stream"
+      },
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de+device",
+     "verified_on": "2026-11-24",
+     "note": "device: ROM as SAF URI plus ClipData"
+    }
+   ]
+  },
+  {
+   "id": "eka2l1",
+   "name": "EKA2L1",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.github.eka2l1",
+     "activity": "com.github.eka2l1.emu.EmulatorActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "ngage",
+    "symbian"
+   ],
+   "profiles": [
+    {
+     "id": "eka2l1",
+     "label": "EKA2L1 (Standalone)",
+     "platforms": [
+      "ngage",
+      "symbian"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "emucorec",
+   "name": "EmuCoreC",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.sbro.emucorec",
+     "activity": "com.sbro.emucorec.core.ps3.Emulator",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "consolearcade",
+    "ps3"
+   ],
+   "profiles": [
+    {
+     "id": "emucorec-directory-or-iso",
+     "label": "EmuCoreC Directory or ISO (Standalone)",
+     "platforms": [
+      "consolearcade",
+      "ps3"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "extras": [
+       {
+        "key": "gamePath",
+        "type": "string",
+        "value": "{rom}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "emucorev",
+   "name": "EmuCoreV",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.sbro.emucorev",
+     "activity": "com.sbro.emucorev.core.vita.Emulator",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "psvita"
+   ],
+   "profiles": [
+    {
+     "id": "emucorev",
+     "label": "EmuCoreV (Standalone)",
+     "platforms": [
+      "psvita"
+     ],
+     "rom_access": "none",
+     "intent": {
+      "extras": [
+       {
+        "key": "AppStartParameters",
+        "type": "string_array",
+        "value": [
+         "-r",
+         "{tags.vita_game_id}"
+        ]
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "emucorex",
+   "name": "EmuCoreX",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.sbro.emucorex",
+     "activity": "com.sbro.emucorex.MainActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "ps2"
+   ],
+   "profiles": [
+    {
+     "id": "emucorex",
+     "label": "EmuCoreX (Standalone)",
+     "platforms": [
+      "ps2"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "clear_task",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "epsxe",
+   "name": "ePSXe",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.epsxe.ePSXe",
+     "activity": "com.epsxe.ePSXe.ePSXe",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "psx"
+   ],
+   "profiles": [
+    {
+     "id": "epsxe",
+     "label": "ePSXe (Standalone)",
+     "platforms": [
+      "psx"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.MAIN",
+      "extras": [
+       {
+        "key": "com.epsxe.ePSXe.isoName",
+        "type": "string",
+        "value": "{rom}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "flycast",
+   "name": "Flycast",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.flycast.emulator",
+     "activity": "com.flycast.emulator.MainActivity",
+     "verified": true
+    },
+    {
+     "package": "com.flycast.emulator",
+     "activity": "com.reicast.emulator.MainActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "atomiswave",
+    "consolearcade",
+    "dreamcast",
+    "mame",
+    "naomi"
+   ],
+   "profiles": [
+    {
+     "id": "flycast",
+     "label": "Flycast (Standalone)",
+     "platforms": [
+      "mame",
+      "atomiswave",
+      "consolearcade",
+      "dreamcast",
+      "naomi"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "fmsx",
+   "name": "fMSX",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.fms.fmsx.deluxe",
+     "activity": "com.fms.emulib.TVActivity",
+     "verified": true
+    },
+    {
+     "package": "com.fms.fmsx",
+     "activity": "com.fms.emulib.TVActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "msx"
+   ],
+   "profiles": [
+    {
+     "id": "fmsx",
+     "label": "fMSX (Standalone)",
+     "platforms": [
+      "msx"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "fpse",
+   "name": "FPse",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.emulator.fpse",
+     "activity": "com.emulator.fpse.Main",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "psx"
+   ],
+   "profiles": [
+    {
+     "id": "fpse",
+     "label": "FPse (Standalone)",
+     "platforms": [
+      "psx"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "fpse-ng",
+   "name": "FPseNG",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.emulator.fpse64",
+     "activity": "com.emulator.fpse64.Main",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "psx"
+   ],
+   "profiles": [
+    {
+     "id": "fpseng",
+     "label": "FPseNG (Standalone)",
+     "platforms": [
+      "psx"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "gamehub-lite",
+   "name": "GameHub Lite",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "emuready.gamehub.lite",
+     "activity": "com.xj.landscape.launcher.ui.gamedetail.GameDetailActivity",
+     "verified": true
+    },
+    {
+     "package": "gamehub.lite",
+     "activity": "com.xj.landscape.launcher.ui.gamedetail.GameDetailActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "steam",
+    "windows"
+   ],
+   "profiles": [
+    {
+     "id": "gamehub-lite",
+     "label": "GameHub Lite (Standalone)",
+     "platforms": [
+      "steam"
+     ],
+     "rom_access": "none",
+     "intent": {
+      "action": "gamehub.lite.LAUNCH_GAME",
+      "extras": [
+       {
+        "key": "autoStartGame",
+        "type": "bool",
+        "value": true
+       },
+       {
+        "key": "steamAppId",
+        "type": "string",
+        "value": "{tags.steamappid}"
+       },
+       {
+        "key": "localGameId",
+        "type": "string",
+        "value": "{tags.steamappid}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "gamehub-lite-local",
+     "label": "GameHub Lite Local (Standalone)",
+     "platforms": [
+      "steam"
+     ],
+     "rom_access": "none",
+     "intent": {
+      "action": "gamehub.lite.LAUNCH_GAME",
+      "extras": [
+       {
+        "key": "autoStartGame",
+        "type": "bool",
+        "value": true
+       },
+       {
+        "key": "localGameId",
+        "type": "string",
+        "value": "{tags.steamappid}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "gamehub-lite-2",
+     "label": "GameHub Lite (Standalone)",
+     "platforms": [
+      "windows"
+     ],
+     "rom_access": "none",
+     "intent": {
+      "action": "gamehub.lite.LAUNCH_GAME",
+      "extras": [
+       {
+        "key": "autoStartGame",
+        "type": "bool",
+        "value": true
+       },
+       {
+        "key": "steamAppId",
+        "type": "string",
+        "value": "{tags.localgameid}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "gamehub-lite-local-2",
+     "label": "GameHub Lite Local (Standalone)",
+     "platforms": [
+      "windows"
+     ],
+     "rom_access": "none",
+     "intent": {
+      "action": "gamehub.lite.LAUNCH_GAME",
+      "extras": [
+       {
+        "key": "autoStartGame",
+        "type": "bool",
+        "value": true
+       },
+       {
+        "key": "localGameId",
+        "type": "string",
+        "value": "{tags.localgameid}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "gamenative",
+   "name": "GameNative",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "app.gamenative",
+     "activity": "app.gamenative.MainActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "steam",
+    "windows"
+   ],
+   "profiles": [
+    {
+     "id": "gamenative",
+     "label": "GameNative (Standalone)",
+     "platforms": [
+      "steam"
+     ],
+     "rom_access": "none",
+     "intent": {
+      "action": "app.gamenative.LAUNCH_GAME",
+      "extras": [
+       {
+        "key": "game_source",
+        "type": "string",
+        "value": "STEAM"
+       },
+       {
+        "key": "app_id",
+        "type": "int",
+        "value": "{tags.steamappid}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "gamenative-steam",
+     "label": "GameNative Steam (Standalone)",
+     "platforms": [
+      "windows"
+     ],
+     "rom_access": "none",
+     "intent": {
+      "action": "app.gamenative.LAUNCH_GAME",
+      "extras": [
+       {
+        "key": "game_source",
+        "type": "string",
+        "value": "STEAM"
+       },
+       {
+        "key": "app_id",
+        "type": "int",
+        "value": "{tags.localgameid}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "gamenative-epic",
+     "label": "GameNative Epic (Standalone)",
+     "platforms": [
+      "windows"
+     ],
+     "rom_access": "none",
+     "intent": {
+      "action": "app.gamenative.LAUNCH_GAME",
+      "extras": [
+       {
+        "key": "game_source",
+        "type": "string",
+        "value": "EPIC"
+       },
+       {
+        "key": "app_id",
+        "type": "int",
+        "value": "{tags.localgameid}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "gamenative-gog",
+     "label": "GameNative GOG (Standalone)",
+     "platforms": [
+      "windows"
+     ],
+     "rom_access": "none",
+     "intent": {
+      "action": "app.gamenative.LAUNCH_GAME",
+      "extras": [
+       {
+        "key": "game_source",
+        "type": "string",
+        "value": "GOG"
+       },
+       {
+        "key": "app_id",
+        "type": "int",
+        "value": "{tags.localgameid}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "gamenative-amazon",
+     "label": "GameNative Amazon (Standalone)",
+     "platforms": [
+      "windows"
+     ],
+     "rom_access": "none",
+     "intent": {
+      "action": "app.gamenative.LAUNCH_GAME",
+      "extras": [
+       {
+        "key": "game_source",
+        "type": "string",
+        "value": "AMAZON"
+       },
+       {
+        "key": "app_id",
+        "type": "int",
+        "value": "{tags.localgameid}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "gamenative-custom-game",
+     "label": "GameNative Custom Game (Standalone)",
+     "platforms": [
+      "windows"
+     ],
+     "rom_access": "none",
+     "intent": {
+      "action": "app.gamenative.LAUNCH_GAME",
+      "extras": [
+       {
+        "key": "game_source",
+        "type": "string",
+        "value": "CUSTOM_GAME"
+       },
+       {
+        "key": "app_id",
+        "type": "int",
+        "value": "{tags.localgameid}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "gba-emu",
+   "name": "GBA.emu",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.explusalpha.GbaEmu",
+     "activity": "com.imagine.BaseActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "gba"
+   ],
+   "profiles": [
+    {
+     "id": "gba-emu",
+     "label": "GBA.emu (Standalone)",
+     "platforms": [
+      "gba"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "data": "{rom_provider}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "gbc-emu",
+   "name": "GBC.emu",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.explusalpha.GbcEmu",
+     "activity": "com.imagine.BaseActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "gb",
+    "gbc"
+   ],
+   "profiles": [
+    {
+     "id": "gbc-emu",
+     "label": "GBC.emu (Standalone)",
+     "platforms": [
+      "gb",
+      "gbc"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "data": "{rom_provider}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "hakux",
+   "name": "hakuX",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.rfandango.haku_x",
+     "activity": "com.rfandango.haku_x.LauncherActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "xbox"
+   ],
+   "profiles": [
+    {
+     "id": "hakux",
+     "label": "hakuX (Standalone)",
+     "platforms": [
+      "xbox"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "ines",
+   "name": "iNES",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.fms.ines.free",
+     "activity": "com.fms.emulib.TVActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "fds",
+    "nes"
+   ],
+   "profiles": [
+    {
+     "id": "ines",
+     "label": "iNES (Standalone)",
+     "platforms": [
+      "nes",
+      "fds"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "infinity",
+   "name": "Infinity",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "me.dt2dev.infinity",
+     "activity": "me.dt2dev.infinity.SchemeActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "pico8"
+   ],
+   "profiles": [
+    {
+     "id": "infinity",
+     "label": "Infinity (Standalone)",
+     "platforms": [
+      "pico8"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "iratajaguar",
+   "name": "IrataJaguar",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "ru.vastness.altmer.iratajaguar",
+     "activity": "ru.vastness.altmer.iratajaguar.EmulatorActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "atarijaguar"
+   ],
+   "profiles": [
+    {
+     "id": "iratajaguar",
+     "label": "IrataJaguar (Standalone)",
+     "platforms": [
+      "atarijaguar"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "j2me-loader",
+   "name": "J2ME Loader",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "ru.playsoftware.j2meloader",
+     "activity": "ru.playsoftware.j2meloader.MainActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "j2me"
+   ],
+   "profiles": [
+    {
+     "id": "j2me-loader",
+     "label": "J2ME Loader (Standalone)",
+     "platforms": [
+      "j2me"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "data": "{rom_provider}",
+      "extras": [],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "jl-mod",
+   "name": "JL-Mod",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "ru.woesss.j2meloader",
+     "activity": "ru.playsoftware.j2meloader.MainActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "j2me"
+   ],
+   "profiles": [
+    {
+     "id": "jl-mod",
+     "label": "JL-Mod (Standalone)",
+     "platforms": [
+      "j2me"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "data": "{rom_provider}",
+      "extras": [],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "kenji-nx",
+   "name": "Kenji-NX",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "org.kenjinx.android",
+     "activity": "org.kenjinx.android.MainActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "switch"
+   ],
+   "profiles": [
+    {
+     "id": "kenji-nx",
+     "label": "Kenji-NX (Standalone)",
+     "platforms": [
+      "switch"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "org.kenjinx.android.LAUNCH_GAME",
+      "extras": [
+       {
+        "key": "bootPath",
+        "type": "string",
+        "value": "{rom_saf}"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "lime3ds",
+   "name": "Lime3DS",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "io.github.lime3ds.android",
+     "activity": "io.github.lime3ds.android.activities.EmulationActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "n3ds"
+   ],
+   "profiles": [
+    {
+     "id": "lime3ds",
+     "label": "Lime3DS (Standalone)",
+     "platforms": [
+      "n3ds"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "linkboy",
+   "name": "Linkboy",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.pixelrespawn.linkboy",
+     "activity": "com.pixelrespawn.linkboy.EmulatorActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "gb",
+    "gba",
+    "gbc"
+   ],
+   "profiles": [
+    {
+     "id": "linkboy",
+     "label": "Linkboy (Standalone)",
+     "platforms": [
+      "gb",
+      "gba",
+      "gbc"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "lynx-emu",
+   "name": "Lynx.emu",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.explusalpha.LynxEmu",
+     "activity": "com.imagine.BaseActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "atarilynx"
+   ],
+   "profiles": [
+    {
+     "id": "lynx-emu",
+     "label": "Lynx.emu (Standalone)",
+     "platforms": [
+      "atarilynx"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "data": "{rom_provider}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "m64plus-fz",
+   "name": "M64Plus FZ",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "org.mupen64plusae.v3.fzurita.amazon",
+     "activity": "paulscode.android.mupen64plusae.SplashActivity",
+     "verified": true
+    },
+    {
+     "package": "org.mupen64plusae.v3.fzurita.pro",
+     "activity": "paulscode.android.mupen64plusae.SplashActivity",
+     "verified": true
+    },
+    {
+     "package": "org.mupen64plusae.v3.fzurita",
+     "activity": "paulscode.android.mupen64plusae.SplashActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "n64"
+   ],
+   "profiles": [
+    {
+     "id": "m64plus-fz",
+     "label": "M64Plus FZ (Standalone)",
+     "platforms": [
+      "n64"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "mame4droid",
+   "name": "MAME4droid",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.seleuco.mame4droid",
+     "activity": "com.seleuco.mame4droid.MAME4droid",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "cps1",
+    "cps2",
+    "cps3",
+    "mame",
+    "neogeo",
+    "stv"
+   ],
+   "profiles": [
+    {
+     "id": "mame4droid",
+     "label": "MAME4droid (Standalone)",
+     "platforms": [
+      "mame",
+      "cps1",
+      "cps2",
+      "cps3",
+      "neogeo",
+      "stv"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "mame4droid-current",
+   "name": "MAME4droid Current",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.seleuco.mame4d2024",
+     "activity": "com.seleuco.mame4droid.MAME4droid",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "adam",
+    "amstradcpc",
+    "apple2",
+    "apple2gs",
+    "arcadia",
+    "archimedes",
+    "astrocde",
+    "atari7800",
+    "atarijaguar",
+    "bbcmicro",
+    "cdimono1",
+    "channelf",
+    "coco",
+    "consolearcade",
+    "cps1",
+    "cps2",
+    "cps3",
+    "crvision",
+    "dragon32",
+    "fm7",
+    "fmtowns",
+    "gamate",
+    "gameandwatch",
+    "gamecom",
+    "gmaster",
+    "gx4000",
+    "intellivision",
+    "laserdisc",
+    "lcdgames",
+    "macintosh",
+    "mame",
+    "megaduck",
+    "model2",
+    "model3",
+    "neogeo",
+    "neogeocd",
+    "odyssey2",
+    "pv1000",
+    "scv",
+    "stv",
+    "supervision",
+    "supracan",
+    "tanodragon",
+    "ti99",
+    "vectrex",
+    "videopac",
+    "vsmile",
+    "x1",
+    "x68000"
+   ],
+   "profiles": [
+    {
+     "id": "mame4droid-current-diskette",
+     "label": "MAME4droid Current [Diskette] (Standalone)",
+     "platforms": [
+      "adam"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "adam",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/adam' -flop1 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-tape",
+     "label": "MAME4droid Current [Tape] (Standalone)",
+     "platforms": [
+      "adam"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "adam",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/adam' -cass1 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-cartridge",
+     "label": "MAME4droid Current [Cartridge] (Standalone)",
+     "platforms": [
+      "adam"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "adam",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/adam' -cart1 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-software-list",
+     "label": "MAME4droid Current [Software list] (Standalone)",
+     "platforms": [
+      "adam"
+     ],
+     "rom_access": "none",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "adam",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/adam' {rom_name}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "amstradcpc"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "cpc6128",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/amstradcpc' -flop1 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-2",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "apple2"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "apple2e",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/apple2' -gameio joy -flop1 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-3",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "apple2gs"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "apple2gs",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/apple2gs' -gameio joy -flop3 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-software-list-2",
+     "label": "MAME4droid Current [Software list] (Standalone)",
+     "platforms": [
+      "apple2gs"
+     ],
+     "rom_access": "none",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "apple2gs",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/apple2gs' -gameio joy {rom_name}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-4",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "mame"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/arcade'"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-5",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "arcadia"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "arcadia",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/arcadia' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-model-a440-1",
+     "label": "MAME4droid Current [Model A440/1] (Standalone)",
+     "platforms": [
+      "archimedes"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "aa4401",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/archimedes' -flop1 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-model-a3000",
+     "label": "MAME4droid Current [Model A3000] (Standalone)",
+     "platforms": [
+      "archimedes"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "aa3000",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/archimedes' -flop1 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-model-a310",
+     "label": "MAME4droid Current [Model A310] (Standalone)",
+     "platforms": [
+      "archimedes"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "aa310",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/archimedes' -flop1 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-model-a540",
+     "label": "MAME4droid Current [Model A540] (Standalone)",
+     "platforms": [
+      "archimedes"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "aa540",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/archimedes' -flop1 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-6",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "astrocde"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "astrocde",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/astrocde' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-7",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "atari7800"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "a7800",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/atari7800' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-8",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "atarijaguar"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "jaguar",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/atarijaguar' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-9",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "bbcmicro"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "bbcb",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/bbcmicro' -autoboot_delay '2' -autoboot_command '*cat\\n\\n*exec !boot\\n' -analogue acornjoy -flop1 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-10",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "cdimono1"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "cdimono1",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/cdimono1' -cdrom '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-11",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "channelf"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "channelf",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/channelf' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-cartridge-2",
+     "label": "MAME4droid Current [Cartridge] (Standalone)",
+     "platforms": [
+      "coco"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "coco",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/coco' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-tape-2",
+     "label": "MAME4droid Current [Tape] (Standalone)",
+     "platforms": [
+      "coco"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "coco",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/coco' -autoboot_delay '2' -autoboot_command 'cloadm:exec\\n' -cass '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-12",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "consolearcade"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/consolearcade'"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-13",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "cps1"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/cps'"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-14",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "cps1"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/cps1'"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-15",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "cps2"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/cps2'"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-16",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "cps3"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/cps3'"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-17",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "crvision"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "crvision",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/crvision' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-dragon-32-cartridge",
+     "label": "MAME4droid Current Dragon 32 [Cartridge] (Standalone)",
+     "platforms": [
+      "dragon32"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "dragon32",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/dragon32' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-dragon-64-cartridge",
+     "label": "MAME4droid Current Dragon 64 [Cartridge] (Standalone)",
+     "platforms": [
+      "dragon32"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "dragon64",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/dragon32' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-fm-7-diskette",
+     "label": "MAME4droid Current [FM-7 Diskette] (Standalone)",
+     "platforms": [
+      "fm7"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "fm7",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/fm7' -flop1 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-fm-7-tape",
+     "label": "MAME4droid Current [FM-7 Tape] (Standalone)",
+     "platforms": [
+      "fm7"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "fm7",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/fm7' -autoboot_delay '5' -autoboot_command 'load\\n\\n\\nrun\\n' -cass1 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-fm-7-software-list",
+     "label": "MAME4droid Current [FM-7 Software list] (Standalone)",
+     "platforms": [
+      "fm7"
+     ],
+     "rom_access": "none",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "fm7",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/fm7' {rom_name}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-fm77av-diskette",
+     "label": "MAME4droid Current [FM77AV Diskette] (Standalone)",
+     "platforms": [
+      "fm7"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "fm77av",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/fm7' -flop1 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-fm77av-tape",
+     "label": "MAME4droid Current [FM77AV Tape] (Standalone)",
+     "platforms": [
+      "fm7"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "fm77av",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/fm7' -autoboot_delay '5' -autoboot_command 'load\\n\\n\\nrun\\n' -cass1 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-fm77av-software-list",
+     "label": "MAME4droid Current [FM77AV Software list] (Standalone)",
+     "platforms": [
+      "fm7"
+     ],
+     "rom_access": "none",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "fm77av",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/fm7' {rom_name}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-18",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "fmtowns"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "fmtownshr",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/fmtowns' -cdrom '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-19",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "gamate"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "gamate",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/gamate' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-local-artwork",
+     "label": "MAME4droid Current Local Artwork (Standalone)",
+     "platforms": [
+      "gameandwatch"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-artpath '{platform_dir}/gameandwatch/artwork'"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-20",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "gameandwatch",
+      "lcdgames"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-21",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "gamecom"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "gamecom",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/gamecom' -cartridge1 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-22",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "gmaster"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "gmaster",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/gmaster' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-23",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "gx4000"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "gx4000",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/gx4000' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-24",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "intellivision"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "intv",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/intellivision' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-25",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "laserdisc"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/laserdisc'"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-local-artwork-2",
+     "label": "MAME4droid Current Local Artwork (Standalone)",
+     "platforms": [
+      "lcdgames"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-artpath '{platform_dir}/lcdgames/artwork'"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-mac-se-bootable",
+     "label": "MAME4droid Current Mac SE Bootable (Standalone)",
+     "platforms": [
+      "macintosh"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "macse",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/macintosh' -flop1 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-mac-se-boot-disk",
+     "label": "MAME4droid Current Mac SE Boot Disk (Standalone)",
+     "platforms": [
+      "macintosh"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "macse",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/macintosh' -flop1 {rom_dir}/boot.dsk -flop2 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-mac-plus-bootable",
+     "label": "MAME4droid Current Mac Plus Bootable (Standalone)",
+     "platforms": [
+      "macintosh"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "macplus",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/macintosh' -flop1 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-mac-plus-boot-disk",
+     "label": "MAME4droid Current Mac Plus Boot Disk (Standalone)",
+     "platforms": [
+      "macintosh"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "macplus",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/macintosh' -flop1 {rom_dir}/boot.dsk -flop2 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-26",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "mame"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/mame'"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-27",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "megaduck"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "megaduck",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/megaduck' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-28",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "model2"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/model2'"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-29",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "model3"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/model3'"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-30",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "neogeo"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/neogeo'"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-31",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "neogeocd"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "neocdz",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/neogeocd' -cdrm '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-32",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "neogeocd"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "neocdz",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/neogeocdjp' -cdrm '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-33",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "odyssey2"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "odyssey2",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/odyssey2' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-34",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "pv1000"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "pv1000",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/pv1000' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-35",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "scv"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "scv",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/scv' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-36",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "stv"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/stv'"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-37",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "supervision"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "svision",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/supervision' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-38",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "supracan"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "supracan",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/supracan' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-cartridge-3",
+     "label": "MAME4droid Current [Cartridge] (Standalone)",
+     "platforms": [
+      "tanodragon"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "tanodr64",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/dragon32' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-39",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "ti99"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "ti99_4a",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/ti99' -ioport peb -ioport:peb:slot3 speechadapter -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-40",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "vectrex"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "vectrex",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/vectrex' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-41",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "videopac"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "videopac",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/videopac' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-42",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "vsmile"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "vsmile",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/vsmile' -cart '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-diskette-2",
+     "label": "MAME4droid Current [Diskette] (Standalone)",
+     "platforms": [
+      "x1"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "x1",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/x1' -flop1 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-tape-3",
+     "label": "MAME4droid Current [Tape] (Standalone)",
+     "platforms": [
+      "x1"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "x1",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/x1' -cass1 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "mame4droid-current-43",
+     "label": "MAME4droid Current (Standalone)",
+     "platforms": [
+      "x68000"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "x68000",
+      "extras": [
+       {
+        "key": "cli_params",
+        "type": "string",
+        "value": "-rompath '{rom_dir};{platform_dir}/x68000' -flop1 '{rom}'"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "mandarine",
+   "name": "Mandarine",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "io.github.mandarine3ds.mandarine",
+     "activity": "io.github.mandarine3ds.mandarine.activities.EmulationActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "n3ds"
+   ],
+   "profiles": [
+    {
+     "id": "mandarine",
+     "label": "Mandarine (Standalone)",
+     "platforms": [
+      "n3ds"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "mastergear",
+   "name": "MasterGear",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.fms.mg",
+     "activity": "com.fms.emulib.TVActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "gamegear",
+    "mastersystem",
+    "multivision",
+    "sg-1000"
+   ],
+   "profiles": [
+    {
+     "id": "mastergear",
+     "label": "MasterGear (Standalone)",
+     "platforms": [
+      "gamegear",
+      "mastersystem",
+      "multivision",
+      "sg-1000"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "md-emu",
+   "name": "MD.emu",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.explusalpha.MdEmu",
+     "activity": "com.imagine.BaseActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "genesis",
+    "mastersystem",
+    "segacd"
+   ],
+   "profiles": [
+    {
+     "id": "md-emu",
+     "label": "MD.emu (Standalone)",
+     "platforms": [
+      "genesis",
+      "mastersystem"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "data": "{rom_provider}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "md-emu-2",
+     "label": "MD.emu (Standalone)",
+     "platforms": [
+      "segacd"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "melonds",
+   "name": "melonDS",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "me.magnum.melonds",
+     "activity": "me.magnum.melonds.ui.emulator.EmulatorActivity",
+     "verified": true
+    },
+    {
+     "package": "me.magnum.melondualds",
+     "activity": "me.magnum.melonds.ui.emulator.EmulatorActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "nds"
+   ],
+   "profiles": [
+    {
+     "id": "melonds",
+     "label": "melonDS (Standalone)",
+     "platforms": [
+      "nds"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "me.magnum.melonds.LAUNCH_ROM",
+      "extras": [
+       {
+        "key": "uri",
+        "type": "string",
+        "value": "{rom_saf}"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de+device",
+     "verified_on": "2026-11-24"
+    }
+   ]
+  },
+  {
+   "id": "melonds-nightly",
+   "name": "melonDS Nightly",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "me.magnum.melonds.nightly",
+     "activity": "me.magnum.melonds.ui.emulator.EmulatorActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "nds"
+   ],
+   "profiles": [
+    {
+     "id": "melonds-nightly",
+     "label": "melonDS Nightly (Standalone)",
+     "platforms": [
+      "nds"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "me.magnum.melonds.nightly.LAUNCH_ROM",
+      "extras": [
+       {
+        "key": "uri",
+        "type": "string",
+        "value": "{rom_saf}"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "moonlight",
+   "name": "Moonlight",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.limelight",
+     "verified": false
+    },
+    {
+     "package": "com.limelight.noir",
+     "verified": false
+    }
+   ],
+   "platforms": [
+    "moonlight"
+   ],
+   "profiles": [
+    {
+     "id": "open-app",
+     "label": "Moonlight (apre solo l'app)",
+     "platforms": [
+      "moonlight"
+     ],
+     "rom_access": "none",
+     "intent": {
+      "action": "android.intent.action.MAIN",
+      "extras": [],
+      "flags": []
+     },
+     "verified": false,
+     "source": "manual"
+    }
+   ]
+  },
+  {
+   "id": "msx-emu",
+   "name": "MSX.emu",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.explusalpha.MsxEmu",
+     "activity": "com.imagine.BaseActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "colecovision",
+    "msx"
+   ],
+   "profiles": [
+    {
+     "id": "msx-emu",
+     "label": "MSX.emu (Standalone)",
+     "platforms": [
+      "colecovision",
+      "msx"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "mupen64plus-ae",
+   "name": "Mupen64Plus AE",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "org.mupen64plusae.v3.alpha",
+     "activity": "paulscode.android.mupen64plusae.SplashActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "n64"
+   ],
+   "profiles": [
+    {
+     "id": "mupen64plus-ae",
+     "label": "Mupen64Plus AE (Standalone)",
+     "platforms": [
+      "n64"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "my-boy",
+   "name": "My Boy!",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.fastemulator.gba",
+     "activity": "com.fastemulator.gba.EmulatorActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "gba"
+   ],
+   "profiles": [
+    {
+     "id": "my-boy",
+     "label": "My Boy! (Standalone)",
+     "platforms": [
+      "gba"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "my-oldboy",
+   "name": "My OldBoy!",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.fastemulator.gbc",
+     "activity": "com.fastemulator.gbc.EmulatorActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "gb",
+    "gbc"
+   ],
+   "profiles": [
+    {
+     "id": "my-oldboy",
+     "label": "My OldBoy! (Standalone)",
+     "platforms": [
+      "gb",
+      "gbc"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "neo-emu",
+   "name": "NEO.emu",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.explusalpha.NeoEmu",
+     "activity": "com.imagine.BaseActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "mame",
+    "neogeo"
+   ],
+   "profiles": [
+    {
+     "id": "neo-emu",
+     "label": "NEO.emu (Standalone)",
+     "platforms": [
+      "mame",
+      "neogeo"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "nes-emu",
+   "name": "NES.emu",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.explusalpha.NesEmu",
+     "activity": "com.imagine.BaseActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "fds",
+    "nes"
+   ],
+   "profiles": [
+    {
+     "id": "nes-emu",
+     "label": "NES.emu (Standalone)",
+     "platforms": [
+      "nes",
+      "fds"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "data": "{rom_provider}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "nesoid",
+   "name": "Nesoid",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.androidemu.nes",
+     "activity": "com.androidemu.nes.EmulatorActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "fds",
+    "nes"
+   ],
+   "profiles": [
+    {
+     "id": "nesoid",
+     "label": "Nesoid (Standalone)",
+     "platforms": [
+      "nes",
+      "fds"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom}",
+      "extras": [],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "nethersx2",
+   "name": "NetherSX2",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "xyz.aethersx2.android",
+     "activity": "xyz.aethersx2.android.EmulationActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "ps2"
+   ],
+   "profiles": [
+    {
+     "id": "nethersx2",
+     "label": "NetherSX2 (Standalone)",
+     "platforms": [
+      "ps2"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.MAIN",
+      "extras": [
+       {
+        "key": "bootPath",
+        "type": "string",
+        "value": "{rom_saf}"
+       }
+      ],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de+device",
+     "verified_on": "2026-11-24",
+     "note": "device: AetherSX2 package xyz.aethersx2.android"
+    }
+   ]
+  },
+  {
+   "id": "nethersx2-turnip",
+   "name": "NetherSX2-Turnip",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "xyz.aethersx2.tturnip",
+     "activity": "xyz.aethersx2.android.EmulationActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "ps2"
+   ],
+   "profiles": [
+    {
+     "id": "nethersx2-turnip",
+     "label": "NetherSX2-Turnip (Standalone)",
+     "platforms": [
+      "ps2"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.MAIN",
+      "extras": [
+       {
+        "key": "bootPath",
+        "type": "string",
+        "value": "{rom_saf}"
+       }
+      ],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "nethersx2-turnip-classic",
+   "name": "NetherSX2-Turnip Classic",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "xyz.aethersx2.cturnip",
+     "activity": "xyz.aethersx2.android.EmulationActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "ps2"
+   ],
+   "profiles": [
+    {
+     "id": "nethersx2-turnip-classic",
+     "label": "NetherSX2-Turnip Classic (Standalone)",
+     "platforms": [
+      "ps2"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.MAIN",
+      "extras": [
+       {
+        "key": "bootPath",
+        "type": "string",
+        "value": "{rom_saf}"
+       }
+      ],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "ngp-emu",
+   "name": "NGP.emu",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.explusalpha.NgpEmu",
+     "activity": "com.imagine.BaseActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "ngp",
+    "ngpc"
+   ],
+   "profiles": [
+    {
+     "id": "ngp-emu",
+     "label": "NGP.emu (Standalone)",
+     "platforms": [
+      "ngp",
+      "ngpc"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "data": "{rom_provider}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "noods",
+   "name": "NooDS",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.hydra.noods",
+     "activity": "com.hydra.noods.FileBrowser",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "gba",
+    "nds"
+   ],
+   "profiles": [
+    {
+     "id": "noods",
+     "label": "NooDS (Standalone)",
+     "platforms": [
+      "gba",
+      "nds"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "extras": [
+       {
+        "key": "LaunchPath",
+        "type": "string",
+        "value": "{rom}"
+       }
+      ],
+      "flags": [
+       "clear_task",
+       "clear_top"
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "panda3ds",
+   "name": "Panda3DS",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.panda3ds.pandroid",
+     "activity": "com.panda3ds.pandroid.app.MainActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "n3ds"
+   ],
+   "profiles": [
+    {
+     "id": "panda3ds",
+     "label": "Panda3DS (Standalone)",
+     "platforms": [
+      "n3ds"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "data": "{rom_provider}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "pce-emu",
+   "name": "PCE.emu",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.PceEmu",
+     "activity": "com.imagine.BaseActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "supergrafx",
+    "tg-cd",
+    "tg16"
+   ],
+   "profiles": [
+    {
+     "id": "pce-emu",
+     "label": "PCE.emu (Standalone)",
+     "platforms": [
+      "tg16",
+      "supergrafx"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "data": "{rom_provider}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    },
+    {
+     "id": "pce-emu-2",
+     "label": "PCE.emu (Standalone)",
+     "platforms": [
+      "tg-cd"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "pico-8",
+   "name": "PICO-8",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "io.wip.pico8",
+     "activity": "com.godot.game.GodotAppLauncher",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "pico8"
+   ],
+   "profiles": [
+    {
+     "id": "pico-8",
+     "label": "PICO-8 (Standalone)",
+     "platforms": [
+      "pico8"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "pixl8",
+   "name": "Pixl8",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "be.codedreams.pixl8",
+     "activity": "be.codedreams.pixl8.MainActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "pico8"
+   ],
+   "profiles": [
+    {
+     "id": "pixl8",
+     "label": "Pixl8 (Standalone)",
+     "platforms": [
+      "pico8"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "pizza-boy-gba",
+   "name": "Pizza Boy GBA",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "it.dbtecno.pizzaboygbapro",
+     "activity": "it.dbtecno.pizzaboygbapro.MainActivity",
+     "verified": true
+    },
+    {
+     "package": "it.dbtecno.pizzaboygba",
+     "activity": "it.dbtecno.pizzaboygba.MainActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "gba"
+   ],
+   "profiles": [
+    {
+     "id": "pizza-boy-gba",
+     "label": "Pizza Boy GBA (Standalone)",
+     "platforms": [
+      "gba"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "extras": [
+       {
+        "key": "rom_uri",
+        "type": "string",
+        "value": "{rom_saf}"
+       }
+      ],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "pizza-boy-gbc",
+   "name": "Pizza Boy GBC",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "it.dbtecno.pizzaboypro",
+     "activity": "it.dbtecno.pizzaboypro.MainActivity",
+     "verified": true
+    },
+    {
+     "package": "it.dbtecno.pizzaboy",
+     "activity": "it.dbtecno.pizzaboy.MainActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "gb",
+    "gbc"
+   ],
+   "profiles": [
+    {
+     "id": "pizza-boy-gbc",
+     "label": "Pizza Boy GBC (Standalone)",
+     "platforms": [
+      "gb",
+      "gbc"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "extras": [
+       {
+        "key": "rom_uri",
+        "type": "string",
+        "value": "{rom_saf}"
+       }
+      ],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "pizza-boy-sc",
+   "name": "Pizza Boy SC",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "it.dbtecno.pizzaboyscpro",
+     "activity": "it.dbtecno.pizzaboyscpro.MainActivity",
+     "verified": true
+    },
+    {
+     "package": "it.dbtecno.pizzaboyscbasic",
+     "activity": "it.dbtecno.pizzaboyscbasic.MainActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "gamegear",
+    "genesis",
+    "mastersystem",
+    "segacd"
+   ],
+   "profiles": [
+    {
+     "id": "pizza-boy-sc",
+     "label": "Pizza Boy SC (Standalone)",
+     "platforms": [
+      "gamegear",
+      "genesis",
+      "mastersystem",
+      "segacd"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "extras": [
+       {
+        "key": "rom_uri",
+        "type": "string",
+        "value": "{rom_saf}"
+       }
+      ],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "play!",
+   "name": "Play!",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.virtualapplications.play",
+     "activity": "com.virtualapplications.play.MainActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "consolearcade",
+    "ps2"
+   ],
+   "profiles": [
+    {
+     "id": "play",
+     "label": "Play! (Standalone)",
+     "platforms": [
+      "consolearcade",
+      "ps2"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "ppsspp",
+   "name": "PPSSPP",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "org.ppsspp.ppssppgold",
+     "activity": "org.ppsspp.ppsspp.PpssppActivity",
+     "verified": true
+    },
+    {
+     "package": "org.ppsspp.ppsspp",
+     "activity": "org.ppsspp.ppsspp.PpssppActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "psp"
+   ],
+   "profiles": [
+    {
+     "id": "ppsspp",
+     "label": "PPSSPP (Standalone)",
+     "platforms": [
+      "psp"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_saf}",
+      "category": [
+       "android.intent.category.DEFAULT"
+      ],
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de+device",
+     "verified_on": "2026-11-24"
+    }
+   ]
+  },
+  {
+   "id": "real3doplayer",
+   "name": "Real3DOPlayer",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "ru.vastness.altmer.real3doplayer",
+     "activity": "ru.vastness.altmer.real3doplayer.EmulatorActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "3do"
+   ],
+   "profiles": [
+    {
+     "id": "real3doplayer",
+     "label": "Real3DOPlayer (Standalone)",
+     "platforms": [
+      "3do"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "redream",
+   "name": "Redream",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "io.recompiled.redream",
+     "activity": "io.recompiled.redream.MainActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "dreamcast"
+   ],
+   "profiles": [
+    {
+     "id": "redream",
+     "label": "Redream (Standalone)",
+     "platforms": [
+      "dreamcast"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "retroarch",
+   "name": "RetroArch",
+   "kind": "retroarch",
+   "packages": [
+    {
+     "package": "com.retroarch.aarch64",
+     "activity": "com.retroarch.browser.retroactivity.RetroActivityFuture",
+     "verified": true
+    },
+    {
+     "package": "com.retroarch.ra32",
+     "activity": "com.retroarch.browser.retroactivity.RetroActivityFuture",
+     "verified": true
+    },
+    {
+     "package": "com.retroarch",
+     "activity": "com.retroarch.browser.retroactivity.RetroActivityFuture",
+     "verified": true
+    },
+    {
+     "package": "com.retroarch.plus",
+     "activity": "com.retroarch.browser.retroactivity.RetroActivityFuture",
+     "verified": false
+    }
+   ],
+   "platforms": [
+    "3do",
+    "amiga",
+    "amigacd32",
+    "amstradcpc",
+    "apple2",
+    "arcadia",
+    "arduboy",
+    "atari2600",
+    "atari5200",
+    "atari7800",
+    "atari800",
+    "atarijaguar",
+    "atarijaguarcd",
+    "atarilynx",
+    "atarist",
+    "atarixe",
+    "atomiswave",
+    "bbcmicro",
+    "c64",
+    "cdimono1",
+    "cdtv",
+    "chailove",
+    "channelf",
+    "colecovision",
+    "consolearcade",
+    "cps1",
+    "cps2",
+    "cps3",
+    "crvision",
+    "doom",
+    "dos",
+    "dreamcast",
+    "easyrpg",
+    "fbneo",
+    "fds",
+    "gameandwatch",
+    "gamegear",
+    "gb",
+    "gba",
+    "gbc",
+    "gc",
+    "genesis",
+    "gx4000",
+    "intellivision",
+    "j2me",
+    "laserdisc",
+    "lcdgames",
+    "lowresnx",
+    "lutro",
+    "macintosh",
+    "mame",
+    "mastersystem",
+    "megaduck",
+    "mess",
+    "model2",
+    "model3",
+    "moto",
+    "msx",
+    "multivision",
+    "n3ds",
+    "n64",
+    "naomi",
+    "nds",
+    "neogeo",
+    "neogeocd",
+    "nes",
+    "ngp",
+    "ngpc",
+    "odyssey2",
+    "palm",
+    "pc88",
+    "pc98",
+    "pcfx",
+    "pico8",
+    "plus4",
+    "pokemini",
+    "ports",
+    "ps2",
+    "psp",
+    "psx",
+    "quake",
+    "satellaview",
+    "saturn",
+    "scummvm",
+    "sega32x",
+    "segacd",
+    "sg-1000",
+    "snes",
+    "spectravideo",
+    "stv",
+    "supergrafx",
+    "supervision",
+    "tg-cd",
+    "tg16",
+    "tic80",
+    "to8",
+    "triforce",
+    "uzebox",
+    "vectrex",
+    "vic20",
+    "videopac",
+    "vircon32",
+    "virtualboy",
+    "wasm4",
+    "wii",
+    "wiiu",
+    "wonderswan",
+    "wonderswancolor",
+    "x1",
+    "x68000",
+    "zmachine",
+    "zx81",
+    "zxspectrum"
+   ],
+   "profiles": [
+    {
+     "id": "core",
+     "label": "RetroArch",
+     "platforms": [
+      "3do",
+      "amiga",
+      "amigacd32",
+      "amstradcpc",
+      "apple2",
+      "arcadia",
+      "arduboy",
+      "atari2600",
+      "atari5200",
+      "atari7800",
+      "atari800",
+      "atarijaguar",
+      "atarijaguarcd",
+      "atarilynx",
+      "atarist",
+      "atarixe",
+      "atomiswave",
+      "bbcmicro",
+      "c64",
+      "cdimono1",
+      "cdtv",
+      "chailove",
+      "channelf",
+      "colecovision",
+      "consolearcade",
+      "cps1",
+      "cps2",
+      "cps3",
+      "crvision",
+      "doom",
+      "dos",
+      "dreamcast",
+      "easyrpg",
+      "fbneo",
+      "fds",
+      "gameandwatch",
+      "gamegear",
+      "gb",
+      "gba",
+      "gbc",
+      "gc",
+      "genesis",
+      "gx4000",
+      "intellivision",
+      "j2me",
+      "laserdisc",
+      "lcdgames",
+      "lowresnx",
+      "lutro",
+      "macintosh",
+      "mame",
+      "mastersystem",
+      "megaduck",
+      "mess",
+      "model2",
+      "model3",
+      "moto",
+      "msx",
+      "multivision",
+      "n3ds",
+      "n64",
+      "naomi",
+      "nds",
+      "neogeo",
+      "neogeocd",
+      "nes",
+      "ngp",
+      "ngpc",
+      "odyssey2",
+      "palm",
+      "pc88",
+      "pc98",
+      "pcfx",
+      "pico8",
+      "plus4",
+      "pokemini",
+      "ports",
+      "ps2",
+      "psp",
+      "psx",
+      "quake",
+      "satellaview",
+      "saturn",
+      "scummvm",
+      "sega32x",
+      "segacd",
+      "sg-1000",
+      "snes",
+      "spectravideo",
+      "stv",
+      "supergrafx",
+      "supervision",
+      "tg-cd",
+      "tg16",
+      "tic80",
+      "to8",
+      "triforce",
+      "uzebox",
+      "vectrex",
+      "vic20",
+      "videopac",
+      "vircon32",
+      "virtualboy",
+      "wasm4",
+      "wii",
+      "wiiu",
+      "wonderswan",
+      "wonderswancolor",
+      "x1",
+      "x68000",
+      "zmachine",
+      "zx81",
+      "zxspectrum"
+     ],
+     "rom_access": "path",
+     "uses_core": true,
+     "intent": {
+      "extras": [
+       {
+        "key": "ROM",
+        "type": "string",
+        "value": "{rom}"
+       },
+       {
+        "key": "LIBRETRO",
+        "type": "string",
+        "value": "{core_path}"
+       },
+       {
+        "key": "CONFIGFILE",
+        "type": "string",
+        "value": "/storage/emulated/0/Android/data/{package}/files/retroarch.cfg"
+       }
+      ],
+      "flags": [],
+      "action": "android.intent.action.VIEW"
+     },
+     "verified": true,
+     "source": "es-de+device",
+     "verified_on": "2026-11-24",
+     "note": "device: action VIEW; extras DATADIR, SDCARD, EXTERNAL, APK, IME exist but their values are not known"
+    }
+   ],
+   "cores": {
+    "3do": [
+     {
+      "id": "opera",
+      "name": "Opera",
+      "file": "opera_libretro_android.so"
+     }
+    ],
+    "amiga": [
+     {
+      "id": "puae",
+      "name": "PUAE",
+      "file": "puae_libretro_android.so"
+     },
+     {
+      "id": "puae2021",
+      "name": "PUAE 2021",
+      "file": "puae2021_libretro_android.so"
+     },
+     {
+      "id": "amiberry",
+      "name": "Amiberry",
+      "file": "amiberry_libretro_android.so"
+     }
+    ],
+    "amigacd32": [
+     {
+      "id": "puae",
+      "name": "PUAE",
+      "file": "puae_libretro_android.so"
+     },
+     {
+      "id": "puae2021",
+      "name": "PUAE 2021",
+      "file": "puae2021_libretro_android.so"
+     },
+     {
+      "id": "amiberry",
+      "name": "Amiberry",
+      "file": "amiberry_libretro_android.so"
+     }
+    ],
+    "amstradcpc": [
+     {
+      "id": "cap32",
+      "name": "Caprice32",
+      "file": "cap32_libretro_android.so"
+     },
+     {
+      "id": "crocods",
+      "name": "CrocoDS",
+      "file": "crocods_libretro_android.so"
+     }
+    ],
+    "apple2": [
+     {
+      "id": "applewin",
+      "name": "AppleWin",
+      "file": "applewin_libretro_android.so"
+     }
+    ],
+    "arcadia": [
+     {
+      "id": "amiarcadia",
+      "name": "AmiArcadia",
+      "file": "amiarcadia_libretro_android.so"
+     }
+    ],
+    "arduboy": [
+     {
+      "id": "arduous",
+      "name": "Arduous",
+      "file": "arduous_libretro_android.so"
+     },
+     {
+      "id": "ardens",
+      "name": "Ardens",
+      "file": "ardens_libretro_android.so"
+     }
+    ],
+    "atari2600": [
+     {
+      "id": "stella",
+      "name": "Stella",
+      "file": "stella_libretro_android.so"
+     },
+     {
+      "id": "stella2014",
+      "name": "Stella 2014",
+      "file": "stella2014_libretro_android.so"
+     },
+     {
+      "id": "stella2023",
+      "name": "Stella 2023",
+      "file": "stella2023_libretro_android.so"
+     },
+     {
+      "id": "tia",
+      "name": "Tia",
+      "file": "tia_libretro_android.so"
+     }
+    ],
+    "atari5200": [
+     {
+      "id": "a5200",
+      "name": "a5200",
+      "file": "a5200_libretro_android.so"
+     },
+     {
+      "id": "atari800",
+      "name": "Atari800",
+      "file": "atari800_libretro_android.so"
+     }
+    ],
+    "atari7800": [
+     {
+      "id": "prosystem",
+      "name": "ProSystem",
+      "file": "prosystem_libretro_android.so"
+     }
+    ],
+    "atari800": [
+     {
+      "id": "atari800",
+      "name": "Atari800",
+      "file": "atari800_libretro_android.so"
+     }
+    ],
+    "atarijaguar": [
+     {
+      "id": "virtualjaguar",
+      "name": "Virtual Jaguar",
+      "file": "virtualjaguar_libretro_android.so"
+     }
+    ],
+    "atarijaguarcd": [
+     {
+      "id": "virtualjaguar",
+      "name": "Virtual Jaguar",
+      "file": "virtualjaguar_libretro_android.so"
+     }
+    ],
+    "atarilynx": [
+     {
+      "id": "handy",
+      "name": "Handy",
+      "file": "handy_libretro_android.so"
+     },
+     {
+      "id": "mednafen_lynx",
+      "name": "Beetle Lynx",
+      "file": "mednafen_lynx_libretro_android.so"
+     },
+     {
+      "id": "gearlynx",
+      "name": "Gearlynx",
+      "file": "gearlynx_libretro_android.so"
+     },
+     {
+      "id": "holani",
+      "name": "Holani",
+      "file": "holani_libretro_android.so"
+     }
+    ],
+    "atarist": [
+     {
+      "id": "hatari",
+      "name": "Hatari",
+      "file": "hatari_libretro_android.so"
+     },
+     {
+      "id": "hatari2014",
+      "name": "Hatari 2014",
+      "file": "hatari2014_libretro_android.so"
+     }
+    ],
+    "atarixe": [
+     {
+      "id": "atari800",
+      "name": "Atari800",
+      "file": "atari800_libretro_android.so"
+     }
+    ],
+    "atomiswave": [
+     {
+      "id": "flycast",
+      "name": "Flycast",
+      "file": "flycast_libretro_android.so"
+     }
+    ],
+    "bbcmicro": [
+     {
+      "id": "b2",
+      "name": "b2",
+      "file": "b2_libretro_android.so"
+     }
+    ],
+    "c64": [
+     {
+      "id": "vice_x64sc",
+      "name": "VICE x64sc Accurate",
+      "file": "vice_x64sc_libretro_android.so"
+     },
+     {
+      "id": "vice_x64",
+      "name": "VICE x64 Fast",
+      "file": "vice_x64_libretro_android.so"
+     },
+     {
+      "id": "vice_xscpu64",
+      "name": "VICE x64 SuperCPU",
+      "file": "vice_xscpu64_libretro_android.so"
+     },
+     {
+      "id": "vice_x128",
+      "name": "VICE x128",
+      "file": "vice_x128_libretro_android.so"
+     }
+    ],
+    "cdimono1": [
+     {
+      "id": "same_cdi",
+      "name": "SAME CDi",
+      "file": "same_cdi_libretro_android.so"
+     }
+    ],
+    "cdtv": [
+     {
+      "id": "puae",
+      "name": "PUAE",
+      "file": "puae_libretro_android.so"
+     },
+     {
+      "id": "puae2021",
+      "name": "PUAE 2021",
+      "file": "puae2021_libretro_android.so"
+     },
+     {
+      "id": "amiberry",
+      "name": "Amiberry",
+      "file": "amiberry_libretro_android.so"
+     }
+    ],
+    "chailove": [
+     {
+      "id": "chailove",
+      "name": "ChaiLove",
+      "file": "chailove_libretro_android.so"
+     }
+    ],
+    "channelf": [
+     {
+      "id": "freechaf",
+      "name": "FreeChaF",
+      "file": "freechaf_libretro_android.so"
+     }
+    ],
+    "colecovision": [
+     {
+      "id": "bluemsx",
+      "name": "blueMSX",
+      "file": "bluemsx_libretro_android.so"
+     },
+     {
+      "id": "gearcoleco",
+      "name": "Gearcoleco",
+      "file": "gearcoleco_libretro_android.so"
+     },
+     {
+      "id": "jollycv",
+      "name": "JollyCV",
+      "file": "jollycv_libretro_android.so"
+     },
+     {
+      "id": "blastem",
+      "name": "BlastEm",
+      "file": "blastem_libretro_android.so"
+     }
+    ],
+    "consolearcade": [
+     {
+      "id": "mamearcade",
+      "name": "MAME - Current",
+      "file": "mamearcade_libretro_android.so"
+     },
+     {
+      "id": "flycast",
+      "name": "Flycast",
+      "file": "flycast_libretro_android.so"
+     },
+     {
+      "id": "dolphin",
+      "name": "Dolphin",
+      "file": "dolphin_libretro_android.so"
+     }
+    ],
+    "cps1": [
+     {
+      "id": "mamearcade",
+      "name": "MAME - Current",
+      "file": "mamearcade_libretro_android.so"
+     },
+     {
+      "id": "mame2010",
+      "name": "MAME 2010",
+      "file": "mame2010_libretro_android.so"
+     },
+     {
+      "id": "mame2003_plus",
+      "name": "MAME 2003-Plus",
+      "file": "mame2003_plus_libretro_android.so"
+     },
+     {
+      "id": "mame2003",
+      "name": "MAME 2003",
+      "file": "mame2003_libretro_android.so"
+     },
+     {
+      "id": "mame2000",
+      "name": "MAME 2000",
+      "file": "mame2000_libretro_android.so"
+     },
+     {
+      "id": "fbneo",
+      "name": "FinalBurn Neo",
+      "file": "fbneo_libretro_android.so"
+     },
+     {
+      "id": "fbalpha2012",
+      "name": "FB Alpha 2012",
+      "file": "fbalpha2012_libretro_android.so"
+     },
+     {
+      "id": "fbalpha2012_cps1",
+      "name": "FB Alpha 2012 CPS-1",
+      "file": "fbalpha2012_cps1_libretro_android.so"
+     },
+     {
+      "id": "fbalpha2012_cps2",
+      "name": "FB Alpha 2012 CPS-2",
+      "file": "fbalpha2012_cps2_libretro_android.so"
+     },
+     {
+      "id": "fbalpha2012_cps3",
+      "name": "FB Alpha 2012 CPS-3",
+      "file": "fbalpha2012_cps3_libretro_android.so"
+     }
+    ],
+    "cps2": [
+     {
+      "id": "mamearcade",
+      "name": "MAME - Current",
+      "file": "mamearcade_libretro_android.so"
+     },
+     {
+      "id": "mame2010",
+      "name": "MAME 2010",
+      "file": "mame2010_libretro_android.so"
+     },
+     {
+      "id": "mame2003_plus",
+      "name": "MAME 2003-Plus",
+      "file": "mame2003_plus_libretro_android.so"
+     },
+     {
+      "id": "mame2003",
+      "name": "MAME 2003",
+      "file": "mame2003_libretro_android.so"
+     },
+     {
+      "id": "mame2000",
+      "name": "MAME 2000",
+      "file": "mame2000_libretro_android.so"
+     },
+     {
+      "id": "fbneo",
+      "name": "FinalBurn Neo",
+      "file": "fbneo_libretro_android.so"
+     },
+     {
+      "id": "fbalpha2012",
+      "name": "FB Alpha 2012",
+      "file": "fbalpha2012_libretro_android.so"
+     },
+     {
+      "id": "fbalpha2012_cps2",
+      "name": "FB Alpha 2012 CPS-2",
+      "file": "fbalpha2012_cps2_libretro_android.so"
+     }
+    ],
+    "cps3": [
+     {
+      "id": "mamearcade",
+      "name": "MAME - Current",
+      "file": "mamearcade_libretro_android.so"
+     },
+     {
+      "id": "mame2010",
+      "name": "MAME 2010",
+      "file": "mame2010_libretro_android.so"
+     },
+     {
+      "id": "mame2003_plus",
+      "name": "MAME 2003-Plus",
+      "file": "mame2003_plus_libretro_android.so"
+     },
+     {
+      "id": "mame2003",
+      "name": "MAME 2003",
+      "file": "mame2003_libretro_android.so"
+     },
+     {
+      "id": "mame2000",
+      "name": "MAME 2000",
+      "file": "mame2000_libretro_android.so"
+     },
+     {
+      "id": "fbneo",
+      "name": "FinalBurn Neo",
+      "file": "fbneo_libretro_android.so"
+     },
+     {
+      "id": "fbalpha2012",
+      "name": "FB Alpha 2012",
+      "file": "fbalpha2012_libretro_android.so"
+     },
+     {
+      "id": "fbalpha2012_cps3",
+      "name": "FB Alpha 2012 CPS-3",
+      "file": "fbalpha2012_cps3_libretro_android.so"
+     }
+    ],
+    "crvision": [
+     {
+      "id": "jollycv",
+      "name": "JollyCV",
+      "file": "jollycv_libretro_android.so"
+     }
+    ],
+    "doom": [
+     {
+      "id": "prboom",
+      "name": "PrBoom",
+      "file": "prboom_libretro_android.so"
+     },
+     {
+      "id": "boom3",
+      "name": "Boom 3",
+      "file": "boom3_libretro_android.so"
+     }
+    ],
+    "dos": [
+     {
+      "id": "dosbox_pure",
+      "name": "DOSBox-Pure",
+      "file": "dosbox_pure_libretro_android.so"
+     },
+     {
+      "id": "dosbox_core",
+      "name": "DOSBox-Core",
+      "file": "dosbox_core_libretro_android.so"
+     },
+     {
+      "id": "dosbox_svn",
+      "name": "DOSBox-SVN",
+      "file": "dosbox_svn_libretro_android.so"
+     },
+     {
+      "id": "virtualxt",
+      "name": "VirtualXT",
+      "file": "virtualxt_libretro_android.so"
+     }
+    ],
+    "dreamcast": [
+     {
+      "id": "flycast",
+      "name": "Flycast",
+      "file": "flycast_libretro_android.so"
+     }
+    ],
+    "easyrpg": [
+     {
+      "id": "easyrpg",
+      "name": "EasyRPG",
+      "file": "easyrpg_libretro_android.so"
+     }
+    ],
+    "fbneo": [
+     {
+      "id": "fbalpha2012",
+      "name": "FB Alpha 2012",
+      "file": "fbalpha2012_libretro_android.so"
+     },
+     {
+      "id": "fbalpha2012_neogeo",
+      "name": "FB Alpha 2012 Neo Geo",
+      "file": "fbalpha2012_neogeo_libretro_android.so"
+     },
+     {
+      "id": "fbalpha2012_cps1",
+      "name": "FB Alpha 2012 CPS-1",
+      "file": "fbalpha2012_cps1_libretro_android.so"
+     },
+     {
+      "id": "fbalpha2012_cps2",
+      "name": "FB Alpha 2012 CPS-2",
+      "file": "fbalpha2012_cps2_libretro_android.so"
+     },
+     {
+      "id": "fbalpha2012_cps3",
+      "name": "FB Alpha 2012 CPS-3",
+      "file": "fbalpha2012_cps3_libretro_android.so"
+     },
+     {
+      "id": "fbneo",
+      "name": "FinalBurn Neo",
+      "file": "fbneo_libretro_android.so"
+     }
+    ],
+    "fds": [
+     {
+      "id": "mesen",
+      "name": "Mesen",
+      "file": "mesen_libretro_android.so"
+     },
+     {
+      "id": "mesen2",
+      "name": "MesenCE",
+      "file": "mesen2_libretro_android.so"
+     },
+     {
+      "id": "nestopia",
+      "name": "Nestopia UE",
+      "file": "nestopia_libretro_android.so"
+     },
+     {
+      "id": "fceumm",
+      "name": "FCEUmm",
+      "file": "fceumm_libretro_android.so"
+     },
+     {
+      "id": "rustynes",
+      "name": "RustyNES",
+      "file": "rustynes_libretro_android.so"
+     }
+    ],
+    "gameandwatch": [
+     {
+      "id": "mamemess",
+      "name": "Multi (MESS)",
+      "file": "mamemess_libretro_android.so"
+     },
+     {
+      "id": "gw",
+      "name": "Handheld Electronic (GW)",
+      "file": "gw_libretro_android.so"
+     }
+    ],
+    "gamegear": [
+     {
+      "id": "genesis_plus_gx",
+      "name": "Genesis Plus GX",
+      "file": "genesis_plus_gx_libretro_android.so"
+     },
+     {
+      "id": "genesis_plus_gx_wide",
+      "name": "Genesis Plus GX Wide",
+      "file": "genesis_plus_gx_wide_libretro_android.so"
+     },
+     {
+      "id": "gearsystem",
+      "name": "Gearsystem",
+      "file": "gearsystem_libretro_android.so"
+     },
+     {
+      "id": "smsplus",
+      "name": "SMS Plus GX",
+      "file": "smsplus_libretro_android.so"
+     },
+     {
+      "id": "picodrive",
+      "name": "PicoDrive",
+      "file": "picodrive_libretro_android.so"
+     },
+     {
+      "id": "blastem",
+      "name": "BlastEm",
+      "file": "blastem_libretro_android.so"
+     },
+     {
+      "id": "mesen2",
+      "name": "MesenCE",
+      "file": "mesen2_libretro_android.so"
+     }
+    ],
+    "gb": [
+     {
+      "id": "gambatte",
+      "name": "Gambatte",
+      "file": "gambatte_libretro_android.so"
+     },
+     {
+      "id": "sameboy",
+      "name": "SameBoy",
+      "file": "sameboy_libretro_android.so"
+     },
+     {
+      "id": "gearboy",
+      "name": "Gearboy",
+      "file": "gearboy_libretro_android.so"
+     },
+     {
+      "id": "tgbdual",
+      "name": "TGB Dual",
+      "file": "tgbdual_libretro_android.so"
+     },
+     {
+      "id": "DoubleCherryGB",
+      "name": "DoubleCherryGB",
+      "file": "DoubleCherryGB_libretro_android.so"
+     },
+     {
+      "id": "irogb",
+      "name": "IroGB",
+      "file": "irogb_libretro_android.so"
+     },
+     {
+      "id": "mesen-s",
+      "name": "Mesen-S",
+      "file": "mesen-s_libretro_android.so"
+     },
+     {
+      "id": "mesen2",
+      "name": "MesenCE",
+      "file": "mesen2_libretro_android.so"
+     },
+     {
+      "id": "bsnes",
+      "name": "bsnes",
+      "file": "bsnes_libretro_android.so"
+     },
+     {
+      "id": "mgba",
+      "name": "mGBA",
+      "file": "mgba_libretro_android.so"
+     },
+     {
+      "id": "vbam",
+      "name": "VBA-M",
+      "file": "vbam_libretro_android.so"
+     },
+     {
+      "id": "skyemu",
+      "name": "SkyEmu",
+      "file": "skyemu_libretro_android.so"
+     }
+    ],
+    "gba": [
+     {
+      "id": "mgba",
+      "name": "mGBA",
+      "file": "mgba_libretro_android.so"
+     },
+     {
+      "id": "vbam",
+      "name": "VBA-M",
+      "file": "vbam_libretro_android.so"
+     },
+     {
+      "id": "vba_next",
+      "name": "VBA Next",
+      "file": "vba_next_libretro_android.so"
+     },
+     {
+      "id": "gpsp",
+      "name": "gpSP",
+      "file": "gpsp_libretro_android.so"
+     },
+     {
+      "id": "noods",
+      "name": "NooDS",
+      "file": "noods_libretro_android.so"
+     },
+     {
+      "id": "skyemu",
+      "name": "SkyEmu",
+      "file": "skyemu_libretro_android.so"
+     },
+     {
+      "id": "mesen2",
+      "name": "MesenCE",
+      "file": "mesen2_libretro_android.so"
+     }
+    ],
+    "gbc": [
+     {
+      "id": "gambatte",
+      "name": "Gambatte",
+      "file": "gambatte_libretro_android.so"
+     },
+     {
+      "id": "sameboy",
+      "name": "SameBoy",
+      "file": "sameboy_libretro_android.so"
+     },
+     {
+      "id": "gearboy",
+      "name": "Gearboy",
+      "file": "gearboy_libretro_android.so"
+     },
+     {
+      "id": "tgbdual",
+      "name": "TGB Dual",
+      "file": "tgbdual_libretro_android.so"
+     },
+     {
+      "id": "DoubleCherryGB",
+      "name": "DoubleCherryGB",
+      "file": "DoubleCherryGB_libretro_android.so"
+     },
+     {
+      "id": "irogb",
+      "name": "IroGB",
+      "file": "irogb_libretro_android.so"
+     },
+     {
+      "id": "mesen-s",
+      "name": "Mesen-S",
+      "file": "mesen-s_libretro_android.so"
+     },
+     {
+      "id": "mesen2",
+      "name": "MesenCE",
+      "file": "mesen2_libretro_android.so"
+     },
+     {
+      "id": "bsnes",
+      "name": "bsnes",
+      "file": "bsnes_libretro_android.so"
+     },
+     {
+      "id": "mgba",
+      "name": "mGBA",
+      "file": "mgba_libretro_android.so"
+     },
+     {
+      "id": "vbam",
+      "name": "VBA-M",
+      "file": "vbam_libretro_android.so"
+     },
+     {
+      "id": "skyemu",
+      "name": "SkyEmu",
+      "file": "skyemu_libretro_android.so"
+     }
+    ],
+    "gc": [
+     {
+      "id": "dolphin",
+      "name": "Dolphin",
+      "file": "dolphin_libretro_android.so"
+     }
+    ],
+    "genesis": [
+     {
+      "id": "genesis_plus_gx",
+      "name": "Genesis Plus GX",
+      "file": "genesis_plus_gx_libretro_android.so"
+     },
+     {
+      "id": "genesis_plus_gx_wide",
+      "name": "Genesis Plus GX Wide",
+      "file": "genesis_plus_gx_wide_libretro_android.so"
+     },
+     {
+      "id": "picodrive",
+      "name": "PicoDrive",
+      "file": "picodrive_libretro_android.so"
+     },
+     {
+      "id": "blastem",
+      "name": "BlastEm",
+      "file": "blastem_libretro_android.so"
+     },
+     {
+      "id": "clownmdemu",
+      "name": "ClownMDEmu",
+      "file": "clownmdemu_libretro_android.so"
+     }
+    ],
+    "gx4000": [
+     {
+      "id": "cap32",
+      "name": "Caprice32",
+      "file": "cap32_libretro_android.so"
+     },
+     {
+      "id": "crocods",
+      "name": "CrocoDS",
+      "file": "crocods_libretro_android.so"
+     }
+    ],
+    "intellivision": [
+     {
+      "id": "freeintv",
+      "name": "FreeIntv",
+      "file": "freeintv_libretro_android.so"
+     }
+    ],
+    "j2me": [
+     {
+      "id": "squirreljme",
+      "name": "SquirrelJME",
+      "file": "squirreljme_libretro_android.so"
+     }
+    ],
+    "laserdisc": [
+     {
+      "id": "dirksimple",
+      "name": "DirkSimple",
+      "file": "dirksimple_libretro_android.so"
+     }
+    ],
+    "lcdgames": [
+     {
+      "id": "mamemess",
+      "name": "Multi (MESS)",
+      "file": "mamemess_libretro_android.so"
+     },
+     {
+      "id": "gw",
+      "name": "Handheld Electronic (GW)",
+      "file": "gw_libretro_android.so"
+     }
+    ],
+    "lowresnx": [
+     {
+      "id": "lowresnx",
+      "name": "LowRes NX",
+      "file": "lowresnx_libretro_android.so"
+     }
+    ],
+    "lutro": [
+     {
+      "id": "lutro",
+      "name": "Lutro",
+      "file": "lutro_libretro_android.so"
+     }
+    ],
+    "macintosh": [
+     {
+      "id": "minivmac",
+      "name": "Mini vMac",
+      "file": "minivmac_libretro_android.so"
+     }
+    ],
+    "mame": [
+     {
+      "id": "mamearcade",
+      "name": "MAME - Current",
+      "file": "mamearcade_libretro_android.so"
+     },
+     {
+      "id": "mame2010",
+      "name": "MAME 2010",
+      "file": "mame2010_libretro_android.so"
+     },
+     {
+      "id": "mame2003_plus",
+      "name": "MAME 2003-Plus",
+      "file": "mame2003_plus_libretro_android.so"
+     },
+     {
+      "id": "mame2003",
+      "name": "MAME 2003",
+      "file": "mame2003_libretro_android.so"
+     },
+     {
+      "id": "mame2000",
+      "name": "MAME 2000",
+      "file": "mame2000_libretro_android.so"
+     },
+     {
+      "id": "hbmame",
+      "name": "HBMAME",
+      "file": "hbmame_libretro_android.so"
+     },
+     {
+      "id": "fbneo",
+      "name": "FinalBurn Neo",
+      "file": "fbneo_libretro_android.so"
+     },
+     {
+      "id": "fbalpha2012",
+      "name": "FB Alpha 2012",
+      "file": "fbalpha2012_libretro_android.so"
+     },
+     {
+      "id": "geolith",
+      "name": "Geolith",
+      "file": "geolith_libretro_android.so"
+     },
+     {
+      "id": "flycast",
+      "name": "Flycast",
+      "file": "flycast_libretro_android.so"
+     },
+     {
+      "id": "dice",
+      "name": "DICE",
+      "file": "dice_libretro_android.so"
+     },
+     {
+      "id": "supermodel",
+      "name": "Supermodel",
+      "file": "supermodel_libretro_android.so"
+     }
+    ],
+    "mastersystem": [
+     {
+      "id": "genesis_plus_gx",
+      "name": "Genesis Plus GX",
+      "file": "genesis_plus_gx_libretro_android.so"
+     },
+     {
+      "id": "genesis_plus_gx_wide",
+      "name": "Genesis Plus GX Wide",
+      "file": "genesis_plus_gx_wide_libretro_android.so"
+     },
+     {
+      "id": "smsplus",
+      "name": "SMS Plus GX",
+      "file": "smsplus_libretro_android.so"
+     },
+     {
+      "id": "gearsystem",
+      "name": "Gearsystem",
+      "file": "gearsystem_libretro_android.so"
+     },
+     {
+      "id": "picodrive",
+      "name": "PicoDrive",
+      "file": "picodrive_libretro_android.so"
+     },
+     {
+      "id": "blastem",
+      "name": "BlastEm",
+      "file": "blastem_libretro_android.so"
+     },
+     {
+      "id": "mesen2",
+      "name": "MesenCE",
+      "file": "mesen2_libretro_android.so"
+     }
+    ],
+    "megaduck": [
+     {
+      "id": "sameduck",
+      "name": "SameDuck",
+      "file": "sameduck_libretro_android.so"
+     }
+    ],
+    "mess": [
+     {
+      "id": "mamemess",
+      "name": "Multi (MESS)",
+      "file": "mamemess_libretro_android.so"
+     }
+    ],
+    "model2": [
+     {
+      "id": "mamearcade",
+      "name": "MAME - Current",
+      "file": "mamearcade_libretro_android.so"
+     }
+    ],
+    "model3": [
+     {
+      "id": "supermodel",
+      "name": "Supermodel",
+      "file": "supermodel_libretro_android.so"
+     },
+     {
+      "id": "mamearcade",
+      "name": "MAME - Current",
+      "file": "mamearcade_libretro_android.so"
+     }
+    ],
+    "moto": [
+     {
+      "id": "theodore",
+      "name": "Theodore",
+      "file": "theodore_libretro_android.so"
+     }
+    ],
+    "msx": [
+     {
+      "id": "bluemsx",
+      "name": "blueMSX",
+      "file": "bluemsx_libretro_android.so"
+     },
+     {
+      "id": "fmsx",
+      "name": "fMSX",
+      "file": "fmsx_libretro_android.so"
+     }
+    ],
+    "multivision": [
+     {
+      "id": "gearsystem",
+      "name": "Gearsystem",
+      "file": "gearsystem_libretro_android.so"
+     }
+    ],
+    "n3ds": [
+     {
+      "id": "azahar",
+      "name": "Azahar",
+      "file": "azahar_libretro.so"
+     },
+     {
+      "id": "citra",
+      "name": "Citra",
+      "file": "citra_libretro_android.so"
+     },
+     {
+      "id": "citra2018",
+      "name": "Citra 2018",
+      "file": "citra2018_libretro_android.so"
+     }
+    ],
+    "n64": [
+     {
+      "id": "mupen64plus_next_gles3",
+      "name": "Mupen64Plus-Next",
+      "file": "mupen64plus_next_gles3_libretro_android.so"
+     },
+     {
+      "id": "parallel_n64",
+      "name": "ParaLLEl N64",
+      "file": "parallel_n64_libretro_android.so"
+     }
+    ],
+    "naomi": [
+     {
+      "id": "flycast",
+      "name": "Flycast",
+      "file": "flycast_libretro_android.so"
+     }
+    ],
+    "nds": [
+     {
+      "id": "melondsds",
+      "name": "melonDS DS",
+      "file": "melondsds_libretro_android.so"
+     },
+     {
+      "id": "melonds",
+      "name": "melonDS",
+      "file": "melonds_libretro_android.so"
+     },
+     {
+      "id": "desmume",
+      "name": "DeSmuME",
+      "file": "desmume_libretro_android.so"
+     },
+     {
+      "id": "desmume2015",
+      "name": "DeSmuME 2015",
+      "file": "desmume2015_libretro_android.so"
+     },
+     {
+      "id": "noods",
+      "name": "NooDS",
+      "file": "noods_libretro_android.so"
+     },
+     {
+      "id": "skyemu",
+      "name": "SkyEmu",
+      "file": "skyemu_libretro_android.so"
+     }
+    ],
+    "neogeo": [
+     {
+      "id": "fbneo",
+      "name": "FinalBurn Neo",
+      "file": "fbneo_libretro_android.so"
+     },
+     {
+      "id": "geolith",
+      "name": "Geolith",
+      "file": "geolith_libretro_android.so"
+     },
+     {
+      "id": "mamearcade",
+      "name": "MAME - Current",
+      "file": "mamearcade_libretro_android.so"
+     }
+    ],
+    "neogeocd": [
+     {
+      "id": "neocd",
+      "name": "NeoCD",
+      "file": "neocd_libretro_android.so"
+     },
+     {
+      "id": "geolith",
+      "name": "Geolith",
+      "file": "geolith_libretro_android.so"
+     }
+    ],
+    "nes": [
+     {
+      "id": "mesen",
+      "name": "Mesen",
+      "file": "mesen_libretro_android.so"
+     },
+     {
+      "id": "mesen2",
+      "name": "MesenCE",
+      "file": "mesen2_libretro_android.so"
+     },
+     {
+      "id": "nestopia",
+      "name": "Nestopia UE",
+      "file": "nestopia_libretro_android.so"
+     },
+     {
+      "id": "fceumm",
+      "name": "FCEUmm",
+      "file": "fceumm_libretro_android.so"
+     },
+     {
+      "id": "quicknes",
+      "name": "QuickNES",
+      "file": "quicknes_libretro_android.so"
+     },
+     {
+      "id": "rustynes",
+      "name": "RustyNES",
+      "file": "rustynes_libretro_android.so"
+     }
+    ],
+    "ngp": [
+     {
+      "id": "mednafen_ngp",
+      "name": "Beetle NeoPop",
+      "file": "mednafen_ngp_libretro_android.so"
+     },
+     {
+      "id": "race",
+      "name": "RACE",
+      "file": "race_libretro_android.so"
+     }
+    ],
+    "ngpc": [
+     {
+      "id": "mednafen_ngp",
+      "name": "Beetle NeoPop",
+      "file": "mednafen_ngp_libretro_android.so"
+     },
+     {
+      "id": "race",
+      "name": "RACE",
+      "file": "race_libretro_android.so"
+     }
+    ],
+    "odyssey2": [
+     {
+      "id": "o2em",
+      "name": "O2EM",
+      "file": "o2em_libretro_android.so"
+     }
+    ],
+    "palm": [
+     {
+      "id": "mu",
+      "name": "O2EM",
+      "file": "mu_libretro_android.so"
+     }
+    ],
+    "pc88": [
+     {
+      "id": "quasi88",
+      "name": "QUASI88",
+      "file": "quasi88_libretro_android.so"
+     }
+    ],
+    "pc98": [
+     {
+      "id": "np2kai",
+      "name": "Neko Project II Kai",
+      "file": "np2kai_libretro_android.so"
+     },
+     {
+      "id": "nekop2",
+      "name": "Neko Project II",
+      "file": "nekop2_libretro_android.so"
+     }
+    ],
+    "pcfx": [
+     {
+      "id": "mednafen_pcfx",
+      "name": "Beetle PC-FX",
+      "file": "mednafen_pcfx_libretro_android.so"
+     }
+    ],
+    "pico8": [
+     {
+      "id": "fake08",
+      "name": "Fake-08",
+      "file": "fake08_libretro_android.so"
+     },
+     {
+      "id": "retro8",
+      "name": "Retro8",
+      "file": "retro8_libretro_android.so"
+     }
+    ],
+    "plus4": [
+     {
+      "id": "vice_xplus4",
+      "name": "VICE xplus4",
+      "file": "vice_xplus4_libretro_android.so"
+     }
+    ],
+    "pokemini": [
+     {
+      "id": "pokemini",
+      "name": "PokeMini",
+      "file": "pokemini_libretro_android.so"
+     }
+    ],
+    "ports": [
+     {
+      "id": "ecwolf",
+      "name": "ECWolf (Wolfenstein 3D)",
+      "file": "ecwolf_libretro_android.so"
+     },
+     {
+      "id": "cannonball",
+      "name": "CannonBall (OutRun)",
+      "file": "cannonball_libretro_android.so"
+     },
+     {
+      "id": "nxengine",
+      "name": "NXEngine (Cave Story)",
+      "file": "nxengine_libretro_android.so"
+     },
+     {
+      "id": "doukutsu_rs",
+      "name": "drs (Cave Story)",
+      "file": "doukutsu_rs_libretro_android.so"
+     },
+     {
+      "id": "openlara",
+      "name": "OpenLara (Tomb Raider)",
+      "file": "openlara_libretro_android.so"
+     },
+     {
+      "id": "superbroswar",
+      "name": "Super Bros War",
+      "file": "superbroswar_libretro_android.so"
+     }
+    ],
+    "ps2": [
+     {
+      "id": "pcee2",
+      "name": "PCEE2",
+      "file": "pcee2_libretro_android.so"
+     },
+     {
+      "id": "pcsx2",
+      "name": "LRPS2",
+      "file": "pcsx2_libretro_android.so"
+     }
+    ],
+    "psp": [
+     {
+      "id": "ppsspp",
+      "name": "PPSSPP",
+      "file": "ppsspp_libretro_android.so"
+     }
+    ],
+    "psx": [
+     {
+      "id": "mednafen_psx",
+      "name": "Beetle PSX",
+      "file": "mednafen_psx_libretro_android.so"
+     },
+     {
+      "id": "mednafen_psx_hw",
+      "name": "Beetle PSX HW",
+      "file": "mednafen_psx_hw_libretro_android.so"
+     },
+     {
+      "id": "pcsx_rearmed",
+      "name": "PCSX ReARMed",
+      "file": "pcsx_rearmed_libretro_android.so"
+     },
+     {
+      "id": "swanstation",
+      "name": "SwanStation",
+      "file": "swanstation_libretro_android.so"
+     }
+    ],
+    "quake": [
+     {
+      "id": "tyrquake",
+      "name": "TyrQuake",
+      "file": "tyrquake_libretro_android.so"
+     },
+     {
+      "id": "vitaquake2",
+      "name": "vitaQuake 2",
+      "file": "vitaquake2_libretro_android.so"
+     },
+     {
+      "id": "vitaquake2-rogue",
+      "name": "vitaQuake 2 [Rogue]",
+      "file": "vitaquake2-rogue_libretro_android.so"
+     },
+     {
+      "id": "vitaquake2-xatrix",
+      "name": "vitaQuake 2 [Xatrix]",
+      "file": "vitaquake2-xatrix_libretro_android.so"
+     },
+     {
+      "id": "vitaquake2-zaero",
+      "name": "vitaQuake 2 [Zaero]",
+      "file": "vitaquake2-zaero_libretro_android.so"
+     }
+    ],
+    "satellaview": [
+     {
+      "id": "snes9x",
+      "name": "Snes9x - Current",
+      "file": "snes9x_libretro_android.so"
+     },
+     {
+      "id": "snes9x2010",
+      "name": "Snes9x 2010",
+      "file": "snes9x2010_libretro_android.so"
+     },
+     {
+      "id": "snes9x2005_plus",
+      "name": "Snes9x 2005 Plus",
+      "file": "snes9x2005_plus_libretro_android.so"
+     },
+     {
+      "id": "bsnes",
+      "name": "bsnes",
+      "file": "bsnes_libretro_android.so"
+     },
+     {
+      "id": "bsnes_hd_beta",
+      "name": "bsnes-hd",
+      "file": "bsnes_hd_beta_libretro_android.so"
+     },
+     {
+      "id": "bsnes-jg",
+      "name": "bsnes-jg",
+      "file": "bsnes-jg_libretro_android.so"
+     },
+     {
+      "id": "bsnes_mercury_accuracy",
+      "name": "bsnes-mercury Accuracy",
+      "file": "bsnes_mercury_accuracy_libretro_android.so"
+     },
+     {
+      "id": "mesen-s",
+      "name": "Mesen-S",
+      "file": "mesen-s_libretro_android.so"
+     },
+     {
+      "id": "mesen2",
+      "name": "MesenCE",
+      "file": "mesen2_libretro_android.so"
+     }
+    ],
+    "saturn": [
+     {
+      "id": "mednafen_saturn",
+      "name": "Beetle Saturn",
+      "file": "mednafen_saturn_libretro_android.so"
+     },
+     {
+      "id": "yabasanshiro",
+      "name": "YabaSanshiro",
+      "file": "yabasanshiro_libretro_android.so"
+     },
+     {
+      "id": "yabause",
+      "name": "Yabause",
+      "file": "yabause_libretro_android.so"
+     }
+    ],
+    "scummvm": [
+     {
+      "id": "scummvm",
+      "name": "ScummVM",
+      "file": "scummvm_libretro_android.so"
+     }
+    ],
+    "sega32x": [
+     {
+      "id": "picodrive",
+      "name": "PicoDrive",
+      "file": "picodrive_libretro_android.so"
+     },
+     {
+      "id": "blastem",
+      "name": "BlastEm",
+      "file": "blastem_libretro_android.so"
+     }
+    ],
+    "segacd": [
+     {
+      "id": "genesis_plus_gx",
+      "name": "Genesis Plus GX",
+      "file": "genesis_plus_gx_libretro_android.so"
+     },
+     {
+      "id": "genesis_plus_gx_wide",
+      "name": "Genesis Plus GX Wide",
+      "file": "genesis_plus_gx_wide_libretro_android.so"
+     },
+     {
+      "id": "picodrive",
+      "name": "PicoDrive",
+      "file": "picodrive_libretro_android.so"
+     },
+     {
+      "id": "blastem",
+      "name": "BlastEm",
+      "file": "blastem_libretro_android.so"
+     },
+     {
+      "id": "clownmdemu",
+      "name": "ClownMDEmu",
+      "file": "clownmdemu_libretro_android.so"
+     }
+    ],
+    "sg-1000": [
+     {
+      "id": "genesis_plus_gx",
+      "name": "Genesis Plus GX",
+      "file": "genesis_plus_gx_libretro_android.so"
+     },
+     {
+      "id": "genesis_plus_gx_wide",
+      "name": "Genesis Plus GX Wide",
+      "file": "genesis_plus_gx_wide_libretro_android.so"
+     },
+     {
+      "id": "gearsystem",
+      "name": "Gearsystem",
+      "file": "gearsystem_libretro_android.so"
+     },
+     {
+      "id": "blastem",
+      "name": "BlastEm",
+      "file": "blastem_libretro_android.so"
+     },
+     {
+      "id": "bluemsx",
+      "name": "blueMSX",
+      "file": "bluemsx_libretro_android.so"
+     }
+    ],
+    "snes": [
+     {
+      "id": "snes9x",
+      "name": "Snes9x - Current",
+      "file": "snes9x_libretro_android.so"
+     },
+     {
+      "id": "snes9x2010",
+      "name": "Snes9x 2010",
+      "file": "snes9x2010_libretro_android.so"
+     },
+     {
+      "id": "snes9x2005_plus",
+      "name": "Snes9x 2005 Plus",
+      "file": "snes9x2005_plus_libretro_android.so"
+     },
+     {
+      "id": "bsnes",
+      "name": "bsnes",
+      "file": "bsnes_libretro_android.so"
+     },
+     {
+      "id": "bsnes_hd_beta",
+      "name": "bsnes-hd",
+      "file": "bsnes_hd_beta_libretro_android.so"
+     },
+     {
+      "id": "bsnes-jg",
+      "name": "bsnes-jg",
+      "file": "bsnes-jg_libretro_android.so"
+     },
+     {
+      "id": "bsnes_mercury_accuracy",
+      "name": "bsnes-mercury Accuracy",
+      "file": "bsnes_mercury_accuracy_libretro_android.so"
+     },
+     {
+      "id": "mednafen_supafaust",
+      "name": "Beetle Supafaust",
+      "file": "mednafen_supafaust_libretro_android.so"
+     },
+     {
+      "id": "mesen-s",
+      "name": "Mesen-S",
+      "file": "mesen-s_libretro_android.so"
+     },
+     {
+      "id": "mesen2",
+      "name": "MesenCE",
+      "file": "mesen2_libretro_android.so"
+     }
+    ],
+    "spectravideo": [
+     {
+      "id": "bluemsx",
+      "name": "blueMSX",
+      "file": "bluemsx_libretro_android.so"
+     }
+    ],
+    "stv": [
+     {
+      "id": "mamearcade",
+      "name": "MAME - Current",
+      "file": "mamearcade_libretro_android.so"
+     }
+    ],
+    "supergrafx": [
+     {
+      "id": "mednafen_supergrafx",
+      "name": "Beetle SuperGrafx",
+      "file": "mednafen_supergrafx_libretro_android.so"
+     },
+     {
+      "id": "mednafen_pce",
+      "name": "Beetle PCE",
+      "file": "mednafen_pce_libretro_android.so"
+     },
+     {
+      "id": "geargrafx",
+      "name": "Geargrafx",
+      "file": "geargrafx_libretro_android.so"
+     },
+     {
+      "id": "mesen2",
+      "name": "MesenCE",
+      "file": "mesen2_libretro_android.so"
+     }
+    ],
+    "supervision": [
+     {
+      "id": "potator",
+      "name": "Potator",
+      "file": "potator_libretro_android.so"
+     }
+    ],
+    "tg-cd": [
+     {
+      "id": "mednafen_pce",
+      "name": "Beetle PCE",
+      "file": "mednafen_pce_libretro_android.so"
+     },
+     {
+      "id": "mednafen_pce_fast",
+      "name": "Beetle PCE FAST",
+      "file": "mednafen_pce_fast_libretro_android.so"
+     },
+     {
+      "id": "mednafen_supergrafx",
+      "name": "Beetle SuperGrafx",
+      "file": "mednafen_supergrafx_libretro_android.so"
+     },
+     {
+      "id": "geargrafx",
+      "name": "Geargrafx",
+      "file": "geargrafx_libretro_android.so"
+     },
+     {
+      "id": "mesen2",
+      "name": "MesenCE",
+      "file": "mesen2_libretro_android.so"
+     }
+    ],
+    "tg16": [
+     {
+      "id": "mednafen_pce",
+      "name": "Beetle PCE",
+      "file": "mednafen_pce_libretro_android.so"
+     },
+     {
+      "id": "mednafen_pce_fast",
+      "name": "Beetle PCE FAST",
+      "file": "mednafen_pce_fast_libretro_android.so"
+     },
+     {
+      "id": "mednafen_supergrafx",
+      "name": "Beetle SuperGrafx",
+      "file": "mednafen_supergrafx_libretro_android.so"
+     },
+     {
+      "id": "geargrafx",
+      "name": "Geargrafx",
+      "file": "geargrafx_libretro_android.so"
+     },
+     {
+      "id": "mesen2",
+      "name": "MesenCE",
+      "file": "mesen2_libretro_android.so"
+     }
+    ],
+    "tic80": [
+     {
+      "id": "tic80",
+      "name": "TIC-80",
+      "file": "tic80_libretro_android.so"
+     }
+    ],
+    "to8": [
+     {
+      "id": "theodore",
+      "name": "Theodore",
+      "file": "theodore_libretro_android.so"
+     }
+    ],
+    "triforce": [
+     {
+      "id": "dolphin",
+      "name": "Dolphin",
+      "file": "dolphin_libretro_android.so"
+     }
+    ],
+    "uzebox": [
+     {
+      "id": "uzem",
+      "name": "Uzem",
+      "file": "uzem_libretro_android.so"
+     }
+    ],
+    "vectrex": [
+     {
+      "id": "vecx",
+      "name": "vecx",
+      "file": "vecx_libretro_android.so"
+     }
+    ],
+    "vic20": [
+     {
+      "id": "vice_xvic",
+      "name": "VICE xvic",
+      "file": "vice_xvic_libretro_android.so"
+     }
+    ],
+    "videopac": [
+     {
+      "id": "o2em",
+      "name": "O2EM",
+      "file": "o2em_libretro_android.so"
+     }
+    ],
+    "vircon32": [
+     {
+      "id": "vircon32",
+      "name": "Vircon32",
+      "file": "vircon32_libretro_android.so"
+     }
+    ],
+    "virtualboy": [
+     {
+      "id": "mednafen_vb",
+      "name": "Beetle VB",
+      "file": "mednafen_vb_libretro_android.so"
+     }
+    ],
+    "wasm4": [
+     {
+      "id": "wasm4",
+      "name": "WASM-4",
+      "file": "wasm4_libretro_android.so"
+     }
+    ],
+    "wii": [
+     {
+      "id": "dolphin",
+      "name": "Dolphin",
+      "file": "dolphin_libretro_android.so"
+     }
+    ],
+    "wiiu": [
+     {
+      "id": "cemu",
+      "name": "Cemu",
+      "file": "cemu_libretro_android.so"
+     }
+    ],
+    "wonderswan": [
+     {
+      "id": "mednafen_wswan",
+      "name": "Beetle Cygne",
+      "file": "mednafen_wswan_libretro_android.so"
+     },
+     {
+      "id": "mesen2",
+      "name": "MesenCE",
+      "file": "mesen2_libretro_android.so"
+     }
+    ],
+    "wonderswancolor": [
+     {
+      "id": "mednafen_wswan",
+      "name": "Beetle Cygne",
+      "file": "mednafen_wswan_libretro_android.so"
+     },
+     {
+      "id": "mesen2",
+      "name": "MesenCE",
+      "file": "mesen2_libretro_android.so"
+     }
+    ],
+    "x1": [
+     {
+      "id": "x1",
+      "name": "X Millennium",
+      "file": "x1_libretro_android.so"
+     }
+    ],
+    "x68000": [
+     {
+      "id": "px68k",
+      "name": "PX68k",
+      "file": "px68k_libretro_android.so"
+     }
+    ],
+    "zmachine": [
+     {
+      "id": "mojozork",
+      "name": "MojoZork",
+      "file": "mojozork_libretro_android.so"
+     }
+    ],
+    "zx81": [
+     {
+      "id": "81",
+      "name": "EightyOne",
+      "file": "81_libretro_android.so"
+     }
+    ],
+    "zxspectrum": [
+     {
+      "id": "fuse",
+      "name": "Fuse",
+      "file": "fuse_libretro_android.so"
+     }
+    ]
+   }
+  },
+  {
+   "id": "saturn-emu",
+   "name": "Saturn.emu",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.explusalpha.SaturnEmu",
+     "activity": "com.imagine.BaseActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "saturn"
+   ],
+   "profiles": [
+    {
+     "id": "saturn-emu",
+     "label": "Saturn.emu (Standalone)",
+     "platforms": [
+      "saturn"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "scummvm",
+   "name": "ScummVM",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "org.scummvm.scummvm.debug",
+     "activity": "org.scummvm.scummvm.SplashActivity",
+     "verified": true
+    },
+    {
+     "package": "org.scummvm.scummvm",
+     "activity": "org.scummvm.scummvm.SplashActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "scummvm"
+   ],
+   "profiles": [
+    {
+     "id": "scummvm",
+     "label": "ScummVM (Standalone)",
+     "platforms": [
+      "scummvm"
+     ],
+     "rom_access": "none",
+     "intent": {
+      "action": "android.intent.action.MAIN",
+      "data": "{tags.scummvm_id}",
+      "category": [
+       "android.intent.action.MAIN"
+      ],
+      "extras": [],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "seedlessds",
+   "name": "SeedlessDS",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.seedlessds.app",
+     "activity": "com.seedlessds.app.LaunchGame",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "nds"
+   ],
+   "profiles": [
+    {
+     "id": "seedlessds",
+     "label": "SeedlessDS (Standalone)",
+     "platforms": [
+      "nds"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "extras": [
+       {
+        "key": "rom_path",
+        "type": "string",
+        "value": "{rom}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "skyemu",
+   "name": "SkyEmu",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.sky.SkyEmu",
+     "activity": "com.sky.SkyEmu.EnhancedNativeActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "gb",
+    "gba",
+    "gbc",
+    "nds"
+   ],
+   "profiles": [
+    {
+     "id": "skyemu",
+     "label": "SkyEmu (Standalone)",
+     "platforms": [
+      "gb",
+      "gba",
+      "gbc",
+      "nds"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "skyline",
+   "name": "Skyline",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "skyline.emu",
+     "activity": "emu.skyline.EmulationActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "switch"
+   ],
+   "profiles": [
+    {
+     "id": "skyline",
+     "label": "Skyline (Standalone)",
+     "platforms": [
+      "switch"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "snes9x-explus",
+   "name": "Snes9x EX+",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.explusalpha.Snes9xPlus",
+     "activity": "com.imagine.BaseActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "satellaview",
+    "snes"
+   ],
+   "profiles": [
+    {
+     "id": "snes9x-ex",
+     "label": "Snes9x EX+ (Standalone)",
+     "platforms": [
+      "satellaview",
+      "snes"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "speccy",
+   "name": "Speccy",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.fms.speccy.deluxe",
+     "activity": "com.fms.emulib.TVActivity",
+     "verified": true
+    },
+    {
+     "package": "com.fms.speccy",
+     "activity": "com.fms.emulib.TVActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "samcoupe",
+    "zxspectrum"
+   ],
+   "profiles": [
+    {
+     "id": "speccy",
+     "label": "Speccy (Standalone)",
+     "platforms": [
+      "samcoupe",
+      "zxspectrum"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "starboard",
+   "name": "Starboard",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "org.force9.starboard",
+     "activity": "org.force9.starboard.ui.game.GameActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "ports"
+   ],
+   "profiles": [
+    {
+     "id": "starboard",
+     "label": "Starboard (Standalone)",
+     "platforms": [
+      "ports"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "extras": [
+       {
+        "key": "port_file",
+        "type": "string",
+        "value": "{rom}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "super3",
+   "name": "SUPER3",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.izzy2lost.super3",
+     "activity": "com.izzy2lost.super3.MainActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "mame",
+    "model3"
+   ],
+   "profiles": [
+    {
+     "id": "super3",
+     "label": "SUPER3 (Standalone)",
+     "platforms": [
+      "mame",
+      "model3"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "swan-emu",
+   "name": "Swan.emu",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.explusalpha.SwanEmu",
+     "activity": "com.imagine.BaseActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "wonderswan",
+    "wonderswancolor"
+   ],
+   "profiles": [
+    {
+     "id": "swan-emu",
+     "label": "Swan.emu (Standalone)",
+     "platforms": [
+      "wonderswan",
+      "wonderswancolor"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "data": "{rom_provider}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "virtual-virtual-boy",
+   "name": "Virtual Virtual Boy",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.simongellis.vvb",
+     "activity": "com.simongellis.vvb.MainActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "virtualboy"
+   ],
+   "profiles": [
+    {
+     "id": "virtual-virtual-boy",
+     "label": "Virtual Virtual Boy (Standalone)",
+     "platforms": [
+      "virtualboy"
+     ],
+     "rom_access": "content_uri",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_provider}",
+      "extras": [],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_provider}",
+        "read": true,
+        "write": false,
+        "optional": false
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "vita3k",
+   "name": "Vita3K",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "org.vita3k.emulator",
+     "activity": "org.vita3k.emulator.Emulator",
+     "verified": true
+    },
+    {
+     "package": "org.vita3k.emulator.ikhoeyZX",
+     "activity": "org.vita3k.emulator.Emulator",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "psvita"
+   ],
+   "profiles": [
+    {
+     "id": "vita3k",
+     "label": "Vita3K (Standalone)",
+     "platforms": [
+      "psvita"
+     ],
+     "rom_access": "none",
+     "intent": {
+      "extras": [
+       {
+        "key": "AppStartParameters",
+        "type": "string_array",
+        "value": [
+         "-r",
+         "{tags.vita_game_id}"
+        ]
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "watermelonds",
+   "name": "WatermelonDS",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "me.magnum.melondualds",
+     "activity": "me.magnum.melonds.ui.emulator.EmulatorActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "nds"
+   ],
+   "profiles": [
+    {
+     "id": "watermelonds",
+     "label": "WatermelonDS (Standalone)",
+     "platforms": [
+      "nds"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "me.magnum.melonds.LAUNCH_ROM",
+      "extras": [
+       {
+        "key": "uri",
+        "type": "string",
+        "value": "{rom_saf}"
+       }
+      ],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "winlator-cmod",
+   "name": "Winlator Cmod",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.winlator.cmod",
+     "activity": "com.winlator.cmod.XServerDisplayActivity",
+     "verified": true
+    },
+    {
+     "package": "com.winlator.vanilla",
+     "activity": "com.winlator.cmod.XServerDisplayActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "pcarcade",
+    "type-x",
+    "windows"
+   ],
+   "profiles": [
+    {
+     "id": "winlator-cmod",
+     "label": "Winlator Cmod (Standalone)",
+     "platforms": [
+      "pcarcade",
+      "type-x",
+      "windows"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "extras": [
+       {
+        "key": "shortcut_path",
+        "type": "string",
+        "value": "{rom}"
+       }
+      ],
+      "flags": [
+       "clear_task",
+       "clear_top"
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "winlator-glibc",
+   "name": "Winlator Cmod Glibc",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.winlator",
+     "activity": "com.winlator.XServerDisplayActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "pcarcade",
+    "type-x",
+    "windows"
+   ],
+   "profiles": [
+    {
+     "id": "winlator-cmod-glibc",
+     "label": "Winlator Cmod Glibc (Standalone)",
+     "platforms": [
+      "pcarcade",
+      "type-x",
+      "windows"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "extras": [
+       {
+        "key": "shortcut_path",
+        "type": "string",
+        "value": "{rom}"
+       }
+      ],
+      "flags": [
+       "clear_task",
+       "clear_top"
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "winlator-proot",
+   "name": "Winlator Cmod PRoot",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.cmodded.winlator",
+     "activity": "com.winlator.XServerDisplayActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "pcarcade",
+    "type-x",
+    "windows"
+   ],
+   "profiles": [
+    {
+     "id": "winlator-cmod-proot",
+     "label": "Winlator Cmod PRoot (Standalone)",
+     "platforms": [
+      "pcarcade",
+      "type-x",
+      "windows"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "extras": [
+       {
+        "key": "shortcut_path",
+        "type": "string",
+        "value": "{rom}"
+       }
+      ],
+      "flags": [
+       "clear_task",
+       "clear_top"
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "winnative",
+   "name": "WinNative",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.winnative.cmod",
+     "activity": "com.winlator.cmod.runtime.display.XServerDisplayActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "pcarcade",
+    "steam",
+    "type-x",
+    "windows"
+   ],
+   "profiles": [
+    {
+     "id": "winnative",
+     "label": "WinNative (Standalone)",
+     "platforms": [
+      "pcarcade",
+      "steam",
+      "type-x",
+      "windows"
+     ],
+     "rom_access": "path",
+     "intent": {
+      "extras": [
+       {
+        "key": "shortcut_path",
+        "type": "string",
+        "value": "{rom}"
+       }
+      ],
+      "flags": [
+       "clear_task",
+       "clear_top"
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "x1-box",
+   "name": "X1 BOX",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.izzy2lost.x1box",
+     "activity": "com.izzy2lost.x1box.LauncherActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "xbox"
+   ],
+   "profiles": [
+    {
+     "id": "x1-box",
+     "label": "X1 BOX (Standalone)",
+     "platforms": [
+      "xbox"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "xendroid",
+   "name": "XenDroid",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "xendroid.compose",
+     "activity": "xendroid.compose.EmulatorHostActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "xbox360"
+   ],
+   "profiles": [
+    {
+     "id": "xendroid",
+     "label": "XenDroid (Standalone)",
+     "platforms": [
+      "xbox360"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "xenra",
+   "name": "Xenra",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "Ali.Xanite.green",
+     "activity": "Ali.Xanite.LauncherActivity",
+     "verified": true
+    },
+    {
+     "package": "Ali.Xanite",
+     "activity": "Ali.Xanite.LauncherActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "xbox",
+    "xbox360"
+   ],
+   "profiles": [
+    {
+     "id": "xenra",
+     "label": "Xenra (Standalone)",
+     "platforms": [
+      "xbox",
+      "xbox360"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "data": "{rom_saf}",
+      "extras": [],
+      "flags": [
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "yabasanshiro-2",
+   "name": "Yaba Sanshiro 2",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "org.devmiyax.yabasanshioro2.pro",
+     "activity": "org.uoyabause.android.Yabause",
+     "verified": true
+    },
+    {
+     "package": "org.devmiyax.yabasanshioro2",
+     "activity": "org.uoyabause.android.Yabause",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "saturn"
+   ],
+   "profiles": [
+    {
+     "id": "yaba-sanshiro-2",
+     "label": "Yaba Sanshiro 2 (Standalone)",
+     "platforms": [
+      "saturn"
+     ],
+     "rom_access": "saf",
+     "intent": {
+      "action": "android.intent.action.VIEW",
+      "extras": [
+       {
+        "key": "org.uoyabause.android.FileNameUri",
+        "type": "string",
+        "value": "{rom_saf}"
+       }
+      ],
+      "flags": [
+       "clear_task",
+       "clear_top",
+       "grant_read_uri_permission"
+      ],
+      "uri_grants": [
+       {
+        "uri": "{rom_saf}",
+        "read": true,
+        "write": false,
+        "optional": false
+       },
+       {
+        "uri": "{rom_saf_tree}",
+        "read": true,
+        "write": false,
+        "optional": true
+       }
+      ]
+     },
+     "verified": true,
+     "source": "es-de"
+    }
+   ]
+  }
+ ]
+}

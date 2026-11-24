@@ -1,0 +1,2699 @@
+{
+ "schema": 1,
+ "version": 1,
+ "sources": [
+  "ES-DE (MIT) es_systems.xml / es_find_rules.xml for Android"
+ ],
+ "platforms": [
+  {
+   "id": "3do",
+   "name": "3DO Interactive Multiplayer",
+   "extensions": [
+    "7z",
+    "bin",
+    "chd",
+    "cue",
+    "iso",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": true,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "adam",
+   "name": "Coleco Adam",
+   "extensions": [
+    "1dd",
+    "7z",
+    "bin",
+    "col",
+    "cqi",
+    "cqm",
+    "d77",
+    "d88",
+    "ddp",
+    "dfi",
+    "dsk",
+    "hfe",
+    "imd",
+    "mfi",
+    "mfm",
+    "rom",
+    "td0",
+    "wav",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "amiga",
+   "name": "Commodore Amiga",
+   "extensions": [
+    "7z",
+    "adf",
+    "adz",
+    "ccd",
+    "chd",
+    "cue",
+    "dms",
+    "fdi",
+    "hdf",
+    "hdz",
+    "ipf",
+    "iso",
+    "lha",
+    "m3u",
+    "mds",
+    "nrg",
+    "rp9",
+    "uae",
+    "zip"
+   ],
+   "aliases": [
+    "amiga1200",
+    "amiga600"
+   ],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "amigacd32",
+   "name": "Commodore Amiga CD32",
+   "extensions": [
+    "7z",
+    "adf",
+    "adz",
+    "ccd",
+    "chd",
+    "cue",
+    "dms",
+    "fdi",
+    "hdf",
+    "hdz",
+    "ipf",
+    "iso",
+    "lha",
+    "m3u",
+    "mds",
+    "nrg",
+    "rp9",
+    "uae",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": true,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "amstradcpc",
+   "name": "Amstrad CPC",
+   "extensions": [
+    "7z",
+    "cdt",
+    "cpr",
+    "dsk",
+    "kcr",
+    "m3u",
+    "sna",
+    "tap",
+    "tar",
+    "voc",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "apple2",
+   "name": "Apple II",
+   "extensions": [
+    "7z",
+    "do",
+    "dsk",
+    "nib",
+    "po",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "apple2gs",
+   "name": "Apple IIGS",
+   "extensions": [
+    "2mg",
+    "7z",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "arcadia",
+   "name": "Emerson Arcadia 2001",
+   "extensions": [
+    "7z",
+    "bin",
+    "tvc",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "archimedes",
+   "name": "Acorn Archimedes",
+   "extensions": [
+    "1dd",
+    "360",
+    "7z",
+    "adf",
+    "adl",
+    "adm",
+    "ads",
+    "apd",
+    "bbc",
+    "chd",
+    "cqi",
+    "cqm",
+    "d77",
+    "d88",
+    "dfi",
+    "dsd",
+    "dsk",
+    "hfe",
+    "ima",
+    "imd",
+    "img",
+    "ipf",
+    "jfd",
+    "mfi",
+    "mfm",
+    "msa",
+    "ssd",
+    "st",
+    "td0",
+    "ufi",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "arduboy",
+   "name": "Arduboy Miniature Game System",
+   "extensions": [
+    "7z",
+    "arduboy",
+    "hex",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "astrocde",
+   "name": "Bally Astrocade",
+   "extensions": [
+    "7z",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "atari2600",
+   "name": "Atari 2600",
+   "extensions": [
+    "7z",
+    "a26",
+    "bin",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "atari5200",
+   "name": "Atari 5200",
+   "extensions": [
+    "7z",
+    "a52",
+    "atr",
+    "atx",
+    "bin",
+    "car",
+    "cas",
+    "cdm",
+    "com",
+    "rom",
+    "xex",
+    "xfd",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "atari7800",
+   "name": "Atari 7800 ProSystem",
+   "extensions": [
+    "7z",
+    "a78",
+    "bin",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "atari800",
+   "name": "Atari 800",
+   "extensions": [
+    "7z",
+    "a52",
+    "atr",
+    "atx",
+    "bin",
+    "car",
+    "cas",
+    "cdm",
+    "com",
+    "rom",
+    "xex",
+    "xfd",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "atarijaguar",
+   "name": "Atari Jaguar",
+   "extensions": [
+    "7z",
+    "abs",
+    "bin",
+    "cdi",
+    "cof",
+    "cue",
+    "j64",
+    "jag",
+    "prg",
+    "rom",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "atarijaguarcd",
+   "name": "Atari Jaguar CD",
+   "extensions": [
+    "abs",
+    "bin",
+    "cdi",
+    "cof",
+    "cue",
+    "j64",
+    "jag",
+    "prg",
+    "rom"
+   ],
+   "aliases": [],
+   "multi_disc": true,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "atarilynx",
+   "name": "Atari Lynx",
+   "extensions": [
+    "7z",
+    "lnx",
+    "lyx",
+    "o",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "atarist",
+   "name": "Atari ST",
+   "extensions": [
+    "7z",
+    "dim",
+    "ipf",
+    "m3u",
+    "msa",
+    "st",
+    "stx",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "atarixe",
+   "name": "Atari XE",
+   "extensions": [
+    "7z",
+    "a52",
+    "atr",
+    "atx",
+    "bin",
+    "car",
+    "cas",
+    "cdm",
+    "com",
+    "rom",
+    "xex",
+    "xfd",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "atomiswave",
+   "name": "Sammy Corporation Atomiswave",
+   "extensions": [
+    "7z",
+    "bin",
+    "dat",
+    "elf",
+    "lst",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "bbcmicro",
+   "name": "Acorn Computers BBC Micro",
+   "extensions": [
+    "7z",
+    "dsd",
+    "img",
+    "ssd",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "c64",
+   "name": "Commodore 64",
+   "extensions": [
+    "7z",
+    "bin",
+    "cmd",
+    "crt",
+    "d2m",
+    "d4m",
+    "d64",
+    "d6z",
+    "d71",
+    "d7z",
+    "d80",
+    "d81",
+    "d82",
+    "d8z",
+    "g41",
+    "g4z",
+    "g64",
+    "g6z",
+    "gz",
+    "lnx",
+    "m3u",
+    "nbz",
+    "nib",
+    "p00",
+    "prg",
+    "t64",
+    "tap",
+    "vfl",
+    "vsf",
+    "x64",
+    "x6z",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "cdimono1",
+   "name": "Philips CD-i",
+   "extensions": [
+    "chd",
+    "cue",
+    "iso"
+   ],
+   "aliases": [],
+   "multi_disc": true,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "cdtv",
+   "name": "Commodore CDTV",
+   "extensions": [
+    "7z",
+    "adf",
+    "adz",
+    "ccd",
+    "chd",
+    "cue",
+    "dms",
+    "fdi",
+    "hdf",
+    "hdz",
+    "ipf",
+    "iso",
+    "lha",
+    "m3u",
+    "mds",
+    "nrg",
+    "rp9",
+    "uae",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "chailove",
+   "name": "ChaiLove Game Engine",
+   "extensions": [
+    "7z",
+    "chai",
+    "chailove",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "channelf",
+   "name": "Fairchild Channel F",
+   "extensions": [
+    "7z",
+    "bin",
+    "chf",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "coco",
+   "name": "Tandy Color Computer",
+   "extensions": [
+    "cas",
+    "ccc",
+    "dsk",
+    "rom"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "colecovision",
+   "name": "Coleco ColecoVision",
+   "extensions": [
+    "7z",
+    "bin",
+    "cas",
+    "col",
+    "cv",
+    "dsk",
+    "m3u",
+    "mx1",
+    "mx2",
+    "myv",
+    "ri",
+    "rom",
+    "sc",
+    "sg",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "consolearcade",
+   "name": "Console Arcade Systems",
+   "extensions": [
+    "7z",
+    "arcadedef",
+    "iso",
+    "ps3",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "cps1",
+   "name": "Capcom Play System",
+   "extensions": [
+    "7z",
+    "zip"
+   ],
+   "aliases": [
+    "cps"
+   ],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "cps2",
+   "name": "Capcom Play System II",
+   "extensions": [
+    "7z",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "cps3",
+   "name": "Capcom Play System III",
+   "extensions": [
+    "7z",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "crvision",
+   "name": "VTech CreatiVision",
+   "extensions": [
+    "7z",
+    "bin",
+    "rom",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "doom",
+   "name": "Doom",
+   "extensions": [
+    "idtech",
+    "iwad",
+    "pk4",
+    "pwad",
+    "wad"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "dos",
+   "name": "DOS (PC)",
+   "extensions": [
+    "7z",
+    "bat",
+    "com",
+    "conf",
+    "cue",
+    "dosz",
+    "exe",
+    "img",
+    "iso",
+    "zip"
+   ],
+   "aliases": [
+    "pc"
+   ],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "dragon32",
+   "name": "Dragon Data Dragon 32",
+   "extensions": [
+    "7z",
+    "cas",
+    "ccc",
+    "dsk",
+    "rom",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "dreamcast",
+   "name": "Sega Dreamcast",
+   "extensions": [
+    "7z",
+    "cdi",
+    "chd",
+    "cue",
+    "dat",
+    "elf",
+    "gdi",
+    "iso",
+    "lst",
+    "m3u",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": true,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "easyrpg",
+   "name": "EasyRPG Game Engine",
+   "extensions": [
+    "easyrpg",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "fbneo",
+   "name": "FinalBurn Alpha",
+   "extensions": [
+    "7z",
+    "iso",
+    "zip"
+   ],
+   "aliases": [
+    "fba"
+   ],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "fds",
+   "name": "Nintendo Famicom Disk System",
+   "extensions": [
+    "7z",
+    "fds",
+    "nes",
+    "unf",
+    "unif",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "fm7",
+   "name": "Fujitsu FM-7",
+   "extensions": [
+    "1dd",
+    "7z",
+    "cqi",
+    "cqm",
+    "d77",
+    "d88",
+    "dfi",
+    "dsk",
+    "hfe",
+    "imd",
+    "mfi",
+    "mfm",
+    "t77",
+    "td0",
+    "wav",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "fmtowns",
+   "name": "Fujitsu FM Towns",
+   "extensions": [
+    "cdr",
+    "chd",
+    "cue",
+    "gdi",
+    "iso"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "gamate",
+   "name": "Bit Corporation Gamate",
+   "extensions": [
+    "7z",
+    "bin",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "gameandwatch",
+   "name": "Nintendo Game and Watch",
+   "extensions": [
+    "7z",
+    "mgw",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "gamecom",
+   "name": "Tiger Electronics Game.com",
+   "extensions": [
+    "7z",
+    "tgc",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "gamegear",
+   "name": "Sega Game Gear",
+   "extensions": [
+    "68k",
+    "7z",
+    "bin",
+    "bms",
+    "chd",
+    "col",
+    "cue",
+    "gen",
+    "gg",
+    "iso",
+    "m3u",
+    "md",
+    "mdx",
+    "rom",
+    "sg",
+    "sgd",
+    "smd",
+    "sms",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "gb",
+   "name": "Nintendo Game Boy",
+   "extensions": [
+    "7z",
+    "bs",
+    "cgb",
+    "dmg",
+    "gb",
+    "gbc",
+    "gbx",
+    "sfc",
+    "sgb",
+    "smc",
+    "zip"
+   ],
+   "aliases": [
+    "sgb"
+   ],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "gba",
+   "name": "Nintendo Game Boy Advance",
+   "extensions": [
+    "7z",
+    "agb",
+    "bin",
+    "cgb",
+    "dmg",
+    "gb",
+    "gba",
+    "gbc",
+    "gbx",
+    "sgb",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "gbc",
+   "name": "Nintendo Game Boy Color",
+   "extensions": [
+    "7z",
+    "bs",
+    "cgb",
+    "dmg",
+    "gb",
+    "gbc",
+    "gbx",
+    "sfc",
+    "sgb",
+    "smc",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "gc",
+   "name": "Nintendo GameCube",
+   "extensions": [
+    "7z",
+    "ciso",
+    "dff",
+    "dol",
+    "elf",
+    "gcm",
+    "gcz",
+    "iso",
+    "json",
+    "m3u",
+    "rvz",
+    "tgc",
+    "wad",
+    "wbfs",
+    "wia",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "genesis",
+   "name": "Sega Genesis",
+   "extensions": [
+    "32x",
+    "68k",
+    "7z",
+    "bin",
+    "bms",
+    "chd",
+    "cue",
+    "gen",
+    "gg",
+    "iso",
+    "m3u",
+    "md",
+    "mdx",
+    "sg",
+    "sgd",
+    "smd",
+    "sms",
+    "zip"
+   ],
+   "aliases": [
+    "megadrive",
+    "megadrivejp"
+   ],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "gmaster",
+   "name": "Hartung Game Master",
+   "extensions": [
+    "7z",
+    "bin",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "gx4000",
+   "name": "Amstrad GX4000",
+   "extensions": [
+    "7z",
+    "bin",
+    "cdt",
+    "cpr",
+    "dsk",
+    "kcr",
+    "m3u",
+    "sna",
+    "tap",
+    "tar",
+    "voc",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "intellivision",
+   "name": "Mattel Electronics Intellivision",
+   "extensions": [
+    "7z",
+    "bin",
+    "int",
+    "rom",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "j2me",
+   "name": "Java 2 Micro Edition (J2ME)",
+   "extensions": [
+    "7z",
+    "jar",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "laserdisc",
+   "name": "LaserDisc Games",
+   "extensions": [
+    "7z",
+    "dirksimple",
+    "ogv",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "lcdgames",
+   "name": "LCD Handheld Games",
+   "extensions": [
+    "7z",
+    "mgw",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "lowresnx",
+   "name": "LowRes NX Fantasy Console",
+   "extensions": [
+    "nx"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "lutro",
+   "name": "Lutro Game Engine",
+   "extensions": [
+    "7z",
+    "lua",
+    "lutro",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "macintosh",
+   "name": "Apple Macintosh",
+   "extensions": [
+    "dsk",
+    "img"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "mame",
+   "name": "Arcade",
+   "extensions": [
+    "7z",
+    "cmd",
+    "neo",
+    "zip"
+   ],
+   "aliases": [
+    "arcade",
+    "mame-advmame"
+   ],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "mastersystem",
+   "name": "Sega Mark III",
+   "extensions": [
+    "68k",
+    "7z",
+    "bin",
+    "bms",
+    "chd",
+    "col",
+    "cue",
+    "gen",
+    "gg",
+    "iso",
+    "m3u",
+    "md",
+    "mdx",
+    "rom",
+    "sg",
+    "sgd",
+    "smd",
+    "sms",
+    "zip"
+   ],
+   "aliases": [
+    "mark3"
+   ],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "megaduck",
+   "name": "Creatronic Mega Duck",
+   "extensions": [
+    "7z",
+    "bin",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "mess",
+   "name": "Multi Emulator Super System",
+   "extensions": [
+    "7z",
+    "chd",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "model2",
+   "name": "Sega Model 2",
+   "extensions": [
+    "7z",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "model3",
+   "name": "Sega Model 3",
+   "extensions": [
+    "7z",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "moonlight",
+   "name": "Moonlight",
+   "extensions": [
+    "moonlight"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": [
+    {
+     "ext": "moonlight",
+     "key": "moonlight_id"
+    }
+   ]
+  },
+  {
+   "id": "moto",
+   "name": "Thomson MO/TO Series",
+   "extensions": [
+    "7z",
+    "fd",
+    "k7",
+    "m5",
+    "m7",
+    "rom",
+    "sap",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "msx",
+   "name": "MSX",
+   "extensions": [
+    "7z",
+    "cas",
+    "col",
+    "di1",
+    "di2",
+    "dmk",
+    "dsk",
+    "fd1",
+    "fd2",
+    "m3u",
+    "mx1",
+    "mx2",
+    "ogv",
+    "ri",
+    "rom",
+    "sc",
+    "sg",
+    "wav",
+    "xsa",
+    "zip"
+   ],
+   "aliases": [
+    "msx1",
+    "msx2",
+    "msxturbor"
+   ],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "multivision",
+   "name": "Othello Multivision",
+   "extensions": [
+    "7z",
+    "bin",
+    "gg",
+    "rom",
+    "sg",
+    "sms",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "n3ds",
+   "name": "Nintendo 3DS",
+   "extensions": [
+    "3ds",
+    "3dsx",
+    "7z",
+    "app",
+    "axf",
+    "cci",
+    "cxi",
+    "elf",
+    "z3dsx",
+    "zcci",
+    "zcxi",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "n64",
+   "name": "Nintendo 64",
+   "extensions": [
+    "7z",
+    "app",
+    "bin",
+    "d64",
+    "n64",
+    "ndd",
+    "u1",
+    "v64",
+    "z64",
+    "zip"
+   ],
+   "aliases": [
+    "n64dd"
+   ],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "naomi",
+   "name": "Sega NAOMI",
+   "extensions": [
+    "7z",
+    "bin",
+    "dat",
+    "elf",
+    "lst",
+    "zip"
+   ],
+   "aliases": [
+    "naomi2",
+    "naomigd"
+   ],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "nds",
+   "name": "Nintendo DS",
+   "extensions": [
+    "7z",
+    "app",
+    "bin",
+    "dsi",
+    "ids",
+    "nds",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "neogeo",
+   "name": "SNK Neo Geo",
+   "extensions": [
+    "7z",
+    "neo",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "neogeocd",
+   "name": "SNK Neo Geo CD",
+   "extensions": [
+    "chd",
+    "cue"
+   ],
+   "aliases": [
+    "neogeocdjp"
+   ],
+   "multi_disc": true,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "nes",
+   "name": "Nintendo Family Computer",
+   "extensions": [
+    "3dsen",
+    "7z",
+    "fds",
+    "nes",
+    "unf",
+    "unif",
+    "zip"
+   ],
+   "aliases": [
+    "famicom"
+   ],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "ngage",
+   "name": "Nokia N-Gage",
+   "extensions": [
+    "json"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "ngp",
+   "name": "SNK Neo Geo Pocket",
+   "extensions": [
+    "7z",
+    "ngc",
+    "ngp",
+    "ngpc",
+    "npc",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "ngpc",
+   "name": "SNK Neo Geo Pocket Color",
+   "extensions": [
+    "7z",
+    "ngc",
+    "ngp",
+    "ngpc",
+    "npc",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "odyssey2",
+   "name": "Magnavox Odyssey 2",
+   "extensions": [
+    "7z",
+    "bin",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "oric",
+   "name": "Tangerine Computer Systems Oric",
+   "extensions": [
+    "dsk",
+    "ort",
+    "tap",
+    "wav"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "palm",
+   "name": "Palm OS",
+   "extensions": [
+    "7z",
+    "img",
+    "pqa",
+    "prc",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "pc88",
+   "name": "NEC PC-8800 Series",
+   "extensions": [
+    "88d",
+    "cmt",
+    "d88",
+    "m3u",
+    "t88",
+    "u88"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "pc98",
+   "name": "NEC PC-9800 Series",
+   "extensions": [
+    "2hd",
+    "7z",
+    "88d",
+    "98d",
+    "cmd",
+    "d88",
+    "d98",
+    "dup",
+    "fdd",
+    "fdi",
+    "hdd",
+    "hdi",
+    "hdm",
+    "hdn",
+    "m3u",
+    "nhd",
+    "tfd",
+    "thd",
+    "xdf",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "pcarcade",
+   "name": "PC Arcade Systems",
+   "extensions": [
+    "desktop"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "pcfx",
+   "name": "NEC PC-FX",
+   "extensions": [
+    "7z",
+    "ccd",
+    "chd",
+    "cue",
+    "m3u",
+    "toc",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": true,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "pico8",
+   "name": "PICO-8 Fantasy Console",
+   "extensions": [
+    "p8",
+    "p8.png"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "plus4",
+   "name": "Commodore Plus/4",
+   "extensions": [
+    "7z",
+    "bin",
+    "cmd",
+    "crt",
+    "d2m",
+    "d4m",
+    "d64",
+    "d6z",
+    "d71",
+    "d7z",
+    "d80",
+    "d81",
+    "d82",
+    "d8z",
+    "g41",
+    "g4z",
+    "g64",
+    "g6z",
+    "gz",
+    "lnx",
+    "m3u",
+    "nbz",
+    "nib",
+    "p00",
+    "prg",
+    "t64",
+    "tap",
+    "vfl",
+    "vsf",
+    "x64",
+    "x6z",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "pokemini",
+   "name": "Nintendo Pokémon Mini",
+   "extensions": [
+    "7z",
+    "min",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "ports",
+   "name": "Ports",
+   "extensions": [
+    "app",
+    "exe",
+    "game",
+    "idtech",
+    "phd",
+    "port",
+    "psx"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "ps2",
+   "name": "Sony PlayStation 2",
+   "extensions": [
+    "bin",
+    "chd",
+    "ciso",
+    "cso",
+    "dump",
+    "elf",
+    "gz",
+    "img",
+    "iso",
+    "isz",
+    "m3u",
+    "mdf",
+    "ngr",
+    "nrg"
+   ],
+   "aliases": [],
+   "multi_disc": true,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "ps3",
+   "name": "Sony PlayStation 3",
+   "extensions": [
+    "iso",
+    "ps3"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "psp",
+   "name": "Sony PlayStation Portable",
+   "extensions": [
+    "7z",
+    "chd",
+    "cso",
+    "elf",
+    "iso",
+    "pbp",
+    "prx",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": true,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "psvita",
+   "name": "Sony PlayStation Vita",
+   "extensions": [
+    "dpt",
+    "psvita"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": [
+    {
+     "ext": "dpt",
+     "key": "vita_game_id"
+    }
+   ]
+  },
+  {
+   "id": "psx",
+   "name": "Sony PlayStation",
+   "extensions": [
+    "7z",
+    "bin",
+    "cbn",
+    "ccd",
+    "chd",
+    "cue",
+    "ecm",
+    "exe",
+    "img",
+    "iso",
+    "m3u",
+    "mdf",
+    "mds",
+    "minipsf",
+    "pbp",
+    "psexe",
+    "psf",
+    "toc",
+    "z",
+    "zip",
+    "znx"
+   ],
+   "aliases": [],
+   "multi_disc": true,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "pv1000",
+   "name": "Casio PV-1000",
+   "extensions": [
+    "7z",
+    "bin",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "quake",
+   "name": "Quake",
+   "extensions": [
+    "idtech",
+    "pak",
+    "pk3"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "samcoupe",
+   "name": "MGT SAM Coupé",
+   "extensions": [
+    "7z",
+    "dsk",
+    "mgt",
+    "sad",
+    "sbt",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "satellaview",
+   "name": "Nintendo Satellaview",
+   "extensions": [
+    "7z",
+    "bml",
+    "bs",
+    "fig",
+    "sfc",
+    "smc",
+    "st",
+    "swc",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "saturn",
+   "name": "Sega Saturn",
+   "extensions": [
+    "7z",
+    "bin",
+    "ccd",
+    "chd",
+    "cue",
+    "iso",
+    "m3u",
+    "mds",
+    "toc",
+    "zip"
+   ],
+   "aliases": [
+    "saturnjp"
+   ],
+   "multi_disc": true,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "scummvm",
+   "name": "ScummVM Game Engine",
+   "extensions": [
+    "dpt",
+    "scummvm",
+    "svm"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": [
+    {
+     "ext": "dpt",
+     "key": "scummvm_id"
+    }
+   ]
+  },
+  {
+   "id": "scv",
+   "name": "Epoch Super Cassette Vision",
+   "extensions": [
+    "0",
+    "7z",
+    "bin",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "sega32x",
+   "name": "Sega Mega Drive 32X",
+   "extensions": [
+    "32x",
+    "68k",
+    "7z",
+    "bin",
+    "chd",
+    "cue",
+    "gen",
+    "iso",
+    "m3u",
+    "md",
+    "smd",
+    "sms",
+    "zip"
+   ],
+   "aliases": [
+    "sega32xjp",
+    "sega32xna"
+   ],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "segacd",
+   "name": "Sega Mega-CD",
+   "extensions": [
+    "68k",
+    "7z",
+    "bin",
+    "bms",
+    "chd",
+    "cue",
+    "gen",
+    "gg",
+    "iso",
+    "m3u",
+    "md",
+    "mdx",
+    "sg",
+    "sgd",
+    "smd",
+    "sms",
+    "zip"
+   ],
+   "aliases": [
+    "megacd",
+    "megacdjp"
+   ],
+   "multi_disc": true,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "sg-1000",
+   "name": "Sega SG-1000",
+   "extensions": [
+    "68k",
+    "7z",
+    "bin",
+    "bms",
+    "chd",
+    "cue",
+    "gen",
+    "gg",
+    "iso",
+    "m3u",
+    "md",
+    "mdx",
+    "ri",
+    "rom",
+    "sg",
+    "sgd",
+    "smd",
+    "sms",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "snes",
+   "name": "Nintendo SFC (Super Famicom)",
+   "extensions": [
+    "7z",
+    "bin",
+    "bml",
+    "bs",
+    "bsx",
+    "dx2",
+    "fig",
+    "gd3",
+    "gd7",
+    "mgd",
+    "sfc",
+    "smc",
+    "st",
+    "swc",
+    "zip"
+   ],
+   "aliases": [
+    "sfc",
+    "snesna",
+    "sufami"
+   ],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "solarus",
+   "name": "Solarus Game Engine",
+   "extensions": [
+    "7z",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "spectravideo",
+   "name": "Spectravideo",
+   "extensions": [
+    "7z",
+    "cas",
+    "col",
+    "dsk",
+    "m3u",
+    "mx1",
+    "mx2",
+    "ri",
+    "rom",
+    "sc",
+    "sg",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "steam",
+   "name": "Valve Steam",
+   "extensions": [
+    "steamappid"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": [
+    {
+     "ext": "steamappid",
+     "key": "steamappid"
+    }
+   ]
+  },
+  {
+   "id": "stv",
+   "name": "Sega Titan Video Game System",
+   "extensions": [
+    "7z",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "supergrafx",
+   "name": "NEC SuperGrafx",
+   "extensions": [
+    "7z",
+    "ccd",
+    "chd",
+    "cue",
+    "pce",
+    "rom",
+    "sgx",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "supervision",
+   "name": "Watara Supervision",
+   "extensions": [
+    "7z",
+    "bin",
+    "sv",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "supracan",
+   "name": "Funtech Super A'Can",
+   "extensions": [
+    "7z",
+    "bin",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "switch",
+   "name": "Nintendo Switch",
+   "extensions": [
+    "nca",
+    "nro",
+    "nso",
+    "nsp",
+    "xci"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "symbian",
+   "name": "Symbian",
+   "extensions": [
+    "json"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "tanodragon",
+   "name": "Tano Dragon",
+   "extensions": [
+    "7z",
+    "cas",
+    "ccc",
+    "dsk",
+    "rom",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "tg-cd",
+   "name": "NEC PC Engine CD",
+   "extensions": [
+    "7z",
+    "ccd",
+    "chd",
+    "cue",
+    "img",
+    "iso",
+    "m3u",
+    "pce",
+    "sgx",
+    "toc",
+    "zip"
+   ],
+   "aliases": [
+    "pcenginecd"
+   ],
+   "multi_disc": true,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "tg16",
+   "name": "NEC PC Engine",
+   "extensions": [
+    "7z",
+    "ccd",
+    "chd",
+    "cue",
+    "img",
+    "iso",
+    "m3u",
+    "pce",
+    "rom",
+    "sgx",
+    "toc",
+    "zip"
+   ],
+   "aliases": [
+    "pcengine"
+   ],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "ti99",
+   "name": "Texas Instruments TI-99",
+   "extensions": [
+    "7z",
+    "rpk",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "tic80",
+   "name": "TIC-80 Fantasy Computer",
+   "extensions": [
+    "tic"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "to8",
+   "name": "Thomson TO8",
+   "extensions": [
+    "7z",
+    "fd",
+    "k7",
+    "m5",
+    "m7",
+    "rom",
+    "sap",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "triforce",
+   "name": "Namco-Sega-Nintendo Triforce",
+   "extensions": [
+    "7z",
+    "ciso",
+    "dff",
+    "dol",
+    "elf",
+    "gcm",
+    "gcz",
+    "iso",
+    "json",
+    "m3u",
+    "rvz",
+    "tgc",
+    "wad",
+    "wbfs",
+    "wia",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "trs-80",
+   "name": "Tandy TRS-80",
+   "extensions": [
+    "7z",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "type-x",
+   "name": "Taito Type X",
+   "extensions": [
+    "desktop"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "uzebox",
+   "name": "Uzebox Open Source Console",
+   "extensions": [
+    "7z",
+    "uze",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "vectrex",
+   "name": "GCE Vectrex",
+   "extensions": [
+    "7z",
+    "bin",
+    "gam",
+    "vc",
+    "vec",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "vic20",
+   "name": "Commodore VIC-20",
+   "extensions": [
+    "7z",
+    "a0",
+    "b0",
+    "bin",
+    "cmd",
+    "crt",
+    "d2m",
+    "d4m",
+    "d64",
+    "d6z",
+    "d71",
+    "d7z",
+    "d80",
+    "d81",
+    "d82",
+    "d8z",
+    "g41",
+    "g4z",
+    "g64",
+    "g6z",
+    "gz",
+    "lnx",
+    "m3u",
+    "nbz",
+    "nib",
+    "p00",
+    "prg",
+    "rom",
+    "t64",
+    "tap",
+    "vfl",
+    "vsf",
+    "x64",
+    "x6z",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "videopac",
+   "name": "Philips Videopac G7000",
+   "extensions": [
+    "7z",
+    "bin",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "vircon32",
+   "name": "Vircon32 Virtual Console",
+   "extensions": [
+    "7z",
+    "v32",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "virtualboy",
+   "name": "Nintendo Virtual Boy",
+   "extensions": [
+    "7z",
+    "bin",
+    "vb",
+    "vboy",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "vsmile",
+   "name": "VTech V.Smile",
+   "extensions": [
+    "7z",
+    "bin",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "wasm4",
+   "name": "WASM-4 Fantasy Console",
+   "extensions": [
+    "7z",
+    "wasm",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "wii",
+   "name": "Nintendo Wii",
+   "extensions": [
+    "7z",
+    "ciso",
+    "dff",
+    "dol",
+    "elf",
+    "gcm",
+    "gcz",
+    "iso",
+    "json",
+    "m3u",
+    "rvz",
+    "tgc",
+    "wad",
+    "wbfs",
+    "wia",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "wiiu",
+   "name": "Nintendo Wii U",
+   "extensions": [
+    "elf",
+    "rpx",
+    "tmd",
+    "wua",
+    "wud",
+    "wuhb",
+    "wux"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "windows",
+   "name": "Microsoft Windows",
+   "extensions": [
+    "localgameid"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": [
+    {
+     "ext": "localgameid",
+     "key": "localgameid"
+    }
+   ]
+  },
+  {
+   "id": "wonderswan",
+   "name": "Bandai WonderSwan",
+   "extensions": [
+    "7z",
+    "pc2",
+    "ws",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "wonderswancolor",
+   "name": "Bandai WonderSwan Color",
+   "extensions": [
+    "7z",
+    "pc2",
+    "ws",
+    "wsc",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "x1",
+   "name": "Sharp X1",
+   "extensions": [
+    "2d",
+    "2hd",
+    "7z",
+    "88d",
+    "cmd",
+    "d88",
+    "dup",
+    "dx1",
+    "hdm",
+    "tap",
+    "tfd",
+    "xdf",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "x68000",
+   "name": "Sharp X68000",
+   "extensions": [
+    "2hd",
+    "7z",
+    "88d",
+    "cmd",
+    "d88",
+    "dim",
+    "dup",
+    "hdf",
+    "hdm",
+    "img",
+    "m3u",
+    "xdf",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "xbox",
+   "name": "Microsoft Xbox",
+   "extensions": [
+    "iso",
+    "xiso"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "xbox360",
+   "name": "Microsoft Xbox 360",
+   "extensions": [
+    "iso",
+    "xex",
+    "zar"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "xcloud",
+   "name": "Xbox Cloud Gaming",
+   "extensions": [
+    "xcloud"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": [
+    {
+     "ext": "xcloud",
+     "key": "titleId"
+    }
+   ]
+  },
+  {
+   "id": "zmachine",
+   "name": "Infocom Z-machine",
+   "extensions": [
+    "dat",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "zblorb",
+    "zlb"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "zx81",
+   "name": "Sinclair ZX81",
+   "extensions": [
+    "7z",
+    "p",
+    "tzx",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  },
+  {
+   "id": "zxnext",
+   "name": "Sinclair ZX Spectrum Next",
+   "extensions": [
+    "7z",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": false,
+   "tag_files": []
+  },
+  {
+   "id": "zxspectrum",
+   "name": "Sinclair ZX Spectrum",
+   "extensions": [
+    "7z",
+    "dsk",
+    "gz",
+    "img",
+    "mgt",
+    "rzx",
+    "scl",
+    "sh",
+    "sna",
+    "szx",
+    "tap",
+    "trd",
+    "tzx",
+    "udi",
+    "z80",
+    "zip"
+   ],
+   "aliases": [],
+   "multi_disc": false,
+   "cocoon": true,
+   "tag_files": []
+  }
+ ]
+}

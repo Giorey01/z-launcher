@@ -1,0 +1,61 @@
+//! Repository: rom roots and platforms.
+
+use rusqlite::params;
+
+use crate::db::Db;
+use crate::error::DbError;
+use crate::models::Root;
+
+impl Db {
+    /// Adds a root or updates its sub-folder option; returns its id. Enabled state is kept.
+    pub fn upsert_root(&self, path: &str, scan_subfolders: bool) -> Result<i64, DbError> {
+        Ok(self.conn.query_row(
+            "INSERT INTO rom_roots (path, scan_subfolders) VALUES (?1, ?2)
+             ON CONFLICT(path) DO UPDATE SET scan_subfolders = excluded.scan_subfolders
+             RETURNING id",
+            params![path, scan_subfolders],
+            |row| row.get(0),
+        )?)
+    }
+
+    /// Enables or disables a root.
+    pub fn set_root_enabled(&self, root_id: i64, enabled: bool) -> Result<(), DbError> {
+        self.conn.execute(
+            "UPDATE rom_roots SET enabled = ?2 WHERE id = ?1",
+            params![root_id, enabled],
+        )?;
+        Ok(())
+    }
+
+    /// Lists all roots in insertion order.
+    pub fn list_roots(&self) -> Result<Vec<Root>, DbError> {
+        let mut stmt = self
+            .conn
+            .prepare("SELECT id, path, enabled, scan_subfolders FROM rom_roots ORDER BY id")?;
+        let rows = stmt.query_map([], |row| {
+            Ok(Root {
+                id: row.get(0)?,
+                path: row.get(1)?,
+                enabled: row.get(2)?,
+                scan_subfolders: row.get(3)?,
+            })
+        })?;
+        Ok(rows.collect::<Result<_, _>>()?)
+    }
+
+    /// Records that a platform id exists on disk (idempotent).
+    pub fn ensure_platform(&self, platform_id: &str) -> Result<(), DbError> {
+        self.conn.execute(
+            "INSERT OR IGNORE INTO platforms (id) VALUES (?1)",
+            params![platform_id],
+        )?;
+        Ok(())
+    }
+
+    /// Lists the platform ids seen, sorted.
+    pub fn list_platforms(&self) -> Result<Vec<String>, DbError> {
+        let mut stmt = self.conn.prepare("SELECT id FROM platforms ORDER BY id")?;
+        let rows = stmt.query_map([], |row| row.get(0))?;
+        Ok(rows.collect::<Result<_, _>>()?)
+    }
+}
