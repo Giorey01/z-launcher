@@ -5,7 +5,9 @@ use zl_config::appearance as cfg;
 use zl_db::Db;
 use zl_theme::StringEnum;
 
-use crate::appearance_types::{ExternalDisplayDocking, ScreenMode, SingleRowStyle, UserSettings};
+use crate::appearance_types::{
+    AnimationSpeed, ExternalDisplayDocking, ScreenMode, SingleRowStyle, UserSettings,
+};
 use crate::error::CoreError;
 use crate::Service;
 
@@ -41,6 +43,8 @@ impl UserSettings {
         self.sfx_volume = clamp(self.sfx_volume, cfg::VOLUME_RANGE);
         self.music_volume = clamp(self.music_volume, cfg::VOLUME_RANGE);
         self.jingle_volume = clamp(self.jingle_volume, cfg::VOLUME_RANGE);
+        self.now_playing_dimming = clamp(self.now_playing_dimming, (0.0, 1.0));
+        self.now_playing_saturation = clamp(self.now_playing_saturation, (0.0, 1.0));
         self
     }
 }
@@ -94,8 +98,8 @@ impl Reader<'_> {
     }
 }
 
-/// The settings as `(name, text)` pairs ready to store.
-fn pairs(s: &UserSettings) -> Vec<(&'static str, String)> {
+/// Visual settings as `(name, text)` pairs.
+fn look_pairs(s: &UserSettings) -> Vec<(&'static str, String)> {
     let flag = |b: bool| if b { "1" } else { "0" }.to_string();
     vec![
         ("icon_roundness", s.icon_roundness.to_string()),
@@ -124,6 +128,13 @@ fn pairs(s: &UserSettings) -> Vec<(&'static str, String)> {
         ("dock_on_top", flag(s.dock_on_top)),
         ("corner_hints", flag(s.corner_hints)),
         ("fullscreen_folders", flag(s.fullscreen_folders)),
+    ]
+}
+
+/// System, sound, and integrations settings as `(name, text)` pairs.
+fn system_pairs(s: &UserSettings) -> Vec<(&'static str, String)> {
+    let flag = |b: bool| if b { "1" } else { "0" }.to_string();
+    vec![
         (
             "accent_override",
             s.accent_override
@@ -143,7 +154,28 @@ fn pairs(s: &UserSettings) -> Vec<(&'static str, String)> {
         ("music_mode", s.music_mode.as_str().into()),
         ("music_volume", s.music_volume.to_string()),
         ("jingle_volume", s.jingle_volume.to_string()),
+        ("show_battery_percentage", flag(s.show_battery_percentage)),
+        ("discrete_paging", flag(s.discrete_paging)),
+        ("animation_speed", s.animation_speed.as_str().into()),
+        ("now_playing_dimming", s.now_playing_dimming.to_string()),
+        (
+            "now_playing_saturation",
+            s.now_playing_saturation.to_string(),
+        ),
+        ("app_icon_pack", s.app_icon_pack.clone().unwrap_or_default()),
+        (
+            "retroachievements_enabled",
+            flag(s.retroachievements_enabled),
+        ),
+        ("discord_presence_enabled", flag(s.discord_presence_enabled)),
     ]
+}
+
+/// The settings as `(name, text)` pairs ready to store.
+fn pairs(s: &UserSettings) -> Vec<(&'static str, String)> {
+    let mut out = look_pairs(s);
+    out.extend(system_pairs(s));
+    out
 }
 
 /// Reads the look settings (everything up to the dock) over the defaults.
@@ -202,6 +234,20 @@ fn read_rest(r: &Reader<'_>, base: UserSettings) -> Result<UserSettings, CoreErr
         music_mode: r.choice("music_mode", base.music_mode)?,
         music_volume: r.num("music_volume", base.music_volume)?,
         jingle_volume: r.num("jingle_volume", base.jingle_volume)?,
+        show_battery_percentage: r.flag("show_battery_percentage", base.show_battery_percentage)?,
+        discrete_paging: r.flag("discrete_paging", base.discrete_paging)?,
+        animation_speed: r.text_choice(
+            "animation_speed",
+            base.animation_speed,
+            AnimationSpeed::parse_text,
+        )?,
+        now_playing_dimming: r.num("now_playing_dimming", base.now_playing_dimming)?,
+        now_playing_saturation: r.num("now_playing_saturation", base.now_playing_saturation)?,
+        app_icon_pack: r.text("app_icon_pack")?.filter(|t| !t.is_empty()),
+        retroachievements_enabled: r
+            .flag("retroachievements_enabled", base.retroachievements_enabled)?,
+        discord_presence_enabled: r
+            .flag("discord_presence_enabled", base.discord_presence_enabled)?,
         ..base
     })
 }
@@ -219,7 +265,7 @@ impl Service {
     /// Stores all the settings (numbers limited to their ranges first).
     pub fn set_user_settings(&self, settings: &UserSettings) -> Result<(), CoreError> {
         let db = self.db();
-        let rows = pairs(&settings.clamped());
+        let rows = pairs(&settings.clone().clamped());
         db.transaction::<(), CoreError>(|db| {
             for (name, value) in rows {
                 db.set_setting(&key(name), &value)?;
@@ -264,13 +310,14 @@ mod tests {
         assert!(ScreenMode::parse_text(cfg::SCREEN_MODE).is_some());
         assert!(ExternalDisplayDocking::parse_text(cfg::EXTERNAL_DISPLAY_DOCKING).is_some());
         assert!(SingleRowStyle::parse_text(cfg::SINGLE_ROW_STYLE).is_some());
+        assert!(AnimationSpeed::parse_text(cfg::ANIMATION_SPEED).is_some());
     }
 
     /// Defaults sit inside their own ranges, so clamping them changes nothing.
     #[test]
     fn defaults_are_inside_their_ranges() {
         let d = UserSettings::default();
-        assert_eq!(d.clamped(), d);
+        assert_eq!(d.clone().clamped(), d);
     }
 
     /// Out-of-range numbers are pulled in and NaN becomes the lower bound.
@@ -294,4 +341,5 @@ mod tests {
         .clamped();
         assert_eq!((rows.single_screen_rows, rows.hero_split), (5, 1.0));
     }
+
 }

@@ -36,10 +36,10 @@ use zl_db::Db;
 use zl_platforms::PlatformDb;
 
 pub use appearance_types::{
-    argb, CocoonDataDir, ExternalDisplayDocking, FolderArt, FolderSlot, ImportReport,
-    InstalledPack, InstalledTheme, LayerChoice, MusicSetup, OverlayArt, PackRef, ResolvedTheme,
-    ScheduleTrack, ScreenMode, SingleRowStyle, SoundEntry, ThemeColors, ThemeIssue, ThemeSelection,
-    UserSettings, Wallpaper, WallpaperKind,
+    argb, AnimationSpeed, CocoonDataDir, ExternalDisplayDocking, FolderArt, FolderSlot,
+    ImportReport, InstalledPack, InstalledTheme, LayerChoice, MusicSetup, OverlayArt, PackRef,
+    ResolvedTheme, ScheduleTrack, ScreenMode, SingleRowStyle, SoundEntry, ThemeColors, ThemeIssue,
+    ThemeSelection, UserSettings, Wallpaper, WallpaperKind,
 };
 pub use error::CoreError;
 pub use media::{GameMedia, MediaCount, MediaImportReport, MediaItem, MediaSources};

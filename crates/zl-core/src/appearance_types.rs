@@ -128,9 +128,21 @@ text_enum! {
     }
 }
 
+text_enum! {
+    /// Animation speed of the launcher UI.
+    AnimationSpeed {
+        /// Normal animation speed.
+        Normal => "NORMAL",
+        /// Fast animation speed.
+        Fast => "FAST",
+        /// Animations turned off.
+        Off => "OFF",
+    }
+}
+
 /// The settings of the look and the sound that the user can change, with defaults applied. A
 /// theme's own values reach this record only when the user applies the theme's settings.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct UserSettings {
     /// Corner roundness of icons, 0.0-0.5.
     pub icon_roundness: f32,
@@ -203,6 +215,22 @@ pub struct UserSettings {
     pub music_volume: f32,
     /// Volume of the jingles, 0-1.
     pub jingle_volume: f32,
+    /// Whether to show the battery percentage in the status pill.
+    pub show_battery_percentage: bool,
+    /// Show the home grid as discrete swipeable pages.
+    pub discrete_paging: bool,
+    /// Animation speed of the UI.
+    pub animation_speed: AnimationSpeed,
+    /// Dimming factor of the now playing screen, 0-1.
+    pub now_playing_dimming: f32,
+    /// Saturation factor of the now playing screen, 0-1.
+    pub now_playing_saturation: f32,
+    /// Selected app icon pack id (`None` for Default).
+    pub app_icon_pack: Option<String>,
+    /// RetroAchievements account integration enabled.
+    pub retroachievements_enabled: bool,
+    /// Discord Rich Presence enabled.
+    pub discord_presence_enabled: bool,
 }
 
 /// Parses the canonical text of a default (they are constants, checked by a test).
@@ -210,56 +238,129 @@ fn text_default<T: StringEnum>(text: &str, fallback: T) -> T {
     T::parse_text(text).unwrap_or(fallback)
 }
 
+impl UserSettings {
+    /// Fills hero, icon and glass visual defaults.
+    fn with_visual_defaults(mut self) -> Self {
+        self.icon_roundness = defaults::ICON_ROUNDNESS;
+        self.icon_scale = defaults::ICON_SCALE;
+        self.hover_scale = defaults::HOVER_SCALE;
+        self.hero_display_style =
+            text_default(defaults::HERO_DISPLAY_STYLE, HeroDisplayStyle::Vignette);
+        self.hero_logo_scale = defaults::HERO_LOGO_SCALE;
+        self.hero_folder_logo_scale = defaults::HERO_FOLDER_LOGO_SCALE;
+        self.hero_gradient_style = text_default(
+            defaults::HERO_GRADIENT_STYLE,
+            HeroGradientStyle::BlackGradient,
+        );
+        self.hero_vignette_size = defaults::HERO_VIGNETTE_SIZE;
+        self.icon_style = text_default(defaults::ICON_STYLE, IconStyle::Colored);
+        self.surface_material = text_default(defaults::SURFACE_MATERIAL, SurfaceMaterial::Solid);
+        self.glass_blur = defaults::GLASS_BLUR;
+        self.glass_refraction = defaults::GLASS_REFRACTION;
+        self.glass_highlight = defaults::GLASS_HIGHLIGHT;
+        self.glass_rim_strength = defaults::GLASS_RIM_STRENGTH;
+        self.glass_tint = defaults::GLASS_TINT;
+        self.glass_on_tiles = defaults::GLASS_ON_TILES;
+        self.cursor_style = text_default(defaults::CURSOR_STYLE, CursorStyle::Animated);
+        self.highlight_thickness = defaults::HIGHLIGHT_THICKNESS;
+        self
+    }
+
+    /// Fills dock, screen and system defaults.
+    fn with_system_defaults(mut self) -> Self {
+        self.dock_icon_shape = text_default(defaults::DOCK_ICON_SHAPE, DockIconShape::Circle);
+        self.hide_dock_background = defaults::HIDE_DOCK_BACKGROUND;
+        self.dock_on_top = defaults::DOCK_ON_TOP;
+        self.corner_hints = defaults::CORNER_HINTS;
+        self.fullscreen_folders = defaults::FULLSCREEN_FOLDERS;
+        self.screen_mode =
+            ScreenMode::parse_text(defaults::SCREEN_MODE).unwrap_or(ScreenMode::Dual);
+        self.reverse_display_roles = defaults::REVERSE_DISPLAY_ROLES;
+        self.external_display_docking =
+            ExternalDisplayDocking::parse_text(defaults::EXTERNAL_DISPLAY_DOCKING)
+                .unwrap_or(ExternalDisplayDocking::Automatic);
+        self.hero_split = defaults::HERO_SPLIT;
+        self.single_screen_rows = defaults::SINGLE_SCREEN_ROWS;
+        self.single_row_style = SingleRowStyle::parse_text(defaults::SINGLE_ROW_STYLE)
+            .unwrap_or(SingleRowStyle::Standard);
+        self.show_battery_percentage = defaults::SHOW_BATTERY_PERCENTAGE;
+        self.discrete_paging = defaults::DISCRETE_PAGING;
+        self.animation_speed =
+            AnimationSpeed::parse_text(defaults::ANIMATION_SPEED).unwrap_or(AnimationSpeed::Normal);
+        self.now_playing_dimming = defaults::NOW_PLAYING_DIMMING;
+        self.now_playing_saturation = defaults::NOW_PLAYING_SATURATION;
+        self.retroachievements_enabled = defaults::RETROACHIEVEMENTS_ENABLED;
+        self.discord_presence_enabled = defaults::DISCORD_PRESENCE_ENABLED;
+        self
+    }
+
+    /// Fills sound and music defaults.
+    fn with_audio_defaults(mut self) -> Self {
+        self.sfx_enabled = defaults::SFX_ENABLED;
+        self.sfx_volume = defaults::SFX_VOLUME;
+        self.music_mode = text_default(defaults::MUSIC_MODE, MusicMode::Disabled);
+        self.music_volume = defaults::MUSIC_VOLUME;
+        self.jingle_volume = defaults::JINGLE_VOLUME;
+        self
+    }
+
+    /// An empty settings struct with dummy zeros.
+    fn empty() -> Self {
+        UserSettings {
+            icon_roundness: 0.0,
+            icon_scale: 0.0,
+            hover_scale: 0.0,
+            hero_display_style: HeroDisplayStyle::Vignette,
+            hero_logo_scale: 0.0,
+            hero_folder_logo_scale: 0.0,
+            hero_gradient_style: HeroGradientStyle::None,
+            hero_vignette_size: 0.0,
+            icon_style: IconStyle::Colored,
+            surface_material: SurfaceMaterial::Solid,
+            glass_blur: 0.0,
+            glass_refraction: 0.0,
+            glass_highlight: 0.0,
+            glass_rim_strength: 0.0,
+            glass_tint: 0.0,
+            glass_on_tiles: false,
+            cursor_style: CursorStyle::Animated,
+            highlight_thickness: 0.0,
+            dock_icon_shape: DockIconShape::Circle,
+            hide_dock_background: false,
+            dock_on_top: false,
+            corner_hints: false,
+            fullscreen_folders: false,
+            accent_override: None,
+            screen_mode: ScreenMode::Dual,
+            reverse_display_roles: false,
+            external_display_docking: ExternalDisplayDocking::Automatic,
+            hero_split: 0.0,
+            single_screen_rows: 1,
+            single_row_style: SingleRowStyle::Standard,
+            sfx_enabled: false,
+            sfx_volume: 0.0,
+            music_mode: MusicMode::Disabled,
+            music_volume: 0.0,
+            jingle_volume: 0.0,
+            show_battery_percentage: true,
+            discrete_paging: true,
+            animation_speed: AnimationSpeed::Normal,
+            now_playing_dimming: 0.0,
+            now_playing_saturation: 0.0,
+            app_icon_pack: None,
+            retroachievements_enabled: false,
+            discord_presence_enabled: false,
+        }
+    }
+}
+
 impl Default for UserSettings {
     /// The defaults of `zl_config::appearance`.
     fn default() -> Self {
-        UserSettings {
-            icon_roundness: defaults::ICON_ROUNDNESS,
-            icon_scale: defaults::ICON_SCALE,
-            hover_scale: defaults::HOVER_SCALE,
-            hero_display_style: text_default(
-                defaults::HERO_DISPLAY_STYLE,
-                HeroDisplayStyle::Vignette,
-            ),
-            hero_logo_scale: defaults::HERO_LOGO_SCALE,
-            hero_folder_logo_scale: defaults::HERO_FOLDER_LOGO_SCALE,
-            hero_gradient_style: text_default(
-                defaults::HERO_GRADIENT_STYLE,
-                HeroGradientStyle::BlackGradient,
-            ),
-            hero_vignette_size: defaults::HERO_VIGNETTE_SIZE,
-            icon_style: text_default(defaults::ICON_STYLE, IconStyle::Colored),
-            surface_material: text_default(defaults::SURFACE_MATERIAL, SurfaceMaterial::Solid),
-            glass_blur: defaults::GLASS_BLUR,
-            glass_refraction: defaults::GLASS_REFRACTION,
-            glass_highlight: defaults::GLASS_HIGHLIGHT,
-            glass_rim_strength: defaults::GLASS_RIM_STRENGTH,
-            glass_tint: defaults::GLASS_TINT,
-            glass_on_tiles: defaults::GLASS_ON_TILES,
-            cursor_style: text_default(defaults::CURSOR_STYLE, CursorStyle::Animated),
-            highlight_thickness: defaults::HIGHLIGHT_THICKNESS,
-            dock_icon_shape: text_default(defaults::DOCK_ICON_SHAPE, DockIconShape::Circle),
-            hide_dock_background: defaults::HIDE_DOCK_BACKGROUND,
-            dock_on_top: defaults::DOCK_ON_TOP,
-            corner_hints: defaults::CORNER_HINTS,
-            fullscreen_folders: defaults::FULLSCREEN_FOLDERS,
-            accent_override: None,
-            screen_mode: ScreenMode::parse_text(defaults::SCREEN_MODE).unwrap_or(ScreenMode::Dual),
-            reverse_display_roles: defaults::REVERSE_DISPLAY_ROLES,
-            external_display_docking: ExternalDisplayDocking::parse_text(
-                defaults::EXTERNAL_DISPLAY_DOCKING,
-            )
-            .unwrap_or(ExternalDisplayDocking::Automatic),
-            hero_split: defaults::HERO_SPLIT,
-            single_screen_rows: defaults::SINGLE_SCREEN_ROWS,
-            single_row_style: SingleRowStyle::parse_text(defaults::SINGLE_ROW_STYLE)
-                .unwrap_or(SingleRowStyle::Standard),
-            sfx_enabled: defaults::SFX_ENABLED,
-            sfx_volume: defaults::SFX_VOLUME,
-            music_mode: text_default(defaults::MUSIC_MODE, MusicMode::Disabled),
-            music_volume: defaults::MUSIC_VOLUME,
-            jingle_volume: defaults::JINGLE_VOLUME,
-        }
+        UserSettings::empty()
+            .with_visual_defaults()
+            .with_system_defaults()
+            .with_audio_defaults()
     }
 }
 
@@ -495,3 +596,4 @@ pub struct CocoonDataDir {
     /// It also has `downloaded_media/`.
     pub has_media: bool,
 }
+

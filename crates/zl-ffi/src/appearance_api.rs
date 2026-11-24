@@ -3,10 +3,11 @@
 use zl_db::MediaKind as DbMediaKind;
 
 use crate::appearance::{
-    AssetCategory, CocoonDataDir, CursorStyle, ExternalDisplayDocking, FolderArt, FolderSlot,
-    GameMedia, IconStyle, ImportReport, InstalledPack, InstalledTheme, MediaImportReport,
-    MediaKind, MediaSources, MusicMode, OverlayArt, PlatformEmulatorSetting, ResolvedTheme,
-    ScreenMode, SingleRowStyle, SurfaceMaterial, ThemeIssue, ThemeSelection, UserSettings,
+    AnimationSpeed, AssetCategory, CocoonDataDir, CursorStyle, DockIconShape,
+    ExternalDisplayDocking, FolderArt, FolderSlot, GameMedia, HeroDisplayStyle, HeroGradientStyle,
+    IconStyle, ImportReport, InstalledPack, InstalledTheme, MediaImportReport, MediaKind,
+    MediaSources, MusicMode, OverlayArt, PlatformEmulatorSetting, ResolvedTheme, ScreenMode,
+    SingleRowStyle, SurfaceMaterial, ThemeIssue, ThemeSelection, UserSettings,
 };
 use crate::core_object::Core;
 use crate::error::CoreError;
@@ -264,6 +265,181 @@ impl Core {
         Ok(())
     }
 
+    /// Sets whether battery percentage is shown in the status pill.
+    pub fn set_show_battery_percentage(&self, on: bool) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.show_battery_percentage = on)?;
+        Ok(())
+    }
+
+    /// Sets discrete paging mode for the grid.
+    pub fn set_discrete_paging(&self, on: bool) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.discrete_paging = on)?;
+        Ok(())
+    }
+
+    /// Sets UI animation speed.
+    pub fn set_animation_speed(&self, speed: AnimationSpeed) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.animation_speed = speed.into())?;
+        Ok(())
+    }
+
+    /// Sets dimming factor for now playing.
+    pub fn set_now_playing_dimming(&self, value: f32) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.now_playing_dimming = value)?;
+        Ok(())
+    }
+
+    /// Sets saturation factor for now playing.
+    pub fn set_now_playing_saturation(&self, value: f32) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.now_playing_saturation = value)?;
+        Ok(())
+    }
+
+    /// Sets the app icon pack id (`None` for default).
+    pub fn set_app_icon_pack(&self, pack_id: Option<String>) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.app_icon_pack = pack_id)?;
+        Ok(())
+    }
+
+    /// Enables or disables RetroAchievements integration.
+    pub fn set_retroachievements_enabled(&self, on: bool) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.retroachievements_enabled = on)?;
+        Ok(())
+    }
+
+    /// Enables or disables Discord Rich Presence integration.
+    pub fn set_discord_presence_enabled(&self, on: bool) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.discord_presence_enabled = on)?;
+        Ok(())
+    }
+
+    /// Sets dock icon shape.
+    pub fn set_dock_icon_shape(&self, shape: DockIconShape) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.dock_icon_shape = shape.into())?;
+        Ok(())
+    }
+
+    /// Sets hide dock background.
+    pub fn set_hide_dock_background(&self, on: bool) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.hide_dock_background = on)?;
+        Ok(())
+    }
+
+    /// Sets icon roundness (0.0 to 0.5).
+    pub fn set_icon_roundness(&self, value: f32) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.icon_roundness = value)?;
+        Ok(())
+    }
+
+    /// Sets icon scale (0.5 to 1.0).
+    pub fn set_icon_scale(&self, value: f32) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.icon_scale = value)?;
+        Ok(())
+    }
+
+    /// Sets hover scale.
+    pub fn set_hover_scale(&self, value: f32) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.hover_scale = value)?;
+        Ok(())
+    }
+
+    /// Sets hero display style.
+    pub fn set_hero_display_style(&self, style: HeroDisplayStyle) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.hero_display_style = style.into())?;
+        Ok(())
+    }
+
+    /// Sets hero logo scale.
+    pub fn set_hero_logo_scale(&self, value: f32) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.hero_logo_scale = value)?;
+        Ok(())
+    }
+
+    /// Sets hero folder logo scale.
+    pub fn set_hero_folder_logo_scale(&self, value: f32) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.hero_folder_logo_scale = value)?;
+        Ok(())
+    }
+
+    /// Sets hero gradient style.
+    pub fn set_hero_gradient_style(&self, style: HeroGradientStyle) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.hero_gradient_style = style.into())?;
+        Ok(())
+    }
+
+    /// Sets hero vignette size.
+    pub fn set_hero_vignette_size(&self, value: f32) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.hero_vignette_size = value)?;
+        Ok(())
+    }
+
+    /// Sets glass blur (0 to 10).
+    pub fn set_glass_blur(&self, value: f32) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.glass_blur = value)?;
+        Ok(())
+    }
+
+    /// Sets glass refraction (0 to 1).
+    pub fn set_glass_refraction(&self, value: f32) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.glass_refraction = value)?;
+        Ok(())
+    }
+
+    /// Sets glass highlight (0 to 1).
+    pub fn set_glass_highlight(&self, value: f32) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.glass_highlight = value)?;
+        Ok(())
+    }
+
+    /// Sets glass rim strength (0 to 1).
+    pub fn set_glass_rim_strength(&self, value: f32) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.glass_rim_strength = value)?;
+        Ok(())
+    }
+
+    /// Sets glass tint (0 to 1).
+    pub fn set_glass_tint(&self, value: f32) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.glass_tint = value)?;
+        Ok(())
+    }
+
+    /// Sets glass on tiles.
+    pub fn set_glass_on_tiles(&self, on: bool) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.glass_on_tiles = on)?;
+        Ok(())
+    }
+
+    /// Sets jingle volume (0 to 1).
+    pub fn set_jingle_volume(&self, value: f32) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.jingle_volume = value)?;
+        Ok(())
+    }
+
     /// Removes a ROM folder and its games from the library (the files stay on disk).
     pub fn remove_root(&self, root_id: i64) -> Res<()> {
         Ok(self.service().remove_root(root_id)?)
@@ -314,3 +490,4 @@ impl Core {
             .set_game_media(game_id, kind, path.as_deref())?)
     }
 }
+

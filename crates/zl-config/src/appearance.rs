@@ -153,3 +153,18 @@ pub const SINGLE_SCREEN_ROWS: u8 = 3;
 pub const SINGLE_SCREEN_ROWS_RANGE: (u8, u8) = (1, 5);
 /// Default style of the rows on a single screen.
 pub const SINGLE_ROW_STYLE: &str = "STANDARD";
+
+/// Default for showing the battery percentage in the status pill.
+pub const SHOW_BATTERY_PERCENTAGE: bool = true;
+/// Default for discrete swipeable paging in the grid.
+pub const DISCRETE_PAGING: bool = true;
+/// Default UI animation speed mode.
+pub const ANIMATION_SPEED: &str = "NORMAL";
+/// Default now playing dimming (0.0 to 1.0).
+pub const NOW_PLAYING_DIMMING: f32 = 0.5;
+/// Default now playing saturation (0.0 to 1.0).
+pub const NOW_PLAYING_SATURATION: f32 = 1.0;
+/// Default for RetroAchievements integration.
+pub const RETROACHIEVEMENTS_ENABLED: bool = false;
+/// Default for Discord presence integration.
+pub const DISCORD_PRESENCE_ENABLED: bool = false;

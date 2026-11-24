@@ -86,6 +86,10 @@ mirror_enum! {
     SingleRowStyle <=> core::SingleRowStyle { Standard, Carousel, CoverFlow }
 }
 mirror_enum! {
+    /// Animation speed of the launcher UI.
+    AnimationSpeed <=> core::AnimationSpeed { Normal, Fast, Off }
+}
+mirror_enum! {
     /// What a media file shows.
     MediaKind <=> DbMediaKind {
         Icon, Hero, Logo, Screenshot, Video, Box3d, TitleScreen, BackCover, MixImage,
@@ -227,6 +231,22 @@ mirror_record! {
         plain music_volume: f32,
         /// Volume of the jingles, 0-1.
         plain jingle_volume: f32,
+        /// Whether to show the battery percentage in the status pill.
+        plain show_battery_percentage: bool,
+        /// Show the home grid as discrete swipeable pages.
+        plain discrete_paging: bool,
+        /// Animation speed of the UI.
+        plain animation_speed: AnimationSpeed,
+        /// Dimming factor of the now playing screen, 0-1.
+        plain now_playing_dimming: f32,
+        /// Saturation factor of the now playing screen, 0-1.
+        plain now_playing_saturation: f32,
+        /// Selected app icon pack id (`None` for Default).
+        opt app_icon_pack: String,
+        /// RetroAchievements account integration enabled.
+        plain retroachievements_enabled: bool,
+        /// Discord Rich Presence enabled.
+        plain discord_presence_enabled: bool,
     }
 }
 
