@@ -1,0 +1,38 @@
+{
+  "name": "Mono Grid",
+  "theme_mode": "oled",
+  "color_scheme": {
+    "background_gradient_start": "#000000",
+    "background_gradient_end": "#000000",
+    "text_primary": "#ffffff",
+    "icon_tint": "rgb(200, 200, 200)",
+    "selection_gradient_start": "#ff8800cc"
+  },
+  "settings": {
+    "hero_display_style": "NONE",
+    "hero_gradient_style": "NONE",
+    "surface_material": "GLASS",
+    "glass_blur": 10,
+    "dock_icon_shape": "ROUNDED_SQUARE",
+    "cursor_style": "ALTERNATIVE_ANIMATED"
+  },
+  "music_mode": "TIME",
+  "music_time_schedule": "06:00|morning.mp3||18:30|evening.ogg",
+  "music_playlist": "a.mp3||b.mp3||c.mp3",
+  "music_playback_mode": "SHUFFLE",
+  "music_volume": 0.35,
+  "asset_refs": [
+    {
+      "id": "sfx-ee33ff",
+      "name": "Soft Sounds",
+      "category": "sounds",
+      "version": "1.2"
+    },
+    {
+      "id": "icons-aa11bb",
+      "name": "Round Icons",
+      "category": "icon_overlays",
+      "version": "1.0"
+    }
+  ]
+}

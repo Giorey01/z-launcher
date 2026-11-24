@@ -1,0 +1,10 @@
+{
+  "name": "Bad Colour",
+  "theme_mode": "sepia",
+  "color_scheme": {
+    "text_primary": "banana",
+    "text_secondary": "#12",
+    "divider": "rgba(0,0,0,2)",
+    "success": "#00ff00"
+  }
+}

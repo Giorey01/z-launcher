@@ -1,0 +1,19 @@
+{
+  "cases": [
+    {"path": "steam/Portal.steamappid", "platform": "steam", "name": "Portal", "extension": "steamappid", "kind": "SteamAppId", "tags": [["steamappid", "400"]], "issues": []},
+    {"path": "windows/Puzzle Box.localgameid", "platform": "windows", "name": "Puzzle Box", "extension": "localgameid", "kind": "LocalGameId", "tags": [["localgameid", "com.example.puzzle"]], "issues": []},
+    {"path": "scummvm/Island Tales.dpt", "platform": "scummvm", "name": "Island Tales", "extension": "dpt", "kind": "ScummvmId", "tags": [["scummvm_id", "monkey:en"]], "issues": []},
+    {"path": "psvita/Vita Quest.dpt", "platform": "psvita", "name": "Vita Quest", "extension": "dpt", "kind": "VitaGameId", "tags": [["vita_game_id", "PCSE00001"]], "issues": []},
+    {"path": "moonlight/Gaming PC.moonlight", "platform": "moonlight", "name": "Gaming PC", "extension": "moonlight", "kind": "MoonlightId", "tags": [["moonlight_id", "Desktop"]], "issues": []},
+    {"path": "xcloud/Space Racer.xcloud", "platform": "xcloud", "name": "Space Racer", "extension": "xcloud", "kind": "XcloudTitleId", "tags": [["titleId", "1234567890"]], "issues": []},
+    {"path": "steam/Crlf Game.steamappid", "platform": "steam", "name": "Crlf Game", "extension": "steamappid", "kind": "SteamAppId", "tags": [["steamappid", "620"]], "issues": []},
+    {"path": "steam/Bom Game.steamappid", "platform": "steam", "name": "Bom Game", "extension": "steamappid", "kind": "SteamAppId", "tags": [["steamappid", "730"]], "issues": []},
+    {"path": "steam/Mixed Case.steamappid", "platform": "steam", "name": "Mixed Case", "extension": "steamappid", "kind": "SteamAppId", "tags": [["SteamAppID", "10"], ["other_key", "kept as written"], ["steamappid", "20"]], "lookup": {"steamappid": "10", "STEAMAPPID": "10", "other_KEY": "kept as written"}, "issues": []},
+    {"path": "steam/Garbage.steamappid", "platform": "steam", "name": "Garbage", "extension": "steamappid", "kind": "SteamAppId", "tags": [["steamappid", "99"]], "issues": [{"line": 1, "code": "malformed_line"}, {"line": 2, "code": "malformed_line"}, {"line": 3, "code": "empty_key"}, {"line": 4, "code": "empty_value"}, {"line": 7, "code": "malformed_line"}]},
+    {"path": "edge/Both Keys.dpt", "platform": null, "name": "Both Keys", "extension": "dpt", "kind": "ScummvmId", "tags": [["scummvm_id", "both:en"], ["vita_game_id", "PCSB00002"]], "issues": []},
+    {"path": "psvita/Both Keys.dpt", "platform": "psvita", "name": "Both Keys", "extension": "dpt", "kind": "VitaGameId", "tags": [["scummvm_id", "both:en"], ["vita_game_id", "PCSB00002"]], "issues": []},
+    {"path": "edge/Vita No Folder.dpt", "platform": null, "name": "Vita No Folder", "extension": "dpt", "kind": "VitaGameId", "tags": [["vita_game_id", "PCSB00003"]], "issues": []},
+    {"path": "edge/Wrong Extension.txt", "platform": null, "name": "Wrong Extension", "extension": "txt", "kind": "Other", "tags": [["scummvm_id", "x"]], "issues": []},
+    {"path": "edge/No Key.steamappid", "platform": "steam", "name": "No Key", "extension": "steamappid", "kind": "Other", "tags": [["something", "else"]], "issues": []}
+  ]
+}

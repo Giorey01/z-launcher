@@ -1,0 +1,127 @@
+{
+  "cases": [
+    {
+      "case": "valid_video", "theme_id": "neon-drift-3fa9c1", "installed_packs": [],
+      "parsed": true, "name": "Neon Drift", "theme_mode": "dark",
+      "description": "A synthetic test theme.\r\nSecond line of the description.",
+      "colors": {
+        "accent_gradient_start": [52, 190, 237, 255],
+        "text_secondary": [138, 138, 138, 102],
+        "drop_shadow": [0, 0, 0, 128],
+        "inner_shadow_light": [255, 255, 255, 102]
+      },
+      "wallpaper_main": "main.mp4", "wallpaper_external": "external.webm",
+      "settings": {"highlight_thickness": 0.65000004, "glass_blur": 6.0, "hero_display_style": "FULLSCREEN", "hero_gradient_style": "BLACK_GRADIENT", "surface_material": "GLASS", "dock_icon_shape": "SQUIRCLE", "glass_on_tiles": true},
+      "music": {"jingle_volume": 1.0, "sfx_volume": 0.8, "music_volume": 0.5},
+      "asset_ref_categories": ["icon_overlays", "smart_folders", "sounds", "music"],
+      "issues": [
+        {"severity": "warning", "code": "missing_asset_pack", "location": "$.asset_refs[0]"},
+        {"severity": "warning", "code": "missing_asset_pack", "location": "$.asset_refs[1]"},
+        {"severity": "warning", "code": "missing_asset_pack", "location": "$.asset_refs[2]"},
+        {"severity": "warning", "code": "missing_asset_pack", "location": "$.asset_refs[3]"}
+      ]
+    },
+    {
+      "case": "valid_gif", "theme_id": "pixel-sky-b7c8d9", "installed_packs": [],
+      "parsed": true, "name": "Pixel Sky", "theme_mode": "light",
+      "colors": {"divider": [255, 255, 255, 255], "accent_glow": [52, 190, 237, 102], "tile_border": [138, 138, 138, 102]},
+      "wallpaper_main": "main.gif", "wallpaper_external": "external.gif",
+      "settings": {"hero_display_style": "VIGNETTE", "hero_vignette_size": 0.7, "icon_style": "FLAT", "cursor_style": "OUTLINED", "icon_roundness": 0.5},
+      "asset_ref_categories": ["music"],
+      "issues": [{"severity": "warning", "code": "missing_asset_pack", "location": "$.asset_refs[0]"}]
+    },
+    {
+      "case": "valid_png", "theme_id": "mono-grid-0a1b2c", "installed_packs": ["sfx-ee33ff", "icons-aa11bb"],
+      "parsed": true, "name": "Mono Grid", "theme_mode": "oled",
+      "colors": {"icon_tint": [200, 200, 200, 255], "selection_gradient_start": [255, 136, 0, 204]},
+      "wallpaper_main": "main.png", "wallpaper_external": "external.png",
+      "settings": {"glass_blur": 10.0, "cursor_style": "ALTERNATIVE_ANIMATED", "dock_icon_shape": "ROUNDED_SQUARE"},
+      "music": {
+        "mode": "TIME", "playback_mode": "SHUFFLE", "music_volume": 0.35,
+        "playlist": ["a.mp3", "b.mp3", "c.mp3"],
+        "schedule": [[6, 0, "morning.mp3"], [18, 30, "evening.ogg"]]
+      },
+      "asset_ref_categories": ["sounds", "icon_overlays"],
+      "issues": []
+    },
+    {
+      "case": "valid_layers", "theme_id": "full-stack-4d5e6f", "installed_packs": ["icons-aa11bb", "sfx-ee33ff"],
+      "parsed": true, "name": "Full Stack", "theme_mode": "dark",
+      "colors": {},
+      "wallpaper_main": "bottom.webp", "wallpaper_external": "top.png",
+      "asset_ref_categories": ["icon_overlays", "sounds"],
+      "layers": {
+        "preview": true,
+        "icon_overlays": {"gba": ["mask.png", "overlay.png"], "snes": ["mask.png", null]},
+        "smart_folders": {"favorites": ["icon.png", "hero.png", null], "recent": [null, null, "logo.png"]},
+        "smart_folders_by_platform": {"psx": ["icon.png", "hero.png", "logo.png"]},
+        "sounds": {"navigate": "navigate.wav", "saving_end": "saving_end.mp3", "select": "select.OGG"},
+        "music": ["evening.ogg", "morning.mp3"]
+      },
+      "issues": [
+        {"severity": "warning", "code": "unknown_sound_name", "location": "sounds/bogus.wav"},
+        {"severity": "warning", "code": "unknown_sound_name", "location": "sounds/notes.txt"}
+      ]
+    },
+    {
+      "case": "invalid_missing_name", "theme_id": "no-name-111111", "installed_packs": [],
+      "parsed": true, "name": "", "theme_mode": "dark", "colors": {},
+      "wallpaper_main": null, "wallpaper_external": null,
+      "issues": [{"severity": "error", "code": "missing_name", "location": "$.name"}]
+    },
+    {
+      "case": "invalid_trailing_comma", "theme_id": "comma-222222", "installed_packs": [],
+      "parsed": false, "wallpaper_main": null, "wallpaper_external": null,
+      "issues": [{"severity": "error", "code": "invalid_json", "location": "$"}]
+    },
+    {
+      "case": "invalid_missing_wallpaper", "theme_id": "gone-333333", "installed_packs": [],
+      "parsed": true, "name": "Gone", "theme_mode": null, "colors": {},
+      "wallpaper_main": null, "wallpaper_external": null,
+      "issues": [
+        {"severity": "error", "code": "missing_wallpaper_file", "location": "$.wallpaper_main"},
+        {"severity": "error", "code": "missing_wallpaper_file", "location": "$.wallpaper_external"}
+      ]
+    },
+    {
+      "case": "invalid_out_of_range", "theme_id": "range-444444", "installed_packs": [],
+      "parsed": true, "name": "Range", "theme_mode": "light", "colors": {},
+      "wallpaper_main": "main.png", "wallpaper_external": null,
+      "settings": {"icon_scale": 1.0, "icon_roundness": 0.0, "glass_blur": 10.0, "highlight_thickness": 0.65000004, "hero_display_style": "FULLSCREEN", "icon_style": null},
+      "music": {"music_volume": 1.0, "sfx_volume": 0.0},
+      "issues": [
+        {"severity": "warning", "code": "value_clamped", "location": "$.settings.icon_scale"},
+        {"severity": "warning", "code": "value_clamped", "location": "$.settings.icon_roundness"},
+        {"severity": "warning", "code": "value_clamped", "location": "$.settings.glass_blur"},
+        {"severity": "warning", "code": "unknown_enum_value", "location": "$.settings.icon_style"},
+        {"severity": "warning", "code": "value_clamped", "location": "$.music_volume"},
+        {"severity": "warning", "code": "value_clamped", "location": "$.sfx_volume"}
+      ]
+    },
+    {
+      "case": "invalid_unknown_keys", "theme_id": "unknown-555555", "installed_packs": [],
+      "parsed": true, "name": "Unknown", "theme_mode": null,
+      "colors": {"text_primary": [255, 255, 255, 255]},
+      "unknown_colors": ["mystery_tint"], "extras": ["flux_capacitor"], "settings_extras": ["warp_factor"],
+      "wallpaper_main": "main.png", "wallpaper_external": null,
+      "settings": {"icon_scale": 0.8},
+      "issues": [
+        {"severity": "warning", "code": "unknown_key", "location": "$.flux_capacitor"},
+        {"severity": "warning", "code": "unknown_key", "location": "$.color_scheme.mystery_tint"},
+        {"severity": "warning", "code": "unknown_key", "location": "$.settings.warp_factor"}
+      ]
+    },
+    {
+      "case": "invalid_bad_colour", "theme_id": "colour-666666", "installed_packs": [],
+      "parsed": true, "name": "Bad Colour", "theme_mode": null,
+      "colors": {"success": [0, 255, 0, 255]}, "absent_colors": ["text_primary", "text_secondary", "divider"],
+      "wallpaper_main": "main.png", "wallpaper_external": null,
+      "issues": [
+        {"severity": "warning", "code": "unknown_enum_value", "location": "$.theme_mode"},
+        {"severity": "warning", "code": "bad_color", "location": "$.color_scheme.text_primary"},
+        {"severity": "warning", "code": "bad_color", "location": "$.color_scheme.text_secondary"},
+        {"severity": "warning", "code": "bad_color", "location": "$.color_scheme.divider"}
+      ]
+    }
+  ]
+}

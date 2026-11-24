@@ -1,0 +1,14 @@
+{
+  "name": "Range",
+  "theme_mode": "LIGHT",
+  "settings": {
+    "icon_scale": 3,
+    "icon_roundness": -1,
+    "glass_blur": 99,
+    "highlight_thickness": 0.65000004,
+    "icon_style": "FANCY",
+    "hero_display_style": "fullscreen"
+  },
+  "music_volume": 5,
+  "sfx_volume": -0.5
+}

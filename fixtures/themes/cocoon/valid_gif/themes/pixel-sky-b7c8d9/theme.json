@@ -1,0 +1,32 @@
+{
+  "name": "Pixel Sky",
+  "author": "Synthetic Author",
+  "version": "2.0",
+  "theme_mode": "light",
+  "color_scheme": {
+    "background_gradient_start": "#e8f4ff",
+    "text_primary": "#102030",
+    "accent_glow": "rgba(52, 190, 237, 0.4)",
+    "tile_border": "#8a8a8a66",
+    "divider": "#FFF"
+  },
+  "wallpaper_main": "main.gif",
+  "wallpaper_external": "external",
+  "settings": {
+    "icon_roundness": 0.5,
+    "hero_display_style": "vignette",
+    "hero_vignette_size": 0.7,
+    "surface_material": "SOLID",
+    "cursor_style": "OUTLINED",
+    "icon_style": "FLAT",
+    "highlight_thickness": 0.65000004
+  },
+  "asset_refs": [
+    {
+      "id": "tunes-778899",
+      "name": "Sky Tunes",
+      "category": "music",
+      "version": "3"
+    }
+  ]
+}

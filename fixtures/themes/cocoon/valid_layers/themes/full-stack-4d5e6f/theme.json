@@ -1,0 +1,20 @@
+{
+  "name": "Full Stack",
+  "theme_mode": "dark",
+  "wallpaper_main": "bottom",
+  "wallpaper_external": "top",
+  "asset_refs": [
+    {
+      "id": "icons-aa11bb",
+      "name": "Round Icons",
+      "category": "icon_overlays",
+      "version": "1.0"
+    },
+    {
+      "id": "sfx-ee33ff",
+      "name": "Soft Sounds",
+      "category": "sounds",
+      "version": "1.2"
+    }
+  ]
+}

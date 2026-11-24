@@ -1,0 +1,68 @@
+{
+  "name": "Neon Drift",
+  "author": "Synthetic Author",
+  "version": "1.1",
+  "description": "A synthetic test theme.\r\nSecond line of the description.",
+  "credits": "Made for tests",
+  "website": "https://example.invalid/neon",
+  "theme_mode": "dark",
+  "color_scheme": {
+    "background_gradient_start": "#0b0f1a",
+    "background_gradient_end": "#1a2238",
+    "text_primary": "#ffffff",
+    "text_secondary": "#8a8a8a66",
+    "accent_gradient_start": "#34beed",
+    "accent_gradient_end": "#8a2be2",
+    "drop_shadow": "rgba(0,0,0,0.5)",
+    "inner_shadow_light": "#ffffff66"
+  },
+  "wallpaper_main": "main.mp4",
+  "wallpaper_external": "external.webm",
+  "settings": {
+    "icon_roundness": 0.25,
+    "icon_scale": 0.9,
+    "hover_scale": 1,
+    "hero_display_style": "FULLSCREEN",
+    "hero_logo_scale": 0.35,
+    "hero_gradient_style": "BLACK_GRADIENT",
+    "icon_style": "COLORED",
+    "surface_material": "GLASS",
+    "glass_blur": 6,
+    "glass_on_tiles": true,
+    "cursor_style": "ANIMATED",
+    "highlight_thickness": 0.65000004,
+    "dock_icon_shape": "SQUIRCLE",
+    "hide_dock_background": false,
+    "dock_on_top": false,
+    "corner_hints": true
+  },
+  "sfx_volume": 0.8,
+  "music_volume": 0.5,
+  "jingle_volume": 1,
+  "asset_refs": [
+    {
+      "id": "icons-aa11bb",
+      "name": "Round Icons",
+      "category": "icon_overlays",
+      "version": "1.0"
+    },
+    {
+      "id": "folders-cc22dd",
+      "name": "Folder Art",
+      "category": "smart_folders",
+      "version": "2.0"
+    },
+    {
+      "id": "sfx-ee33ff",
+      "name": "Soft Sounds",
+      "category": "sounds",
+      "version": "1.2"
+    },
+    {
+      "id": "tunes-001122",
+      "name": "Night Tunes",
+      "category": "music",
+      "version": "1.0"
+    }
+  ]
+}

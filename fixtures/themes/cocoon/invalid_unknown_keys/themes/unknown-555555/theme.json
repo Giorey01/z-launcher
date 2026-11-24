@@ -1,0 +1,12 @@
+{
+  "name": "Unknown",
+  "flux_capacitor": true,
+  "color_scheme": {
+    "text_primary": "#fff",
+    "mystery_tint": "#123456"
+  },
+  "settings": {
+    "icon_scale": 0.8,
+    "warp_factor": 9
+  }
+}
