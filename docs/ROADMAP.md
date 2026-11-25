@@ -15,17 +15,17 @@ fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare.
 | RF-08 | Lancio | Ordine di scelta dell'emulatore: gioco, poi sistema, poi estensione, poi chiedi | 1 | Fatto |
 | RF-09 | Lancio | Variabili nei profili, come `{rom}`, `{core}` e `{tags.NOME}` | 1 | Fatto |
 | RF-10 | Lancio | Rilevamento degli emulatori installati e proposta automatica nell'onboarding | 1 | Fatto |
-| RF-11 | Lancio | Lancio di giochi PC con profili per GameNative, GameHub, Winlator e DroidDeck | 7 |  |
+| RF-11 | Lancio | Lancio di giochi PC con profili per GameNative, GameHub, Winlator e DroidDeck | 7 | Parziale: profili di tutti e quattro, giochi Steam e Windows in una sola cartella "PC"; DroidDeck non provato su dispositivo |
 | RF-12 | Lancio | Gestore emulatori: segnala gli aggiornamenti e scarica le release ufficiali | 7 |  |
 | RF-13 | Organizzazione | Smart Folders: Preferiti, Recenti, Più giocati, Mai giocati, Nuovi, App, Emulatori, Per piattaforma | 2 |  |
 | RF-14 | Organizzazione | Simple Mode, con tutti i giochi nella Home | 2 |  |
 | RF-15 | Organizzazione | Cartelle manuali e lo stesso gioco in più cartelle | 2 |  |
 | RF-16 | Organizzazione | Ricerca e ordinamenti; selezione multipla con sposta e rimuovi | 2 |  |
 | RF-17 | Organizzazione | Nascondi gioco, preferito, valutazione | 2 |  |
-| RF-18 | Metadati | Orchestratore con fonti in ordine scelto: libretro-db, ScreenScraper, SteamGridDB, IGDB, LaunchBox, HLTB | 2 |  |
+| RF-18 | Metadati | Orchestratore con fonti in ordine scelto: libretro-db, ScreenScraper, SteamGridDB, IGDB, LaunchBox, HLTB | 2 | Parziale: SteamGridDB (immagini, chiave dell'utente), Steam Store (dettagli e screenshot, gratis), ES-DE; niente orchestratore |
 | RF-19 | Metadati | Tre modalità: solo mancanti, campi scelti, forza tutto | 2 |  |
 | RF-20 | Metadati | Campi protetti: una modifica manuale non viene sovrascritta | 2 |  |
-| RF-21 | Metadati | Import dei media già scaricati da ES-DE | 2 |  |
+| RF-21 | Metadati | Import dei media già scaricati da ES-DE | 2 | Fatto (media e `gamelist.xml`) |
 | RF-22 | Metadati | Modifica di nome, descrizione e artwork, con scelta tra le alternative | 2 |  |
 | RF-23 | Home | Griglia con zoom continuo e un layout salvato per ogni livello | 3 |  |
 | RF-24 | Home | Page Mode con righe e colonne per pagina e frecce di scorrimento | 3 |  |
@@ -55,7 +55,7 @@ fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare.
 | RF-48 | Temi | Quattro stili di cursore con gradiente proprio; maschere e cornici delle icone per piattaforma | 4 |  |
 | RF-49 | Temi | Validatore con errori comprensibili | 4 |  |
 | RF-50 | Temi | Theme Hub: catalogo da un indice su GitHub, anteprima, installazione, import ZIP | 4 |  |
-| RF-51 | Audio | Effetti sonori a bassa latenza per le 22 azioni | 4 |  |
+| RF-51 | Audio | Effetti sonori a bassa latenza per le 22 azioni | 4 | Parziale: suoni propri sintetizzati per le 22 azioni, sostituibili dal tema; latenza non misurata |
 | RF-52 | Audio | Musica in playlist, per ora del giorno o spenta; jingle per gioco; sfumatura quando parte un gioco | 4 |  |
 | RF-53 | Achievement | Hash compatibile con RetroAchievements per le piattaforme supportate | 5 |  |
 | RF-54 | Achievement | Trofei, percentuale, Hardcore e Softcore; abbinamento manuale | 5 |  |
@@ -71,7 +71,7 @@ fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare.
 | RF-64 | Widget | Orologio, Recenti, Ultimo giocato, Musica, Immagine, Log, Gioco casuale nella griglia | 6 |  |
 | RF-65 | Widget | Host di AppWidget Android di terze parti | 6 |  |
 | RF-66 | Widget | Pod Picnic: screenshot per gioco | 6 |  |
-| RF-67 | Steam e PC | Libreria Steam, ore e artwork con la Web API ufficiale | 7 |  |
+| RF-67 | Steam e PC | Libreria Steam, ore e artwork con la Web API ufficiale | 7 | Parziale: import dei giochi posseduti con la chiave dell'utente; ore non ancora salvate |
 | RF-68 | Pannelli | Pannello stato (RB): Wi-Fi, Bluetooth, Non disturbare, luminosità, volume, notifiche | 3 |  |
 | RF-69 | Pannelli | Pannello social (LB): amici Steam e Discord in sola lettura, conversazioni Android con risposta rapida | 8 |  |
 | RF-70 | Mod | Mod da GameBanana e cartelle mod degli emulatori; attiva o disattiva; conflitti | 8 |  |
@@ -79,6 +79,7 @@ fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare.
 | RF-72 | Sistema | Sync in LAN verso il PC di salvataggi, screenshot e backup | 8 |  |
 | RF-73 | Estensioni | Pod esterni: una build terza può aggiungere Pod che usano tema, suoni e libreria del launcher | 4 |  |
 | RF-74 | Sistema | Interfaccia in italiano e inglese | 1 | Fatto |
+| RF-75 | Libreria | App Android che sono giochi di una console (recomp, port) nella cartella di quella console, avviate come app | 2 | Fatto: `.localgameid` in ogni console, "Sposta in una console" dal cassetto |
 
 ## Requisiti non funzionali
 
