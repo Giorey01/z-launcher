@@ -1,0 +1,109 @@
+[
+  {
+    "installed": null,
+    "candidate": {
+      "version": "1.0.0",
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    "expected": "NEW"
+  },
+  {
+    "installed": {
+      "version": "1.0.0",
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    "candidate": {
+      "version": "1.0.1",
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    "expected": "UPDATE"
+  },
+  {
+    "installed": {
+      "version": "1.9.0",
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    "candidate": {
+      "version": "1.10.0",
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    "expected": "UPDATE"
+  },
+  {
+    "installed": {
+      "version": "1.0.0",
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    "candidate": {
+      "version": "2.0.0",
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    "expected": "UPDATE"
+  },
+  {
+    "installed": {
+      "version": "1.2.0",
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    "candidate": {
+      "version": "1.2.0",
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    "expected": "SAME_VERSION"
+  },
+  {
+    "installed": {
+      "version": "1.2.0",
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    "candidate": {
+      "version": "1.1.9",
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    "expected": "DOWNGRADE"
+  },
+  {
+    "installed": {
+      "version": "1.10.0",
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    "candidate": {
+      "version": "1.9.0",
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    "expected": "DOWNGRADE"
+  },
+  {
+    "installed": {
+      "version": "1.0.0",
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    "candidate": {
+      "version": "1.0.1",
+      "signer": "24f6ed6acbfe1009c030d7ca567c33ca4830911498236b5561a6c82abec5de28"
+    },
+    "expected": "SIGNER_CHANGED"
+  },
+  {
+    "installed": {
+      "version": "1.2.0",
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    "candidate": {
+      "version": "1.2.0",
+      "signer": "24f6ed6acbfe1009c030d7ca567c33ca4830911498236b5561a6c82abec5de28"
+    },
+    "expected": "SIGNER_CHANGED"
+  },
+  {
+    "installed": {
+      "version": "1.2.0",
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    "candidate": {
+      "version": "1.1.0",
+      "signer": "24f6ed6acbfe1009c030d7ca567c33ca4830911498236b5561a6c82abec5de28"
+    },
+    "expected": "SIGNER_CHANGED"
+  }
+]

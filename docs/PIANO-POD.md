@@ -58,7 +58,7 @@ autori esterni e maintainer.
 | `PodLoader` | `android/app/.../pods/` | Verifica, copia in sola lettura, carica con `DexClassLoader`, isola gli errori | esteso (`PodRegistry`) |
 | Slot | `android/app/.../ui/` | Dove i Pod si agganciano, vedi §5 | nuovo |
 | Schermata "Pod" | `android/app/.../ui/pods/` | Elenco installati, tasto **+**, store, aggiornamenti, disattivazione | nuovo |
-| `zl-net` | `crates/zl-net` | Già previsto in `PIANO.md` §2; **prerequisito** | nuovo |
+| `zl-net` | `crates/zl-net` | HTTP condiviso; **già presente**, `zl-pods` lo usa | portato |
 | `zl-pods` | `crates/zl-pods` | Vedi sotto | nuovo |
 | Migrazione `zl-db` | `crates/zl-db` | Tabelle `pods`, `pod_trust`, `pod_health` | esteso |
 | Costanti | `crates/zl-config` | Dimensione massima del `.zlpod`, soglia di crash, `apiVersion` corrente, indice predefinito | esteso |
@@ -154,9 +154,9 @@ Ogni fase si chiude solo con `bash scripts/gate.sh` e la verifica Android del `C
 
 | Fase | Cosa | Uscita |
 | --- | --- | --- |
-| **0. Specifica** | `docs/spec/pods.md` v2 (formato, slot, eventi, servizi, firma); `fixtures/pods/` | Spec e fixture riviste; ogni regola della spec ha un caso in fixture |
+| **0. Specifica** | **Fatta**: `docs/spec/pods.md` v2 (formato, slot, eventi, servizi, firma); `fixtures/pods/` generate da `scripts/gen_pod_fixtures.py` | Spec e fixture riviste; ogni regola della spec ha un caso in fixture |
 | **1. Spike del caricamento** | Un dex con un `@Composable` caricato da file, in build `release` con R8, con un `.so` di prova, su emulatore o dispositivo. Branch usa e getta | **Go/no-go.** Se non regge (classloader, R8, Compose) si decide prima di costruirci sopra |
-| **2. `zl-net`** | Trait, client `ureq`, retry, client finto | Test con client finto che possono fallire |
+| **2. `zl-net`** | **Già fatto** (portato, `964e4c0`): trait, client `ureq`, retry, client finto | Nulla da fare; `zl-pods` lo usa |
 | **3. `zl-pods` + DB + FFI** | Manifest, pacchetto, firma, trust, registro, health, indice | Fixture: `.zlpod` manomesso rifiutato, firma cambiata rifiutata, `apiVersion` troppo nuova rifiutata |
 | **4. `pod-ui`** | Estrazione di tema e componenti del pad in modulo; `:app` ci dipende | Nessuna differenza di comportamento; test JVM esistenti passano; navigazione col pad invariata |
 | **5. `pod-api`, loader e slot** | Contratto v2; `PodLoader`; slot uno alla volta; `pod-sample` | Test strumentati: il Pod di prova appare nel menu Start e come primo elemento di una griglia, e un suo crash non butta giù il launcher |

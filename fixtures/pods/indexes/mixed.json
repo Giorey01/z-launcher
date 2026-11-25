@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "name": "Test index",
+  "updated": "2026-11-25",
+  "pods": [
+    {
+      "id": "good.one",
+      "name": "Good.One",
+      "version": "1.0.0",
+      "api": 1,
+      "description": "Sample entry.",
+      "url": "https://example.invalid/pods/good.one-1.0.0.zlpod",
+      "sha256": "b822c98ae43838bd93a8d434e65386a8abeec9dcaff43b0e0e50f290b19d322f",
+      "size": 857,
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    {
+      "id": "http.url",
+      "name": "Http.Url",
+      "version": "1.0.0",
+      "api": 1,
+      "description": "Sample entry.",
+      "url": "http://example.invalid/x.zlpod",
+      "sha256": "b822c98ae43838bd93a8d434e65386a8abeec9dcaff43b0e0e50f290b19d322f",
+      "size": 857,
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    {
+      "id": "bad.hash",
+      "name": "Bad.Hash",
+      "version": "1.0.0",
+      "api": 1,
+      "description": "Sample entry.",
+      "url": "https://example.invalid/pods/bad.hash-1.0.0.zlpod",
+      "sha256": "xyz",
+      "size": 857,
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    {
+      "id": "Bad.Id",
+      "name": "Bad.Id",
+      "version": "1.0.0",
+      "api": 1,
+      "description": "Sample entry.",
+      "url": "https://example.invalid/pods/Bad.Id-1.0.0.zlpod",
+      "sha256": "b822c98ae43838bd93a8d434e65386a8abeec9dcaff43b0e0e50f290b19d322f",
+      "size": 857,
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    {
+      "id": "bad.version",
+      "name": "Bad.Version",
+      "version": "1.0",
+      "api": 1,
+      "description": "Sample entry.",
+      "url": "https://example.invalid/pods/bad.version-1.0.zlpod",
+      "sha256": "b822c98ae43838bd93a8d434e65386a8abeec9dcaff43b0e0e50f290b19d322f",
+      "size": 857,
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    {
+      "id": "missing.url",
+      "name": "Missing.Url",
+      "version": "1.0.0",
+      "api": 1,
+      "description": "Sample entry.",
+      "sha256": "b822c98ae43838bd93a8d434e65386a8abeec9dcaff43b0e0e50f290b19d322f",
+      "size": 857,
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    {
+      "id": "good.one",
+      "name": "Good.One",
+      "version": "2.0.0",
+      "api": 1,
+      "description": "Sample entry.",
+      "url": "https://example.invalid/pods/good.one-2.0.0.zlpod",
+      "sha256": "b822c98ae43838bd93a8d434e65386a8abeec9dcaff43b0e0e50f290b19d322f",
+      "size": 857,
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    {
+      "id": "future.pod",
+      "name": "Future.Pod",
+      "version": "1.0.0",
+      "api": 2,
+      "description": "Sample entry.",
+      "url": "https://example.invalid/pods/future.pod-1.0.0.zlpod",
+      "sha256": "b822c98ae43838bd93a8d434e65386a8abeec9dcaff43b0e0e50f290b19d322f",
+      "size": 857,
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    {
+      "id": "old.pod",
+      "name": "Old.Pod",
+      "version": "1.0.0",
+      "api": 0,
+      "description": "Sample entry.",
+      "url": "https://example.invalid/pods/old.pod-1.0.0.zlpod",
+      "sha256": "b822c98ae43838bd93a8d434e65386a8abeec9dcaff43b0e0e50f290b19d322f",
+      "size": 857,
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    }
+  ]
+}

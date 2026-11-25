@@ -1,0 +1,29 @@
+{
+  "schema": 2,
+  "name": "Test index",
+  "updated": "2026-11-25",
+  "pods": [
+    {
+      "id": "sample.hello",
+      "name": "Sample.Hello",
+      "version": "1.2.0",
+      "api": 1,
+      "description": "Sample entry.",
+      "url": "https://example.invalid/pods/sample.hello-1.2.0.zlpod",
+      "sha256": "b822c98ae43838bd93a8d434e65386a8abeec9dcaff43b0e0e50f290b19d322f",
+      "size": 857,
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    {
+      "id": "sample.lib",
+      "name": "Sample.Lib",
+      "version": "1.2.0",
+      "api": 1,
+      "description": "Sample entry.",
+      "url": "https://example.invalid/pods/sample.lib-1.2.0.zlpod",
+      "sha256": "025050246532ee13263f9db46bcb8750e10beea1ac614b2d88daaacc49f795f1",
+      "size": 1383,
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    }
+  ]
+}

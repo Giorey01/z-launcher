@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "id": "sample.hello",
+  "name": "Hello",
+  "version": "1.2.0",
+  "api": 1,
+  "author": {
+    "name": "Example",
+    "signer": "56475AA75463474C0285DF5DBF2BCAB73DA651358839E9B77481B2EAB107708C"
+  },
+  "entry": "dev.example.hello.HelloProvider",
+  "slots": [
+    "start_menu"
+  ],
+  "permissions": []
+}

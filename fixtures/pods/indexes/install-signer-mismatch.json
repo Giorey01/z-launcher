@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "name": "Test index",
+  "updated": "2026-11-25",
+  "pods": [
+    {
+      "id": "sample.hello",
+      "name": "Sample.Hello",
+      "version": "1.2.0",
+      "api": 1,
+      "description": "Sample entry.",
+      "url": "https://example.invalid/pods/sample.hello-1.2.0.zlpod",
+      "sha256": "b822c98ae43838bd93a8d434e65386a8abeec9dcaff43b0e0e50f290b19d322f",
+      "size": 857,
+      "signer": "24f6ed6acbfe1009c030d7ca567c33ca4830911498236b5561a6c82abec5de28"
+    }
+  ]
+}

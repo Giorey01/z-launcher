@@ -1,0 +1,11 @@
+{
+  "note": "TEST keys derived from public seeds; they sign nothing real.",
+  "a": {
+    "publicKey": "A6EHv/POEL4dcN0Y50vAmWfk1jCbpQ1fHdyGZBJVMbg=",
+    "fingerprint": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+  },
+  "b": {
+    "publicKey": "Kay64UG8yvCyLhqU000LxzYeUm0L/hLIl5S8kyKWbdc=",
+    "fingerprint": "24f6ed6acbfe1009c030d7ca567c33ca4830911498236b5561a6c82abec5de28"
+  }
+}
