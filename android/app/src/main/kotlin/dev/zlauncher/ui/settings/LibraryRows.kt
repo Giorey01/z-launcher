@@ -33,8 +33,8 @@ class LibraryRows(private val app: AppViewModel, private val model: SettingsMode
         val progress = model.artDownload?.done?.takeIf { model.resultRowRunning == id }
         val message = model.result?.takeIf { model.resultRow == id }
         return when {
-            model.busy && progress != null -> s(R.string.st_sgdb_progress, progress.first, progress.second)
-            model.busy -> s(R.string.st_working)
+            progress != null -> s(R.string.st_sgdb_progress, progress.first, progress.second)
+            model.busy && model.resultRowRunning == id -> s(R.string.st_working)
             else -> message?.let { formatUiMessage(context, it) } ?: default
         }
     }

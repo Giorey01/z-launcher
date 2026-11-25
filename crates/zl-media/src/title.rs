@@ -34,6 +34,14 @@ static VERSION_TAIL_RE: LazyLock<Regex> = LazyLock::new(|| {
     compile_regex(r"(?i)\bv?\d+\.\d+(\.\d+)*\b|\b(update|dlc|deluxe edition|complete edition)\b.*$")
 });
 
+/// An article moved behind the name, the No-Intro way: `Legend of Zelda, The - Subtitle`, also without
+/// the comma when a ` - ` subtitle follows (`Legend of Zelda The - Subtitle`), or `Name, The` at the end.
+static MOVED_ARTICLE_RE: LazyLock<Regex> = LazyLock::new(|| {
+    compile_regex(
+        r"^(?P<name>.+?)(?:, ?| )(?P<art>The|A|An)(?P<rest> - .+)$|^(?P<name2>.+?), (?P<art2>The|A|An)$",
+    )
+});
+
 /// Anything that is not an ASCII lowercase letter or digit.
 static NON_ALNUM_RE: LazyLock<Regex> = LazyLock::new(|| compile_regex(r"[^a-z0-9]+"));
 
@@ -55,9 +63,10 @@ const LANG_CODES: &[&str] = &[
 ];
 
 /// Strips the trailing `(...)` and `[...]` groups and dump/region/language tags from a title,
-/// and reads a title that has no spaces at all as written with underscores (`Super_Mario_Land` gives
-/// `Super Mario Land`). Conservative: only trailing groups and suffixes go, a title that would end up
-/// empty is kept as it is, and nothing else (articles, punctuation, case) is touched.
+/// reads a title that has no spaces at all as written with underscores (`Super_Mario_Land` gives
+/// `Super Mario Land`), and puts a moved article back in front (`Legend of Zelda, The - Link's
+/// Awakening` gives `The Legend of Zelda - Link's Awakening`). Conservative: only trailing groups and
+/// suffixes go, a title that would end up empty is kept as it is, and punctuation and case stay.
 pub fn display_title(title: &str) -> String {
     let stripped = strip_all_tags(title.trim());
     let base = if stripped.is_empty() {
@@ -69,10 +78,20 @@ pub fn display_title(title: &str) -> String {
         let spaced = base.replace('_', " ");
         let spaced = spaced.split_whitespace().collect::<Vec<_>>().join(" ");
         if !spaced.is_empty() {
-            return spaced;
+            return front_article(&spaced);
         }
     }
-    base.to_string()
+    front_article(base)
+}
+
+/// `Name, The - Rest` (or `Name The - Rest`, or `Name, The`) as `The Name - Rest`; others unchanged.
+fn front_article(title: &str) -> String {
+    let Some(c) = MOVED_ARTICLE_RE.captures(title) else {
+        return title.to_string();
+    };
+    let pick = |a: &str, b: &str| c.name(a).or_else(|| c.name(b)).map_or("", |m| m.as_str());
+    let rest = c.name("rest").map_or("", |m| m.as_str());
+    format!("{} {}{rest}", pick("art", "art2"), pick("name", "name2"))
 }
 
 /// Recursively removes dump suffixes, balanced bracket groups, revision tags, language bundles,
@@ -278,6 +297,28 @@ mod tests {
         ];
         for input in kept {
             assert_eq!(display_title(input), input, "{input}");
+        }
+    }
+
+    /// An article moved behind the name comes back in front; a "The" inside a title stays.
+    #[test]
+    fn puts_a_moved_article_back_in_front() {
+        let cases = [
+            (
+                "Legend of Zelda The - A Link Between Worlds Europe EnFrDeEsIt-decrypted",
+                "The Legend of Zelda - A Link Between Worlds",
+            ),
+            (
+                "Legend of Zelda, The - Ocarina of Time 3D (Europe)",
+                "The Legend of Zelda - Ocarina of Time 3D",
+            ),
+            ("Simpsons, The (USA)", "The Simpsons"),
+            ("Bug's Life, A", "A Bug's Life"),
+            ("Escape The Room", "Escape The Room"),
+            ("The Last of Us - Remastered", "The Last of Us - Remastered"),
+        ];
+        for (stored, shown) in cases {
+            assert_eq!(display_title(stored), shown, "{stored}");
         }
     }
 
