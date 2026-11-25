@@ -18,6 +18,7 @@
 mod cocoon;
 mod esde;
 mod found;
+pub mod gamelist;
 mod keys;
 mod title;
 mod walk;
@@ -25,5 +26,6 @@ mod walk;
 pub use cocoon::{parse_cocoon_name, scan_cocoon};
 pub use esde::{esde_media_dir, scan_esde};
 pub use found::FoundMedia;
+pub use gamelist::{export_gamelist, parse_gamelist, GamelistEntry};
 pub use keys::game_keys;
 pub use title::display_title;

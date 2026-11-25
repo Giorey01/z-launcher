@@ -298,3 +298,156 @@ pub struct MediaRow {
     /// The user's choice: an import never removes or replaces it, and it wins over all others.
     pub protected: bool,
 }
+
+/// A field that can be protected from automated scraping by a user override.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub enum MetaField {
+    /// Title override.
+    Title,
+    /// Synopsis or description.
+    Description,
+    /// Release date (YYYY-MM-DD).
+    ReleaseDate,
+    /// Developer studio.
+    Developer,
+    /// Publisher company.
+    Publisher,
+    /// Genres (comma-separated or JSON array).
+    Genres,
+    /// Maximum player count.
+    Players,
+    /// Critical rating.
+    Rating,
+}
+
+impl MetaField {
+    /// Stable spelling stored in the database.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            MetaField::Title => "title",
+            MetaField::Description => "description",
+            MetaField::ReleaseDate => "release_date",
+            MetaField::Developer => "developer",
+            MetaField::Publisher => "publisher",
+            MetaField::Genres => "genres",
+            MetaField::Players => "players",
+            MetaField::Rating => "rating",
+        }
+    }
+
+    /// Reads the stored spelling back.
+    pub fn parse(text: &str) -> Result<MetaField, DbError> {
+        match text {
+            "title" => Ok(MetaField::Title),
+            "description" => Ok(MetaField::Description),
+            "release_date" => Ok(MetaField::ReleaseDate),
+            "developer" => Ok(MetaField::Developer),
+            "publisher" => Ok(MetaField::Publisher),
+            "genres" => Ok(MetaField::Genres),
+            "players" => Ok(MetaField::Players),
+            "rating" => Ok(MetaField::Rating),
+            other => Err(DbError::InvalidValue(other.to_string())),
+        }
+    }
+}
+
+/// A protected user override for a specific metadata field.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MetaOverride {
+    /// The game row id.
+    pub game_id: i64,
+    /// The protected field.
+    pub field: MetaField,
+    /// The user-defined value.
+    pub value: String,
+}
+
+/// Stored metadata of a game.
+#[derive(Debug, Clone, PartialEq, Default)]
+pub struct GameMeta {
+    /// The game row id.
+    pub game_id: i64,
+    /// Synopsis or description.
+    pub description: Option<String>,
+    /// Release date (e.g. YYYY-MM-DD or YYYY).
+    pub release_date: Option<String>,
+    /// Developer name.
+    pub developer: Option<String>,
+    /// Publisher name.
+    pub publisher: Option<String>,
+    /// Comma-separated genres.
+    pub genres: Option<String>,
+    /// Number of players.
+    pub players: Option<u32>,
+    /// Game rating (0.0 - 5.0 or 0 - 100).
+    pub rating: Option<f32>,
+    /// Source that populated this row.
+    pub source: String,
+    /// Timestamp when metadata was saved, Unix seconds.
+    pub scraped_at: i64,
+}
+
+/// Scraping mode defining which fields to populate.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum ScrapeMode {
+    /// Only query and populate fields that are currently missing.
+    MissingOnly,
+    /// Populate specific chosen fields.
+    ChosenFields,
+    /// Force overwrite of all fields (except user-protected fields unless requested).
+    ForceAll,
+}
+
+impl ScrapeMode {
+    /// String identifier for settings.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            ScrapeMode::MissingOnly => "missing_only",
+            ScrapeMode::ChosenFields => "chosen_fields",
+            ScrapeMode::ForceAll => "force_all",
+        }
+    }
+
+    /// Parses string representation.
+    pub fn parse(text: &str) -> Result<ScrapeMode, DbError> {
+        match text {
+            "missing_only" => Ok(ScrapeMode::MissingOnly),
+            "chosen_fields" => Ok(ScrapeMode::ChosenFields),
+            "force_all" => Ok(ScrapeMode::ForceAll),
+            other => Err(DbError::InvalidValue(other.to_string())),
+        }
+    }
+}
+
+/// Metadata source identifier.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord, Default)]
+pub enum ScraperSource {
+    /// SteamGridDB API for artwork.
+    #[default]
+    SteamGridDb,
+    /// EmulationStation ES-DE gamelist.xml.
+    Esde,
+    /// User manual edit.
+    User,
+}
+
+impl ScraperSource {
+    /// Stable string spelling.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            ScraperSource::SteamGridDb => "steamgriddb",
+            ScraperSource::Esde => "esde",
+            ScraperSource::User => "user",
+        }
+    }
+
+    /// Parses source string.
+    pub fn parse(text: &str) -> Result<ScraperSource, DbError> {
+        match text {
+            "steamgriddb" => Ok(ScraperSource::SteamGridDb),
+            "esde" => Ok(ScraperSource::Esde),
+            "user" => Ok(ScraperSource::User),
+            other => Err(DbError::InvalidValue(other.to_string())),
+        }
+    }
+}

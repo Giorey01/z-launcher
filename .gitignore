@@ -8,3 +8,6 @@ local.properties
 .kotlin/
 android/core/native/src/main/jniLibs/
 android/core/native/src/main/kotlin/uniffi/
+
+# Note locali del maintainer (mai versionate)
+docs/local/

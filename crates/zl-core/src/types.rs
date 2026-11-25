@@ -134,3 +134,55 @@ pub enum LibraryMode {
     /// All games on the Home.
     Simple,
 }
+
+/// Comprehensive details of a game, including metadata and media.
+#[derive(Debug, Clone, PartialEq, Default)]
+pub struct GameDetails {
+    /// Row id.
+    pub id: i64,
+    /// Canonical platform id.
+    pub platform_id: String,
+    /// English platform name.
+    pub platform_name: String,
+    /// Original file title.
+    pub title: String,
+    /// Clean display title (with user override applied if set).
+    pub display_title: String,
+    /// Synopsis or description.
+    pub description: Option<String>,
+    /// Release date (YYYY-MM-DD or YYYY).
+    pub release_date: Option<String>,
+    /// Developer studio.
+    pub developer: Option<String>,
+    /// Publisher company.
+    pub publisher: Option<String>,
+    /// Comma-separated genres.
+    pub genres: Option<String>,
+    /// Maximum player count.
+    pub players: Option<u32>,
+    /// Rating normalized to 0.0 - 5.0.
+    pub rating: Option<f32>,
+    /// Best cover art path.
+    pub icon: Option<String>,
+    /// Best hero wallpaper path.
+    pub hero: Option<String>,
+    /// Best logo path.
+    pub logo: Option<String>,
+    /// Screenshot file paths.
+    pub screenshots: Vec<String>,
+    /// Video preview path.
+    pub video: Option<String>,
+}
+
+/// Configuration for the metadata scraper orchestrator.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ScraperConfig {
+    /// Priority order of metadata sources.
+    pub sources_order: Vec<zl_db::ScraperSource>,
+    /// Scraping mode defining which fields to populate.
+    pub mode: zl_db::ScrapeMode,
+    /// Whether bulk scraping should overwrite protected user fields.
+    pub overwrite_protected: bool,
+    /// SteamGridDB API key.
+    pub steamgriddb_key: Option<String>,
+}

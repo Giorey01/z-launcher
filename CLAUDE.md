@@ -3,6 +3,10 @@
 Launcher Android open source, gamepad-first. Repo **pubblica**.
 
 ## Documenti
+- `docs/PIANO.md`: **da leggere per primo.** Cosa costruiamo, dove va ogni cosa, l'ordine da
+  seguire prima di scrivere codice e come si porta codice già scritto.
+- `docs/local/EREDITA.md` (non versionato, se presente): quale codice già scritto e testato si
+  porta e da dove. Mai copiarne nomi o percorsi in file versionati.
 - `docs/ROADMAP.md`: requisiti funzionali e stato.
 - `docs/spec/cocoon-theme.md`: formato dei temi (Cocoon e nostre estensioni).
 - `docs/reference/cocoon-wiki.md`: comportamento di Cocoon da raggiungere.
@@ -20,7 +24,9 @@ Launcher Android open source, gamepad-first. Repo **pubblica**.
   logo. Le specifiche si scrivono in parole nostre in `docs/spec/`.
 - **Licenze.** Codice solo da progetti MIT/Apache/BSD (con attribuzione in `NOTICE`); da GPL
   solo idee. Dati CC-BY-SA con attribuzione.
-- **Prima di implementare** controlla che la funzione non esista già (codice, `git log`).
+- **Prima di implementare** segui l'ordine di `docs/PIANO.md` §3: esiste già qui (codice,
+  `git log`)? esiste nel codice ereditato? esiste in un progetto di riferimento? Solo dopo si
+  scrive da zero.
 
 ## Convenzioni di codice
 - Funzioni di al massimo 50 righe (`clippy.toml`); moduli divisi per responsabilità.

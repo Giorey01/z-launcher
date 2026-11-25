@@ -1,0 +1,20 @@
+[package]
+name = "zl-meta"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+zl-config = { path = "../zl-config" }
+zl-db = { path = "../zl-db" }
+zl-media = { path = "../zl-media" }
+
+[dev-dependencies]
+tempfile = { workspace = true }
+
+[lints]
+workspace = true

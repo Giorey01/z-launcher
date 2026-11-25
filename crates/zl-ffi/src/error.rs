@@ -43,6 +43,9 @@ pub enum CoreError {
     /// The dock has no free slot.
     #[error("dock_full")]
     DockFull,
+    /// An I/O error occurred.
+    #[error("io")]
+    Io,
 }
 
 impl From<ServiceError> for CoreError {
@@ -57,6 +60,7 @@ impl From<ServiceError> for CoreError {
             ServiceError::InvalidInput => CoreError::InvalidInput,
             ServiceError::Theme { code } => CoreError::Theme { code },
             ServiceError::DockFull => CoreError::DockFull,
+            ServiceError::Io => CoreError::Io,
         }
     }
 }

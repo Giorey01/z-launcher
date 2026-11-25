@@ -45,6 +45,9 @@ pub enum CoreError {
     /// The dock already holds the maximum number of shortcuts.
     #[error("dock_full")]
     DockFull,
+    /// File I/O failed.
+    #[error("io")]
+    Io,
 }
 
 impl From<DbError> for CoreError {

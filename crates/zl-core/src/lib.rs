@@ -19,6 +19,7 @@ mod error;
 mod launch;
 mod library;
 mod media;
+mod meta;
 mod platform_settings;
 mod prefs;
 mod theme_files;
@@ -44,8 +45,8 @@ pub use appearance_types::{
 pub use error::CoreError;
 pub use media::{GameMedia, MediaCount, MediaImportReport, MediaItem, MediaSources};
 pub use types::{
-    Candidate, Detection, GameEntry, InstalledView, LibraryMode, Plan, PlatformEmulatorSetting,
-    PlatformEntry, ProposedDefault, RootInfo,
+    Candidate, Detection, GameDetails, GameEntry, InstalledView, LibraryMode, Plan,
+    PlatformEmulatorSetting, PlatformEntry, ProposedDefault, RootInfo, ScraperConfig,
 };
 
 /// The service: an open library database and the platform data, shared by every call.

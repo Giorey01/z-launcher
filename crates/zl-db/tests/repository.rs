@@ -1,7 +1,8 @@
 //! Tests of migrations, WAL and the repository API.
 
 use zl_db::{
-    Db, DbError, GameFile, GameKind, GameQuery, MediaKind, MediaSource, NewGame, NewMedia,
+    Db, DbError, GameFile, GameKind, GameMeta, GameQuery, MediaKind, MediaSource, MetaField,
+    NewGame, NewMedia,
 };
 
 /// Result type of the tests: any error fails the test.
@@ -249,5 +250,93 @@ fn media_precedence_and_protection() -> TestResult {
     assert_eq!(best(&db)?, "/m/esde.png");
     db.delete_root(root)?;
     assert!(db.game_media(id)?.is_empty());
+    Ok(())
+}
+
+/// Metadata CRUD, user overrides and protected field behavior.
+#[test]
+fn meta_crud_and_overrides() -> TestResult {
+    let db = Db::open_in_memory()?;
+    let root = db.upsert_root("/roms", true)?;
+    let id = db.upsert_game(&game(root, "gba", "A", "/roms/gba/a.gba"), 1)?;
+
+    let meta = GameMeta {
+        game_id: id,
+        description: Some("Scraped synopsis".to_string()),
+        release_date: Some("2001-03-21".to_string()),
+        developer: Some("Original Dev".to_string()),
+        publisher: Some("Original Pub".to_string()),
+        genres: Some("Action, Platformer".to_string()),
+        players: Some(1),
+        rating: Some(4.5),
+        source: "esde".to_string(),
+        scraped_at: 0,
+    };
+    db.save_game_meta(&meta, false)?;
+
+    let loaded = db.game_meta(id)?.ok_or("missing meta")?;
+    assert_eq!(loaded.description.as_deref(), Some("Scraped synopsis"));
+    assert_eq!(loaded.developer.as_deref(), Some("Original Dev"));
+
+    db.set_meta_override(id, MetaField::Description, "User custom synopsis")?;
+    db.set_meta_override(id, MetaField::Developer, "User Dev")?;
+
+    let merged = db.game_meta(id)?.ok_or("missing merged meta")?;
+    assert_eq!(merged.description.as_deref(), Some("User custom synopsis"));
+    assert_eq!(merged.developer.as_deref(), Some("User Dev"));
+    assert_eq!(merged.publisher.as_deref(), Some("Original Pub"));
+
+    let raw = db.raw_game_meta(id)?.ok_or("missing raw meta")?;
+    assert_eq!(raw.description.as_deref(), Some("Scraped synopsis"));
+
+    db.clear_meta_override(id, MetaField::Developer)?;
+    let cleared = db.game_meta(id)?.ok_or("missing cleared meta")?;
+    assert_eq!(cleared.developer.as_deref(), Some("Original Dev"));
+    Ok(())
+}
+
+/// A database created at version 3 with games and media is migrated to version 4 preserving data.
+#[test]
+fn migration_from_v3_preserves_data() -> TestResult {
+    let dir = tempfile::tempdir()?;
+    let db_path = dir.path().join("library.db");
+    {
+        let conn = rusqlite::Connection::open(&db_path)?;
+        for sql in &zl_db::migrations::MIGRATIONS[..3] {
+            conn.execute_batch(sql)?;
+        }
+        conn.execute_batch("PRAGMA user_version = 3")?;
+        assert_eq!(zl_db::migrations::current_version(&conn)?, 3);
+
+        conn.execute(
+            "INSERT INTO rom_roots (path, enabled, scan_subfolders) VALUES ('/roms', 1, 1)",
+            [],
+        )?;
+        conn.execute("INSERT INTO platforms (id) VALUES ('gba')", [])?;
+        conn.execute(
+            "INSERT INTO games (root_id, platform_id, title, path, kind, size, mtime, fingerprint, missing, added_at, last_seen_scan)
+             VALUES (1, 'gba', 'Pokemon', '/roms/gba/p.gba', 'rom', 100, 10, 55, 0, 1234, 1)",
+            [],
+        )?;
+        conn.execute(
+            "INSERT INTO game_media (game_id, kind, path, source, edit, protected)
+             VALUES (1, 'icon', '/m/p.png', 'esde', NULL, 0)",
+            [],
+        )?;
+    }
+
+    let db = Db::open(&db_path)?;
+    assert_eq!(db.schema_version()?, 4);
+
+    let g = db.game(1)?.ok_or("game missing after migration")?;
+    assert_eq!(g.title, "Pokemon");
+    assert_eq!(g.path, "/roms/gba/p.gba");
+
+    let media = db.game_media(1)?;
+    assert_eq!(media.len(), 1);
+    assert_eq!(media[0].path, "/m/p.png");
+
+    let meta = db.game_meta(1)?;
+    assert!(meta.is_none());
     Ok(())
 }

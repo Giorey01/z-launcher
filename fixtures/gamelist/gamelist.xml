@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<gameList>
+    <game>
+        <path>./Kirby Mass Attack.nds</path>
+        <name>Kirby Mass Attack</name>
+        <desc>Kirby is split into ten smaller copies of himself in this stylus-controlled adventure.</desc>
+        <releasedate>20110919T000000</releasedate>
+        <developer>HAL Laboratory</developer>
+        <publisher>Nintendo</publisher>
+        <genre>Platformer</genre>
+        <players>1</players>
+        <rating>0.85</rating>
+    </game>
+    <game>
+        <path>./Metroid Fusion.gba</path>
+        <name>Metroid Fusion</name>
+        <desc>Samus Aran investigates an infection on the BSL research station.</desc>
+        <releasedate>20021117T000000</releasedate>
+        <publisher>Nintendo</publisher>
+        <genre>Action-Adventure</genre>
+    </game>
+</gameList>

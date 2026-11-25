@@ -9,6 +9,7 @@ members = [
     "crates/zl-platforms",
     "crates/zl-tags",
     "crates/zl-theme",
+    "crates/zl-meta",
     "crates/zl-ffi",
 ]
 
@@ -27,6 +28,8 @@ tempfile = "3.12"
 zip = { version = "2.6", default-features = false, features = ["deflate"] }
 uniffi = "0.29"
 rusqlite = { version = "0.37", features = ["bundled"] }
+quick-xml = "0.37"
+ureq = { version = "2.10", default-features = false, features = ["tls", "json"] }
 
 [workspace.lints.clippy]
 unwrap_used = "deny"

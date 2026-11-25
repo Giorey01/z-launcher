@@ -28,4 +28,6 @@ fun CoreException.toMessage(): UiMessage = when (this) {
     is CoreException.InvalidInput -> UiMessage(R.string.msg_invalid_input)
     is CoreException.Theme -> UiMessage(R.string.msg_theme_import, listOf(code))
     is CoreException.DockFull -> UiMessage(R.string.msg_dock_full)
+    is CoreException.Io -> UiMessage(R.string.msg_invalid_input)
 }
+

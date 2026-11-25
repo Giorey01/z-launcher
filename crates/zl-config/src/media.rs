@@ -39,3 +39,22 @@ pub const MANUAL_EXTENSIONS: [&str; 1] = ["pdf"];
 
 /// Extensions (lower case) of the files taken as video wallpapers of a theme.
 pub const VIDEO_WALLPAPER_EXTENSIONS: [&str; 4] = ["mp4", "webm", "mkv", "mov"];
+
+/// SteamGridDB API v2 base URL.
+pub const STEAMGRIDDB_API_BASE: &str = "https://www.steamgriddb.com/api/v2";
+
+/// User Agent string for HTTP requests sent to metadata APIs.
+pub const HTTP_USER_AGENT: &str =
+    "Z-Launcher/0.0.1 (Android; Controller-First Open Source Launcher)";
+
+/// Network timeout in milliseconds for HTTP calls.
+pub const HTTP_TIMEOUT_MS: u64 = 10_000;
+
+/// Default delay between consecutive online API requests in milliseconds to avoid rate limits.
+pub const SCRAPER_REQUEST_DELAY_MS: u64 = 350;
+
+/// Maximum number of retry attempts when encountering transient errors or 429 rate limit.
+pub const SCRAPER_MAX_RETRIES: u32 = 3;
+
+/// Initial backoff delay in milliseconds when a 429 Too Many Requests response is encountered.
+pub const SCRAPER_BACKOFF_INITIAL_MS: u64 = 1_000;

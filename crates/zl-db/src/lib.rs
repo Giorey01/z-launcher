@@ -34,6 +34,7 @@ mod emulators;
 mod error;
 mod games;
 mod media;
+mod meta;
 pub mod migrations;
 mod models;
 mod roots;
@@ -42,6 +43,7 @@ mod settings;
 pub use db::Db;
 pub use error::DbError;
 pub use models::{
-    Counts, ExistingGame, Game, GameFile, GameKind, GameQuery, MediaKind, MediaRow, MediaSource,
-    NewGame, NewMedia, PlatformCount, Root,
+    Counts, ExistingGame, Game, GameFile, GameKind, GameMeta, GameQuery, MediaKind, MediaRow,
+    MediaSource, MetaField, MetaOverride, NewGame, NewMedia, PlatformCount, Root, ScrapeMode,
+    ScraperSource,
 };

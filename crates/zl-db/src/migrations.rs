@@ -87,8 +87,31 @@ CREATE TABLE game_media (
 ) WITHOUT ROWID;
 ";
 
+/// Step 4: extended game metadata (synopsis, release date, developer, publisher, genres, players,
+/// rating), protected user overrides, and ROM hashes cache.
+const STEP_4: &str = "
+CREATE TABLE game_meta (
+    game_id INTEGER PRIMARY KEY REFERENCES games(id) ON DELETE CASCADE,
+    description TEXT,
+    release_date TEXT,
+    developer TEXT,
+    publisher TEXT,
+    genres TEXT,
+    players INTEGER,
+    rating REAL,
+    source TEXT NOT NULL,
+    scraped_at INTEGER NOT NULL DEFAULT (unixepoch())
+);
+CREATE TABLE game_meta_overrides (
+    game_id INTEGER NOT NULL REFERENCES games(id) ON DELETE CASCADE,
+    field TEXT NOT NULL,
+    value TEXT NOT NULL,
+    PRIMARY KEY (game_id, field)
+) WITHOUT ROWID;
+";
+
 /// All steps in order; step `n` is `MIGRATIONS[n - 1]`.
-pub const MIGRATIONS: &[&str] = &[STEP_1, STEP_2, STEP_3];
+pub const MIGRATIONS: &[&str] = &[STEP_1, STEP_2, STEP_3, STEP_4];
 
 /// Reads the schema version of the open database.
 pub fn current_version(conn: &Connection) -> Result<u32, DbError> {
