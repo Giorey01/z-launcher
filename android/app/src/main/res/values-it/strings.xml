@@ -304,4 +304,15 @@
     <string name="msg_sgdb_cancelled">Interrotto. %1$s immagini scaricate.</string>
     <string name="msg_sgdb_result">%1$s immagini per %2$s giochi. %3$s giochi non trovati.</string>
     <string name="msg_sgdb_working">Scaricamento immagini…</string>
+    <string name="menu_pin_dock">Aggiungi al dock</string>
+    <string name="menu_unpin_dock">Togli dal dock</string>
+    <string name="menu_file_console">Sposta in una console…</string>
+    <string name="menu_unfile_console">Togli dalla console</string>
+    <string name="console_picker_title">Sposta %1$s in una console</string>
+    <string name="console_picker_hint">L\'app compare tra i giochi della console che scegli e si avvia da sola.</string>
+    <string name="console_picker_games">%1$s giochi</string>
+    <string name="msg_app_filed">%1$s ora è tra i giochi %2$s.</string>
+    <string name="msg_app_unfiled">%1$s non è più tra i giochi della console.</string>
+    <string name="msg_app_file_failed">Non è stato possibile scrivere il file nella cartella dei giochi. Controlla l\'accesso a tutti i file.</string>
+    <string name="msg_app_no_folder">Aggiungi prima una cartella dei giochi nelle impostazioni.</string>
 </resources>

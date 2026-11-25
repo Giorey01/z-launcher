@@ -23,6 +23,14 @@ sealed interface Screen {
 
     /** The settings (the main part on the hero display in the dual-screen mode). */
     data object Settings : Screen
+
+    /** The consoles an Android app (a recomp or port) can be filed under. */
+    data class ConsolePicker(
+        /** Package of the app. */
+        val packageName: String,
+        /** Label of the app, used as the game's title. */
+        val label: String,
+    ) : Screen
 }
 
 /** A menu floating over the Home. At most one is open. */
@@ -37,6 +45,16 @@ sealed interface Overlay {
 
     /** The Start menu: Apps, Sort, Settings. */
     data object StartMenu : Overlay
+
+    /** The Y menu of an app in the drawer: pin to the dock, file under a console. */
+    data class AppMenu(
+        /** Package of the app. */
+        val packageName: String,
+        /** Label of the app. */
+        val label: String,
+        /** Whether the app is pinned to the dock. */
+        val pinned: Boolean,
+    ) : Overlay
 }
 
 

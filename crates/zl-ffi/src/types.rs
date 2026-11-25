@@ -137,6 +137,8 @@ pub struct GameEntry {
     pub hero: Option<String>,
     /// Best logo.
     pub logo: Option<String>,
+    /// For an Android app filed under a console (a recomp or port), its package.
+    pub app_package: Option<String>,
 }
 
 impl From<core::GameEntry> for GameEntry {
@@ -153,6 +155,7 @@ impl From<core::GameEntry> for GameEntry {
             icon: g.icon,
             hero: g.hero,
             logo: g.logo,
+            app_package: g.app_package,
         }
     }
 }
@@ -328,6 +331,8 @@ pub enum ResolvedBy {
     ExtensionRule,
     /// The only installed candidate.
     OnlyCandidate,
+    /// The game is an Android app filed under a console; the app itself starts.
+    AndroidApp,
 }
 
 impl From<plat::ResolvedBy> for ResolvedBy {
@@ -338,6 +343,7 @@ impl From<plat::ResolvedBy> for ResolvedBy {
             plat::ResolvedBy::PlatformDefault => ResolvedBy::PlatformDefault,
             plat::ResolvedBy::ExtensionRule => ResolvedBy::ExtensionRule,
             plat::ResolvedBy::OnlyCandidate => ResolvedBy::OnlyCandidate,
+            plat::ResolvedBy::AndroidApp => ResolvedBy::AndroidApp,
         }
     }
 }

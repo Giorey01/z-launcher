@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.RemoveCircleOutline
 import androidx.compose.material.icons.rounded.Smartphone
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -113,7 +114,10 @@ private fun entries(
         app.overlay = null
         app.downloadArt(game)
     }
-    return listOf(launch, edit, art)
+    val unfile = game.appPackage?.let {
+        MenuEntry(Icons.Rounded.RemoveCircleOutline, stringResource(R.string.menu_unfile_console)) { app.unfileApp(game) }
+    }
+    return listOfNotNull(launch, edit.takeIf { game.appPackage == null }, art, unfile)
 }
 
 /** The displays that are on, the larger as the top screen. */

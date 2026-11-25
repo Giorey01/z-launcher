@@ -49,6 +49,24 @@ qualunque client li lanci.
 - Artwork della cartella: quello con l'id della cartella, poi quello di ciascuna piattaforma
   membro, immagine per immagine (icona, hero, logo).
 
+### App Android dentro una console (recomp e port)
+
+Un'app Android che è un gioco di una console (un recomp o un port) sta nella cartella di quella
+console con un file `.localgameid` (nome del file = titolo, riga `[localgameid] <package>`), lo
+stesso formato che Cocoon usa per `windows/`.
+
+- Ogni cartella di console accetta `.localgameid`, non solo `windows/`.
+- Se la piattaforma non usa `localgameid` nei suoi file tag (cioè non è Windows, dove ES-DE e
+  GameNative gli danno un altro significato) e il valore è un nome di package (almeno due parti
+  separate da punti, ciascuna che comincia con una lettera), il gioco **avvia l'app stessa**:
+  `MAIN` + `LAUNCHER` verso il package, flag `new_task`, profilo riportato `android/app`, scelta
+  `android_app`. Nessun emulatore, nemmeno quello predefinito della console.
+- "Sposta in una console" (menu Y di un'app nel cassetto) scrive quel file nella cartella della
+  console dentro la prima cartella dei giochi attiva (se esiste già con qualunque maiuscola o
+  alias la riusa, se no crea `<id>`), poi riscansiona. "Togli dalla console" cancella il file. Il
+  file è l'unico record: sopravvive a reinstallazioni e backup e lo leggono gli altri launcher.
+- L'id `android` è riservato: nessun emulatore può usarlo.
+
 ## `emulators.json`
 
 Primo livello: `schema`, `version`, `sources`, `default_preference`, `preferences`, `emulators`.

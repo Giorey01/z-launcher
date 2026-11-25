@@ -305,3 +305,81 @@ fn pc_folder_groups_steam_and_windows_games() -> Res {
     assert_eq!(intent.extras.len(), 1);
     Ok(())
 }
+
+/// A recomp filed under a console: written as a `.localgameid` file in the console's existing
+/// folder, listed with the console's games, launched as the app itself, taken out again.
+#[test]
+fn android_apps_filed_under_a_console() -> Res {
+    let dir = tempfile::tempdir()?;
+    let root = dir.path().join("Games");
+    touch(&root.join("N64/Mario.z64"))?;
+    fs::create_dir_all(root.join("psx"))?;
+    fs::write(
+        root.join("psx/Port.localgameid"),
+        "[localgameid] org.example.port\n",
+    )?;
+    let svc = Service::open(&dir.path().join("data"))?;
+    svc.add_root(&root.to_string_lossy(), None)?;
+    svc.scan(&NoProgress)?;
+    assert_eq!(
+        svc.games(Some("psx"))?.len(),
+        1,
+        "a hand-written tag file counts"
+    );
+    let id = svc.file_app(
+        "org.example.recomp",
+        "Zelda 64: Recompiled",
+        "n64",
+        &NoProgress,
+    )?;
+    let written = fs::read_to_string(root.join("N64/Zelda 64 Recompiled.localgameid"))?;
+    assert_eq!(written, "[localgameid] org.example.recomp\n");
+    let titles: Vec<String> = svc
+        .games(Some("n64"))?
+        .into_iter()
+        .map(|g| g.title)
+        .collect();
+    assert_eq!(titles, ["Mario", "Zelda 64 Recompiled"]);
+    let packages: Vec<Option<String>> = svc
+        .games(Some("n64"))?
+        .into_iter()
+        .map(|g| g.app_package)
+        .collect();
+    assert_eq!(packages, [None, Some("org.example.recomp".into())]);
+    let again = svc.file_app(
+        "org.example.recomp",
+        "Zelda 64: Recompiled",
+        "n64",
+        &NoProgress,
+    )?;
+    assert_eq!(again, id, "filing the same app twice reuses its file");
+    let Plan::Launch {
+        intent,
+        profile,
+        by,
+    } = svc.plan_launch(id, &pkgs(&["org.example.recomp"]))?
+    else {
+        return Err("expected a launch".into());
+    };
+    assert_eq!(by, ResolvedBy::AndroidApp);
+    assert_eq!(profile.emulator, "android");
+    assert_eq!(intent.package, "org.example.recomp");
+    assert_eq!(intent.activity, None);
+    svc.unfile_app(id, &NoProgress)?;
+    assert!(!root.join("N64/Zelda 64 Recompiled.localgameid").exists());
+    assert_eq!(svc.games(Some("n64"))?.len(), 1);
+    let rom = svc.games(Some("n64"))?[0].id;
+    assert_eq!(
+        svc.unfile_app(rom, &NoProgress),
+        Err(CoreError::InvalidInput)
+    );
+    assert_eq!(
+        svc.file_app("org.example.recomp", "?", "n64", &NoProgress),
+        Err(CoreError::InvalidInput)
+    );
+    assert_eq!(
+        svc.file_app("org.example.recomp", "X", "nope", &NoProgress),
+        Err(CoreError::NotFound)
+    );
+    Ok(())
+}

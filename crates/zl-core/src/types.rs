@@ -50,6 +50,8 @@ pub struct GameEntry {
     pub hero: Option<String>,
     /// Best logo.
     pub logo: Option<String>,
+    /// For an Android app filed under a console (a recomp or port), its package.
+    pub app_package: Option<String>,
 }
 
 /// A platform of the library with its default emulator, for the settings screen.

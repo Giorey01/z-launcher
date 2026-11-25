@@ -34,7 +34,7 @@ pub fn validate(p: &PlatformsFile, e: &EmulatorsFile) -> Result<(), DbError> {
     validate_folders(p)?;
     let mut emu_ids = HashSet::new();
     for emu in &e.emulators {
-        if !emu_ids.insert(emu.id.as_str()) {
+        if emu.id == crate::plan::ANDROID_APP_EMULATOR || !emu_ids.insert(emu.id.as_str()) {
             return Err(invalid("duplicate_emulator_id", &emu.id));
         }
         validate_emulator(emu, &ids)?;

@@ -22,6 +22,7 @@ import dev.zlauncher.ui.hero.HeroArea
 import dev.zlauncher.ui.hero.StatusPill
 import dev.zlauncher.ui.home.GridSpec
 import dev.zlauncher.ui.home.LocalGridSpec
+import dev.zlauncher.ui.menus.AppMenu
 import dev.zlauncher.ui.menus.GameMenu
 import dev.zlauncher.ui.menus.StartMenu
 import dev.zlauncher.ui.theme.LocalZTheme
@@ -44,7 +45,8 @@ fun SingleRoot(app: AppViewModel) {
     val theme = LocalZTheme.current
     val settings = theme.settings
     WallpaperScreen(theme.wallpaperMain) {
-        if (app.top == Screen.Settings || app.top == Screen.Drawer || app.top == Screen.Picker) {
+        val fullScreen = app.top == Screen.Settings || app.top == Screen.Drawer || app.top == Screen.Picker
+        if (fullScreen || app.top is Screen.ConsolePicker) {
             GridContent(app, single = true)
         } else {
             SingleContent(app, settings)
@@ -53,6 +55,7 @@ fun SingleRoot(app: AppViewModel) {
             null -> Unit
             is Overlay.GameMenu -> GameMenu(app, menu)
             Overlay.StartMenu -> StartMenu(app)
+            is Overlay.AppMenu -> AppMenu(app, menu)
         }
         app.message?.let { MessageLine(it, { app.message = null }, Modifier.align(Alignment.BottomCenter)) }
     }

@@ -165,6 +165,14 @@ impl Db {
         rows.next()?.map(game_from_row).transpose()
     }
 
+    /// Looks up one game by the path of its primary file.
+    pub fn game_by_path(&self, path: &str) -> Result<Option<Game>, DbError> {
+        let sql = format!("SELECT {GAME_COLUMNS} FROM games WHERE path = ?1");
+        let mut stmt = self.conn.prepare(&sql)?;
+        let mut rows = stmt.query(params![path])?;
+        rows.next()?.map(game_from_row).transpose()
+    }
+
     /// Count of visible games per stored platform id, platforms without games left out.
     pub fn platform_counts(&self) -> Result<Vec<PlatformCount>, DbError> {
         let mut stmt = self.conn.prepare(

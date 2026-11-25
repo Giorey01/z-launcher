@@ -304,4 +304,15 @@
     <string name="msg_sgdb_cancelled">Stopped. %1$s images downloaded.</string>
     <string name="msg_sgdb_result">%1$s images for %2$s games. %3$s games not found.</string>
     <string name="msg_sgdb_working">Downloading images…</string>
+    <string name="menu_pin_dock">Pin to the dock</string>
+    <string name="menu_unpin_dock">Remove from the dock</string>
+    <string name="menu_file_console">Move to a console…</string>
+    <string name="menu_unfile_console">Remove from the console</string>
+    <string name="console_picker_title">Move %1$s to a console</string>
+    <string name="console_picker_hint">The app shows up with the games of the console you pick, and starts as itself.</string>
+    <string name="console_picker_games">%1$s games</string>
+    <string name="msg_app_filed">%1$s is now with the %2$s games.</string>
+    <string name="msg_app_unfiled">%1$s is no longer with the console games.</string>
+    <string name="msg_app_file_failed">The file in the games folder could not be written. Check the access to all files.</string>
+    <string name="msg_app_no_folder">Add a games folder in Settings first.</string>
 </resources>

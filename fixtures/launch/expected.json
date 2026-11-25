@@ -212,6 +212,30 @@
       }
     },
     {
+      "name": "an android app filed under a console starts itself, not the console's emulator",
+      "installed_packages": ["com.retroarch.aarch64", "org.example.recomp"],
+      "request": {
+        "context": {
+          "rom_path": "/storage/emulated/0/Games/n64/Zelda 64 Recompiled.localgameid",
+          "platform": "n64",
+          "tags": {"localgameid": "org.example.recomp"}
+        },
+        "platform_default": {"emulator": "retroarch", "profile": "core", "core": "mupen64plus_next_gles3"}
+      },
+      "expected": {
+        "launch": {
+          "intent": {
+            "action": "android.intent.action.MAIN",
+            "package": "org.example.recomp",
+            "categories": ["android.intent.category.LAUNCHER"],
+            "flags": ["new_task"]
+          },
+          "profile": {"emulator": "android", "profile": "app"},
+          "by": "android_app"
+        }
+      }
+    },
+    {
       "name": "eden with ClipData and the flags observed on a device",
       "installed_packages": ["dev.eden.eden_emulator"],
       "request": {

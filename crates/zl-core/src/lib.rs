@@ -13,6 +13,7 @@
     clippy::cognitive_complexity
 )]
 
+mod app_games;
 mod appearance_types;
 mod detect;
 mod error;

@@ -4,9 +4,10 @@ use std::collections::BTreeMap;
 use std::path::PathBuf;
 
 use zl_config::platforms::FOLDER_GAME_RULES;
-use zl_db::{Db, GameQuery, MediaKind, Root};
+use zl_db::{Db, Game, GameKind, GameQuery, MediaKind, Root};
 use zl_library::{scan, ExtensionRules, FolderGameRule, RootSpec, ScanProgress, ScanSummary};
 use zl_media::display_title;
+use zl_platforms::ANDROID_PACKAGE_TAG;
 
 use crate::error::CoreError;
 use crate::types::{GameEntry, PlatformEntry, RootInfo};
@@ -47,11 +48,16 @@ impl Service {
     }
 
     /// The scanner rules: the extensions of every platform (also under each alias, so a folder
-    /// named `sfc` is read as `snes`) and the folder-per-game rules.
+    /// named `sfc` is read as `snes`), `.localgameid` everywhere, and the folder-per-game rules.
     fn extension_rules(&self) -> ExtensionRules {
         let mut rules = ExtensionRules::new();
         for p in self.platforms.platforms() {
-            let exts: Vec<&str> = p.extensions.iter().map(String::as_str).collect();
+            let mut exts: Vec<&str> = p.extensions.iter().map(String::as_str).collect();
+            // Every console folder takes `.localgameid` files: an Android app (a recomp or a
+            // port) filed under that console.
+            if !exts.contains(&ANDROID_PACKAGE_TAG) {
+                exts.push(ANDROID_PACKAGE_TAG);
+            }
             for name in std::iter::once(&p.id).chain(&p.aliases) {
                 rules.insert(name, &exts);
             }
@@ -140,6 +146,18 @@ impl Service {
         }
     }
 
+    /// The package of a tag-file game that is an Android app filed under its console.
+    fn app_package_of(&self, db: &Db, game: &Game, canonical: &str) -> Option<String> {
+        if game.kind != GameKind::TagFile {
+            return None;
+        }
+        let tags = db.game_tags(game.id).ok()?;
+        let (_, value) = tags.into_iter().find(|(k, _)| k == ANDROID_PACKAGE_TAG)?;
+        self.platforms
+            .is_android_app(canonical, &value)
+            .then_some(value)
+    }
+
     /// The games of one Home folder or platform (any id or alias), or of every platform with
     /// `None`, by title. Missing games are left out.
     pub fn games(&self, platform: Option<&str>) -> Result<Vec<GameEntry>, CoreError> {
@@ -160,6 +178,7 @@ impl Service {
                 icon: art.get(&(g.id, MediaKind::Icon)).cloned(),
                 hero: art.get(&(g.id, MediaKind::Hero)).cloned(),
                 logo: art.get(&(g.id, MediaKind::Logo)).cloned(),
+                app_package: self.app_package_of(&db, &g, &canonical),
                 title: g.title,
                 platform_name: self.platform_name(&canonical),
                 platform_id: canonical,
