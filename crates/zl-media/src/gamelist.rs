@@ -35,38 +35,35 @@ pub struct GamelistEntry {
 }
 
 /// Parses a `gamelist.xml` document into a list of [`GamelistEntry`].
+///
+/// Text may be plain or CDATA and may come in several pieces; an element with no text leaves its
+/// field unset; a reference the XML does not define (`Tom & Jerry` written without escaping, or
+/// `&nbsp;`) is kept as written instead of failing the whole file.
 pub fn parse_gamelist(xml_content: &str) -> Result<Vec<GamelistEntry>, String> {
     let mut reader = Reader::from_str(xml_content);
     reader.config_mut().trim_text(true);
     let mut entries = Vec::new();
     let mut current: Option<GamelistEntry> = None;
-    let mut current_tag = String::new();
+    let mut text = String::new();
     let mut buf = Vec::new();
 
     loop {
         match reader.read_event_into(&mut buf) {
             Ok(Event::Start(ref e)) => {
-                let name = String::from_utf8_lossy(e.name().as_ref()).to_string();
-                if name == "game" {
+                if e.name().as_ref() == b"game" {
                     current = Some(GamelistEntry::default());
-                } else if current.is_some() {
-                    current_tag = name;
                 }
+                text.clear();
             }
-            Ok(Event::Text(ref e)) => {
-                let text = e.unescape().map_err(|err| err.to_string())?.to_string();
-                if let Some(ref mut entry) = current {
-                    apply_gamelist_field(entry, &current_tag, &text);
-                }
-            }
+            Ok(Event::Text(ref e)) => match e.unescape() {
+                Ok(piece) => text.push_str(&piece),
+                Err(_) => text.push_str(&String::from_utf8_lossy(e)),
+            },
+            Ok(Event::CData(ref e)) => text.push_str(&String::from_utf8_lossy(e)),
             Ok(Event::End(ref e)) => {
                 let name = String::from_utf8_lossy(e.name().as_ref()).to_string();
-                if name == "game" {
-                    if let Some(entry) = current.take() {
-                        entries.push(entry);
-                    }
-                }
-                current_tag.clear();
+                finish_element(&name, &text, &mut current, &mut entries);
+                text.clear();
             }
             Ok(Event::Eof) => break,
             Err(e) => return Err(e.to_string()),
@@ -76,6 +73,24 @@ pub fn parse_gamelist(xml_content: &str) -> Result<Vec<GamelistEntry>, String> {
     }
 
     Ok(entries)
+}
+
+/// Handles the end of the element `name`: `game` closes the entry, any other element inside a
+/// game sets its field from `text`.
+fn finish_element(
+    name: &str,
+    text: &str,
+    current: &mut Option<GamelistEntry>,
+    entries: &mut Vec<GamelistEntry>,
+) {
+    if name == "game" {
+        entries.extend(current.take());
+    } else if let Some(entry) = current.as_mut() {
+        let value = text.trim();
+        if !value.is_empty() {
+            apply_gamelist_field(entry, name, value);
+        }
+    }
 }
 
 /// Helper mapping an XML tag to a [`GamelistEntry`] field.
@@ -92,9 +107,17 @@ fn apply_gamelist_field(entry: &mut GamelistEntry, tag: &str, text: &str) {
         "publisher" => entry.publisher = Some(text.to_string()),
         "genre" => entry.genre = Some(text.to_string()),
         "players" => entry.players = Some(text.to_string()),
-        "rating" => entry.rating = text.parse().ok(),
+        "rating" => entry.rating = parse_rating(text),
         _ => {}
     }
+}
+
+/// A rating as a finite number; a decimal comma (`0,85`) is read as a point.
+fn parse_rating(text: &str) -> Option<f32> {
+    text.replace(',', ".")
+        .parse::<f32>()
+        .ok()
+        .filter(|r| r.is_finite())
 }
 
 /// Generates a `gamelist.xml` document string from a slice of [`GamelistEntry`].
@@ -129,14 +152,23 @@ fn write_entry<W: std::io::Write>(
     if let Some(ref desc) = entry.desc {
         write_tag(writer, "desc", desc)?;
     }
-    if let Some(ref image) = entry.image {
-        write_tag(writer, "image", image)?;
+    let texts = [
+        ("image", &entry.image),
+        ("marquee", &entry.marquee),
+        ("video", &entry.video),
+        ("releasedate", &entry.release_date),
+        ("developer", &entry.developer),
+        ("publisher", &entry.publisher),
+        ("genre", &entry.genre),
+        ("players", &entry.players),
+    ];
+    for (tag, value) in texts {
+        if let Some(value) = value {
+            write_tag(writer, tag, value)?;
+        }
     }
-    if let Some(ref dev) = entry.developer {
-        write_tag(writer, "developer", dev)?;
-    }
-    if let Some(ref publ) = entry.publisher {
-        write_tag(writer, "publisher", publ)?;
+    if let Some(rating) = entry.rating {
+        write_tag(writer, "rating", &rating.to_string())?;
     }
     writer.write_event(Event::End(BytesEnd::new("game")))?;
     Ok(())

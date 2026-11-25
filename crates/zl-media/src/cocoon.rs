@@ -13,6 +13,7 @@ use zl_config::media::{
 use zl_db::{MediaKind, MediaSource};
 
 use crate::found::FoundMedia;
+use crate::keys::stem_key;
 use crate::walk::{extension_of, files_below, stem_of, sub_dirs};
 
 /// The media kind of a Cocoon kind folder, `None` for a folder the reader does not know.
@@ -37,7 +38,11 @@ pub fn parse_cocoon_name(stem: &str) -> (String, Option<u32>) {
     let parsed = tail.split_once('_').and_then(|(n, hash)| {
         let well_formed =
             hash.len() == COCOON_EDIT_HASH_LEN && hash.chars().all(|c| c.is_ascii_hexdigit());
-        well_formed.then(|| n.parse::<u32>().ok()).flatten()
+        // `parse` alone would take `+3`: the number is plain digits.
+        let digits = !n.is_empty() && n.bytes().all(|b| b.is_ascii_digit());
+        (well_formed && digits)
+            .then(|| n.parse::<u32>().ok())
+            .flatten()
     });
     match parsed {
         Some(n) => (stem[..at].to_string(), Some(n)),
@@ -64,7 +69,7 @@ pub fn scan_cocoon(data_dir: &Path) -> Vec<FoundMedia> {
                 let (rom_stem, edit) = parse_cocoon_name(&stem);
                 out.push(FoundMedia {
                     platform: platform.to_ascii_lowercase(),
-                    stem: rom_stem.to_lowercase(),
+                    stem: stem_key(&rom_stem),
                     kind,
                     path,
                     source: MediaSource::Cocoon,
