@@ -3,6 +3,8 @@ package dev.zlauncher.ui.settings
 import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CreateNewFolder
+import androidx.compose.material.icons.rounded.Description
+import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material.icons.rounded.Image
 import androidx.compose.material.icons.rounded.Memory
@@ -28,9 +30,13 @@ class LibraryRows(private val app: AppViewModel, private val model: SettingsMode
 
     /** The result of the job row [id] ran last, "Working…" while it runs, or [default]. */
     private fun resultOr(id: String, default: String): String {
-        if (model.busy) return s(R.string.st_working)
+        val progress = model.artDownload?.done?.takeIf { model.resultRowRunning == id }
         val message = model.result?.takeIf { model.resultRow == id }
-        return message?.let { formatUiMessage(context, it) } ?: default
+        return when {
+            model.busy && progress != null -> s(R.string.st_sgdb_progress, progress.first, progress.second)
+            model.busy -> s(R.string.st_working)
+            else -> message?.let { formatUiMessage(context, it) } ?: default
+        }
     }
 
     /** The root list of the category. */
@@ -69,8 +75,63 @@ class LibraryRows(private val app: AppViewModel, private val model: SettingsMode
             resultOr("media", s(R.string.st_media_sub)),
             onActivate = ::importMedia
         )
+        rows += metadataRows()
         rows += scanRow()
         return rows
+    }
+
+    /** The SteamGridDB download and the ES-DE gamelist import. */
+    private fun metadataRows(): List<SettingRow> = listOf(
+        SettingRow(
+            "sgdb_art",
+            Icons.Rounded.Download,
+            s(R.string.st_sgdb_download),
+            resultOr("sgdb_art", s(R.string.st_sgdb_download_sub)),
+            onActivate = ::downloadArt
+        ),
+        SettingRow(
+            "gamelists",
+            Icons.Rounded.Description,
+            s(R.string.st_gamelists),
+            resultOr("gamelists", s(R.string.st_gamelists_sub)),
+            onActivate = ::importGamelists
+        ),
+    )
+
+    /**
+     * Downloads the missing covers, heroes and logos of the whole library from SteamGridDB; pressed again while it
+     * runs, it asks the download to stop.
+     */
+    private fun downloadArt() {
+        val running = model.artDownload
+        when {
+            running != null -> running.requestCancel()
+            model.busy -> Unit
+            !model.data.hasSgdbKey -> app.message = UiMessage(R.string.msg_sgdb_need_key)
+            else -> startDownload()
+        }
+    }
+
+    /** Starts the download of the whole library, with its progress shown on the row. */
+    private fun startDownload() {
+        val download = ArtDownload()
+        model.artDownload = download
+        model.work("sgdb_art") {
+            try {
+                app.zl.core.call { it.scrapeImages(null, null, download) }.toMessage()
+            } finally {
+                model.artDownload = null
+            }
+        }
+    }
+
+    /** Reads the ES-DE gamelists and reports how many games got their description, year and so on. */
+    private fun importGamelists() {
+        if (model.busy) return
+        model.work("gamelists") {
+            val matched = app.zl.core.call { it.importEsdeGamelists() }
+            UiMessage(R.string.st_gamelists_result, listOf(matched.toString()))
+        }
     }
 
     /** The "scan the library" action. */

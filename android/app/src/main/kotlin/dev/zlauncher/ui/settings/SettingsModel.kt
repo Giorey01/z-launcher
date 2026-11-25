@@ -19,12 +19,6 @@ import dev.zlauncher.nav.AppViewModel
 import dev.zlauncher.nav.UiMessage
 import kotlinx.coroutines.launch
 
-/**
- * The categories on the rail. Integrations stays out until one integration works: its rows (RetroAchievements,
- * Discord, SteamGridDB, ScreenScraper) only stored a value nothing read.
- */
-val VisibleCategories: List<Category> get() = Category.entries.filter { it != Category.INTEGRATIONS }
-
 /** The categories of the left rail matching Cocoon. */
 enum class Category {
     /** Look: theme, accent, cursor, surface, sounds. */
@@ -119,6 +113,8 @@ data class SettingsData(
     val emulators: List<PlatformEmulatorSetting> = emptyList(),
     /** The library mode. */
     val libraryMode: LibraryMode = LibraryMode.SMART,
+    /** Whether a SteamGridDB key is stored. */
+    val hasSgdbKey: Boolean = false,
 )
 
 /**
@@ -156,11 +152,21 @@ class SettingsModel(private val app: AppViewModel) {
     /** A long operation is running. */
     var busy by mutableStateOf(false)
 
+    /** Id of the row whose long operation is running, `null` when none. */
+    var resultRowRunning by mutableStateOf<String?>(null)
+        private set
+
     /** Set to ask the screen to open the ZIP picker. */
     var wantZip by mutableStateOf(false)
 
     /** Set to ask the screen to open the ROM folder picker. */
     var wantFolder by mutableStateOf(false)
+
+    /** Set while the SteamGridDB key editor is open. */
+    var wantSgdbKey by mutableStateOf(false)
+
+    /** The art download running now, `null` when none. */
+    var artDownload by mutableStateOf<ArtDownload?>(null)
 
     /** Cursor row remembered per page, to come back to the same row. */
     private val rowMemory = HashMap<Any, Int>()
@@ -191,8 +197,8 @@ class SettingsModel(private val app: AppViewModel) {
 
     /** Steps through the categories by [delta], wrapping around. */
     fun step(delta: Int) {
-        val all = VisibleCategories
-        select(all[(all.indexOf(category) + delta).mod(all.size)])
+        val all = Category.entries
+        select(all[(category.ordinal + delta).mod(all.size)])
     }
 
     /** Opens a subpage. */
@@ -234,6 +240,7 @@ class SettingsModel(private val app: AppViewModel) {
                         roots = core.roots(),
                         emulators = core.platformEmulators(packages),
                         libraryMode = core.libraryMode(),
+                        hasSgdbKey = core.hasSteamgriddbKey(),
                     )
                 }
             } catch (e: CoreException) {
@@ -278,6 +285,7 @@ class SettingsModel(private val app: AppViewModel) {
     fun work(rowId: String, job: suspend () -> UiMessage?) {
         app.viewModelScope.launch {
             busy = true
+            resultRowRunning = rowId
             try {
                 result = job()
                 resultRow = rowId
@@ -287,6 +295,7 @@ class SettingsModel(private val app: AppViewModel) {
                 app.message = e.toMessage()
             } finally {
                 busy = false
+                resultRowRunning = null
             }
         }
     }

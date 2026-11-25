@@ -199,7 +199,7 @@ abstract class ScreenActivity : ComponentActivity() {
         if (host != null && host !== this && role == Role.HERO) {
             return host.dispatchKeyEvent(event)
         }
-        val inSettings = app.top == Screen.Settings
+        val inSettings = app.top == Screen.Settings && !app.settings.wantSgdbKey
         val consumed = (inSettings && event.action == KeyEvent.ACTION_DOWN && SettingsKeys.handle(app, event)) ||
             (inSettings && event.action == KeyEvent.ACTION_UP && SettingsKeys.consumes(event))
         return if (consumed) true else super.dispatchKeyEvent(event)

@@ -18,7 +18,9 @@ import dev.zlauncher.core.nativecore.SoundAction
 import dev.zlauncher.launch.LaunchFailure
 import dev.zlauncher.launch.toMessage
 import dev.zlauncher.ui.pad.FocusMemory
+import dev.zlauncher.ui.settings.ArtDownload
 import dev.zlauncher.ui.settings.SettingsModel
+import dev.zlauncher.ui.settings.toMessage
 import dev.zlauncher.ui.theme.ZTheme
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.channels.Channel
@@ -238,6 +240,24 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                 choice = Choice(game, plan.candidates)
                 memories.remove("picker")
                 open(Screen.Picker)
+            }
+        }
+    }
+
+    /**
+     * Downloads the missing cover, hero and logo of [game] from SteamGridDB, then reloads the lists so the new
+     * art shows; the result is a message.
+     */
+    fun downloadArt(game: GameEntry) {
+        viewModelScope.launch {
+            message = UiMessage(R.string.msg_sgdb_working)
+            message = try {
+                val download = ArtDownload()
+                val report = zl.core.call { it.scrapeImages(null, game.id, download) }
+                resumeTick++
+                report.toMessage()
+            } catch (e: CoreException) {
+                e.toMessage()
             }
         }
     }

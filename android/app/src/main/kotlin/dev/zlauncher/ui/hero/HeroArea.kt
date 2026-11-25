@@ -116,7 +116,13 @@ private fun InfoBox(name: String, logo: String?, modifier: Modifier = Modifier) 
     }
 }
 
-/** A game: hero image behind (when the style wants it) and the logo large in the centre. */
+/** Top part of the hero where a game's logo is centred, leaving the bottom to the game facts. */
+private const val LOGO_AREA_HEIGHT = 0.64f
+
+/** Height of a game's logo within its area. */
+private const val LOGO_HEIGHT = 0.72f
+
+/** A game: hero image behind (when the style wants it), the logo large in the upper part, the facts below. */
 @Composable
 private fun GameHero(game: GameEntry) {
     val theme = LocalZTheme.current
@@ -126,11 +132,19 @@ private fun GameHero(game: GameEntry) {
         if (theme.settings.heroGradientStyle == HeroGradientStyle.BLACK_GRADIENT && game.hero != null) {
             Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color.Transparent, Color.Black.copy(alpha = 0.55f)))))
         }
-        BoxWithConstraints(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        GameFacts(game.id, Modifier.align(Alignment.BottomCenter).padding(bottom = 32.dp, start = 32.dp, end = 32.dp))
+        BoxWithConstraints(
+            Modifier.fillMaxWidth().fillMaxHeight(LOGO_AREA_HEIGHT).align(Alignment.TopCenter),
+            contentAlignment = Alignment.Center,
+        ) {
             val logo = game.logo
             val areaWidth = maxWidth
             if (logo != null) {
-                ArtImage(logo, Modifier.width(areaWidth * GAME_LOGO_WIDTH * theme.settings.heroLogoScale).fillMaxHeight(0.5f), ContentScale.Fit)
+                ArtImage(
+                    logo,
+                    Modifier.width(areaWidth * GAME_LOGO_WIDTH * theme.settings.heroLogoScale).fillMaxHeight(LOGO_HEIGHT),
+                    ContentScale.Fit,
+                )
             } else {
                 Text(
                     text = game.displayTitle,

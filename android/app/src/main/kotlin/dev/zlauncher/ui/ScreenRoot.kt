@@ -36,6 +36,7 @@ import dev.zlauncher.ui.pad.ProvidePlay
 import dev.zlauncher.ui.picker.EmulatorPickerScreen
 import dev.zlauncher.ui.settings.SettingsAside
 import dev.zlauncher.ui.settings.SettingsMain
+import dev.zlauncher.ui.settings.SgdbKeyDialog
 import dev.zlauncher.ui.single.SingleRoot
 import dev.zlauncher.ui.theme.LocalZTheme
 import dev.zlauncher.ui.theme.WallpaperScreen
@@ -58,6 +59,9 @@ fun ScreenRoot(app: AppViewModel, role: Role, displayId: Int) {
             if (playing != null) {
                 NowPlayingScreen(app, playing)
                 return@Surface
+            }
+            if (app.settings.wantSgdbKey && role != Role.HERO) {
+                SgdbKeyDialog(app) { app.settings.wantSgdbKey = false }
             }
             when (role) {
                 Role.GRID -> GridRoot(app)

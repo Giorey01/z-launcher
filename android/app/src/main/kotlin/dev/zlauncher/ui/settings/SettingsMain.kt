@@ -187,7 +187,7 @@ private fun RowCursor(state: androidx.compose.foundation.lazy.LazyListState, ind
 private fun Rail(model: SettingsModel, modifier: Modifier) {
     Column(modifier) {
         SearchPill(Modifier.padding(bottom = 14.dp))
-        VisibleCategories.forEach { category ->
+        Category.entries.forEach { category ->
             RailItem(category, selected = category == model.category, cursor = model.inRail && category == model.category)
         }
     }

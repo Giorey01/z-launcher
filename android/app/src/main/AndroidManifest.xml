@@ -5,6 +5,9 @@
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
     <uses-feature android:name="android.hardware.gamepad" android:required="false" />
 
+    <!-- Network: art downloads from SteamGridDB, only when the user starts them with their own key. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <!-- "All files access": the main storage mode (RNF-10); the folder picker is used on top to hand ROMs to emulators. -->
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 

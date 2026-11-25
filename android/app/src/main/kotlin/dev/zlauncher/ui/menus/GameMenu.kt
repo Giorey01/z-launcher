@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Smartphone
@@ -108,7 +109,11 @@ private fun entries(
         app.overlay = null
         app.chooseEmulator(game)
     }
-    return listOf(launch, edit)
+    val art = MenuEntry(Icons.Rounded.Download, stringResource(R.string.menu_download_art)) {
+        app.overlay = null
+        app.downloadArt(game)
+    }
+    return listOf(launch, edit, art)
 }
 
 /** The displays that are on, the larger as the top screen. */
