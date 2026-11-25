@@ -28,6 +28,8 @@ sealed interface Screen {
     data class Pod(
         /** The Pod's id. */
         val id: String,
+        /** The destination route within the Pod. */
+        val route: dev.zlauncher.pods.PodRoute = dev.zlauncher.pods.PodRoute(),
     ) : Screen
 
     /** The Info tab of a game: details, play time, trailer and screenshots. */

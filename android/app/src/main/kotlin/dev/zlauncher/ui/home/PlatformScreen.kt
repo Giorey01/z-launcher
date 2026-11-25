@@ -80,14 +80,22 @@ fun PlatformScreen(
             dockOnTop
         )
     }
+    val leads = app.zl.pods.platformGridLeadSlots(screen.id)
+    val defaultKey = leads.firstOrNull()?.let { "lead:${it.podId}:${it.label}" } ?: list.firstOrNull()?.let { gameKey(it.id) }
     Column(Modifier.fillMaxSize()) {
         if (dockOnTop) dock()
         FolderHeader(screen.name, Modifier.padding(top = if (dockOnTop) 6.dp else 20.dp, bottom = 6.dp))
-        Box(Modifier.weight(1f)) { GameGrid(app, list, gridState, memory) }
+        Box(Modifier.weight(1f)) { GameGrid(app, list, gridState, memory, leads) }
         if (!dockOnTop) dock()
     }
-    FocusRestorer(memory, app.resumeTick, games != null && app.overlay == null, list.firstOrNull()?.let { gameKey(it.id) }) { focused ->
-        list.indexOfFirst { gameKey(it.id) == focused }.takeIf { it >= 0 }?.let { gridState.scrollToItem(it) }
+    FocusRestorer(memory, app.resumeTick, games != null && app.overlay == null, defaultKey) { focused ->
+        val leadIdx = leads.indexOfFirst { "lead:${it.podId}:${it.label}" == focused }
+        if (leadIdx >= 0) {
+            gridState.scrollToItem(leadIdx)
+        } else {
+            val gameIdx = list.indexOfFirst { gameKey(it.id) == focused }
+            if (gameIdx >= 0) gridState.scrollToItem(leads.size + gameIdx)
+        }
     }
 }
 

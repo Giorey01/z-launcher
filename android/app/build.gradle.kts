@@ -69,6 +69,7 @@ kotlin { compilerOptions { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarg
 dependencies {
     implementation(project(":core:native"))
     implementation(project(":pod-ui"))
+    implementation(project(":pod-api"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.compose.bom))

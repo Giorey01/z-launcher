@@ -34,7 +34,9 @@ private val ROW = 73.dp
 fun StartMenu(app: AppViewModel) {
     Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.35f))) {
         val context = LocalContext.current
-        val pods = app.zl.pods.pods.map { pod -> MenuEntry(pod.icon, pod.title(context)) { app.open(Screen.Pod(pod.id)) } }
+        val pods = app.zl.pods.startMenuSlots(context).map { item ->
+            MenuEntry(item.icon, item.label) { app.open(Screen.Pod(item.podId, item.route)) }
+        }
         MenuPanel(
             pods + listOf(
                 MenuEntry(Icons.Rounded.Apps, stringResource(R.string.menu_apps)) { app.open(Screen.Drawer) },

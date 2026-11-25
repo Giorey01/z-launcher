@@ -14,6 +14,8 @@ import androidx.compose.ui.unit.dp
 import dev.zlauncher.core.nativecore.GameEntry
 import dev.zlauncher.nav.AppViewModel
 import dev.zlauncher.nav.HeroTarget
+import dev.zlauncher.nav.Screen
+import dev.zlauncher.pods.LeadTileSlotItem
 import dev.zlauncher.ui.pad.FocusMemory
 
 /** Columns of the game grid. */
@@ -24,6 +26,9 @@ private const val MIN_ROWS = 3
 
 /** A cell of the game grid. */
 private sealed interface Cell {
+    /** A Pod lead tile (§7). */
+    data class Lead(val item: LeadTileSlotItem) : Cell
+
     /** A game. */
     data class Game(val game: GameEntry) : Cell
 
@@ -31,30 +36,31 @@ private sealed interface Cell {
     data class Empty(val index: Int) : Cell
 }
 
-/** The games followed by empty slots that complete the last row and fill [MIN_ROWS] rows. */
-private fun cellsOf(games: List<GameEntry>): List<Cell> {
-    val rows = maxOf(MIN_ROWS, (games.size + GAME_COLUMNS - 1) / GAME_COLUMNS)
+/** The lead items and games followed by empty slots that complete the last row and fill [MIN_ROWS] rows. */
+private fun cellsOf(leads: List<LeadTileSlotItem>, games: List<GameEntry>): List<Cell> {
+    val items = leads.map { Cell.Lead(it) } + games.map { Cell.Game(it) }
+    val rows = maxOf(MIN_ROWS, (items.size + GAME_COLUMNS - 1) / GAME_COLUMNS)
     val total = rows * GAME_COLUMNS
-    return games.map { Cell.Game(it) } + (games.size until total).map { Cell.Empty(it) }
+    return items + (items.size until total).map { Cell.Empty(it) }
 }
 
 /**
- * The covers of [games] in five square columns with faint empty slots after the last one. A launches, Y opens
- * the game's menu; the focused game is shown in the hero area.
+ * The covers of [games] preceded by optional [leads] (Pod lead tiles), in five square columns
+ * with faint empty slots after the last one.
  */
 @Composable
-fun GameGrid(app: AppViewModel, games: List<GameEntry>, state: LazyGridState, memory: FocusMemory) {
+fun GameGrid(
+    app: AppViewModel,
+    games: List<GameEntry>,
+    state: LazyGridState,
+    memory: FocusMemory,
+    leads: List<LeadTileSlotItem> = emptyList(),
+) {
     val spec = LocalGridSpec.current
+    val allCells = cellsOf(leads, games)
     if (spec.rows == 1) {
-        OneRow(games, spec) { game, _ ->
-            GameTile(
-                game,
-                { app.launchGame(game) },
-                { openGameMenu(app, game) },
-                Modifier.then(memory.track(gameKey(game.id))),
-                onFocused = { app.hero = HeroTarget.Game(game) }
-            )
-        }
+        val nonEmpties = leads.map { Cell.Lead(it) } + games.map { Cell.Game(it) }
+        OneRow(nonEmpties, spec) { cell, _ -> RenderCell(app, cell, memory) }
         return
     }
     LazyVerticalGrid(
@@ -64,18 +70,35 @@ fun GameGrid(app: AppViewModel, games: List<GameEntry>, state: LazyGridState, me
         contentPadding = androidx.compose.foundation.layout.PaddingValues(top = 6.dp),
         horizontalArrangement = Arrangement.Start,
     ) {
-        items(cellsOf(games), key = { if (it is Cell.Game) it.game.id else -1L - (it as Cell.Empty).index }) { cell ->
-            when (cell) {
-                is Cell.Game -> GameTile(
-                    cell.game,
-                    { app.launchGame(cell.game) },
-                    { openGameMenu(app, cell.game) },
-                    Modifier.then(memory.track(gameKey(cell.game.id))),
-                    onFocused = { app.hero = HeroTarget.Game(cell.game) },
-                )
-                is Cell.Empty -> EmptySlot()
+        items(allCells, key = {
+            when (it) {
+                is Cell.Lead -> "lead:${it.item.podId}:${it.item.label}"
+                is Cell.Game -> it.game.id
+                is Cell.Empty -> -1L - it.index
             }
+        }) { cell ->
+            RenderCell(app, cell, memory)
         }
+    }
+}
+
+/** Draws one cell inside the grid. */
+@Composable
+private fun RenderCell(app: AppViewModel, cell: Cell, memory: FocusMemory) {
+    when (cell) {
+        is Cell.Lead -> LeadTile(
+            cell.item,
+            { app.open(Screen.Pod(cell.item.podId, cell.item.route)) },
+            Modifier.then(memory.track("lead:${cell.item.podId}:${cell.item.label}")),
+        )
+        is Cell.Game -> GameTile(
+            cell.game,
+            { app.launchGame(cell.game) },
+            { openGameMenu(app, cell.game) },
+            Modifier.then(memory.track(gameKey(cell.game.id))),
+            onFocused = { app.hero = HeroTarget.Game(cell.game) },
+        )
+        is Cell.Empty -> EmptySlot()
     }
 }
 

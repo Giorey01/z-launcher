@@ -24,6 +24,7 @@
     <string name="msg_invalid_input">Valore non valido.</string>
     <string name="msg_theme_import">Impossibile importare il tema (%1$s).</string>
     <string name="msg_pod">Operazione Pod non riuscita (%1$s).</string>
+    <string name="pod_crash_title">Il Pod ha riscontrato un errore</string>
     <string name="msg_dock_full">Il dock è pieno. Togli prima un\'app.</string>
     <string name="ob_continue">Continua</string>
     <string name="ob_start">Inizia</string>

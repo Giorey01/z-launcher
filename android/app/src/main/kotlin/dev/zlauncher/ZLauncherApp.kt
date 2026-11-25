@@ -15,8 +15,13 @@ import dev.zlauncher.core.CoreProvider
 import dev.zlauncher.core.KeystoreSecrets
 import dev.zlauncher.ui.art.ArtResolver
 import dev.zlauncher.ui.theme.ThemeStore
+import dev.zlauncher.pods.PodLoader
 import dev.zlauncher.pods.PodRegistry
 import dev.zlauncher.sessions.SessionTracker
+import java.io.File
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * The application: owns the objects every screen on every display shares (the Rust core, the installed-app
@@ -69,7 +74,22 @@ class ZLauncherApp : Application(), ImageLoaderFactory, ViewModelStoreOwner {
         sound = SoundFx()
         themeStore = ThemeStore(core, art, sound)
         sessions = SessionTracker(this, core)
-        pods = PodRegistry.load(classLoader)
+        val loader = PodLoader(this, File(filesDir, "pods"))
+        val onCrash: (String, String) -> Unit = { id, reason ->
+            CoroutineScope(Dispatchers.IO).launch {
+                core.call { it.recordPodCrash(id, reason) }
+            }
+        }
+        val loadResult = loader.loadExternalPods(emptyList(), onCrash)
+        val activePodFile = File(filesDir, "active_pod")
+        if (activePodFile.exists()) {
+            val crashedScreenPodId = runCatching { activePodFile.readText().trim() }.getOrDefault("")
+            activePodFile.delete()
+            if (crashedScreenPodId.isNotEmpty()) {
+                onCrash(crashedScreenPodId, "Process died while Pod screen was open")
+            }
+        }
+        pods = PodRegistry.load(classLoader, loadResult.externalPods, onCrash)
     }
 
     /** The image loader of the whole app: decodes animated GIF and WebP too. */

@@ -7,8 +7,11 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,6 +32,7 @@ import dev.zlauncher.core.nativecore.GameEntry
 import dev.zlauncher.core.nativecore.IconStyle
 import dev.zlauncher.core.nativecore.OverlayArt
 import dev.zlauncher.core.nativecore.PlatformEntry
+import dev.zlauncher.pods.LeadTileSlotItem
 import dev.zlauncher.ui.art.ArtImage
 import dev.zlauncher.ui.art.CoverArt
 import dev.zlauncher.ui.art.GreyMatrix
@@ -203,5 +207,56 @@ fun EmptySlot(modifier: Modifier = Modifier) {
                 .background(Color.Black.copy(alpha = 0.22f))
                 .border(2.5.dp, Color.Black.copy(alpha = 0.35f), shape)
         )
+    }
+}
+
+/** A lead tile declared by a Pod slot (e.g. '+' action tile) appearing in the platform grid. */
+@Composable
+fun LeadTile(
+    item: LeadTileSlotItem,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    onFocused: () -> Unit = {},
+) {
+    val theme = LocalZTheme.current
+    val shape = RoundedCornerShape(theme.settings.iconRoundness.dpPercent())
+    PadTile(
+        onClick,
+        modifier.fillMaxWidth().aspectRatio(1f),
+        surface = TileSurface.NONE,
+        cursorOutset = GAME_CURSOR,
+        onFocused = onFocused,
+    ) {
+        Box(
+            Modifier
+                .fillMaxSize(GAME_COVER_FRACTION)
+                .clip(shape)
+                .background(theme.cardBrush())
+                .border(1.5.dp, theme.tileBorder, shape),
+            contentAlignment = Alignment.Center,
+        ) {
+            Column(
+                modifier = Modifier.padding(8.dp),
+                verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Icon(
+                    item.icon,
+                    contentDescription = item.label,
+                    tint = theme.accentStart,
+                    modifier = Modifier.size(32.dp),
+                )
+                Text(
+                    item.label,
+                    Modifier.padding(top = 4.dp),
+                    color = theme.textPrimary,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Medium,
+                    textAlign = TextAlign.Center,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+        }
     }
 }

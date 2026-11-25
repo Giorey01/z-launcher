@@ -16,4 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "z-launcher"
 
-include(":app", ":core:native", ":pod-ui")
+include(":app", ":core:native", ":pod-ui", ":pod-api")
