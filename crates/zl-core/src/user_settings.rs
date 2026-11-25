@@ -6,7 +6,7 @@ use zl_db::Db;
 use zl_theme::StringEnum;
 
 use crate::appearance_types::{
-    AnimationSpeed, ExternalDisplayDocking, ScreenMode, SingleRowStyle, UserSettings,
+    AnimationSpeed, ExternalDisplayDocking, LaunchScreen, ScreenMode, SingleRowStyle, UserSettings,
 };
 use crate::error::CoreError;
 use crate::Service;
@@ -43,8 +43,10 @@ impl UserSettings {
         self.sfx_volume = clamp(self.sfx_volume, cfg::VOLUME_RANGE);
         self.music_volume = clamp(self.music_volume, cfg::VOLUME_RANGE);
         self.jingle_volume = clamp(self.jingle_volume, cfg::VOLUME_RANGE);
-        self.now_playing_dimming = clamp(self.now_playing_dimming, (0.0, 1.0));
-        self.now_playing_saturation = clamp(self.now_playing_saturation, (0.0, 1.0));
+        self.now_playing_dimming = clamp(self.now_playing_dimming, cfg::NOW_PLAYING_RANGE);
+        self.now_playing_saturation = clamp(self.now_playing_saturation, cfg::NOW_PLAYING_RANGE);
+        let idle = cfg::NOW_PLAYING_IDLE_RANGE;
+        self.now_playing_idle_seconds = self.now_playing_idle_seconds.clamp(idle.0, idle.1);
         self
     }
 }
@@ -162,6 +164,11 @@ fn system_pairs(s: &UserSettings) -> Vec<(&'static str, String)> {
             "now_playing_saturation",
             s.now_playing_saturation.to_string(),
         ),
+        (
+            "now_playing_idle_seconds",
+            s.now_playing_idle_seconds.to_string(),
+        ),
+        ("launch_screen", s.launch_screen.as_str().into()),
         ("app_icon_pack", s.app_icon_pack.clone().unwrap_or_default()),
         (
             "retroachievements_enabled",
@@ -241,13 +248,29 @@ fn read_rest(r: &Reader<'_>, base: UserSettings) -> Result<UserSettings, CoreErr
             base.animation_speed,
             AnimationSpeed::parse_text,
         )?,
-        now_playing_dimming: r.num("now_playing_dimming", base.now_playing_dimming)?,
-        now_playing_saturation: r.num("now_playing_saturation", base.now_playing_saturation)?,
         app_icon_pack: r.text("app_icon_pack")?.filter(|t| !t.is_empty()),
         retroachievements_enabled: r
             .flag("retroachievements_enabled", base.retroachievements_enabled)?,
         discord_presence_enabled: r
             .flag("discord_presence_enabled", base.discord_presence_enabled)?,
+        ..base
+    })
+}
+
+/// Reads the now playing and launch settings over `base`.
+fn read_play(r: &Reader<'_>, base: UserSettings) -> Result<UserSettings, CoreError> {
+    Ok(UserSettings {
+        now_playing_dimming: r.num("now_playing_dimming", base.now_playing_dimming)?,
+        now_playing_saturation: r.num("now_playing_saturation", base.now_playing_saturation)?,
+        now_playing_idle_seconds: r
+            .text("now_playing_idle_seconds")?
+            .and_then(|t| t.parse().ok())
+            .unwrap_or(base.now_playing_idle_seconds),
+        launch_screen: r.text_choice(
+            "launch_screen",
+            base.launch_screen,
+            LaunchScreen::parse_text,
+        )?,
         ..base
     })
 }
@@ -259,7 +282,8 @@ impl Service {
         let db = self.db();
         let r = Reader { db: &db };
         let look = read_look(&r, UserSettings::default())?;
-        Ok(read_rest(&r, look)?.clamped())
+        let rest = read_rest(&r, look)?;
+        Ok(read_play(&r, rest)?.clamped())
     }
 
     /// Stores all the settings (numbers limited to their ranges first).
@@ -375,6 +399,37 @@ mod tests {
         assert_eq!(loaded.app_icon_pack.as_deref(), Some("org.example.pack"));
         assert!((loaded.now_playing_dimming - 0.75).abs() < 1e-4);
         assert!((loaded.now_playing_saturation - 0.25).abs() < 1e-4);
+        Ok(())
+    }
+
+    /// Games start on the hero display by default; the choice and the idle delay are stored,
+    /// and the delay is held to its range.
+    #[test]
+    fn launch_screen_and_idle_delay_roundtrip() -> Result<(), Box<dyn std::error::Error>> {
+        let dir = tempfile::tempdir()?;
+        let svc = Service::open(dir.path())?;
+        let initial = svc.user_settings()?;
+        assert_eq!(initial.launch_screen, LaunchScreen::Hero);
+        assert_eq!(
+            initial.now_playing_idle_seconds,
+            cfg::NOW_PLAYING_IDLE_SECONDS
+        );
+
+        svc.set_user_settings(&UserSettings {
+            launch_screen: LaunchScreen::Grid,
+            now_playing_idle_seconds: 30,
+            ..initial.clone()
+        })?;
+        let loaded = svc.user_settings()?;
+        assert_eq!(loaded.launch_screen, LaunchScreen::Grid);
+        assert_eq!(loaded.now_playing_idle_seconds, 30);
+
+        svc.set_user_settings(&UserSettings {
+            now_playing_idle_seconds: 1,
+            ..loaded
+        })?;
+        let low = svc.user_settings()?.now_playing_idle_seconds;
+        assert_eq!(low, cfg::NOW_PLAYING_IDLE_RANGE.0);
         Ok(())
     }
 

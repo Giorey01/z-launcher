@@ -13,12 +13,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Smartphone
-import androidx.compose.material.icons.rounded.Star
-import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,7 +36,6 @@ import dev.zlauncher.R
 import dev.zlauncher.display.DisplayRoles
 import dev.zlauncher.nav.AppViewModel
 import dev.zlauncher.nav.Overlay
-import dev.zlauncher.nav.UiMessage
 import dev.zlauncher.ui.art.CoverArt
 import dev.zlauncher.ui.home.rememberOverlay
 import dev.zlauncher.ui.theme.LocalZTheme
@@ -112,19 +108,7 @@ private fun entries(
         app.overlay = null
         app.chooseEmulator(game)
     }
-    val hide = MenuEntry(Icons.Rounded.VisibilityOff, stringResource(R.string.menu_hide)) {
-        app.overlay = null
-        app.message = UiMessage(R.string.msg_game_hidden)
-    }
-    val favorite = MenuEntry(Icons.Rounded.Star, stringResource(R.string.menu_favorite), badge = "R1") {
-        app.overlay = null
-        app.message = UiMessage(R.string.msg_game_favorite)
-    }
-    val addHome = MenuEntry(Icons.Rounded.Add, stringResource(R.string.menu_add_to_home)) {
-        app.overlay = null
-        app.message = UiMessage(R.string.msg_game_added_home)
-    }
-    return listOf(launch, edit, hide, favorite, addHome)
+    return listOf(launch, edit)
 }
 
 /** The displays that are on, the larger as the top screen. */

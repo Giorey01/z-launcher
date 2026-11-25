@@ -24,9 +24,6 @@
     <string name="msg_invalid_input">Valore non valido.</string>
     <string name="msg_theme_import">Impossibile importare il tema (%1$s).</string>
     <string name="msg_dock_full">Il dock è pieno. Togli prima un\'app.</string>
-    <string name="msg_game_hidden">Gioco nascosto.</string>
-    <string name="msg_game_favorite">Aggiunto ai preferiti.</string>
-    <string name="msg_game_added_home">Aggiunto alla Home.</string>
     <string name="ob_continue">Continua</string>
     <string name="ob_start">Inizia</string>
     <string name="ob_welcome_title">Benvenuto in Z-Launcher</string>
@@ -85,9 +82,6 @@
     <string name="menu_launch">Avvia</string>
     <string name="menu_emulator">Emulatore</string>
     <string name="menu_edit">Modifica</string>
-    <string name="menu_hide">Nascondi</string>
-    <string name="menu_favorite">Preferito</string>
-    <string name="menu_add_to_home">Aggiungi a Home</string>
     <string name="menu_search">Cerca</string>
     <string name="menu_screen_top">Schermo sopra</string>
     <string name="menu_screen_bottom">Schermo sotto</string>
@@ -274,10 +268,15 @@
     <string name="st_steamgrid_sub">Collega SteamGridDB come sorgente per scaricare loghi, banner e icone</string>
     <string name="st_screenscraper">ScreenScraper</string>
     <string name="st_screenscraper_sub">Credenziali ScreenScraper per copertine e media</string>
-    <string name="st_reset_grid">Ripristina disposizione griglia</string>
-    <string name="st_reset_grid_sub">Ripristina la disposizione iniziale delle app</string>
     <string name="st_reset_data">Ripristina dati app</string>
     <string name="st_reset_data_sub">Cancella tutte le impostazioni e ricomincia da zero</string>
     <string name="st_screen_details">Informazioni schermi</string>
     <string name="st_screen_details_sub">Principale: 1920x1080 · Secondario: 1240x1080</string>
+    <string name="st_launch_screen">Schermo di lancio</string>
+    <string name="st_launch_screen_sub">Schermo su cui partono i giochi in modalità doppio schermo</string>
+    <string name="st_launch_hero">Schermo superiore (hero)</string>
+    <string name="st_launch_grid">Schermo inferiore (griglia)</string>
+    <string name="st_now_playing_idle">Oscura dopo</string>
+    <string name="st_now_playing_idle_sub">Secondi senza tocchi prima che lo schermo si scurisca</string>
+    <string name="st_seconds">%1$d s</string>
 </resources>

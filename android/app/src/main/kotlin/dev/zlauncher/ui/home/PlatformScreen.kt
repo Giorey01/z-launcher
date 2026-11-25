@@ -61,7 +61,8 @@ fun PlatformScreen(
     vm: PlatformViewModel = viewModel(),
     home: HomeViewModel = viewModel()
 ) {
-    val games by vm.games.collectAsState()
+    val loaded by vm.games.collectAsState()
+    val games = loaded?.takeIf { it.platformId == screen.id }?.games
     val homeUi by home.ui.collectAsState()
     val memory = app.memory("platform:${screen.id}")
     LaunchedEffect(screen.id, app.resumeTick) { vm.load(screen.id) { app.message = it.toMessage() } }

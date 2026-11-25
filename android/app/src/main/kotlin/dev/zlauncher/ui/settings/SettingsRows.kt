@@ -32,6 +32,7 @@ import androidx.compose.material.icons.rounded.TextFields
 import androidx.compose.material.icons.rounded.ViewAgenda
 import androidx.compose.material.icons.rounded.ViewStream
 import androidx.compose.material.icons.rounded.Wallpaper
+import androidx.compose.material.icons.rounded.Smartphone
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -40,6 +41,7 @@ import dev.zlauncher.core.nativecore.AssetCategory
 import dev.zlauncher.core.nativecore.CursorStyle
 import dev.zlauncher.core.nativecore.ExternalDisplayDocking
 import dev.zlauncher.core.nativecore.IconStyle
+import dev.zlauncher.core.nativecore.LaunchScreen
 import dev.zlauncher.core.nativecore.ScreenMode
 import dev.zlauncher.core.nativecore.SingleRowStyle
 import dev.zlauncher.core.nativecore.SurfaceMaterial
@@ -80,7 +82,10 @@ class SettingsRows(
     private fun s(id: Int, vararg args: Any): String = context.getString(id, *args)
 
     /** The rows of the current page. */
-    fun build(): List<SettingRow> = subpageRows() ?: when (val page = model.page) {
+    fun build(): List<SettingRow> = allRows().filter { it.id !in NOT_WIRED }
+
+    /** Every row of the current page, before the ones that do nothing yet are left out. */
+    private fun allRows(): List<SettingRow> = subpageRows() ?: when (val page = model.page) {
         Page.Root -> root()
         Page.Themes -> ThemeRows(app, model, theme, context).themes()
         is Page.ApplyTheme -> ThemeRows(app, model, theme, context).apply(page)
@@ -278,6 +283,8 @@ class SettingsRows(
         val st = theme.settings
         val screensMeta = RowMeta("screens", Icons.Rounded.Devices, R.string.st_screen_mode, R.string.st_screen_mode_sub)
         val reverseMeta = RowMeta("reverse", Icons.Rounded.SwapVert, R.string.st_reverse, R.string.st_reverse_sub)
+        val launchMeta = RowMeta("launch_screen", Icons.Rounded.Smartphone, R.string.st_launch_screen, R.string.st_launch_screen_sub)
+        val launchLabels = listOf(R.string.st_launch_hero, R.string.st_launch_grid)
         val dockingMeta = RowMeta("docking", Icons.Rounded.Monitor, R.string.st_docking, R.string.st_docking_sub)
         val dockingLabels = listOf(R.string.st_dock_auto, R.string.st_dock_always, R.string.st_dock_never)
         val rowStyleMeta = RowMeta("rowstyle", Icons.Rounded.ViewStream, R.string.st_row_style, R.string.st_row_style_sub)
@@ -294,13 +301,13 @@ class SettingsRows(
                 c.setScreenMode(v)
             },
             toggle(reverseMeta, st.reverseDisplayRoles) { c, v -> c.setReverseDisplayRoles(v) },
+            choice(launchMeta, LaunchScreen.entries, launchLabels, st.launchScreen) { c, v -> c.setLaunchScreen(v) },
             choice(dockingMeta, ExternalDisplayDocking.entries, dockingLabels, st.externalDisplayDocking) { c, v ->
                 c.setExternalDisplayDocking(v)
             },
             SettingRow("split", Icons.Rounded.ViewAgenda, s(R.string.st_hero_split), s(R.string.st_hero_split_sub), splitSlider),
             SettingRow("rows", Icons.Rounded.ViewStream, s(R.string.st_rows), s(R.string.st_rows_sub), rowsSlider),
             choice(rowStyleMeta, SingleRowStyle.entries, rowStyleLabels, st.singleRowStyle) { c, v -> c.setSingleRowStyle(v) },
-            SettingRow("reset_grid", Icons.Rounded.GridOn, s(R.string.st_reset_grid), s(R.string.st_reset_grid_sub), Control.Value("Reset")),
             SettingRow("setup", Icons.Rounded.RestartAlt, s(R.string.st_setup), s(R.string.st_setup_sub), Control.Chevron, onActivate = { app.reopenSetup() }),
         )
     }
@@ -340,3 +347,18 @@ fun formatUiMessage(context: Context, message: UiMessage): String {
         context.getString(res, args[0], args[1], args[2])
     }
 }
+
+/**
+ * Rows whose setting is stored but not used anywhere yet, so changing it would do nothing: they stay hidden
+ * until the feature behind them exists. Remove an id from here in the same change that makes it work.
+ */
+private val NOT_WIRED = setOf(
+    "app_icon_pack", // Android icon packs are not loaded yet
+    "jingles", // no background music or jingle player yet
+    "anim", // the animation speed is not applied to any animation
+    "fullscreen_folders", // folders always open the same way
+    "refraction", "highlight", "tiles", // glass options the surfaces do not draw
+    "discrete", // the grid always scrolls
+    "icon_size", // the art size is fixed in the tiles
+    "dock_bg", // the dock has no background to hide
+)

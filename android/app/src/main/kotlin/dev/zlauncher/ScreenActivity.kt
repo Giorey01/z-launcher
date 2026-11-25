@@ -5,7 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.hardware.display.DisplayManager
 import android.os.Bundle
+import android.view.Display
 import android.view.KeyEvent
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.LaunchedEffect
@@ -15,6 +17,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -30,6 +33,7 @@ import dev.zlauncher.launch.LaunchExecutor
 import dev.zlauncher.launch.LaunchFailure
 import dev.zlauncher.nav.AppViewModel
 import dev.zlauncher.nav.Boot
+import dev.zlauncher.nav.NowPlaying
 import dev.zlauncher.nav.Overlay
 import dev.zlauncher.nav.Screen
 import dev.zlauncher.nav.UiEvent
@@ -96,9 +100,12 @@ abstract class ScreenActivity : ComponentActivity() {
                 }
             }
             LaunchedEffect(computed) { onRoleChanged(computed) }
-            theme?.let { ZLauncherTheme(it) { ScreenRoot(app, role) } }
+            theme?.let { ZLauncherTheme(it) { ScreenRoot(app, role, displayId) } }
         }
         lifecycleScope.launch { repeatOnLifecycle(Lifecycle.State.STARTED) { followEvents() } }
+        lifecycleScope.launch {
+            snapshotFlow { app.nowPlaying }.collect(::applyNowPlaying)
+        }
     }
 
     /** Draws edge to edge and hides the system bars: the launcher uses the whole display. */
@@ -131,15 +138,51 @@ abstract class ScreenActivity : ComponentActivity() {
     /** Starts what the view model asked for and reports a failure. */
     private fun carryOut(event: UiEvent) {
         val failure: LaunchFailure? = when (event) {
-            is UiEvent.StartGame -> LaunchExecutor.launch(this, event.intent, event.displayId)
+            is UiEvent.StartGame -> startGame(event)
             is UiEvent.StartApp -> LaunchExecutor.launchApp(this, event.packageName)
         }
         failure?.let(app::report)
     }
 
+    /**
+     * Starts a game on the display the user picked, or on the one the settings choose; when that is another
+     * display, this one shows the game as now playing.
+     */
+    private fun startGame(event: UiEvent.StartGame): LaunchFailure? {
+        val target = event.displayId ?: launchDisplay()
+        val failure = LaunchExecutor.launch(this, event.intent, target)
+        val elsewhere = target?.takeIf { it != currentDisplayId() }
+        if (failure == null && event.game != null && elsewhere != null) app.startNowPlaying(event.game, elsewhere)
+        return failure
+    }
+
+    /** The display the settings choose for games, `null` for this one. */
+    private fun launchDisplay(): Int? {
+        val settings = app.theme.value?.settings ?: return null
+        val candidates = DisplayRoles.candidates(getSystemService(DisplayManager::class.java), settings.externalDisplayDocking)
+        return DisplayRoles.launchDisplay(settings, candidates)
+    }
+
+    /** The id of the display this window is on. */
+    private fun currentDisplayId(): Int = display?.displayId ?: Display.DEFAULT_DISPLAY
+
+    /**
+     * While this window shows the now playing screen it must not take the input focus, or a touch here would
+     * move the gamepad away from the game. The dimming is only drawn (a black layer): a window brightness
+     * override was tried on the Thor and Android applied it to the game's display, not to this one.
+     */
+    private fun applyNowPlaying(playing: NowPlaying?) {
+        if (playing != null && playing.displayId != currentDisplayId()) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE)
+        }
+    }
+
     /** Back in the foreground (also after a game): screens put their focus back. */
     override fun onResume() {
         super.onResume()
+        app.endNowPlaying(currentDisplayId())
         if (role != Role.HERO) inputHost = WeakReference(this)
         app.onResumed()
     }

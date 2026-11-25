@@ -3,6 +3,7 @@ package dev.zlauncher.display
 import android.hardware.display.DisplayManager
 import android.view.Display
 import dev.zlauncher.core.nativecore.ExternalDisplayDocking
+import dev.zlauncher.core.nativecore.LaunchScreen
 import dev.zlauncher.core.nativecore.ScreenMode
 import dev.zlauncher.core.nativecore.UserSettings
 
@@ -46,6 +47,16 @@ object DisplayRoles {
         val sorted = candidates.sortedBy(::area)
         val grid = if (settings.reverseDisplayRoles) sorted.last() else sorted.first()
         return if (grid.displayId == currentId) Role.GRID else Role.HERO
+    }
+
+    /**
+     * The display a game starts on when the user did not pick one: in the dual mode the display with the role
+     * the `launch_screen` setting names; `null` (the launcher's own display) otherwise.
+     */
+    fun launchDisplay(settings: UserSettings, candidates: List<Display>): Int? {
+        if (settings.screenMode != ScreenMode.DUAL || candidates.size < 2) return null
+        val wanted = if (settings.launchScreen == LaunchScreen.HERO) Role.HERO else Role.GRID
+        return candidates.firstOrNull { resolve(settings, candidates, it.displayId) == wanted }?.displayId
     }
 
     /** The display that is not [currentId] and is the best companion, or `null` when there is no other one. */

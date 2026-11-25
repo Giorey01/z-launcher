@@ -19,6 +19,12 @@ import dev.zlauncher.nav.AppViewModel
 import dev.zlauncher.nav.UiMessage
 import kotlinx.coroutines.launch
 
+/**
+ * The categories on the rail. Integrations stays out until one integration works: its rows (RetroAchievements,
+ * Discord, SteamGridDB, ScreenScraper) only stored a value nothing read.
+ */
+val VisibleCategories: List<Category> get() = Category.entries.filter { it != Category.INTEGRATIONS }
+
 /** The categories of the left rail matching Cocoon. */
 enum class Category {
     /** Look: theme, accent, cursor, surface, sounds. */
@@ -185,8 +191,8 @@ class SettingsModel(private val app: AppViewModel) {
 
     /** Steps through the categories by [delta], wrapping around. */
     fun step(delta: Int) {
-        val all = Category.entries
-        select(all[(category.ordinal + delta).mod(all.size)])
+        val all = VisibleCategories
+        select(all[(all.indexOf(category) + delta).mod(all.size)])
     }
 
     /** Opens a subpage. */

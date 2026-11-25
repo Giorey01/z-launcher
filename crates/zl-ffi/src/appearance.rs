@@ -86,6 +86,10 @@ mirror_enum! {
     SingleRowStyle <=> core::SingleRowStyle { Standard, Carousel, CoverFlow }
 }
 mirror_enum! {
+    /// Which display a game starts on in the dual-screen mode.
+    LaunchScreen <=> core::LaunchScreen { Hero, Grid }
+}
+mirror_enum! {
     /// Animation speed of the launcher UI.
     AnimationSpeed <=> core::AnimationSpeed { Normal, Fast, Off }
 }
@@ -241,6 +245,10 @@ mirror_record! {
         plain now_playing_dimming: f32,
         /// Saturation factor of the now playing screen, 0-1.
         plain now_playing_saturation: f32,
+        /// Seconds without a touch before the now playing screen dims.
+        plain now_playing_idle_seconds: u16,
+        /// Which display a game starts on in the dual-screen mode.
+        plain launch_screen: LaunchScreen,
         /// Selected app icon pack id (`None` for Default).
         opt app_icon_pack: String,
         /// RetroAchievements account integration enabled.
