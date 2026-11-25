@@ -5,7 +5,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import dev.zlauncher.R
+import dev.zlauncher.pod.ui.R
 
 /** The interface font: Poppins (SIL Open Font License, see NOTICE). */
 val Poppins = FontFamily(
