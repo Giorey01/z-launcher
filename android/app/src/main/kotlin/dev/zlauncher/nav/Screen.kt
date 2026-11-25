@@ -32,6 +32,9 @@ sealed interface Screen {
         val route: dev.zlauncher.pods.PodRoute = dev.zlauncher.pods.PodRoute(),
     ) : Screen
 
+    /** The Pod management and store screen (§11). */
+    data object PodManagement : Screen
+
     /** The Info tab of a game: details, play time, trailer and screenshots. */
     data class GameInfo(
         /** The game. */

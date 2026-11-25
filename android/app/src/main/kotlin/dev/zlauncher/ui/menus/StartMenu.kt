@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Apps
+import androidx.compose.material.icons.rounded.Extension
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.runtime.Composable
@@ -46,6 +47,9 @@ fun StartMenu(app: AppViewModel) {
                 },
                 MenuEntry(Icons.Rounded.Settings, stringResource(R.string.menu_settings), submenu = true) {
                     app.open(Screen.Settings)
+                },
+                MenuEntry(Icons.Rounded.Extension, stringResource(R.string.pod_screen_title)) {
+                    app.open(Screen.PodManagement)
                 },
             ),
             ROW,

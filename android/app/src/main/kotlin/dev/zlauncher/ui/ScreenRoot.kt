@@ -125,6 +125,7 @@ private fun ReadyScreens(app: AppViewModel, single: Boolean) {
         is Screen.ConsolePicker -> ConsolePickerScreen(app, screen)
         is Screen.GameInfo -> GameInfoScreen(app, screen)
         is Screen.Pod -> PodScreen(app, screen)
+        Screen.PodManagement -> dev.zlauncher.ui.pods.PodManagementScreen(app)
         Screen.Settings -> if (single) SettingsMain(app) else SettingsAside(app)
     }
 }

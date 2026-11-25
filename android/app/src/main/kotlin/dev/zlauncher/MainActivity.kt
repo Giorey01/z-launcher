@@ -25,9 +25,28 @@ class MainActivity : ScreenActivity() {
         }
     }
 
-    /** The system Home button while the launcher is already open: back to the Home screen. */
+    override fun onCreate(savedInstanceState: android.os.Bundle?) {
+        super.onCreate(savedInstanceState)
+        handleDeepLink(intent)
+    }
+
+    /** The system Home button while the launcher is already open: back to the Home screen; deep links open targets. */
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        if (intent.action == Intent.ACTION_MAIN) app.goHome()
+        if (intent.action == Intent.ACTION_MAIN) {
+            app.goHome()
+        } else {
+            handleDeepLink(intent)
+        }
+    }
+
+    private fun handleDeepLink(intent: Intent?) {
+        val uri = intent?.data ?: return
+        if (uri.scheme == "zlauncher" && uri.host == "pod") {
+            val url = uri.getQueryParameter("url")
+            if (!url.isNullOrBlank()) {
+                app.openPodUrl(url)
+            }
+        }
     }
 }

@@ -22,6 +22,7 @@ import java.io.File
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 /**
  * The application: owns the objects every screen on every display shares (the Rust core, the installed-app
@@ -74,21 +75,37 @@ class ZLauncherApp : Application(), ImageLoaderFactory, ViewModelStoreOwner {
         sound = SoundFx()
         themeStore = ThemeStore(core, art, sound)
         sessions = SessionTracker(this, core)
+        val activePodFile = File(filesDir, "active_pod")
+        if (activePodFile.exists()) {
+            val crashedScreenPodId = runCatching { activePodFile.readText().trim() }.getOrDefault("")
+            activePodFile.delete()
+            if (crashedScreenPodId.isNotEmpty()) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    core.call { it.recordPodCrash(crashedScreenPodId, "Process died while Pod screen was open") }
+                }
+            }
+        }
+        reloadPods()
+    }
+
+    /** Reloads the Pod registry with active installed external pods (if enabled) and built-ins. */
+    fun reloadPods() {
         val loader = PodLoader(this, File(filesDir, "pods"))
         val onCrash: (String, String) -> Unit = { id, reason ->
             CoroutineScope(Dispatchers.IO).launch {
                 core.call { it.recordPodCrash(id, reason) }
             }
         }
-        val loadResult = loader.loadExternalPods(emptyList(), onCrash)
-        val activePodFile = File(filesDir, "active_pod")
-        if (activePodFile.exists()) {
-            val crashedScreenPodId = runCatching { activePodFile.readText().trim() }.getOrDefault("")
-            activePodFile.delete()
-            if (crashedScreenPodId.isNotEmpty()) {
-                onCrash(crashedScreenPodId, "Process died while Pod screen was open")
-            }
+        val activePods = runBlocking(Dispatchers.IO) {
+            runCatching {
+                if (core.call { it.externalPodsEnabled() }) {
+                    core.call { it.listActivePods() }
+                } else {
+                    emptyList()
+                }
+            }.getOrDefault(emptyList())
         }
+        val loadResult = loader.loadExternalPods(activePods, onCrash)
         pods = PodRegistry.load(classLoader, loadResult.externalPods, onCrash)
     }
 

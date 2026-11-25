@@ -64,6 +64,12 @@ pub fn dock_slots() -> u32 {
     u32::try_from(zl_config::app::DOCK_SLOTS).unwrap_or(u32::MAX)
 }
 
+/// The default URL for the public Pod store index.
+#[uniffi::export]
+pub fn default_pod_index_url() -> String {
+    zl_config::pods::DEFAULT_INDEX_URL.to_string()
+}
+
 /// The tree URI the system folder picker should start at for a folder path, if it is on a
 /// storage volume.
 #[uniffi::export]
@@ -112,5 +118,11 @@ mod tests {
     #[test]
     fn dock_slots_come_from_config() {
         assert_eq!(dock_slots() as usize, zl_config::app::DOCK_SLOTS);
+    }
+
+    /// The default pod index URL comes from the configuration crate.
+    #[test]
+    fn default_pod_index_url_comes_from_config() {
+        assert_eq!(default_pod_index_url(), zl_config::pods::DEFAULT_INDEX_URL);
     }
 }

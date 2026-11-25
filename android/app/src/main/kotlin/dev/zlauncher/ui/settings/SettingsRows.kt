@@ -12,6 +12,7 @@ import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.CropFree
 import androidx.compose.material.icons.rounded.Devices
 import androidx.compose.material.icons.rounded.Dock
+import androidx.compose.material.icons.rounded.Extension
 import androidx.compose.material.icons.rounded.FormatColorFill
 import androidx.compose.material.icons.rounded.Gamepad
 import androidx.compose.material.icons.rounded.GridOn
@@ -38,6 +39,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import dev.zlauncher.R
 import dev.zlauncher.core.nativecore.AssetCategory
+import dev.zlauncher.nav.Screen
 import dev.zlauncher.core.nativecore.CursorStyle
 import dev.zlauncher.core.nativecore.ExternalDisplayDocking
 import dev.zlauncher.core.nativecore.IconStyle
@@ -308,6 +310,10 @@ class SettingsRows(
             SettingRow("split", Icons.Rounded.ViewAgenda, s(R.string.st_hero_split), s(R.string.st_hero_split_sub), splitSlider),
             SettingRow("rows", Icons.Rounded.ViewStream, s(R.string.st_rows), s(R.string.st_rows_sub), rowsSlider),
             choice(rowStyleMeta, SingleRowStyle.entries, rowStyleLabels, st.singleRowStyle) { c, v -> c.setSingleRowStyle(v) },
+            SettingRow(
+                "pods", Icons.Rounded.Extension, s(R.string.pod_screen_title), s(R.string.pod_screen_sub),
+                Control.Chevron, onActivate = { app.open(Screen.PodManagement) },
+            ),
             SettingRow("setup", Icons.Rounded.RestartAlt, s(R.string.st_setup), s(R.string.st_setup_sub), Control.Chevron, onActivate = { app.reopenSetup() }),
         )
     }

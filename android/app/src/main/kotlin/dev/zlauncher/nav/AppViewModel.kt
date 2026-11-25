@@ -116,11 +116,21 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     /** The screen on top, or `null` when the Home is. */
     val top: Screen? get() = stack.lastOrNull()
 
+    /** Manages external and built-in pods, store browsing and installation. */
+    val podManager = dev.zlauncher.pods.PodManager(this)
+
     /** Opens a screen above the current one. */
     fun open(screen: Screen) {
         if (screen == Screen.Settings) settings.reset()
+        if (screen == Screen.PodManagement) podManager.reload()
         if (top != screen) stack.add(screen)
         overlay = null
+    }
+
+    /** Opens a Pod from a URL (deep link or direct action). */
+    fun openPodUrl(url: String) {
+        open(Screen.PodManagement)
+        podManager.handleDeepLink(url)
     }
 
     /** Goes back: closes the open menu first, else one screen; `false` when the Home is already shown. */

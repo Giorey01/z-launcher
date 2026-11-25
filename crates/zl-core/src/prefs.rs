@@ -12,6 +12,8 @@ const KEY_MODE: &str = "library_mode";
 const KEY_ONBOARDING: &str = "onboarding_done";
 /// Setting key of the dock's packages (comma separated; package names never contain a comma).
 const KEY_DOCK: &str = "dock_packages";
+/// Setting key of the external pods enabled flag.
+const KEY_EXTERNAL_PODS: &str = "external_pods_enabled";
 
 impl Service {
     /// How the Home shows the library; Smart Folders until the user chooses otherwise.
@@ -72,5 +74,17 @@ impl Service {
         }
         self.db().set_setting(KEY_DOCK, &list.join(","))?;
         Ok(list)
+    }
+
+    /// Whether external Pods are enabled (default: false per §6).
+    pub fn external_pods_enabled(&self) -> Result<bool, CoreError> {
+        Ok(self.db().setting(KEY_EXTERNAL_PODS)?.as_deref() == Some("1"))
+    }
+
+    /// Sets whether external Pods are enabled.
+    pub fn set_external_pods_enabled(&self, enabled: bool) -> Result<(), CoreError> {
+        self.db()
+            .set_setting(KEY_EXTERNAL_PODS, if enabled { "1" } else { "0" })?;
+        Ok(())
     }
 }

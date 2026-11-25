@@ -241,8 +241,11 @@ impl Service {
         Ok(list.into_iter().map(Into::into).collect())
     }
 
-    /// Lists only active Pods.
+    /// Lists only active Pods (empty when external_pods_enabled is false per §6).
     pub fn list_active_pods(&self) -> Result<Vec<InstalledPodView>, CoreError> {
+        if !self.external_pods_enabled()? {
+            return Ok(Vec::new());
+        }
         let db = self.db();
         let pods_dir = self.pods_dir();
         let registry = PodRegistry::new(&db, &pods_dir);

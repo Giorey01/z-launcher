@@ -255,4 +255,14 @@ impl Core {
     pub fn parse_pod_index(&self, index_bytes: Vec<u8>) -> Res<IndexStoreView> {
         Ok(self.service().parse_pod_index(&index_bytes)?.into())
     }
+
+    /// Checks whether external Pods are enabled.
+    pub fn external_pods_enabled(&self) -> Res<bool> {
+        Ok(self.service().external_pods_enabled()?)
+    }
+
+    /// Sets whether external Pods are enabled.
+    pub fn set_external_pods_enabled(&self, enabled: bool) -> Res<()> {
+        Ok(self.service().set_external_pods_enabled(enabled)?)
+    }
 }
