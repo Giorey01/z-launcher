@@ -1,0 +1,42 @@
+{
+  "comment": "Store appdetails answers in the shape the public endpoint returns, cut to the fields read, written by hand. Read by the zl-steam and zl-core tests.",
+  "app_400": {
+    "400": {
+      "success": true,
+      "data": {
+        "type": "game",
+        "name": "Portal",
+        "steam_appid": 400,
+        "short_description": "Portal&trade; is a new single player game from Valve. Set in the mysterious Aperture Science Laboratories, Portal has been called one of the most innovative new games on the horizon and will offer gamers hours of unique gameplay.",
+        "developers": ["Valve"],
+        "publishers": ["Valve"],
+        "release_date": {"coming_soon": false, "date": "10 Oct, 2007"},
+        "genres": [{"id": "1", "description": "Action"}],
+        "metacritic": {"score": 90, "url": "https://www.metacritic.com/game/pc/portal"},
+        "header_image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/400/header.jpg",
+        "screenshots": [
+          {"id": 0, "path_thumbnail": "https://shared.akamai.steamstatic.com/a_thumb.jpg", "path_full": "https://shared.akamai.steamstatic.com/a.jpg"},
+          {"id": 1, "path_thumbnail": "https://shared.akamai.steamstatic.com/b_thumb.jpg", "path_full": "https://shared.akamai.steamstatic.com/b.jpg"}
+        ],
+        "movies": [
+          {"id": 1, "name": "Trailer", "mp4": {"480": "https://video.akamai.steamstatic.com/t_480.mp4", "max": "https://video.akamai.steamstatic.com/t_max.mp4"}},
+          {"id": 2, "name": "Newer", "hls_h264": "https://video.akamai.steamstatic.com/t2/hls_264_master.m3u8"}
+        ]
+      }
+    }
+  },
+  "app_missing": {"999999999": {"success": false}},
+  "app_quote": {
+    "1145360": {
+      "success": true,
+      "data": {
+        "name": "Hades",
+        "short_description": "Defy the god of the dead as you hack and slash out of the Underworld in this rogue-like dungeon crawler from the creators of &quot;Bastion&quot; &amp; <b>Transistor</b>.",
+        "developers": ["Supergiant Games"],
+        "publishers": ["Supergiant Games"],
+        "release_date": {"coming_soon": false, "date": "Sep 17, 2020"},
+        "genres": [{"id": "1", "description": "Action"}, {"id": "25", "description": "Adventure"}, {"id": "23", "description": "Indie"}, {"id": "3", "description": "RPG"}]
+      }
+    }
+  }
+}

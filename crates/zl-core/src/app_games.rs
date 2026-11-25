@@ -22,7 +22,7 @@ const FORBIDDEN_IN_NAMES: &[char] = &['/', '\\', ':', '*', '?', '"', '<', '>', '
 
 /// The title as a file name: forbidden characters and control characters dropped, spaces
 /// trimmed, no leading dot. `None` when nothing is left.
-fn file_stem(title: &str) -> Option<String> {
+pub(crate) fn file_stem(title: &str) -> Option<String> {
     let cleaned: String = title
         .chars()
         .filter(|c| !FORBIDDEN_IN_NAMES.contains(c) && !c.is_control())
@@ -36,20 +36,20 @@ fn tag_text(package: &str) -> String {
     format!("[{ANDROID_PACKAGE_TAG}] {package}\n")
 }
 
-/// A free path for `stem` in `dir`: `stem.localgameid`, else `stem (2).localgameid`, and so
-/// on. A file that already names the same package is reused.
-fn free_path(dir: &Path, stem: &str, package: &str) -> PathBuf {
+/// A free path for `stem` in `dir` with extension `ext`: `stem.ext`, else `stem (2).ext`, and
+/// so on. A file that already holds `text` (the same tag) is reused.
+pub(crate) fn free_path(dir: &Path, stem: &str, ext: &str, text: &str) -> PathBuf {
     let mut n = 1;
     loop {
         let name = if n == 1 {
-            format!("{stem}.{ANDROID_PACKAGE_TAG}")
+            format!("{stem}.{ext}")
         } else {
-            format!("{stem} ({n}).{ANDROID_PACKAGE_TAG}")
+            format!("{stem} ({n}).{ext}")
         };
         let path = dir.join(name);
         match fs::read_to_string(&path) {
             Err(_) => return path,
-            Ok(text) if text.trim() == tag_text(package).trim() => return path,
+            Ok(found) if found.trim() == text.trim() => return path,
             Ok(_) => n += 1,
         }
     }
@@ -58,7 +58,7 @@ fn free_path(dir: &Path, stem: &str, package: &str) -> PathBuf {
 impl Service {
     /// The folder of `platform` inside `root`: an existing sub-folder whose name is the
     /// platform's id or one of its aliases (any case), else `<root>/<id>` (not created here).
-    fn console_dir(&self, root: &Path, platform: &str) -> PathBuf {
+    pub(crate) fn console_dir(&self, root: &Path, platform: &str) -> PathBuf {
         let existing = fs::read_dir(root).ok().and_then(|entries| {
             entries.flatten().find_map(|entry| {
                 let name = entry.file_name().to_string_lossy().into_owned();
@@ -95,8 +95,9 @@ impl Service {
         let root = PathBuf::from(root.ok_or(CoreError::NotFound)?.path);
         let dir = self.console_dir(&root, &platform.id);
         fs::create_dir_all(&dir).map_err(|_| CoreError::Io)?;
-        let path = free_path(&dir, &stem, package);
-        fs::write(&path, tag_text(package)).map_err(|_| CoreError::Io)?;
+        let text = tag_text(package);
+        let path = free_path(&dir, &stem, ANDROID_PACKAGE_TAG, &text);
+        fs::write(&path, text).map_err(|_| CoreError::Io)?;
         self.scan(progress)?;
         let path = path.to_string_lossy();
         let game = self.db().game_by_path(&path)?.ok_or(CoreError::NotFound)?;

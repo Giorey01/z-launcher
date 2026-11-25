@@ -1429,6 +1429,7 @@ dependencies = [
  "zl-meta",
  "zl-net",
  "zl-platforms",
+ "zl-steam",
  "zl-theme",
 ]
 
@@ -1517,6 +1518,17 @@ dependencies = [
  "tempfile",
  "thiserror",
  "zl-config",
+]
+
+[[package]]
+name = "zl-steam"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "thiserror",
+ "zl-config",
+ "zl-net",
 ]
 
 [[package]]

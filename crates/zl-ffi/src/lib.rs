@@ -17,6 +17,7 @@ mod core_object;
 mod error;
 mod meta_api;
 mod scan;
+mod steam_api;
 mod types;
 
 uniffi::setup_scaffolding!();
@@ -26,6 +27,7 @@ pub use core_object::Core;
 pub use error::CoreError;
 pub use meta_api::{GameDetails, ImageScrapeReport, KeyCheck, ScrapeListener, ScrapeStop};
 pub use scan::{ScanEvent, ScanIssue, ScanListener, ScanSummary};
+pub use steam_api::{SteamAccount, SteamImport, SteamProblem};
 pub use types::{
     Candidate, ClipData, Detection, Extra, ExtraValue, GameEntry, GameKind, InstalledEmulator,
     LaunchIntent, LibraryMode, Plan, PlatformEntry, ProfileRef, ProposedDefault, RawLaunchRequest,

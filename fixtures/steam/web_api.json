@@ -1,0 +1,17 @@
+{
+  "comment": "Steam Web API answers in the documented shape, written by hand (ids and names are real public apps). Read by the zl-steam and zl-core tests.",
+  "owned_games": {
+    "response": {
+      "game_count": 3,
+      "games": [
+        {"appid": 400, "name": "Portal", "playtime_forever": 312, "img_icon_url": "cfa928ab4119dd137e50d728e8fe703e4e970aff", "rtime_last_played": 1700000000},
+        {"appid": 1145360, "name": "Hades", "playtime_forever": 0, "img_icon_url": "", "rtime_last_played": 0},
+        {"appid": 620, "name": "Portal 2: <Coop>", "playtime_forever": 45}
+      ]
+    }
+  },
+  "owned_games_private": {"response": {}},
+  "owned_games_empty": {"response": {"game_count": 0}},
+  "vanity_found": {"response": {"steamid": "76561197960287930", "success": 1}},
+  "vanity_missing": {"response": {"success": 42, "message": "No match"}}
+}

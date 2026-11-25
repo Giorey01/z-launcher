@@ -315,4 +315,20 @@
     <string name="msg_app_unfiled">%1$s is no longer with the console games.</string>
     <string name="msg_app_file_failed">The file in the games folder could not be written. Check the access to all files.</string>
     <string name="msg_app_no_folder">Add a games folder in Settings first.</string>
+    <string name="st_steam">Steam</string>
+    <string name="st_steam_unset">Not set. Add a Web API key and your profile to import your games.</string>
+    <string name="st_steam_help">Get a free Web API key at steamcommunity.com/dev/apikey and paste it here. As profile, write your SteamID64, the link to your profile or its custom name. In the Steam privacy settings, "Game details" must be public.</string>
+    <string name="st_steam_key_label">Web API key</string>
+    <string name="st_steam_key_label_set">Web API key (saved; leave empty to keep it)</string>
+    <string name="st_steam_account_label">Profile</string>
+    <string name="st_steam_import">Import the Steam library</string>
+    <string name="st_steam_import_sub">Adds every game you own to the PC folder. Any Steam client installed starts them.</string>
+    <string name="msg_steam_ready">Steam account saved. Your library can be imported.</string>
+    <string name="msg_steam_not_set">Set your Steam Web API key and profile first.</string>
+    <string name="msg_steam_key_refused">Steam refused this Web API key.</string>
+    <string name="msg_steam_private">The game details of this profile are private. Make them public in the Steam privacy settings.</string>
+    <string name="msg_steam_unknown_profile">No Steam profile has that name.</string>
+    <string name="msg_steam_offline">Steam cannot be reached. Check the connection.</string>
+    <string name="msg_steam_malformed">The key must be 32 letters and digits, and the profile a SteamID64, a profile link or a name.</string>
+    <string name="msg_steam_imported">%1$s games added, %2$s were already there.</string>
 </resources>

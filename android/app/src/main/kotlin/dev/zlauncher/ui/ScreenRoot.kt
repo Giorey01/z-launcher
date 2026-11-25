@@ -39,6 +39,7 @@ import dev.zlauncher.ui.picker.EmulatorPickerScreen
 import dev.zlauncher.ui.settings.SettingsAside
 import dev.zlauncher.ui.settings.SettingsMain
 import dev.zlauncher.ui.settings.SgdbKeyDialog
+import dev.zlauncher.ui.settings.SteamAccountDialog
 import dev.zlauncher.ui.single.SingleRoot
 import dev.zlauncher.ui.theme.LocalZTheme
 import dev.zlauncher.ui.theme.WallpaperScreen
@@ -64,6 +65,9 @@ fun ScreenRoot(app: AppViewModel, role: Role, displayId: Int) {
             }
             if (app.settings.wantSgdbKey && role != Role.HERO) {
                 SgdbKeyDialog(app) { app.settings.wantSgdbKey = false }
+            }
+            if (app.settings.wantSteamAccount && role != Role.HERO) {
+                SteamAccountDialog(app) { app.settings.wantSteamAccount = false }
             }
             when (role) {
                 Role.GRID -> GridRoot(app)

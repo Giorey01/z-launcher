@@ -32,11 +32,12 @@ riferimento è quello di Cocoon (clean-room, vedi `CLAUDE.md`), con identità no
 | `zl-media` | Media già presenti accanto alla libreria (ES-DE, Cocoon), `gamelist.xml`, titoli a schermo |
 | `zl-meta` | Orchestratore dei metadati e fonti online (una per file in `sources/`) |
 | `zl-net` | *(da creare)* client HTTP sincrono condiviso: trait `HttpClient`, implementazione `ureq` con rustls, retry, backoff, `Retry-After`, limite per host, finto per i test. Lo useranno metadati, RetroAchievements, Steam, Theme Hub, gestore emulatori, mod |
+| `zl-steam` | Steam: Web API ufficiale con la chiave dell'utente (giochi posseduti, nome del profilo) e `appdetails` pubblico dello store (dettagli del gioco, senza chiave) |
 | `zl-core` | Servizio applicativo: compone i crate, emette eventi strutturati |
 | `zl-ffi` | Superficie UniFFI verso Kotlin |
 
 Crate futuri previsti dalla roadmap: `layout`, `input`, `sessions` (sett. 3), `achievements`,
-`saves` (sett. 5), `pcbridge`, `steam` (sett. 7), `mods` (sett. 8). Si creano quando serve, non prima.
+`saves` (sett. 5), `pcbridge` (sett. 7), `mods` (sett. 8). Si creano quando serve, non prima.
 
 **Sincrono.** Il core è sincrono: niente `tokio` né `reqwest`. Il parallelismo, quando serve, sta
 in `zl-core` con thread e canali. Il codice asincrono portato da altrove si converte.
