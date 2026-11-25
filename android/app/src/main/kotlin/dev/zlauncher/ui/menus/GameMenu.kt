@@ -15,7 +15,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.RemoveCircleOutline
+import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material.icons.rounded.StarBorder
+import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material.icons.rounded.Smartphone
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,9 +42,13 @@ import dev.zlauncher.R
 import dev.zlauncher.display.DisplayRoles
 import dev.zlauncher.nav.AppViewModel
 import dev.zlauncher.nav.Overlay
+import dev.zlauncher.nav.Screen
 import dev.zlauncher.ui.art.CoverArt
 import dev.zlauncher.ui.home.rememberOverlay
 import dev.zlauncher.ui.theme.LocalZTheme
+
+/** Id of the Hidden Smart Folder (from the core). */
+private const val HIDDEN_FOLDER = "@hidden"
 
 /** Share of the screen width of the entries panel. */
 private const val PANEL_WIDTH = 0.49f
@@ -105,6 +114,9 @@ private fun entries(
     val launch = MenuEntry(Icons.Rounded.PlayArrow, stringResource(R.string.menu_launch), submenu = targets.size > 1) {
         if (targets.size > 1) setSubmenu(true) else { app.overlay = null; app.launchGame(game) }
     }
+    val info = MenuEntry(Icons.Rounded.Info, stringResource(R.string.menu_info)) {
+        app.open(Screen.GameInfo(game))
+    }
     val edit = MenuEntry(Icons.Rounded.Edit, stringResource(R.string.menu_edit), badge = "Y") {
         app.overlay = null
         app.chooseEmulator(game)
@@ -113,7 +125,18 @@ private fun entries(
         app.overlay = null
         app.downloadArt(game)
     }
-    return listOf(launch, edit, art)
+    val unfile = game.appPackage?.let {
+        MenuEntry(Icons.Rounded.RemoveCircleOutline, stringResource(R.string.menu_unfile_console)) { app.library.unfileApp(game) }
+    }
+    val favorite = MenuEntry(
+        if (game.favorite) Icons.Rounded.Star else Icons.Rounded.StarBorder,
+        stringResource(if (game.favorite) R.string.menu_favorite_remove else R.string.menu_favorite_add),
+    ) { app.library.setFavorite(game, !game.favorite) }
+    val hidden = app.top.let { it is Screen.Platform && it.id == HIDDEN_FOLDER }
+    val hide = MenuEntry(Icons.Rounded.VisibilityOff, stringResource(if (hidden) R.string.menu_unhide else R.string.menu_hide)) {
+        app.library.setHidden(game, !hidden)
+    }
+    return listOfNotNull(launch, info, favorite, edit.takeIf { game.appPackage == null }, art, hide, unfile)
 }
 
 /** The displays that are on, the larger as the top screen. */

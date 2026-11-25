@@ -5,3 +5,7 @@
 -keep class dev.zlauncher.core.nativecore.** { *; }
 -dontwarn java.awt.**
 -dontwarn com.sun.jna.**
+
+# Pods are found with ServiceLoader (META-INF/services/dev.zlauncher.pods.PodProvider): keep the providers and
+# their no-argument constructors, which nothing calls directly.
+-keep class * implements dev.zlauncher.pods.PodProvider { <init>(); }

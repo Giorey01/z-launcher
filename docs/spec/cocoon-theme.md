@@ -188,6 +188,13 @@ Un'azione senza file usa il suono di default; un file con nome sconosciuto è un
 pacchetti reali contengono nomi sbagliati (`grido_zoom_in`, `edit`, `swap`, `pickup`) e usano
 sia `sounds/<azione>.<ext>` sia `<azione>.<ext>` in radice: niente alias, si segnalano e basta.
 
+**I nostri suoni di default.** Non usiamo suoni di Cocoon né registrazioni: il core sintetizza
+un suono breve per ognuna delle 22 azioni (ricette in `zl_config::sounds`: toni sinusoidali,
+triangolari o quadri con glissando, attacco e dissolvenza), li scrive una volta come WAV mono a
+44,1 kHz in `sounds/default/v<versione>/` nella cartella dati e li usa per ogni azione che il
+file dell'utente, il pacchetto scelto e il tema non coprono. Cambiare una ricetta alza la
+versione, così i file si rigenerano.
+
 ## 6. Smart Folders
 
 `smart_folders/<tipo>/{icon,hero,logo}.<ext>`, varianti per piattaforma in

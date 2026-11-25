@@ -7,7 +7,7 @@ use serde::de::DeserializeOwned;
 use zl_config::platforms::{EMULATORS_FILE_NAME, PLATFORMS_FILE_NAME};
 
 use crate::error::{DataFile, DbError};
-use crate::model::{Emulator, EmulatorsFile, Platform, PlatformsFile, PrefEntry};
+use crate::model::{Emulator, EmulatorsFile, Folder, Platform, PlatformsFile, PrefEntry};
 use crate::validate::validate;
 
 /// Format version of the data files this build reads. A format fact.
@@ -134,6 +134,23 @@ impl PlatformDb {
         self.platforms()
             .iter()
             .find(|p| p.id == name || p.aliases.contains(&name))
+    }
+
+    /// All Home folders that group several platforms.
+    pub fn folders(&self) -> &[Folder] {
+        &self.platforms_file.folders
+    }
+
+    /// Looks up a Home folder by id, ignoring case.
+    pub fn folder(&self, id: &str) -> Option<&Folder> {
+        let id = id.to_lowercase();
+        self.folders().iter().find(|f| f.id == id)
+    }
+
+    /// The Home folder a platform (id or alias) belongs to, if any.
+    pub fn folder_of(&self, platform: &str) -> Option<&Folder> {
+        let id = &self.platform(platform)?.id;
+        self.folders().iter().find(|f| f.platforms.contains(id))
     }
 
     /// Platform id (map key) to its extensions, the shape the scanner consumes. Tag-file

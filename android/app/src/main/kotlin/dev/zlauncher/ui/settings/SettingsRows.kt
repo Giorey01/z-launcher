@@ -118,7 +118,7 @@ class SettingsRows(
     private fun root(): List<SettingRow> = when (model.category) {
         Category.PERSONALIZATION -> personalization()
         Category.LIBRARY -> LibraryRows(app, model, context).root()
-        Category.INTEGRATIONS -> IntegrationsRows(model, context).root()
+        Category.INTEGRATIONS -> IntegrationsRows(app, model, context).root()
         Category.SYSTEM -> system()
         Category.ABOUT -> about()
     }

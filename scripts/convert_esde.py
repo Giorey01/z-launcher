@@ -16,7 +16,7 @@ import xml.etree.ElementTree as ET
 from collections import OrderedDict
 
 SCHEMA = 1
-VERSION = 1
+VERSION = 2
 
 # ES-DE system name -> id Cocoon (cartella). Nomi non presenti qui e non nella lista Cocoon
 # restano col proprio nome e `cocoon: false`.
@@ -71,11 +71,13 @@ PREFERENCES = {
     "dreamcast": [["flycast"], ["redream"], ["retroarch", "flycast"]],
     "n64": [["m64plus-fz"], ["mupen64plus-ae"], ["retroarch", "mupen64plus_next_gles3"]],
     "saturn": [["yabasanshiro-2"], ["retroarch", "yabasanshiro"]],
-    "steam": [["gamenative"], ["gamehub-lite"], ["winnative"]],
+    "steam": [["gamenative"], ["gamehub-lite"], ["droiddeck"], ["winnative"]],
     "windows": [["gamenative"], ["winlator-cmod"], ["gamehub-lite"], ["winnative"]],
     "scummvm": [["scummvm"], ["retroarch", "scummvm"]],
     "ps3": [["aps3e"], ["armsx3"], ["emucorec"]],
 }
+# Cartelle della Home che raccolgono più piattaforme; ogni gioco tiene la sua piattaforma.
+FOLDERS = [{"id": "pcgames", "name": "PC", "platforms": ["windows", "steam"]}]
 # Nomi leggibili dove l'etichetta ES-DE non basta.
 NAMES = {"retroarch": "RetroArch", "aps3e": "aPS3e", "armsx3": "ARMSX3",
          "emucorec": "EmuCoreC", "mame4droid-current": "MAME4droid Current", "dolphin-mmjr": "Dolphin MMJR", "dolphin-mmjr2": "Dolphin MMJR2"}
@@ -317,6 +319,7 @@ def main():
             e["cores"] = {k: cores[k] for k in sorted(cores)}
         emulators.append(e)
     add_manual(emulators, platforms)
+    add_upstream(emulators)
     apply_observed(emulators)
     add_grants(emulators)
     finalize_platforms(platforms)
@@ -329,7 +332,8 @@ def main():
     emulators.sort(key=lambda e: e["id"])
     head = {"schema": SCHEMA, "version": VERSION,
             "sources": ["ES-DE (MIT) es_systems.xml / es_find_rules.xml for Android"]}
-    write(outdir + "/platforms.json", {**head, "platforms": sorted(platforms.values(), key=lambda p: p["id"])})
+    write(outdir + "/platforms.json", {**head, "platforms": sorted(platforms.values(), key=lambda p: p["id"]),
+                                         "folders": FOLDERS})
     write(outdir + "/emulators.json", {**head, "default_preference": [{"emulator": "retroarch"}],
                                          "preferences": prefs, "emulators": emulators})
     for u in unsupported:
@@ -412,6 +416,24 @@ def add_manual(emulators, platforms):
                       "platforms": ["moonlight"], "rom_access": "none",
                       "intent": {"action": "android.intent.action.MAIN", "extras": [], "flags": []},
                       "verified": False, "source": "manual"}]})
+
+
+def add_upstream(emulators):
+    """Intent letti nel sorgente pubblico dell'app (interfaccia, non codice): source=upstream."""
+    emulators.append({
+        "id": "droiddeck", "name": "DroidDeck", "kind": "standalone",
+        "packages": [{"package": "com.droiddeck.launcher",
+                      "activity": "com.droiddeck.launcher.FrontEndActivity", "verified": True}],
+        "platforms": ["steam"],
+        "profiles": [{"id": "droiddeck", "label": "DroidDeck (Standalone)", "platforms": ["steam"],
+                      "rom_access": "none",
+                      "intent": {"action": "com.droiddeck.launcher.LAUNCH_GAME",
+                                 "extras": [{"key": "app_id", "type": "int",
+                                             "value": "{tags.steamappid}"}],
+                                 "flags": []},
+                      "verified": True, "source": "upstream",
+                      "note": "upstream 0.7.1: game_source defaults to Steam; the game must be in "
+                              "the app's own library; not yet tried on a device"}]})
 
 
 def finalize_platforms(platforms):

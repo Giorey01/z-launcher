@@ -3,9 +3,11 @@ package dev.zlauncher.ui.home
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import dev.zlauncher.R
 import dev.zlauncher.ZLauncherApp
 import dev.zlauncher.apps.AppEntry
 import dev.zlauncher.core.nativecore.CoreException
+import dev.zlauncher.core.nativecore.FolderKind
 import dev.zlauncher.core.nativecore.GameEntry
 import dev.zlauncher.core.nativecore.LibraryMode
 import dev.zlauncher.core.nativecore.PlatformEntry
@@ -33,6 +35,15 @@ data class HomeUi(
 /** Default number of apps to populate in the dock when empty. */
 private const val DEFAULT_DOCK_SIZE = 5
 
+/** The string that names a Smart Folder of [kind]; `null` for a platform, which comes with its name. */
+fun folderNameRes(kind: FolderKind): Int? = when (kind) {
+    FolderKind.PLATFORM -> null
+    FolderKind.FAVORITES -> R.string.folder_favorites
+    FolderKind.RECENT -> R.string.folder_recent
+    FolderKind.NEVER_PLAYED -> R.string.folder_never_played
+    FolderKind.HIDDEN -> R.string.folder_hidden
+}
+
 /** Loads the Home from the core; every call runs off the main thread. */
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     /** The shared application object. */
@@ -43,6 +54,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     /** The state the Home draws. */
     val ui: StateFlow<HomeUi> = state.asStateFlow()
+
+    /** [entry] with its name in the app's language when it is a Smart Folder. */
+    private fun named(entry: PlatformEntry): PlatformEntry =
+        folderNameRes(entry.kind)?.let { entry.copy(name = getApplication<Application>().getString(it)) } ?: entry
 
     /** Reads the library mode, the platforms or games, and the dock again. */
     fun refresh() {
@@ -63,7 +78,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     HomeUi(
                         loading = false,
                         mode = mode,
-                        platforms = if (mode == LibraryMode.SMART) core.platforms() else emptyList(),
+                        platforms = if (mode == LibraryMode.SMART) core.platforms().map(::named) else emptyList(),
                         games = if (mode == LibraryMode.SIMPLE) core.games(null) else emptyList(),
                         dock = dockApps,
                     )

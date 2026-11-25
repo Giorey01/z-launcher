@@ -151,6 +151,7 @@ abstract class ScreenActivity : ComponentActivity() {
     private fun startGame(event: UiEvent.StartGame): LaunchFailure? {
         val target = event.displayId ?: launchDisplay()
         val failure = LaunchExecutor.launch(this, event.intent, target)
+        if (failure == null && event.game != null) app.onGameStarted(event.game, event.intent.`package`)
         val elsewhere = target?.takeIf { it != currentDisplayId() }
         if (failure == null && event.game != null && elsewhere != null) app.startNowPlaying(event.game, elsewhere)
         return failure
@@ -199,7 +200,7 @@ abstract class ScreenActivity : ComponentActivity() {
         if (host != null && host !== this && role == Role.HERO) {
             return host.dispatchKeyEvent(event)
         }
-        val inSettings = app.top == Screen.Settings && !app.settings.wantSgdbKey
+        val inSettings = app.top == Screen.Settings && !app.settings.editing
         val consumed = (inSettings && event.action == KeyEvent.ACTION_DOWN && SettingsKeys.handle(app, event)) ||
             (inSettings && event.action == KeyEvent.ACTION_UP && SettingsKeys.consumes(event))
         return if (consumed) true else super.dispatchKeyEvent(event)

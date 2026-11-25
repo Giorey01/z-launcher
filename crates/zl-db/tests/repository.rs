@@ -296,7 +296,8 @@ fn meta_crud_and_overrides() -> TestResult {
 }
 
 /// A database created at version 3 with games and media is migrated to the latest version
-/// preserving data; the rebuilt media table then takes SteamGridDB rows, ranked after ES-DE.
+/// preserving data; the rebuilt media table then takes SteamGridDB rows, ranked after ES-DE, and
+/// Steam store screenshots.
 #[test]
 fn migration_from_v3_preserves_data() -> TestResult {
     let dir = tempfile::tempdir()?;
@@ -327,7 +328,10 @@ fn migration_from_v3_preserves_data() -> TestResult {
     }
 
     let db = Db::open(&db_path)?;
-    assert_eq!(db.schema_version()?, 5);
+    assert_eq!(
+        db.schema_version()?,
+        zl_db::migrations::MIGRATIONS.len() as u32
+    );
 
     let g = db.game(1)?.ok_or("game missing after migration")?;
     assert_eq!(g.title, "Pokemon");
@@ -351,5 +355,71 @@ fn migration_from_v3_preserves_data() -> TestResult {
     assert_eq!(media.len(), 2);
     assert_eq!(media[0].path, "/m/p.png", "ES-DE art stays first");
     assert_eq!(media[1].source, zl_db::MediaSource::SteamGridDb);
+    db.add_media(&zl_db::NewMedia {
+        game_id: 1,
+        kind: zl_db::MediaKind::Screenshot,
+        path: "/data/steam/400/0.jpg".into(),
+        source: zl_db::MediaSource::Steam,
+        edit: None,
+    })?;
+    let shots: Vec<_> = db
+        .game_media(1)?
+        .into_iter()
+        .filter(|m| m.kind == zl_db::MediaKind::Screenshot)
+        .collect();
+    assert_eq!(shots.len(), 1, "step 6 takes store screenshots");
+    assert_eq!(shots[0].source, zl_db::MediaSource::Steam);
+    Ok(())
+}
+
+/// Flags default to off and round-trip; sessions sum by source and the Steam total is replaced
+/// on every import.
+#[test]
+fn flags_and_play_sessions() -> TestResult {
+    use zl_db::{GameFlags, NewSession, SessionSource};
+    let dir = tempfile::tempdir()?;
+    let db = Db::open(&dir.path().join("lib.db"))?;
+    let root = db.upsert_root("/roms", true)?;
+    let a = db.upsert_game(&game(root, "gba", "A", "/roms/gba/a.gba"), 1)?;
+    let b = db.upsert_game(&game(root, "gba", "B", "/roms/gba/b.gba"), 1)?;
+    assert_eq!(db.game_flags(a)?, GameFlags::default());
+    let fav = GameFlags {
+        favorite: true,
+        hidden: false,
+    };
+    db.set_game_flags(a, fav)?;
+    assert_eq!(db.game_flags(a)?, fav);
+    assert_eq!(db.all_game_flags()?.len(), 1);
+    for (start, end, secs, source) in [
+        (100, 400, 250, SessionSource::Usage),
+        (1000, 1600, 600, SessionSource::Estimated),
+    ] {
+        db.add_session(&NewSession {
+            game_id: a,
+            started_at: start,
+            ended_at: end,
+            seconds: secs,
+            source,
+        })?;
+    }
+    db.set_steam_playtime(a, 3600, 50)?;
+    db.set_steam_playtime(a, 7200, 60)?;
+    let stats = db.play_stats(a)?;
+    assert_eq!(
+        (
+            stats.device_seconds,
+            stats.steam_seconds,
+            stats.sessions,
+            stats.last_played
+        ),
+        (850, 7200, 2, 1600)
+    );
+    db.set_steam_playtime(a, 0, 0)?;
+    assert_eq!(
+        db.play_stats(a)?.steam_seconds,
+        0,
+        "zero removes the Steam total"
+    );
+    assert_eq!(db.play_stats(b)?, zl_db::PlayStats::default());
     Ok(())
 }

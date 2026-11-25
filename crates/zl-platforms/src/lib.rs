@@ -31,9 +31,12 @@ pub use launch::{
     build_launch, ClipData, Extra, ExtraValue, LaunchContext, LaunchIntent, RomUris, UriGrant,
 };
 pub use model::{
-    ClipTemplate, Core, Emulator, EmulatorKind, ExtraTemplate, ExtraTemplateValue, GrantTemplate,
-    IntTemplate, IntentTemplate, Package, Platform, PrefEntry, Profile, RomAccess, TagFileRule,
+    ClipTemplate, Core, Emulator, EmulatorKind, ExtraTemplate, ExtraTemplateValue, Folder,
+    GrantTemplate, IntTemplate, IntentTemplate, Package, Platform, PrefEntry, Profile, RomAccess,
+    TagFileRule,
 };
-pub use plan::{LaunchRequest, Outcome};
+pub use plan::{
+    LaunchRequest, Outcome, ANDROID_APP_EMULATOR, ANDROID_APP_PROFILE, ANDROID_PACKAGE_TAG,
+};
 pub use resolve::{ProfileRef, Resolution, ResolveInput, ResolvedBy};
 pub use validate::KNOWN_FLAGS;

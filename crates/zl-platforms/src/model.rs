@@ -190,7 +190,7 @@ pub struct Profile {
     pub intent: IntentTemplate,
     /// Whether a source confirms the intent.
     pub verified: bool,
-    /// Where the intent comes from (`es-de`, `es-de+device`, `manual`).
+    /// Where the intent comes from (`es-de`, `es-de+device`, `upstream`, `manual`).
     pub source: String,
     /// Date a real device launched a game with this intent, when one did.
     #[serde(default)]
@@ -241,6 +241,18 @@ pub struct PrefEntry {
     pub core: Option<String>,
 }
 
+/// A Home folder that shows the games of several platforms together (Steam and Windows under
+/// "PC"). Each game keeps its own platform, so launching and settings do not change.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Folder {
+    /// Id of the folder; it must not be the id or alias of a platform.
+    pub id: String,
+    /// Display name, in English; the apps may translate it.
+    pub name: String,
+    /// Canonical ids of the member platforms, in the order their folder art is tried.
+    pub platforms: Vec<String>,
+}
+
 /// Contents of `platforms.json`.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PlatformsFile {
@@ -250,6 +262,9 @@ pub struct PlatformsFile {
     pub version: u32,
     /// The platforms.
     pub platforms: Vec<Platform>,
+    /// Folders that group several platforms on the Home.
+    #[serde(default)]
+    pub folders: Vec<Folder>,
 }
 
 /// Contents of `emulators.json`.

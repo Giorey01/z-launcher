@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "version": 1,
+ "version": 2,
  "sources": [
   "ES-DE (MIT) es_systems.xml / es_find_rules.xml for Android"
  ],
@@ -165,6 +165,9 @@
    },
    {
     "emulator": "gamehub-lite"
+   },
+   {
+    "emulator": "droiddeck"
    },
    {
     "emulator": "winnative"
@@ -1266,6 +1269,45 @@
      },
      "verified": true,
      "source": "es-de"
+    }
+   ]
+  },
+  {
+   "id": "droiddeck",
+   "name": "DroidDeck",
+   "kind": "standalone",
+   "packages": [
+    {
+     "package": "com.droiddeck.launcher",
+     "activity": "com.droiddeck.launcher.FrontEndActivity",
+     "verified": true
+    }
+   ],
+   "platforms": [
+    "steam"
+   ],
+   "profiles": [
+    {
+     "id": "droiddeck",
+     "label": "DroidDeck (Standalone)",
+     "platforms": [
+      "steam"
+     ],
+     "rom_access": "none",
+     "intent": {
+      "action": "com.droiddeck.launcher.LAUNCH_GAME",
+      "extras": [
+       {
+        "key": "app_id",
+        "type": "int",
+        "value": "{tags.steamappid}"
+       }
+      ],
+      "flags": []
+     },
+     "verified": true,
+     "source": "upstream",
+     "note": "upstream 0.7.1: game_source defaults to Steam; the game must be in the app's own library; not yet tried on a device"
     }
    ]
   },

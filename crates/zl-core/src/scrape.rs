@@ -182,7 +182,7 @@ impl Service {
     }
 
     /// The games of a target, missing ones left out.
-    fn target_games(&self, target: &ScrapeTarget) -> Result<Vec<GameEntry>, CoreError> {
+    pub(crate) fn target_games(&self, target: &ScrapeTarget) -> Result<Vec<GameEntry>, CoreError> {
         Ok(match target {
             ScrapeTarget::All => self.games(None)?,
             ScrapeTarget::Platform(id) => self.games(Some(id))?,

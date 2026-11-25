@@ -16,6 +16,7 @@ zl-library = { path = "../zl-library" }
 zl-media = { path = "../zl-media" }
 zl-net = { path = "../zl-net" }
 zl-platforms = { path = "../zl-platforms" }
+zl-sessions = { path = "../zl-sessions" }
 zl-theme = { path = "../zl-theme" }
 thiserror = { workspace = true }
 uniffi = { workspace = true }

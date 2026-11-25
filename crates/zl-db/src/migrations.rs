@@ -128,8 +128,47 @@ DROP TABLE game_media;
 ALTER TABLE game_media_new RENAME TO game_media;
 ";
 
+/// Step 6: screenshots downloaded from the Steam store (`steam`). The table is rebuilt again with
+/// the same rows, as in step 5.
+const STEP_6: &str = "
+CREATE TABLE game_media_new (
+    game_id INTEGER NOT NULL REFERENCES games(id) ON DELETE CASCADE,
+    kind TEXT NOT NULL CHECK (kind IN ('icon','hero','logo','screenshot','video','3dbox',
+        'titlescreen','backcover','miximage','physicalmedia','manual')),
+    path TEXT NOT NULL,
+    source TEXT NOT NULL CHECK (source IN ('cocoon','esde','user','sgdb','steam')),
+    edit INTEGER,
+    protected INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (game_id, kind, path)
+) WITHOUT ROWID;
+INSERT INTO game_media_new SELECT game_id, kind, path, source, edit, protected FROM game_media;
+DROP TABLE game_media;
+ALTER TABLE game_media_new RENAME TO game_media;
+";
+
+/// Step 7: the user's flags on a game (favourite, hidden) and the play sessions. A session is
+/// time measured on the device (`usage`, from the system's app usage events; `estimated`, from
+/// the launch to the return when those events are not readable) or the total Steam reports for
+/// the account (`steam`, one row per game, replaced on every import).
+const STEP_7: &str = "
+CREATE TABLE game_flags (
+    game_id INTEGER PRIMARY KEY REFERENCES games(id) ON DELETE CASCADE,
+    favorite INTEGER NOT NULL DEFAULT 0,
+    hidden INTEGER NOT NULL DEFAULT 0
+);
+CREATE TABLE game_sessions (
+    id INTEGER PRIMARY KEY,
+    game_id INTEGER NOT NULL REFERENCES games(id) ON DELETE CASCADE,
+    started_at INTEGER NOT NULL,
+    ended_at INTEGER NOT NULL,
+    seconds INTEGER NOT NULL CHECK (seconds >= 0),
+    source TEXT NOT NULL CHECK (source IN ('usage','estimated','steam'))
+);
+CREATE INDEX game_sessions_game ON game_sessions(game_id, ended_at);
+";
+
 /// All steps in order; step `n` is `MIGRATIONS[n - 1]`.
-pub const MIGRATIONS: &[&str] = &[STEP_1, STEP_2, STEP_3, STEP_4, STEP_5];
+pub const MIGRATIONS: &[&str] = &[STEP_1, STEP_2, STEP_3, STEP_4, STEP_5, STEP_6, STEP_7];
 
 /// Reads the schema version of the open database.
 pub fn current_version(conn: &Connection) -> Result<u32, DbError> {

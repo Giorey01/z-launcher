@@ -14,6 +14,7 @@ import dev.zlauncher.core.nativecore.InstalledTheme
 import dev.zlauncher.core.nativecore.LibraryMode
 import dev.zlauncher.core.nativecore.PlatformEmulatorSetting
 import dev.zlauncher.core.nativecore.RomRoot
+import dev.zlauncher.core.nativecore.SteamAccount
 import dev.zlauncher.launch.toMessage
 import dev.zlauncher.nav.AppViewModel
 import dev.zlauncher.nav.UiMessage
@@ -115,6 +116,8 @@ data class SettingsData(
     val libraryMode: LibraryMode = LibraryMode.SMART,
     /** Whether a SteamGridDB key is stored. */
     val hasSgdbKey: Boolean = false,
+    /** The Steam account (Web API key set, profile as typed). */
+    val steam: SteamAccount = SteamAccount(false, null),
 )
 
 /**
@@ -164,6 +167,12 @@ class SettingsModel(private val app: AppViewModel) {
 
     /** Set while the SteamGridDB key editor is open. */
     var wantSgdbKey by mutableStateOf(false)
+
+    /** Set while the Steam account editor is open. */
+    var wantSteamAccount by mutableStateOf(false)
+
+    /** Whether one of the editors (dialogs) is open; the settings keys stay with it then. */
+    val editing: Boolean get() = wantSgdbKey || wantSteamAccount
 
     /** The art download running now, `null` when none. */
     var artDownload by mutableStateOf<ArtDownload?>(null)
@@ -241,6 +250,7 @@ class SettingsModel(private val app: AppViewModel) {
                         emulators = core.platformEmulators(packages),
                         libraryMode = core.libraryMode(),
                         hasSgdbKey = core.hasSteamgriddbKey(),
+                        steam = core.steamAccount(),
                     )
                 }
             } catch (e: CoreException) {

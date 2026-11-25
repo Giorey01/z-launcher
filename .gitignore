@@ -11,3 +11,4 @@ android/core/native/src/main/kotlin/uniffi/
 
 # Note locali del maintainer (mai versionate)
 docs/local/
+__pycache__/

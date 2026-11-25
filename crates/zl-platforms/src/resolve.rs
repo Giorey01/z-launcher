@@ -73,6 +73,9 @@ pub enum ResolvedBy {
     ExtensionRule,
     /// Nothing was configured and exactly one installed profile can launch the game.
     OnlyCandidate,
+    /// The game is an Android app (a recomp or port) filed under a console by its
+    /// `localgameid` tag: the app itself starts, no emulator is involved.
+    AndroidApp,
 }
 
 /// Everything the choice depends on.

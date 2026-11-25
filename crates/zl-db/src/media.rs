@@ -17,7 +17,7 @@ const BEST_FIRST: &str = "protected DESC,
     CASE WHEN source = 'user' THEN 3
          WHEN source = 'cocoon' AND edit IS NOT NULL THEN 2
          WHEN source = 'cocoon' THEN 1
-         WHEN source = 'sgdb' THEN -1 ELSE 0 END DESC,
+         WHEN source IN ('sgdb', 'steam') THEN -1 ELSE 0 END DESC,
     edit DESC, path";
 
 /// Maps a row selected with [`MEDIA_COLUMNS`] to a [`MediaRow`].

@@ -13,7 +13,9 @@
     clippy::cognitive_complexity
 )]
 
+mod app_games;
 mod appearance_types;
+mod default_sounds;
 mod detect;
 mod error;
 mod launch;
@@ -23,6 +25,11 @@ mod meta;
 mod platform_settings;
 mod prefs;
 mod scrape;
+mod secrets;
+mod sessions;
+mod smart_folders;
+mod steam_details;
+mod steam_library;
 mod theme_files;
 mod theme_resolve;
 mod theme_select;
@@ -46,8 +53,11 @@ pub use appearance_types::{
 pub use error::CoreError;
 pub use media::{GameMedia, MediaCount, MediaImportReport, MediaItem, MediaSources};
 pub use scrape::{ImageScrapeReport, KeyCheck, ScrapeProgress, ScrapeStop, ScrapeTarget};
+pub use secrets::{MemorySecrets, SecretStore};
+pub use sessions::{PendingSession, SessionEnd};
+pub use steam_library::{SteamAccount, SteamImport, SteamProblem};
 pub use types::{
-    Candidate, Detection, GameDetails, GameEntry, InstalledView, LibraryMode, Plan,
+    Candidate, Detection, FolderKind, GameDetails, GameEntry, InstalledView, LibraryMode, Plan,
     PlatformEmulatorSetting, PlatformEntry, ProposedDefault, RootInfo, ScraperConfig,
 };
 
@@ -64,6 +74,8 @@ pub struct Service {
     /// The files of the selected theme, loaded on first use and dropped when the selection or
     /// the installed themes change.
     theme_cache: Mutex<Option<Arc<theme_files::ThemeFiles>>>,
+    /// Where the API keys are kept (in memory until the app sets its own store).
+    secrets: Mutex<Arc<dyn secrets::SecretStore>>,
 }
 
 impl Service {
@@ -84,6 +96,7 @@ impl Service {
             platforms,
             data_dir: data_dir.to_path_buf(),
             theme_cache: Mutex::new(None),
+            secrets: Mutex::new(Arc::new(secrets::MemorySecrets::default())),
         })
     }
 
