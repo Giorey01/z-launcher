@@ -3,7 +3,6 @@ package dev.zlauncher.ui.drawer
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +21,7 @@ import androidx.compose.material.icons.rounded.ContentPaste
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,6 +29,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -42,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.zlauncher.core.nativecore.SoundAction
 import dev.zlauncher.ui.pad.LocalPlay
+import dev.zlauncher.ui.pad.requestSoon
 import dev.zlauncher.ui.theme.LocalZTheme
 import dev.zlauncher.ui.theme.ZPanel
 
@@ -63,6 +66,9 @@ private sealed interface KeyAction {
     data object Space : KeyAction
     data object Confirm : KeyAction
 }
+
+/** The keys that press a keyboard key: gamepad A, the D-pad centre and Enter. */
+private val CONFIRM_KEYS = setOf(Key.ButtonA, Key.DirectionCenter, Key.Enter, Key.NumPadEnter)
 
 /** Standard QWERTY layout rows matching Cocoon reference 12-search-gamepad-keyboard.png. */
 private val ROW_1 = listOf(
@@ -95,6 +101,9 @@ fun GamepadKeyboard(
     modifier: Modifier = Modifier,
 ) {
     var caps by remember { mutableStateOf(false) }
+    // The keyboard opens with the focus on its first key: with a controller there is no other way in.
+    val firstKey = remember { FocusRequester() }
+    LaunchedEffect(Unit) { firstKey.requestSoon() }
     val play = LocalPlay.current
     val handleAction: (KeyAction) -> Unit = { action ->
         when (action) {
@@ -121,6 +130,12 @@ fun GamepadKeyboard(
             }
         }
     }
+    KeyboardPanel(caps, firstKey, handleAction, modifier)
+}
+
+/** The rounded keyboard panel: the action bar, the three letter rows and the bottom row. */
+@Composable
+private fun KeyboardPanel(caps: Boolean, firstKey: FocusRequester, onAction: (KeyAction) -> Unit, modifier: Modifier) {
     Box(
         modifier
             .fillMaxWidth()
@@ -130,10 +145,10 @@ fun GamepadKeyboard(
     ) {
         Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
             KeyboardActionBar()
-            KeyRow(ROW_1, caps, handleAction)
-            KeyRow(ROW_2, caps, handleAction)
-            KeyRow(ROW_3, caps, handleAction)
-            BottomControlRow(handleAction)
+            KeyRow(ROW_1, caps, onAction, firstKey)
+            KeyRow(ROW_2, caps, onAction)
+            KeyRow(ROW_3, caps, onAction)
+            BottomControlRow(onAction)
         }
     }
 }
@@ -173,10 +188,11 @@ private fun ActionChip(label: String, icon: ImageVector? = null, badge: String? 
 
 /** One row of keys in the keyboard grid. */
 @Composable
-private fun KeyRow(keys: List<KeySpec>, caps: Boolean, onAction: (KeyAction) -> Unit) {
+private fun KeyRow(keys: List<KeySpec>, caps: Boolean, onAction: (KeyAction) -> Unit, firstKey: FocusRequester? = null) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-        for (key in keys) {
-            KeyTile(key, caps, Modifier.weight(key.weight), onAction)
+        for ((index, key) in keys.withIndex()) {
+            val focusFirst = if (index == 0 && firstKey != null) Modifier.focusRequester(firstKey) else Modifier
+            KeyTile(key, caps, Modifier.weight(key.weight).then(focusFirst), onAction)
         }
     }
 }
@@ -205,10 +221,13 @@ private fun KeyTile(spec: KeySpec, caps: Boolean, modifier: Modifier, onAction: 
             .clip(RoundedCornerShape(10.dp))
             .background(keyBg)
             .then(activeBorder)
-            .focusable()
+            // No separate focusable(): clickable is the one focus target, so the requester of the first key,
+            // the highlight below and the D-pad all talk about the same node.
             .onFocusChanged { focused = it.isFocused }
             .onKeyEvent { event ->
-                if (event.type == KeyEventType.KeyDown && (event.key == Key.ButtonA || event.key == Key.Enter)) {
+                // Only the first press: holding A must not type the letter over and over (as PadTile does).
+                val first = event.type == KeyEventType.KeyDown && event.nativeKeyEvent.repeatCount == 0
+                if (first && event.key in CONFIRM_KEYS) {
                     onAction(spec.action)
                     true
                 } else false
