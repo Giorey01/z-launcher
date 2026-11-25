@@ -2,12 +2,15 @@
 //! the import of the owned games as `.steamappid` files.
 
 use std::sync::Arc;
+use std::time::Duration;
 
+use zl_config::steam::STEAM_STORE_DELAY_MS;
 use zl_core as core;
 use zl_net::UreqClient;
 
 use crate::core_object::Core;
 use crate::error::CoreError;
+use crate::meta_api::{Bridge as ScrapeBridge, ImageScrapeReport, ScrapeListener};
 use crate::scan::{Bridge, ScanListener};
 
 /// Result of a core call.
@@ -59,6 +62,30 @@ impl Core {
     pub fn check_steam_account(&self) -> Res<Option<SteamProblem>> {
         let problem = self.service().check_steam_account(&UreqClient::new())?;
         Ok(problem.map(Into::into))
+    }
+
+    /// Fetches the store details (description, dates, genres, screenshots) of the Steam games of
+    /// one game, of one platform or folder, or of the whole library when both are `None`. Only
+    /// games without a description are asked. Blocks: call it off the main thread.
+    pub fn fetch_steam_details(
+        &self,
+        platform: Option<String>,
+        game_id: Option<i64>,
+        listener: Arc<dyn ScrapeListener>,
+    ) -> Res<ImageScrapeReport> {
+        let target = match (game_id, platform) {
+            (Some(id), _) => core::ScrapeTarget::Game(id),
+            (None, Some(p)) => core::ScrapeTarget::Platform(p),
+            (None, None) => core::ScrapeTarget::All,
+        };
+        let pause = Duration::from_millis(STEAM_STORE_DELAY_MS);
+        let report = self.service().fetch_steam_details(
+            &target,
+            &UreqClient::new(),
+            &ScrapeBridge(listener),
+            pause,
+        )?;
+        Ok(report.into())
     }
 
     /// Imports the owned games and rescans. Blocks: call it off the main thread.

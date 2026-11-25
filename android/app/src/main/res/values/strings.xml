@@ -331,4 +331,9 @@
     <string name="msg_steam_offline">Steam cannot be reached. Check the connection.</string>
     <string name="msg_steam_malformed">The key must be 32 letters and digits, and the profile a SteamID64, a profile link or a name.</string>
     <string name="msg_steam_imported">%1$s games added, %2$s were already there.</string>
+    <string name="st_steam_details">Details from the Steam store</string>
+    <string name="st_steam_details_sub">Description, year, developer, genres and screenshots of your Steam games. Free, no key. Only games with no description are asked.</string>
+    <string name="msg_steam_details_result">%1$s games got their details and %2$s screenshots. %3$s have no store page.</string>
+    <string name="msg_steam_details_cancelled">Stopped. %1$s games got their details.</string>
+    <string name="msg_steam_store_offline">The Steam store cannot be reached, or asks to slow down. %1$s games got their details; try again later.</string>
 </resources>

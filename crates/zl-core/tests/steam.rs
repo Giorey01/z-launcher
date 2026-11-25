@@ -132,3 +132,95 @@ fn import_needs_a_games_folder() -> Res {
     );
     Ok(())
 }
+
+/// Records progress and never cancels.
+struct Quiet;
+
+impl zl_core::ScrapeProgress for Quiet {
+    /// Ignored.
+    fn on_game(&self, _done: u32, _total: u32) {}
+    /// Never.
+    fn is_cancelled(&self) -> bool {
+        false
+    }
+}
+
+#[test]
+fn store_details_fill_steam_games_without_a_description() -> Res {
+    let dir = tempfile::tempdir()?;
+    let root = dir.path().join("Games");
+    fs::create_dir_all(root.join("steam"))?;
+    fs::write(root.join("steam/Portal.steamappid"), "[steamappid] 400\n")?;
+    fs::create_dir_all(root.join("psp"))?;
+    fs::write(root.join("psp/Patapon.iso"), b"x")?;
+    let svc = Service::open(&dir.path().join("data"))?;
+    svc.add_root(&root.to_string_lossy(), None)?;
+    svc.scan(&NoProgress)?;
+    let path = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../fixtures/steam/store.json");
+    let store: Value = serde_json::from_str(&fs::read_to_string(path)?)?;
+    let http = MockHttpClient::new();
+    http.register("appids=400", &store["app_400"].to_string());
+    http.register("steamstatic.com/a.jpg", "jpeg-a");
+    http.register("steamstatic.com/b.jpg", "jpeg-b");
+    let all = zl_core::ScrapeTarget::All;
+    let pause = std::time::Duration::ZERO;
+    let report = svc.fetch_steam_details(&all, &http, &Quiet, pause)?;
+    assert_eq!(
+        (report.games, report.updated, report.images, report.complete),
+        (2, 1, 2, 1)
+    );
+    assert_eq!(report.stopped, None);
+    let portal = svc.games(Some("steam"))?[0].id;
+    let details = svc.game_details(portal)?;
+    assert_eq!(details.release_date.as_deref(), Some("2007-10-10"));
+    assert_eq!(details.developer.as_deref(), Some("Valve"));
+    assert!(details
+        .description
+        .is_some_and(|d| d.starts_with("Portal™")));
+    assert_eq!(details.screenshots.len(), 2);
+    assert_eq!(fs::read_to_string(&details.screenshots[0])?, "jpeg-a");
+    let store_calls = |h: &MockHttpClient| {
+        h.requested_urls()
+            .iter()
+            .filter(|u| u.contains("appdetails"))
+            .count()
+    };
+    assert_eq!(store_calls(&http), 1, "the PSP game is not asked");
+    let again = svc.fetch_steam_details(&all, &http, &Quiet, pause)?;
+    assert_eq!(
+        (again.updated, again.complete),
+        (0, 2),
+        "a described game is not asked again"
+    );
+    assert_eq!(store_calls(&http), 1);
+    Ok(())
+}
+
+#[test]
+fn store_details_stop_when_offline() -> Res {
+    let dir = tempfile::tempdir()?;
+    let root = dir.path().join("Games");
+    fs::create_dir_all(root.join("steam"))?;
+    for (name, id) in [("A", 1), ("B", 2), ("C", 3), ("D", 4)] {
+        fs::write(
+            root.join(format!("steam/{name}.steamappid")),
+            format!("[steamappid] {id}\n"),
+        )?;
+    }
+    let svc = Service::open(&dir.path().join("data"))?;
+    svc.add_root(&root.to_string_lossy(), None)?;
+    svc.scan(&NoProgress)?;
+    let http = MockHttpClient::new();
+    http.register_status("appdetails", 503, "");
+    let report = svc.fetch_steam_details(
+        &zl_core::ScrapeTarget::All,
+        &http,
+        &Quiet,
+        std::time::Duration::ZERO,
+    )?;
+    assert_eq!(
+        (report.failed, report.stopped),
+        (3, Some(zl_core::ScrapeStop::Offline))
+    );
+    Ok(())
+}

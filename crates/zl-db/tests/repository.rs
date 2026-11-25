@@ -296,7 +296,8 @@ fn meta_crud_and_overrides() -> TestResult {
 }
 
 /// A database created at version 3 with games and media is migrated to the latest version
-/// preserving data; the rebuilt media table then takes SteamGridDB rows, ranked after ES-DE.
+/// preserving data; the rebuilt media table then takes SteamGridDB rows, ranked after ES-DE, and
+/// Steam store screenshots.
 #[test]
 fn migration_from_v3_preserves_data() -> TestResult {
     let dir = tempfile::tempdir()?;
@@ -327,7 +328,10 @@ fn migration_from_v3_preserves_data() -> TestResult {
     }
 
     let db = Db::open(&db_path)?;
-    assert_eq!(db.schema_version()?, 5);
+    assert_eq!(
+        db.schema_version()?,
+        zl_db::migrations::MIGRATIONS.len() as u32
+    );
 
     let g = db.game(1)?.ok_or("game missing after migration")?;
     assert_eq!(g.title, "Pokemon");
@@ -351,5 +355,19 @@ fn migration_from_v3_preserves_data() -> TestResult {
     assert_eq!(media.len(), 2);
     assert_eq!(media[0].path, "/m/p.png", "ES-DE art stays first");
     assert_eq!(media[1].source, zl_db::MediaSource::SteamGridDb);
+    db.add_media(&zl_db::NewMedia {
+        game_id: 1,
+        kind: zl_db::MediaKind::Screenshot,
+        path: "/data/steam/400/0.jpg".into(),
+        source: zl_db::MediaSource::Steam,
+        edit: None,
+    })?;
+    let shots: Vec<_> = db
+        .game_media(1)?
+        .into_iter()
+        .filter(|m| m.kind == zl_db::MediaKind::Screenshot)
+        .collect();
+    assert_eq!(shots.len(), 1, "step 6 takes store screenshots");
+    assert_eq!(shots[0].source, zl_db::MediaSource::Steam);
     Ok(())
 }

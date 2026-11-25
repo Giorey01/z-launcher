@@ -24,6 +24,7 @@ mod meta;
 mod platform_settings;
 mod prefs;
 mod scrape;
+mod steam_details;
 mod steam_library;
 mod theme_files;
 mod theme_resolve;

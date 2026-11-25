@@ -24,3 +24,9 @@ pub const STEAM_STORE_MAX_SCREENSHOTS: usize = 8;
 /// Name of the folder that receives the `.steamappid` files of an import, when the games folder
 /// has no Steam folder yet (Cocoon's folder name).
 pub const STEAM_IMPORT_FOLDER: &str = "steam";
+
+/// Folder (under the app's data folder) of the screenshots downloaded from the store.
+pub const STEAM_MEDIA_FOLDER: &str = "media/steam";
+
+/// Host suffix the store's media must come from; any other URL in an answer is not downloaded.
+pub const STEAM_MEDIA_HOST_SUFFIX: &str = ".steamstatic.com";

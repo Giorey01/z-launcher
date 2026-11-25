@@ -45,3 +45,13 @@ fun ImageScrapeReport.toMessage(): UiMessage = when (stopped) {
         listOf(images.toString(), updated.toString(), notFound.toString()),
     )
 }
+
+/** The message that sums up a finished run of Steam store details: how it ended, then the numbers. */
+fun ImageScrapeReport.toSteamDetailsMessage(): UiMessage = when (stopped) {
+    ScrapeStop.OFFLINE -> UiMessage(R.string.msg_steam_store_offline, listOf(updated.toString()))
+    ScrapeStop.CANCELLED -> UiMessage(R.string.msg_steam_details_cancelled, listOf(updated.toString()))
+    ScrapeStop.MISSING_KEY, ScrapeStop.KEY_REFUSED, null -> UiMessage(
+        R.string.msg_steam_details_result,
+        listOf(updated.toString(), images.toString(), notFound.toString()),
+    )
+}

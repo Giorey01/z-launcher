@@ -331,4 +331,9 @@
     <string name="msg_steam_offline">Steam non è raggiungibile. Controlla la connessione.</string>
     <string name="msg_steam_malformed">La chiave deve avere 32 lettere e cifre, e il profilo deve essere uno SteamID64, un link al profilo o un nome.</string>
     <string name="msg_steam_imported">%1$s giochi aggiunti, %2$s c\'erano già.</string>
+    <string name="st_steam_details">Dettagli dallo Steam Store</string>
+    <string name="st_steam_details_sub">Descrizione, anno, sviluppatore, generi e screenshot dei tuoi giochi Steam. Gratis, senza chiave. Solo i giochi senza descrizione.</string>
+    <string name="msg_steam_details_result">%1$s giochi hanno ora i dettagli e %2$s screenshot. %3$s non hanno una pagina nello store.</string>
+    <string name="msg_steam_details_cancelled">Interrotto. %1$s giochi hanno ora i dettagli.</string>
+    <string name="msg_steam_store_offline">Lo Steam Store non è raggiungibile o chiede di rallentare. %1$s giochi hanno ora i dettagli; riprova più tardi.</string>
 </resources>

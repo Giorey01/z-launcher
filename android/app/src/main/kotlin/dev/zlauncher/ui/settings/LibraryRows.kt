@@ -7,6 +7,7 @@ import androidx.compose.material.icons.rounded.Description
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material.icons.rounded.Image
+import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Memory
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.ViewModule
@@ -90,6 +91,13 @@ class LibraryRows(private val app: AppViewModel, private val model: SettingsMode
             onActivate = ::downloadArt
         ),
         SettingRow(
+            "steam_details",
+            Icons.Rounded.Info,
+            s(R.string.st_steam_details),
+            resultOr("steam_details", s(R.string.st_steam_details_sub)),
+            onActivate = ::downloadSteamDetails
+        ),
+        SettingRow(
             "gamelists",
             Icons.Rounded.Description,
             s(R.string.st_gamelists),
@@ -121,6 +129,29 @@ class LibraryRows(private val app: AppViewModel, private val model: SettingsMode
                 app.zl.core.call { it.scrapeImages(null, null, download) }.toMessage()
             } finally {
                 model.artDownload = null
+            }
+        }
+    }
+
+    /**
+     * Fetches the store details of the Steam games that have no description (free, no key); pressed again while it
+     * runs, it asks the run to stop.
+     */
+    private fun downloadSteamDetails() {
+        val running = model.artDownload
+        when {
+            running != null -> running.requestCancel()
+            model.busy -> Unit
+            else -> {
+                val download = ArtDownload()
+                model.artDownload = download
+                model.work("steam_details") {
+                    try {
+                        app.zl.core.call { it.fetchSteamDetails(null, null, download) }.toSteamDetailsMessage()
+                    } finally {
+                        model.artDownload = null
+                    }
+                }
             }
         }
     }
