@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -13,7 +15,7 @@ android {
         minSdk = 29
         targetSdk = 35
         versionCode = 1
-        versionName = "0.0.1"
+        versionName = "0.1.0"
         // Only the languages the app is translated into.
         resourceConfigurations += listOf("en", "it")
         // The Rust core (core/native) is built for arm64 only.
@@ -25,6 +27,29 @@ android {
     productFlavors {
         create("oss") { dimension = "distribution"; isDefault = true }
         create("full") { dimension = "distribution" }
+    }
+    // Release signing: the keystore stays outside the repository. Its properties file (storeFile, storePassword,
+    // keyAlias, keyPassword) is read from ZL_KEYSTORE_PROPERTIES or ~/.config/z-launcher/keystore.properties;
+    // without it the release build is left unsigned.
+    val keystoreFile = (System.getenv("ZL_KEYSTORE_PROPERTIES") ?: "${System.getProperty("user.home")}/.config/z-launcher/keystore.properties")
+        .let(::file)
+    if (keystoreFile.isFile) {
+        val props = Properties().apply { keystoreFile.inputStream().use(::load) }
+        signingConfigs {
+            create("release") {
+                storeFile = file(props.getProperty("storeFile"))
+                storePassword = props.getProperty("storePassword")
+                keyAlias = props.getProperty("keyAlias")
+                keyPassword = props.getProperty("keyPassword")
+            }
+        }
+        buildTypes.getByName("release").signingConfig = signingConfigs.getByName("release")
+    }
+    buildTypes.getByName("release") {
+        // R8 drops the unused code (most of the Material icon set); see proguard-rules.pro for what must stay.
+        isMinifyEnabled = true
+        isShrinkResources = true
+        proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

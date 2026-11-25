@@ -1412,11 +1412,11 @@ dependencies = [
 
 [[package]]
 name = "zl-config"
-version = "0.0.1"
+version = "0.1.0"
 
 [[package]]
 name = "zl-core"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [
  "serde_json",
  "tempfile",
@@ -1434,7 +1434,7 @@ dependencies = [
 
 [[package]]
 name = "zl-db"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [
  "rusqlite",
  "tempfile",
@@ -1444,7 +1444,7 @@ dependencies = [
 
 [[package]]
 name = "zl-ffi"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [
  "tempfile",
  "thiserror",
@@ -1461,7 +1461,7 @@ dependencies = [
 
 [[package]]
 name = "zl-library"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [
  "serde_json",
  "tempfile",
@@ -1473,7 +1473,7 @@ dependencies = [
 
 [[package]]
 name = "zl-media"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [
  "quick-xml",
  "regex",
@@ -1487,7 +1487,7 @@ dependencies = [
 
 [[package]]
 name = "zl-meta"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [
  "serde",
  "serde_json",
@@ -1501,7 +1501,7 @@ dependencies = [
 
 [[package]]
 name = "zl-net"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [
  "thiserror",
  "ureq",
@@ -1510,7 +1510,7 @@ dependencies = [
 
 [[package]]
 name = "zl-platforms"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [
  "serde",
  "serde_json",
@@ -1521,7 +1521,7 @@ dependencies = [
 
 [[package]]
 name = "zl-tags"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [
  "serde_json",
  "thiserror",
@@ -1529,7 +1529,7 @@ dependencies = [
 
 [[package]]
 name = "zl-theme"
-version = "0.0.1"
+version = "0.1.0"
 dependencies = [
  "serde_json",
  "tempfile",

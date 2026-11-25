@@ -98,8 +98,11 @@ fun PadTile(
             }
             .focusable()
             .pointerInput(Unit) { detectTapGestures { click() } },
+        // A tile with a set size passes it down as the minimum, so the card fills it; a button without one
+        // (a PadButton) takes the size of its label instead of collapsing to nothing.
+        propagateMinConstraints = true,
     ) {
-        Box(Modifier.matchParentSize().graphicsLayer { scaleX = scale; scaleY = scale }.then(cardLook(surface, shape))) {
+        Box(Modifier.graphicsLayer { scaleX = scale; scaleY = scale }.then(cardLook(surface, shape))) {
             content(focused)
         }
         if (focused && showCursor) FocusCursor(Modifier.matchParentSize(), cursorOutset)
