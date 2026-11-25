@@ -145,8 +145,10 @@ fun DrawerScreen(app: AppViewModel, vm: DrawerViewModel = viewModel()) {
     var query by remember { mutableStateOf("") }
     LaunchedEffect(searching) { if (!searching) query = "" }
     val displayApps = remember(ui.apps, query, searching) {
-        if (!searching || query.isEmpty()) ui.apps else ui.apps.filter { it.label.contains(query, ignoreCase = true) }
+        if (!searching) ui.apps else ui.apps.filter { matchesSearch(it.label, query) }
     }
+    // The search hides the recent row, so it is not part of the grid (or of the focus) while it is open.
+    val shownRecent = if (searching) emptyList() else ui.recent
     Box(Modifier.fillMaxSize()) {
         ZPanel(Modifier.fillMaxSize(), RectangleShape, elevation = 0.dp) {
             Column(Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
@@ -169,11 +171,10 @@ fun DrawerScreen(app: AppViewModel, vm: DrawerViewModel = viewModel()) {
             )
         }
     }
-    val first = (ui.recent.firstOrNull()?.let { key(it, true) } ?: displayApps.firstOrNull()?.let { key(it) })
-    FocusRestorer(memory, app.resumeTick, !ui.loading, first) { focused ->
-        val index = ui.recent.indexOfFirst { key(it, true) == focused }.takeIf { it >= 0 }
-            ?: displayApps.indexOfFirst { key(it) == focused }.takeIf { it >= 0 }?.let { it + ui.recent.size + 1 }
-        index?.let { gridState.scrollToItem(it) }
+    val first = (shownRecent.firstOrNull()?.let { key(it, true) } ?: displayApps.firstOrNull()?.let { key(it) })
+    // Not while the keyboard is open: every letter changes the results and would pull the focus off the keyboard.
+    FocusRestorer(memory, app.resumeTick, !ui.loading && !searching, first) { focused ->
+        gridIndexOf(focused, shownRecent.map { key(it, true) }, displayApps.map { key(it) })?.let { gridState.scrollToItem(it) }
     }
 }
 

@@ -2,20 +2,27 @@
 
 use std::path::{Path, PathBuf};
 
-/// Names of the entries of `dir` that are folders, sorted. Unreadable folders list as empty.
+/// Whether a file or folder name is hidden (`.DS_Store`, macOS `._Game.png` copies, `.Trashes`):
+/// never media, never a platform.
+fn is_hidden(name: &std::ffi::OsStr) -> bool {
+    name.to_str().is_some_and(|n| n.starts_with('.'))
+}
+
+/// Names of the entries of `dir` that are folders, sorted, hidden ones left out. Unreadable
+/// folders list as empty.
 pub(crate) fn sub_dirs(dir: &Path) -> Vec<(String, PathBuf)> {
     let mut out: Vec<(String, PathBuf)> = std::fs::read_dir(dir)
         .into_iter()
         .flatten()
         .flatten()
-        .filter(|e| e.path().is_dir())
+        .filter(|e| !is_hidden(&e.file_name()) && e.path().is_dir())
         .filter_map(|e| Some((e.file_name().to_str()?.to_string(), e.path())))
         .collect();
     out.sort();
     out
 }
 
-/// Every file below `dir` (at most `depth` folder levels down, 0 = only `dir`), sorted by path.
+/// Every visible file below `dir` (at most `depth` folder levels down, 0 = only `dir`), sorted by path.
 pub(crate) fn files_below(dir: &Path, depth: usize) -> Vec<PathBuf> {
     let mut out = Vec::new();
     collect(dir, depth, &mut out);
@@ -27,6 +34,9 @@ pub(crate) fn files_below(dir: &Path, depth: usize) -> Vec<PathBuf> {
 fn collect(dir: &Path, depth: usize, out: &mut Vec<PathBuf>) {
     for entry in std::fs::read_dir(dir).into_iter().flatten().flatten() {
         let path = entry.path();
+        if is_hidden(&entry.file_name()) {
+            continue;
+        }
         if path.is_dir() {
             if depth > 0 {
                 collect(&path, depth - 1, out);

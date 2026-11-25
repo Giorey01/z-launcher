@@ -40,12 +40,16 @@ pub fn is_known(name: &str) -> bool {
             .is_some_and(|tag| !tag.is_empty())
 }
 
-/// Splits a template into text and variables. An unclosed, empty or nested brace is
+/// Splits a template into text and variables. An unclosed, empty or nested brace, or a `}` with
+/// no `{` before it (a typo such as `{rom}}` that would reach the emulator as text), is
 /// [`LaunchError::BadTemplate`]; an unknown name is [`LaunchError::UnknownVariable`].
 pub fn parse(template: &str) -> Result<Vec<Part<'_>>, LaunchError> {
     let mut parts = Vec::new();
     let mut rest = template;
     while let Some(open) = rest.find('{') {
+        if rest[..open].contains('}') {
+            return Err(LaunchError::BadTemplate(template.to_string()));
+        }
         if open > 0 {
             parts.push(Part::Text(&rest[..open]));
         }
@@ -62,6 +66,9 @@ pub fn parse(template: &str) -> Result<Vec<Part<'_>>, LaunchError> {
         }
         parts.push(Part::Var(name));
         rest = &after[close + 1..];
+    }
+    if rest.contains('}') {
+        return Err(LaunchError::BadTemplate(template.to_string()));
     }
     if !rest.is_empty() {
         parts.push(Part::Text(rest));

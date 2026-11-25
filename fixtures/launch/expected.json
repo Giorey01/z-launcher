@@ -305,6 +305,18 @@
       "installed_packages": ["org.ppsspp.ppsspp"],
       "request": {"context": {"rom_path": "/g/x/X.iso", "platform": "nonexistent"}},
       "expected_error": "unknown_platform nonexistent"
+    },
+    {
+      "name": "an empty tag value is a missing tag, not an empty argument",
+      "installed_packages": ["app.gamenative"],
+      "request": {"context": {"rom_path": "/g/steam/X.steamappid", "platform": "steam", "tags": {"steamappid": "  "}}},
+      "expected_error": "missing_tag steamappid"
+    },
+    {
+      "name": "an empty SAF uri from the caller is a missing variable",
+      "installed_packages": ["org.ppsspp.ppsspp"],
+      "request": {"context": {"rom_path": "/g/psp/X.iso", "platform": "psp", "rom_uris": {"saf": ""}}},
+      "expected_error": "missing_variable rom_saf"
     }
   ]
 }

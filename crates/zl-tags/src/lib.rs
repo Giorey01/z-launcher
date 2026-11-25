@@ -16,6 +16,6 @@ mod parse;
 
 pub use kind::{is_tag_extension, TagKind, TAG_EXTENSIONS};
 pub use parse::{
-    parent_folder_name, parse_tag_file, read_tag_file, IssueCode, ParsedTag, TagError, TagFile,
-    TagIssue,
+    decode_tag_bytes, parent_folder_name, parse_tag_file, read_tag_file, IssueCode, ParsedTag,
+    TagError, TagFile, TagIssue,
 };

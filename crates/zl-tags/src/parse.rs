@@ -5,6 +5,12 @@ use std::path::Path;
 /// Byte order mark some editors put at the start of a UTF-8 file.
 const BOM: char = '\u{feff}';
 
+/// First bytes of a UTF-16 little-endian file with a byte order mark.
+const UTF16_LE_BOM: [u8; 2] = [0xff, 0xfe];
+
+/// First bytes of a UTF-16 big-endian file with a byte order mark.
+const UTF16_BE_BOM: [u8; 2] = [0xfe, 0xff];
+
 /// A parsed tag file.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TagFile {
@@ -108,7 +114,7 @@ pub fn parse_tag_file(file_name: &str, content: &str) -> ParsedTag {
     let content = content.strip_prefix(BOM).unwrap_or(content);
     let mut tags = Vec::new();
     let mut issues = Vec::new();
-    for (index, raw) in content.lines().enumerate() {
+    for (index, raw) in split_lines(content).enumerate() {
         let line = raw.trim();
         if line.is_empty() {
             continue;
@@ -131,14 +137,54 @@ pub fn parse_tag_file(file_name: &str, content: &str) -> ParsedTag {
     }
 }
 
-/// Reads and parses a tag file from disk. Invalid UTF-8 is replaced, not rejected.
+/// Turns two bytes of a UTF-16 file into a code unit, in the file's byte order.
+type UnitReader = fn([u8; 2]) -> u16;
+
+/// Splits text into lines at `\n`, `\r\n` and a lone `\r` (old Mac editors), so the line numbers
+/// of the issues match what an editor shows.
+fn split_lines(content: &str) -> impl Iterator<Item = &str> {
+    let mut rest = Some(content);
+    std::iter::from_fn(move || {
+        let text = rest?;
+        match text.find(['\r', '\n']) {
+            Some(at) => {
+                let skip = if text[at..].starts_with("\r\n") { 2 } else { 1 };
+                rest = Some(&text[at + skip..]);
+                Some(&text[..at])
+            }
+            None => {
+                rest = None;
+                (!text.is_empty()).then_some(text)
+            }
+        }
+    })
+}
+
+/// Text of the bytes of a tag file: UTF-16 when it starts with a UTF-16 byte order mark (what
+/// Windows Notepad writes as "Unicode"), else UTF-8 with invalid bytes replaced.
+pub fn decode_tag_bytes(bytes: &[u8]) -> String {
+    let (rest, from_pair): (&[u8], UnitReader) = if bytes.starts_with(&UTF16_LE_BOM) {
+        (&bytes[2..], u16::from_le_bytes)
+    } else if bytes.starts_with(&UTF16_BE_BOM) {
+        (&bytes[2..], u16::from_be_bytes)
+    } else {
+        return String::from_utf8_lossy(bytes).into_owned();
+    };
+    let units = rest.chunks_exact(2).map(|c| from_pair([c[0], c[1]]));
+    char::decode_utf16(units)
+        .map(|r| r.unwrap_or(char::REPLACEMENT_CHARACTER))
+        .collect()
+}
+
+/// Reads and parses a tag file from disk. Invalid UTF-8 is replaced, not rejected; UTF-16 files
+/// with a byte order mark are decoded.
 pub fn read_tag_file(path: &Path) -> Result<ParsedTag, TagError> {
     let file_name = path
         .file_name()
         .and_then(|n| n.to_str())
         .ok_or(TagError::NoFileName)?;
     let bytes = std::fs::read(path)?;
-    Ok(parse_tag_file(file_name, &String::from_utf8_lossy(&bytes)))
+    Ok(parse_tag_file(file_name, &decode_tag_bytes(&bytes)))
 }
 
 /// Name of the folder that contains `path`, to pass as the platform id to [`TagFile::kind`].

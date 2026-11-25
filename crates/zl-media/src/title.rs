@@ -13,8 +13,34 @@ fn compile_regex(pattern: &str) -> Regex {
     }
 }
 
-/// Combining marks left after decomposing a character.
-static ACCENTS_RE: LazyLock<Regex> = LazyLock::new(|| compile_regex(r"\p{M}+"));
+/// Combining marks of the Latin, Greek and Cyrillic accents, and the symbol marks that go with
+/// them. Kana voicing marks, Hangul and the vowel signs of Indic scripts are not accents: they
+/// carry the meaning of the letter and stay.
+static ACCENTS_RE: LazyLock<Regex> = LazyLock::new(|| {
+    compile_regex(
+        r"[\u{0300}-\u{036f}\u{1ab0}-\u{1aff}\u{1dc0}-\u{1dff}\u{20d0}-\u{20ff}\u{fe20}-\u{fe2f}]+",
+    )
+});
+
+/// Letters that have no decomposition but a plain-Latin spelling every other source uses.
+const LATIN_FOLDS: &[(char, &str)] = &[
+    ('ß', "ss"),
+    ('æ', "ae"),
+    ('Æ', "AE"),
+    ('œ', "oe"),
+    ('Œ', "OE"),
+    ('ø', "o"),
+    ('Ø', "O"),
+    ('ł', "l"),
+    ('Ł', "L"),
+    ('đ', "d"),
+    ('Đ', "D"),
+    ('ð', "d"),
+    ('Ð', "D"),
+    ('þ', "th"),
+    ('Þ', "Th"),
+    ('ı', "i"),
+];
 
 /// Text enclosed in brackets or parentheses.
 static BRACKETS_RE: LazyLock<Regex> = LazyLock::new(|| compile_regex(r"\[[^\]]*\]|\([^)]*\)"));
@@ -42,8 +68,12 @@ static MOVED_ARTICLE_RE: LazyLock<Regex> = LazyLock::new(|| {
     )
 });
 
-/// Anything that is not an ASCII lowercase letter or digit.
+/// Anything that is not an ASCII lowercase letter or digit (slugs).
 static NON_ALNUM_RE: LazyLock<Regex> = LazyLock::new(|| compile_regex(r"[^a-z0-9]+"));
+
+/// Anything that is not a letter or digit of any script: a title in Japanese, Korean, Greek or
+/// Arabic keeps its letters instead of collapsing to an empty key.
+static NON_WORD_RE: LazyLock<Regex> = LazyLock::new(|| compile_regex(r"[^\p{L}\p{N}]+"));
 
 /// Common suffixes appended by ROM dumping and decrypting utilities.
 const DUMP_SUFFIXES: &[&str] = &[
@@ -205,10 +235,20 @@ fn trailing_group_start(text: &str) -> Option<usize> {
     None
 }
 
-/// Strips all combining accent and diacritic marks from `text`.
+/// Strips the accents and diacritics of Latin, Greek and Cyrillic letters from `text`, spells
+/// `ß æ œ ø ł đ ð þ` in plain letters, and leaves other scripts as they are (the voicing mark of a
+/// kana, the jamo of a Hangul syllable). The result is composed (NFC).
 pub fn strip_accents(text: &str) -> String {
     let nfkd: String = text.nfkd().collect();
-    ACCENTS_RE.replace_all(&nfkd, "").to_string()
+    let bare = ACCENTS_RE.replace_all(&nfkd, "");
+    let mut out = String::with_capacity(bare.len());
+    for ch in bare.chars() {
+        match LATIN_FOLDS.iter().find(|(from, _)| *from == ch) {
+            Some((_, to)) => out.push_str(to),
+            None => out.push(ch),
+        }
+    }
+    out.nfc().collect()
 }
 
 /// Returns a normalized, comparable form of a title: accents, brackets, Cyrillic characters,
@@ -222,14 +262,14 @@ pub fn normalize(title: &str) -> String {
     let t = VERSION_TAIL_RE.replace_all(&t, " ");
     let t = t.replace('&', " and ");
     let t = t.to_lowercase();
-    let t = NON_ALNUM_RE.replace_all(&t, " ");
+    let t = NON_WORD_RE.replace_all(&t, " ");
     t.trim().to_string()
 }
 
 /// Grouping key across platforms: accents stripped, lowercased, and non-alphanumeric runs replaced with single spaces.
 pub fn title_key(title: &str) -> String {
     let lower = strip_accents(title).to_lowercase();
-    NON_ALNUM_RE.replace_all(&lower, " ").trim().to_string()
+    NON_WORD_RE.replace_all(&lower, " ").trim().to_string()
 }
 
 /// Returns a URL-safe slug: lowercased ASCII words joined by hyphens, with quotes dropped.

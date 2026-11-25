@@ -28,17 +28,26 @@ fn invalid(code: &'static str, subject: impl Into<String>) -> DbError {
     }
 }
 
+/// Whether `id` can be part of a stored profile reference (`emulator/profile/core`): not empty
+/// and without the `/` separator or whitespace.
+fn plain_id(id: &str) -> bool {
+    !id.is_empty() && !id.contains('/') && !id.chars().any(char::is_whitespace)
+}
+
 /// Checks both files together; returns the first broken rule.
 pub fn validate(p: &PlatformsFile, e: &EmulatorsFile) -> Result<(), DbError> {
     let ids = platform_ids(p)?;
     let mut emu_ids = HashSet::new();
     for emu in &e.emulators {
+        if !plain_id(&emu.id) {
+            return Err(invalid("bad_id", &emu.id));
+        }
         if !emu_ids.insert(emu.id.as_str()) {
             return Err(invalid("duplicate_emulator_id", &emu.id));
         }
         validate_emulator(emu, &ids)?;
     }
-    validate_preferences(e, &emu_ids)
+    validate_preferences(e, &emu_ids, &ids)
 }
 
 /// Collects platform ids and aliases (lowercase, unique across both) and checks each platform.
@@ -72,8 +81,16 @@ fn validate_emulator(emu: &crate::model::Emulator, ids: &HashSet<&str>) -> Resul
     if !emu.platforms.iter().all(known) || !emu.cores.keys().all(known) {
         return Err(invalid("unknown_platform", &emu.id));
     }
+    for core in emu.cores.values().flatten() {
+        if !plain_id(&core.id) {
+            return Err(invalid("bad_id", format!("{}/{}", emu.id, core.id)));
+        }
+    }
     let mut profile_ids = HashSet::new();
     for profile in &emu.profiles {
+        if !plain_id(&profile.id) {
+            return Err(invalid("bad_id", format!("{}/{}", emu.id, profile.id)));
+        }
         if !profile_ids.insert(profile.id.as_str()) {
             return Err(invalid(
                 "duplicate_profile_id",
@@ -87,6 +104,12 @@ fn validate_emulator(emu: &crate::model::Emulator, ids: &HashSet<&str>) -> Resul
             ));
         }
         validate_profile(emu.kind, &emu.id, profile)?;
+        let no_core =
+            |p: &String| profile.uses_core && !emu.cores.get(p).is_some_and(|c| !c.is_empty());
+        if let Some(platform) = profile.platforms.iter().find(|p| no_core(p)) {
+            let subject = format!("{}/{}/{platform}", emu.id, profile.id);
+            return Err(invalid("no_core_for_platform", subject));
+        }
     }
     Ok(())
 }
@@ -154,7 +177,18 @@ fn validate_profile(kind: EmulatorKind, emu: &str, profile: &Profile) -> Result<
 }
 
 /// Checks that preference entries name existing emulators and cores.
-fn validate_preferences(e: &EmulatorsFile, emu_ids: &HashSet<&str>) -> Result<(), DbError> {
+fn validate_preferences(
+    e: &EmulatorsFile,
+    emu_ids: &HashSet<&str>,
+    platform_ids: &HashSet<&str>,
+) -> Result<(), DbError> {
+    if let Some(name) = e
+        .preferences
+        .keys()
+        .find(|k| !platform_ids.contains(k.as_str()))
+    {
+        return Err(invalid("unknown_preference_platform", name));
+    }
     let all = e
         .default_preference
         .iter()

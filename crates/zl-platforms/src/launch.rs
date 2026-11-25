@@ -159,36 +159,53 @@ fn file_of(path: &str) -> &str {
     path.rsplit('/').next().unwrap_or(path)
 }
 
+/// File name without its last extension; a leading dot is part of the name (`.hidden` stays).
+fn stem_of(file: &str) -> &str {
+    match file.rsplit_once('.') {
+        Some((stem, _)) if !stem.is_empty() => stem,
+        _ => file,
+    }
+}
+
+/// Folder of `path`: empty for a bare name, `/` for a file in the root.
+fn dir_of(path: &str) -> &str {
+    match path.rsplit_once('/') {
+        Some(("", _)) => "/",
+        Some((dir, _)) => dir,
+        None => "",
+    }
+}
+
 impl Values<'_> {
     /// Value of the variable `name`.
     fn lookup(&self, name: &str) -> Result<String, LaunchError> {
         let ctx = self.ctx;
         let missing = || LaunchError::MissingVariable(name.to_string());
-        let opt = |v: &Option<String>| v.clone().ok_or_else(missing);
+        // An empty value is a value the caller does not have: never substituted as nothing.
+        let opt = |v: &Option<String>| {
+            v.clone()
+                .filter(|s| !s.trim().is_empty())
+                .ok_or_else(missing)
+        };
+        let nonempty = |s: &str| (!s.is_empty()).then(|| s.to_string()).ok_or_else(missing);
         if let Some(tag) = name.strip_prefix(TAG_PREFIX) {
             return ctx
                 .tags
                 .get(tag)
+                .filter(|v| !v.trim().is_empty())
                 .cloned()
                 .ok_or_else(|| LaunchError::MissingTag(tag.to_string()));
         }
         let file = file_of(&ctx.rom_path);
         match name {
-            "rom" => Ok(ctx.rom_path.clone()),
+            "rom" => nonempty(&ctx.rom_path),
             "rom_uri" => opt(&ctx.rom_uris.file),
             "rom_saf" => opt(&ctx.rom_uris.saf),
             "rom_saf_tree" => opt(&ctx.rom_uris.saf_tree),
             "rom_provider" => opt(&ctx.rom_uris.provider),
-            "rom_file" => Ok(file.to_string()),
-            "rom_name" => Ok(file
-                .rsplit_once('.')
-                .map_or(file, |(stem, _)| stem)
-                .to_string()),
-            "rom_dir" => Ok(ctx
-                .rom_path
-                .rsplit_once('/')
-                .map_or("", |(dir, _)| dir)
-                .to_string()),
+            "rom_file" => nonempty(file),
+            "rom_name" => nonempty(stem_of(file)),
+            "rom_dir" => Ok(dir_of(&ctx.rom_path).to_string()),
             "platform" => Ok(ctx.platform.clone()),
             "platform_dir" => opt(&ctx.platform_dir),
             "package" => Ok(self.package.package.clone()),

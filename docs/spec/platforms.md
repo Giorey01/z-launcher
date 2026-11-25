@@ -90,8 +90,10 @@ del core, `{core_path}` percorso assoluto del core (`/data/data/<package>/cores/
 `missing_variable`/`missing_tag`, mai una stringa vuota.
 
 Il caricamento controlla anche: id unici, piattaforme esistenti, flag noti, `rom_access`
-coerente con le variabili usate, uso dei core solo in RetroArch, preferenze che puntano a emulatori
-e core esistenti.
+coerente con le variabili usate, uso dei core solo in RetroArch (con un core per ogni piattaforma del
+profilo), id di emulatori, profili e core senza `/` né spazi (servono alla chiave `emulatore/profilo/core`),
+`}` senza `{` nei template, preferenze che puntano a piattaforme, emulatori e core esistenti.
+Un tag, un URI o un percorso ROM vuoti (o solo spazi) valgono come mancanti: mai una stringa vuota.
 
 ## Ordine di scelta (RF-08)
 
@@ -141,7 +143,8 @@ sono concessi.
 `DbError`: `io`, `parse` (file, riga, colonna), `schema_mismatch`, `Invalid{code, subject}` con
 `duplicate_emulator_id`, `duplicate_profile_id`, `bad_or_duplicate_platform_name`, `bad_extension`,
 `bad_package`, `unknown_platform`, `unknown_flag`, `bad_template`, `rom_access_mismatch`,
-`core_use_mismatch`, `unknown_preference_emulator`, `unknown_preference_core`.
+`core_use_mismatch`, `no_core_for_platform`, `bad_id`, `unknown_preference_emulator`,
+`unknown_preference_core`, `unknown_preference_platform`.
 `LaunchError`: `unknown_platform`, `unknown_emulator`, `unknown_profile`, `unknown_package`,
 `profile_platform_mismatch`, `unknown_variable`, `bad_template`, `missing_variable`, `missing_tag`,
 `invalid_integer`, `no_core`, `unknown_core`.

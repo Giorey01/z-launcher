@@ -37,12 +37,13 @@ class FocusMemory {
         false
     }
 
-    /** Like [restore] but waits for the element to be laid out: retries over the next frames. */
-    suspend fun restoreSoon() {
+    /** Like [restore] but waits for the element to be laid out: retries over the next frames; `false` if it never appeared. */
+    suspend fun restoreSoon(): Boolean {
         repeat(RESTORE_ATTEMPTS) {
-            if (restore()) return
+            if (restore()) return true
             awaitFrame()
         }
+        return false
     }
 
     /** Wires an element in: it carries the requester while it is the remembered one and reports when it gets the focus. */

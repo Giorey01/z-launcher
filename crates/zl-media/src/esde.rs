@@ -14,6 +14,7 @@ use zl_config::media::{
 use zl_db::{MediaKind, MediaSource};
 
 use crate::found::FoundMedia;
+use crate::keys::stem_key;
 use crate::walk::{extension_of, files_below, stem_of, sub_dirs};
 
 /// The media kind of an ES-DE folder and the extensions it holds.
@@ -44,7 +45,51 @@ fn xml_string_value(xml: &str, name: &str) -> Option<String> {
     let tag = &xml[tag_start..tag_end];
     let value_at = tag.find("value=\"")? + "value=\"".len();
     let value = &tag[value_at..];
-    Some(value[..value.find('"')?].to_string())
+    Some(unescape_xml(&value[..value.find('"')?]))
+}
+
+/// The five predefined XML entities and numeric character references of an attribute value;
+/// anything else (a lone `&`) is kept as written.
+fn unescape_xml(raw: &str) -> String {
+    let mut out = String::with_capacity(raw.len());
+    let mut rest = raw;
+    while let Some(at) = rest.find('&') {
+        out.push_str(&rest[..at]);
+        let tail = &rest[at..];
+        let decoded = tail.find(';').and_then(|end| {
+            let ch = match &tail[1..end] {
+                "amp" => '&',
+                "lt" => '<',
+                "gt" => '>',
+                "quot" => '"',
+                "apos" => '\'',
+                num => numeric_reference(num)?,
+            };
+            Some((ch, end + 1))
+        });
+        match decoded {
+            Some((ch, used)) => {
+                out.push(ch);
+                rest = &tail[used..];
+            }
+            None => {
+                out.push('&');
+                rest = &tail[1..];
+            }
+        }
+    }
+    out.push_str(rest);
+    out
+}
+
+/// The character of `#NN` or `#xHH` (the inside of a numeric character reference).
+fn numeric_reference(body: &str) -> Option<char> {
+    let digits = body.strip_prefix('#')?;
+    let code = match digits.strip_prefix(['x', 'X']) {
+        Some(hex) => u32::from_str_radix(hex, 16).ok()?,
+        None => digits.parse().ok()?,
+    };
+    char::from_u32(code)
 }
 
 /// The folder ES-DE keeps its scraped media in: the `MediaDirectory` setting when it is not
@@ -75,7 +120,7 @@ pub fn scan_esde(root: &Path) -> Vec<FoundMedia> {
                 };
                 out.push(FoundMedia {
                     platform: system.to_ascii_lowercase(),
-                    stem: stem.to_lowercase(),
+                    stem: stem_key(&stem),
                     kind,
                     path,
                     source: MediaSource::Esde,
