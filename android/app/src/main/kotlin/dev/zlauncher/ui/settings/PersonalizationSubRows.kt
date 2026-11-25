@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.VolumeUp
 import androidx.compose.material.icons.rounded.Animation
+import androidx.compose.material.icons.rounded.Timer
 import androidx.compose.material.icons.rounded.AspectRatio
 import androidx.compose.material.icons.rounded.BlurOn
 import androidx.compose.material.icons.rounded.CropFree
@@ -58,6 +59,15 @@ private data class SubMeta(
     val titleRes: Int,
     val subRes: Int? = null,
 )
+
+/** Shortest idle delay of the now playing screen on the slider (the core holds the same range). */
+private const val MIN_IDLE_SECONDS = 3f
+
+/** Longest idle delay of the now playing screen on the slider. */
+private const val MAX_IDLE_SECONDS = 120f
+
+/** Step of the idle delay slider, in seconds. */
+private const val IDLE_STEP_SECONDS = 1f
 
 private data class SliderSpec(
     val value: Float,
@@ -315,5 +325,12 @@ class PersonalizationSubRows(
             SubMeta("np_sat", Icons.Rounded.Opacity, R.string.st_now_playing_saturation),
             SliderSpec(st.nowPlayingSaturation, 0f, 1f),
         ) { v -> model.change { it.setNowPlayingSaturation(v) } },
+        sliderRow(
+            SubMeta("np_idle", Icons.Rounded.Timer, R.string.st_now_playing_idle, R.string.st_now_playing_idle_sub),
+            SliderSpec(
+                st.nowPlayingIdleSeconds.toFloat(), MIN_IDLE_SECONDS, MAX_IDLE_SECONDS, IDLE_STEP_SECONDS,
+                s(R.string.st_seconds, st.nowPlayingIdleSeconds.toInt()),
+            ),
+        ) { v -> model.change { it.setNowPlayingIdleSeconds(v.toInt().toUShort()) } },
     )
 }

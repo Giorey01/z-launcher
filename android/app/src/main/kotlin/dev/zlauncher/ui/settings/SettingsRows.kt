@@ -32,6 +32,7 @@ import androidx.compose.material.icons.rounded.TextFields
 import androidx.compose.material.icons.rounded.ViewAgenda
 import androidx.compose.material.icons.rounded.ViewStream
 import androidx.compose.material.icons.rounded.Wallpaper
+import androidx.compose.material.icons.rounded.Smartphone
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -40,6 +41,7 @@ import dev.zlauncher.core.nativecore.AssetCategory
 import dev.zlauncher.core.nativecore.CursorStyle
 import dev.zlauncher.core.nativecore.ExternalDisplayDocking
 import dev.zlauncher.core.nativecore.IconStyle
+import dev.zlauncher.core.nativecore.LaunchScreen
 import dev.zlauncher.core.nativecore.ScreenMode
 import dev.zlauncher.core.nativecore.SingleRowStyle
 import dev.zlauncher.core.nativecore.SurfaceMaterial
@@ -278,6 +280,8 @@ class SettingsRows(
         val st = theme.settings
         val screensMeta = RowMeta("screens", Icons.Rounded.Devices, R.string.st_screen_mode, R.string.st_screen_mode_sub)
         val reverseMeta = RowMeta("reverse", Icons.Rounded.SwapVert, R.string.st_reverse, R.string.st_reverse_sub)
+        val launchMeta = RowMeta("launch_screen", Icons.Rounded.Smartphone, R.string.st_launch_screen, R.string.st_launch_screen_sub)
+        val launchLabels = listOf(R.string.st_launch_hero, R.string.st_launch_grid)
         val dockingMeta = RowMeta("docking", Icons.Rounded.Monitor, R.string.st_docking, R.string.st_docking_sub)
         val dockingLabels = listOf(R.string.st_dock_auto, R.string.st_dock_always, R.string.st_dock_never)
         val rowStyleMeta = RowMeta("rowstyle", Icons.Rounded.ViewStream, R.string.st_row_style, R.string.st_row_style_sub)
@@ -294,6 +298,7 @@ class SettingsRows(
                 c.setScreenMode(v)
             },
             toggle(reverseMeta, st.reverseDisplayRoles) { c, v -> c.setReverseDisplayRoles(v) },
+            choice(launchMeta, LaunchScreen.entries, launchLabels, st.launchScreen) { c, v -> c.setLaunchScreen(v) },
             choice(dockingMeta, ExternalDisplayDocking.entries, dockingLabels, st.externalDisplayDocking) { c, v ->
                 c.setExternalDisplayDocking(v)
             },

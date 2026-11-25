@@ -28,6 +28,7 @@ import dev.zlauncher.ui.hero.HeroRoot
 import dev.zlauncher.ui.home.HomeScreen
 import dev.zlauncher.ui.home.PlatformScreen
 import dev.zlauncher.ui.menus.GameMenu
+import dev.zlauncher.ui.nowplaying.NowPlayingScreen
 import dev.zlauncher.ui.menus.StartMenu
 import dev.zlauncher.nav.Overlay
 import dev.zlauncher.ui.onboarding.OnboardingScreen
@@ -45,13 +46,19 @@ private const val MESSAGE_MS = 6000L
 
 /**
  * The whole UI of one window: BACK pops a screen (on the Home it does nothing, so the launcher is never left by
- * mistake) and the part drawn depends on the [role] of the display: the grid, the hero area or both.
+ * mistake) and the part drawn depends on the [role] of the display: the grid, the hero area or both. While a
+ * game runs on another display, this one ([displayId]) shows the now playing screen instead.
  */
 @Composable
-fun ScreenRoot(app: AppViewModel, role: Role) {
+fun ScreenRoot(app: AppViewModel, role: Role, displayId: Int) {
     BackHandler(enabled = true) { app.back() }
+    val playing = app.nowPlaying?.takeIf { it.displayId != displayId }
     ProvidePlay(app::play) {
         Surface(Modifier.fillMaxSize(), color = LocalZTheme.current.backgroundEnd, contentColor = LocalZTheme.current.textPrimary) {
+            if (playing != null) {
+                NowPlayingScreen(app, playing)
+                return@Surface
+            }
             when (role) {
                 Role.GRID -> GridRoot(app)
                 Role.HERO -> HeroRoot(app)

@@ -164,6 +164,15 @@ pub const ANIMATION_SPEED: &str = "NORMAL";
 pub const NOW_PLAYING_DIMMING: f32 = 0.5;
 /// Default now playing saturation (0.0 to 1.0).
 pub const NOW_PLAYING_SATURATION: f32 = 1.0;
+/// Range of the now playing dimming and saturation.
+pub const NOW_PLAYING_RANGE: (f32, f32) = (0.0, 1.0);
+/// Default seconds without a touch before the now playing screen dims.
+pub const NOW_PLAYING_IDLE_SECONDS: u16 = 10;
+/// Range of `now_playing_idle_seconds`.
+pub const NOW_PLAYING_IDLE_RANGE: (u16, u16) = (3, 120);
+/// Default display a game starts on in the dual-screen mode: `HERO` (the big screen), so the
+/// small screen can show the now playing screen.
+pub const LAUNCH_SCREEN: &str = "HERO";
 /// Default for RetroAchievements integration.
 pub const RETROACHIEVEMENTS_ENABLED: bool = false;
 /// Default for Discord presence integration.

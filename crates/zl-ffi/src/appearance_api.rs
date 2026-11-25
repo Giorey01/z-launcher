@@ -5,9 +5,9 @@ use zl_db::MediaKind as DbMediaKind;
 use crate::appearance::{
     AnimationSpeed, AssetCategory, CocoonDataDir, CursorStyle, DockIconShape,
     ExternalDisplayDocking, FolderArt, FolderSlot, GameMedia, HeroDisplayStyle, HeroGradientStyle,
-    IconStyle, ImportReport, InstalledPack, InstalledTheme, MediaImportReport, MediaKind,
-    MediaSources, MusicMode, OverlayArt, PlatformEmulatorSetting, ResolvedTheme, ScreenMode,
-    SingleRowStyle, SurfaceMaterial, ThemeIssue, ThemeSelection, UserSettings,
+    IconStyle, ImportReport, InstalledPack, InstalledTheme, LaunchScreen, MediaImportReport,
+    MediaKind, MediaSources, MusicMode, OverlayArt, PlatformEmulatorSetting, ResolvedTheme,
+    ScreenMode, SingleRowStyle, SurfaceMaterial, ThemeIssue, ThemeSelection, UserSettings,
 };
 use crate::core_object::Core;
 use crate::error::CoreError;
@@ -297,6 +297,20 @@ impl Core {
     pub fn set_now_playing_saturation(&self, value: f32) -> Res<()> {
         self.service()
             .update_user_settings(|s| s.now_playing_saturation = value)?;
+        Ok(())
+    }
+
+    /// Sets the seconds without a touch before the now playing screen dims.
+    pub fn set_now_playing_idle_seconds(&self, seconds: u16) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.now_playing_idle_seconds = seconds)?;
+        Ok(())
+    }
+
+    /// Chooses which display a game starts on in the dual-screen mode.
+    pub fn set_launch_screen(&self, screen: LaunchScreen) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.launch_screen = screen.into())?;
         Ok(())
     }
 

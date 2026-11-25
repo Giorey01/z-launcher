@@ -280,4 +280,11 @@
     <string name="st_reset_data_sub">Clear all configurations and start fresh</string>
     <string name="st_screen_details">Display Information</string>
     <string name="st_screen_details_sub">Primary: 1920x1080 · Secondary: 1240x1080</string>
+    <string name="st_launch_screen">Launch screen</string>
+    <string name="st_launch_screen_sub">Display games start on in dual-screen mode</string>
+    <string name="st_launch_hero">Top screen (hero)</string>
+    <string name="st_launch_grid">Bottom screen (grid)</string>
+    <string name="st_now_playing_idle">Dim after</string>
+    <string name="st_now_playing_idle_sub">Seconds without a touch before the screen darkens</string>
+    <string name="st_seconds">%1$d s</string>
 </resources>

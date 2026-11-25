@@ -280,4 +280,11 @@
     <string name="st_reset_data_sub">Cancella tutte le impostazioni e ricomincia da zero</string>
     <string name="st_screen_details">Informazioni schermi</string>
     <string name="st_screen_details_sub">Principale: 1920x1080 · Secondario: 1240x1080</string>
+    <string name="st_launch_screen">Schermo di lancio</string>
+    <string name="st_launch_screen_sub">Schermo su cui partono i giochi in modalità doppio schermo</string>
+    <string name="st_launch_hero">Schermo superiore (hero)</string>
+    <string name="st_launch_grid">Schermo inferiore (griglia)</string>
+    <string name="st_now_playing_idle">Oscura dopo</string>
+    <string name="st_now_playing_idle_sub">Secondi senza tocchi prima che lo schermo si scurisca</string>
+    <string name="st_seconds">%1$d s</string>
 </resources>

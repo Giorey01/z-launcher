@@ -61,6 +61,13 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     var overlay by mutableStateOf<Overlay?>(null)
 
 
+    /** The game running on another display, shown on this one as the now playing screen; `null` when none. */
+    var nowPlaying by mutableStateOf<NowPlaying?>(null)
+        private set
+
+    /** Whether the now playing screen is dimmed because nobody touched it for a while. */
+    var nowPlayingDimmed by mutableStateOf(false)
+
     /** Whether search mode is active in the app drawer. */
     var drawerSearching by mutableStateOf(false)
 
@@ -139,6 +146,19 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         resumeTick++
     }
 
+    /** [game] started on [displayId]: the other displays show it until the launcher is back there. */
+    fun startNowPlaying(game: GameEntry, displayId: Int) {
+        nowPlayingDimmed = false
+        nowPlaying = NowPlaying(game, displayId)
+    }
+
+    /** The launcher is in front again on [displayId]: the game there has ended or was left. */
+    fun endNowPlaying(displayId: Int) {
+        if (nowPlaying?.displayId != displayId) return
+        nowPlaying = null
+        nowPlayingDimmed = false
+    }
+
     /** The setup finished: show the Home. */
     fun finishOnboarding() {
         goHome()
@@ -209,7 +229,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         when (plan) {
             is Plan.Launch -> {
                 play(SoundAction.LAUNCH)
-                eventChannel.trySend(UiEvent.StartGame(plan.intent, displayId))
+                eventChannel.trySend(UiEvent.StartGame(plan.intent, displayId, game))
             }
             is Plan.NeedsChoice -> if (plan.candidates.isEmpty()) {
                 play(SoundAction.ERROR)
@@ -236,3 +256,11 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 }
+
+/** A game running on another display. */
+data class NowPlaying(
+    /** The game. */
+    val game: GameEntry,
+    /** The display it runs on. */
+    val displayId: Int,
+)

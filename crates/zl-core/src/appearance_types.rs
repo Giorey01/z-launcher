@@ -129,6 +129,16 @@ text_enum! {
 }
 
 text_enum! {
+    /// Which display a game starts on in the dual-screen mode.
+    LaunchScreen {
+        /// The display that shows the hero (the big screen of a dual-screen handheld).
+        Hero => "HERO",
+        /// The display that shows the grid.
+        Grid => "GRID",
+    }
+}
+
+text_enum! {
     /// Animation speed of the launcher UI.
     AnimationSpeed {
         /// Normal animation speed.
@@ -225,6 +235,10 @@ pub struct UserSettings {
     pub now_playing_dimming: f32,
     /// Saturation factor of the now playing screen, 0-1.
     pub now_playing_saturation: f32,
+    /// Seconds without a touch before the now playing screen dims.
+    pub now_playing_idle_seconds: u16,
+    /// Which display a game starts on in the dual-screen mode.
+    pub launch_screen: LaunchScreen,
     /// Selected app icon pack id (`None` for Default).
     pub app_icon_pack: Option<String>,
     /// RetroAchievements account integration enabled.
@@ -289,6 +303,9 @@ impl UserSettings {
             AnimationSpeed::parse_text(defaults::ANIMATION_SPEED).unwrap_or(AnimationSpeed::Normal);
         self.now_playing_dimming = defaults::NOW_PLAYING_DIMMING;
         self.now_playing_saturation = defaults::NOW_PLAYING_SATURATION;
+        self.now_playing_idle_seconds = defaults::NOW_PLAYING_IDLE_SECONDS;
+        self.launch_screen =
+            LaunchScreen::parse_text(defaults::LAUNCH_SCREEN).unwrap_or(LaunchScreen::Hero);
         self.retroachievements_enabled = defaults::RETROACHIEVEMENTS_ENABLED;
         self.discord_presence_enabled = defaults::DISCORD_PRESENCE_ENABLED;
         self
@@ -347,6 +364,8 @@ impl UserSettings {
             animation_speed: AnimationSpeed::Normal,
             now_playing_dimming: 0.0,
             now_playing_saturation: 0.0,
+            now_playing_idle_seconds: 0,
+            launch_screen: LaunchScreen::Hero,
             app_icon_pack: None,
             retroachievements_enabled: false,
             discord_presence_enabled: false,

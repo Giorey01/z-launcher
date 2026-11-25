@@ -66,8 +66,10 @@ sealed interface UiEvent {
     data class StartGame(
         /** The intent the core planned. */
         val intent: LaunchIntent,
-        /** Display to start it on, `null` for the one the launcher is on. */
+        /** Display to start it on, `null` for the one the settings choose. */
         val displayId: Int? = null,
+        /** The game, shown on the other display while it runs. */
+        val game: GameEntry? = null,
     ) : UiEvent
 
     /** Start an installed app. */
