@@ -20,5 +20,6 @@ pub mod library;
 pub mod media;
 pub mod net;
 pub mod platforms;
+pub mod sounds;
 pub mod steam;
 pub mod theme;

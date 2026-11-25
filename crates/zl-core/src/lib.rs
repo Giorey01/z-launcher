@@ -15,6 +15,7 @@
 
 mod app_games;
 mod appearance_types;
+mod default_sounds;
 mod detect;
 mod error;
 mod launch;

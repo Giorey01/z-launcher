@@ -98,7 +98,7 @@ impl Service {
                 .iter()
                 .map(|&action| SoundEntry {
                     action,
-                    path: path_text(files.sound(action)),
+                    path: path_text(files.sound(action)).or_else(|| self.default_sound(action)),
                 })
                 .collect(),
             music,

@@ -26,6 +26,7 @@ mod package;
 mod reader;
 mod settings;
 mod sounds;
+pub mod synth;
 mod validate;
 mod wallpaper;
 mod zip_import;
