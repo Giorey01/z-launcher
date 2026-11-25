@@ -107,10 +107,23 @@ impl Service {
 
     /// Icon, hero and logo of a platform's folder: the user's file, else the explicit pack, else
     /// the theme (and the packs it refers to), each image on its own. Aliases of the platform
-    /// (`megadrive` for `genesis`) are tried by the pack loader.
+    /// (`megadrive` for `genesis`) are tried by the pack loader. A group folder (`pcgames`) tries
+    /// its own id, then each member platform in order, slot by slot.
     pub fn platform_art(&self, platform_id: &str) -> FolderArt {
-        let id = self.canonical_id(&platform_id.to_lowercase());
-        folder_art(&self.theme_files(), "smart_folder_platform", &id)
+        let wanted = platform_id.to_lowercase();
+        let files = self.theme_files();
+        let Some(folder) = self.platforms.folder(&wanted) else {
+            let id = self.canonical_id(&wanted);
+            return folder_art(&files, "smart_folder_platform", &id);
+        };
+        let mut art = folder_art(&files, "smart_folder_platform", &folder.id);
+        for member in &folder.platforms {
+            let more = folder_art(&files, "smart_folder_platform", member);
+            art.icon = art.icon.or(more.icon);
+            art.hero = art.hero.or(more.hero);
+            art.logo = art.logo.or(more.logo);
+        }
+        art
     }
 
     /// Icon, hero and logo of a special folder (`favorites`, `recent`, `lastplayed`,

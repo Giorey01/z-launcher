@@ -252,3 +252,56 @@ fn every_profile_reference_round_trips() -> Res {
     assert!(checked > 50);
     Ok(())
 }
+
+/// Steam and Windows games share the "PC" folder on the Home, but each keeps its platform: a
+/// Steam game still launches through a Steam client with its app id.
+#[test]
+fn pc_folder_groups_steam_and_windows_games() -> Res {
+    let dir = tempfile::tempdir()?;
+    let root = dir.path().join("Games");
+    fs::create_dir_all(root.join("steam"))?;
+    fs::create_dir_all(root.join("Windows"))?;
+    fs::write(
+        root.join("steam/Hades.steamappid"),
+        "[steamappid] 1145360\n",
+    )?;
+    fs::write(root.join("Windows/Box.localgameid"), "[localgameid] 42\n")?;
+    touch(&root.join("psp/Patapon.iso"))?;
+    let svc = Service::open(&dir.path().join("data"))?;
+    svc.add_root(&root.to_string_lossy(), None)?;
+    svc.scan(&NoProgress)?;
+    let summary: Vec<(String, String, u32)> = svc
+        .platforms()?
+        .into_iter()
+        .map(|p| (p.id, p.name, p.games))
+        .collect();
+    assert_eq!(
+        summary,
+        [
+            ("pcgames".into(), "PC".into(), 2),
+            ("psp".into(), "Sony PlayStation Portable".into(), 1)
+        ]
+    );
+    let pc = svc.games(Some("pcgames"))?;
+    let platforms: Vec<&str> = pc.iter().map(|g| g.platform_id.as_str()).collect();
+    assert_eq!(platforms, ["windows", "steam"], "Box, then Hades");
+    assert_eq!(
+        svc.games(Some("steam"))?.len(),
+        1,
+        "a member id asks for itself"
+    );
+    let hades = pc[1].id;
+    let Plan::Launch {
+        intent, profile, ..
+    } = svc.plan_launch(hades, &pkgs(&["com.droiddeck.launcher"]))?
+    else {
+        return Err("expected a launch".into());
+    };
+    assert_eq!(profile.emulator, "droiddeck");
+    assert_eq!(
+        intent.action.as_deref(),
+        Some("com.droiddeck.launcher.LAUNCH_GAME")
+    );
+    assert_eq!(intent.extras.len(), 1);
+    Ok(())
+}

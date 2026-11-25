@@ -187,6 +187,31 @@
       }
     },
     {
+      "name": "droiddeck launches a steam tag file by its app id",
+      "installed_packages": ["com.droiddeck.launcher"],
+      "request": {
+        "context": {
+          "rom_path": "/storage/emulated/0/Games/steam/Hades.steamappid",
+          "platform": "steam",
+          "tags": {"steamappid": "1145360"}
+        }
+      },
+      "expected": {
+        "launch": {
+          "intent": {
+            "action": "com.droiddeck.launcher.LAUNCH_GAME",
+            "package": "com.droiddeck.launcher",
+            "activity": "com.droiddeck.launcher.FrontEndActivity",
+            "extras": [
+              {"key": "app_id", "type": "int", "value": 1145360}
+            ]
+          },
+          "profile": {"emulator": "droiddeck", "profile": "droiddeck"},
+          "by": "only_candidate"
+        }
+      }
+    },
+    {
       "name": "eden with ClipData and the flags observed on a device",
       "installed_packages": ["dev.eden.eden_emulator"],
       "request": {

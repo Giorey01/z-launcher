@@ -88,6 +88,20 @@ impl Service {
             .map_or_else(|| id.to_string(), |p| p.name.clone())
     }
 
+    /// Id of the Home folder a canonical platform shows in: its group folder, else itself.
+    pub(crate) fn home_folder(&self, canonical: &str) -> String {
+        self.platforms
+            .folder_of(canonical)
+            .map_or_else(|| canonical.to_string(), |f| f.id.clone())
+    }
+
+    /// English name of a Home folder id: the group folder's name, else the platform's.
+    fn home_folder_name(&self, id: &str) -> String {
+        self.platforms
+            .folder(id)
+            .map_or_else(|| self.platform_name(id), |f| f.name.clone())
+    }
+
     /// Canonical id of a stored platform id (aliases such as `sfc` map to `snes`).
     pub(crate) fn canonical_id(&self, id: &str) -> String {
         self.platforms
@@ -95,18 +109,20 @@ impl Service {
             .map_or_else(|| id.to_string(), |p| p.id.clone())
     }
 
-    /// Platforms that have games, with their counts, sorted by name. Folders that are aliases of
-    /// the same platform are merged.
+    /// Home folders that have games, with their counts, sorted by name. Folders that are aliases
+    /// of the same platform are merged, and so are the platforms of a group folder (Steam and
+    /// Windows under "PC").
     pub fn platforms(&self) -> Result<Vec<PlatformEntry>, CoreError> {
         let mut merged: BTreeMap<String, u32> = BTreeMap::new();
         for c in self.db().platform_counts()? {
             let games = u32::try_from(c.games).unwrap_or(u32::MAX);
-            *merged.entry(self.canonical_id(&c.platform_id)).or_default() += games;
+            let folder = self.home_folder(&self.canonical_id(&c.platform_id));
+            *merged.entry(folder).or_default() += games;
         }
         let mut out: Vec<PlatformEntry> = merged
             .into_iter()
             .map(|(id, games)| PlatformEntry {
-                name: self.platform_name(&id),
+                name: self.home_folder_name(&id),
                 id,
                 games,
             })
@@ -115,10 +131,19 @@ impl Service {
         Ok(out)
     }
 
-    /// The games of one platform (any id or alias), or of every platform with `None`, by title.
-    /// Missing games are left out.
+    /// Whether a game of canonical platform `canonical` belongs to `wanted`: a group folder id
+    /// takes its member platforms, any other id only its own platform.
+    fn game_in(&self, wanted: &str, canonical: &str) -> bool {
+        match self.platforms.folder(wanted) {
+            Some(folder) => folder.platforms.iter().any(|p| p == canonical),
+            None => self.canonical_id(wanted) == canonical,
+        }
+    }
+
+    /// The games of one Home folder or platform (any id or alias), or of every platform with
+    /// `None`, by title. Missing games are left out.
     pub fn games(&self, platform: Option<&str>) -> Result<Vec<GameEntry>, CoreError> {
-        let wanted = platform.map(|p| self.canonical_id(p));
+        let wanted = platform.map(str::to_lowercase);
         let art = self.best_art()?;
         let db = self.db();
         let games = db.query_games(&GameQuery::default())?;
@@ -128,7 +153,7 @@ impl Service {
                 let canonical = self.canonical_id(&g.platform_id);
                 (g, canonical)
             })
-            .filter(|(_, c)| wanted.as_ref().is_none_or(|w| w == c))
+            .filter(|(_, c)| wanted.as_ref().is_none_or(|w| self.game_in(w, c)))
             .map(|(g, canonical)| GameEntry {
                 id: g.id,
                 display_title: display_title(&g.title),

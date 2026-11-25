@@ -412,3 +412,31 @@ fn zip_import() -> Res {
     );
     Ok(())
 }
+
+/// The "PC" group folder takes its own art first, then each member platform's, slot by slot.
+#[test]
+fn group_folder_art_falls_back_to_its_platforms() -> Res {
+    let (dir, svc) = imported()?;
+    let mine = dir.path().join("mine.png");
+    fs::write(&mine, b"x")?;
+    let path = mine.to_string_lossy();
+    assert_eq!(svc.platform_art("pcgames"), zl_core::FolderArt::default());
+    svc.set_user_folder_art("steam", true, FolderSlot::Hero, Some(&path))?;
+    svc.set_user_folder_art("steam", true, FolderSlot::Icon, Some(&path))?;
+    svc.set_user_folder_art("pcgames", true, FolderSlot::Icon, Some(&path))?;
+    let pc = svc.platform_art("PCGames");
+    assert!(
+        pc.icon
+            .as_deref()
+            .is_some_and(|p| p.contains("by_platform/pcgames/")),
+        "own icon first: {pc:?}"
+    );
+    assert!(
+        pc.hero
+            .as_deref()
+            .is_some_and(|p| p.contains("by_platform/steam/")),
+        "hero from a member: {pc:?}"
+    );
+    assert_eq!(pc.logo, None);
+    Ok(())
+}

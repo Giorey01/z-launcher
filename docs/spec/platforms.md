@@ -15,7 +15,7 @@ python3 -I scripts/convert_esde.py es_find_rules.xml es_systems.xml data
 
 ## `platforms.json`
 
-Campi di primo livello: `schema`, `version`, `sources`, `platforms`.
+Campi di primo livello: `schema`, `version`, `sources`, `platforms`, `folders` (facoltativo).
 
 Ogni piattaforma:
 
@@ -32,6 +32,22 @@ Gli id si confrontano **senza distinguere le maiuscole** (sul dispositivo si ved
 `Wii`, `Switch`): `PlatformDb::platform(nome)` abbassa le maiuscole e risolve gli alias.
 I giochi che sono cartelle (Wii U, Xbox 360, Switch) non hanno estensione di file: il chiamante
 passa il file da lanciare (per Wii U il `code/*.rpx`).
+
+### Cartelle che raggruppano più piattaforme
+
+`folders` elenca le cartelle della Home che mostrano insieme i giochi di più piattaforme. Ognuna ha
+`id`, `name` e `platforms` (id canonici, nell'ordine in cui si cerca l'artwork della cartella).
+Oggi c'è `pcgames` ("PC") con `windows` e `steam`: tutti i giochi PC stanno in una cartella sola,
+qualunque client li lanci.
+
+- Ogni gioco **tiene la sua piattaforma**: lancio, emulatore predefinito e impostazioni restano
+  quelli di `steam` o di `windows`. La cartella cambia solo come si presenta la libreria.
+- L'id di una cartella non può essere l'id o l'alias di una piattaforma (`pc` è alias di `dos`),
+  una piattaforma sta al massimo in una cartella, una cartella non è vuota.
+- Chiedere i giochi di una cartella dà quelli di tutte le sue piattaforme; chiedere quelli di una
+  piattaforma membro dà solo quella.
+- Artwork della cartella: quello con l'id della cartella, poi quello di ciascuna piattaforma
+  membro, immagine per immagine (icona, hero, logo).
 
 ## `emulators.json`
 
@@ -63,7 +79,7 @@ Ogni emulatore: `id`, `name`, `kind` (`standalone` | `retroarch`), `packages`, `
 | `uses_core` | il profilo usa `{core}`/`{core_path}` (solo RetroArch) |
 | `intent` | descrizione dell'intent, sotto |
 | `verified` | una fonte conferma l'intent |
-| `source` | `es-de`, `es-de+device`, `manual` |
+| `source` | `es-de`, `es-de+device`, `upstream` (letto nel sorgente pubblico dell'app: solo l'interfaccia dell'Intent, mai codice), `manual` |
 | `verified_on` | data in cui un gioco è partito davvero su un dispositivo |
 | `note` | differenze dalla fonte o dubbi |
 
@@ -121,6 +137,11 @@ e due `uri_grants` (documento e albero). I permessi di scrittura non sono stati 
 sono concessi.
 
 ## Cosa non è verificato
+
+- DroidDeck (`com.droiddeck.launcher`, GPL-3.0): profilo `upstream` dalla versione 0.7.1. Action
+  `com.droiddeck.launcher.LAUNCH_GAME` verso `FrontEndActivity`, extra `app_id` intero; senza
+  `game_source` l'app assume Steam. Il gioco deve essere già nella libreria di DroidDeck. Non
+  ancora provato su dispositivo.
 
 - Moonlight (`com.limelight`, `com.limelight.noir`): ES-DE non ha Moonlight; il profilo `open-app`
   apre solo l'app (`verified: false`). Il lancio di un'app per nome (`moonlight_id`) va ancora
