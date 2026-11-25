@@ -244,6 +244,8 @@ pub enum MediaSource {
     Esde,
     /// A file the user picked.
     User,
+    /// A file downloaded from SteamGridDB.
+    SteamGridDb,
 }
 
 impl MediaSource {
@@ -253,6 +255,7 @@ impl MediaSource {
             MediaSource::Cocoon => "cocoon",
             MediaSource::Esde => "esde",
             MediaSource::User => "user",
+            MediaSource::SteamGridDb => "sgdb",
         }
     }
 
@@ -262,6 +265,7 @@ impl MediaSource {
             "cocoon" => Ok(MediaSource::Cocoon),
             "esde" => Ok(MediaSource::Esde),
             "user" => Ok(MediaSource::User),
+            "sgdb" => Ok(MediaSource::SteamGridDb),
             other => Err(DbError::InvalidValue(other.to_string())),
         }
     }

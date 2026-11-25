@@ -62,9 +62,15 @@ pub const SCRAPER_BACKOFF_INITIAL_MS: u64 = 1_000;
 /// CDN URL prefix required for SteamGridDB artwork to prevent spoofed hosts.
 pub const SGDB_CDN_PREFIX: &str = "https://cdn2.steamgriddb.com/";
 
-/// Query parameters for static grids filtering dimensions and content.
+/// Query parameters for square grids (the tiles are square), clean static images only.
 pub const SGDB_GRID_QUERY: &str =
-    "dimensions=600x900,1024x1024,512x512&types=static&nsfw=false&humor=false";
+    "dimensions=1024x1024,512x512&types=static&nsfw=false&humor=false";
+
+/// Query parameters for portrait grids, asked when a game has no square one.
+pub const SGDB_GRID_FALLBACK_QUERY: &str = "dimensions=600x900&types=static&nsfw=false&humor=false";
+
+/// Search term used to check a key: any common word works, only the status matters.
+pub const SGDB_KEY_CHECK_TERM: &str = "zelda";
 
 /// Query parameters for heroes/wallpapers filtering content.
 pub const SGDB_HERO_QUERY: &str = "types=static&nsfw=false&humor=false";
@@ -83,3 +89,16 @@ pub const SGDB_MIN_KEY_LEN: usize = 16;
 
 /// Maximum valid length of a SteamGridDB API key.
 pub const SGDB_MAX_KEY_LEN: usize = 64;
+
+/// Folder of the app data where the art downloaded from SteamGridDB is kept
+/// (`<folder>/<platform>/<kind>/<game id>.<ext>`).
+pub const SGDB_MEDIA_FOLDER: &str = "media/sgdb";
+
+/// Pause between two games of a SteamGridDB run, in milliseconds (the API asks for restraint).
+pub const SGDB_PAUSE_MS: u64 = 250;
+
+/// Folder of the ES-DE folder that holds one `<system>/gamelist.xml` per platform.
+pub const ESDE_GAMELISTS_FOLDER: &str = "gamelists";
+
+/// Name of an ES-DE gamelist file.
+pub const ESDE_GAMELIST_FILE: &str = "gamelist.xml";

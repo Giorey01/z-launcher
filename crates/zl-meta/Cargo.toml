@@ -12,6 +12,7 @@ thiserror = { workspace = true }
 zl-config = { path = "../zl-config" }
 zl-db = { path = "../zl-db" }
 zl-media = { path = "../zl-media" }
+zl-net = { path = "../zl-net" }
 
 [dev-dependencies]
 tempfile = { workspace = true }

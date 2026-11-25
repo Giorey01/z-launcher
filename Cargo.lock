@@ -1427,6 +1427,7 @@ dependencies = [
  "zl-library",
  "zl-media",
  "zl-meta",
+ "zl-net",
  "zl-platforms",
  "zl-theme",
 ]
@@ -1453,6 +1454,7 @@ dependencies = [
  "zl-db",
  "zl-library",
  "zl-media",
+ "zl-net",
  "zl-platforms",
  "zl-theme",
 ]
@@ -1494,6 +1496,7 @@ dependencies = [
  "zl-config",
  "zl-db",
  "zl-media",
+ "zl-net",
 ]
 
 [[package]]

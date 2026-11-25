@@ -74,3 +74,36 @@ fn test_scraper_config_roundtrip() -> TestResult {
     assert_eq!(loaded.steamgriddb_key.as_deref(), Some("key_abc"));
     Ok(())
 }
+
+/// The gamelists of an ES-DE folder are read per platform: a gamelist of `gba` fills only the
+/// GBA game even when an NDS game has the same file name, and the ES-DE date becomes ISO.
+#[test]
+fn imports_esde_gamelists_per_platform() -> TestResult {
+    let dir = tempfile::tempdir()?;
+    for platform in ["gba", "nds"] {
+        let folder = dir.path().join("roms").join(platform);
+        std::fs::create_dir_all(&folder)?;
+        std::fs::write(folder.join(format!("Same Name.{platform}")), b"rom")?;
+    }
+    let lists = dir.path().join("ES-DE/gamelists/gba");
+    std::fs::create_dir_all(&lists)?;
+    std::fs::write(
+        lists.join("gamelist.xml"),
+        "<gameList><game><path>./Same Name.gba</path><desc>Only GBA</desc>\
+         <releasedate>20021117T000000</releasedate><players>2</players></game></gameList>",
+    )?;
+    let service = Service::open(&dir.path().join("data"))?;
+    service.add_root(&dir.path().join("roms").to_string_lossy(), None)?;
+    service.scan(&zl_library::NoProgress)?;
+    service.set_media_sources(None, Some(&dir.path().join("ES-DE").to_string_lossy()))?;
+
+    assert_eq!(service.import_esde_gamelists()?, 1);
+    let gba = service.games(Some("gba"))?[0].id;
+    let nds = service.games(Some("nds"))?[0].id;
+    let details = service.game_details(gba)?;
+    assert_eq!(details.description.as_deref(), Some("Only GBA"));
+    assert_eq!(details.release_date.as_deref(), Some("2002-11-17"));
+    assert_eq!(details.players, Some(2));
+    assert_eq!(service.game_details(nds)?.description, None);
+    Ok(())
+}

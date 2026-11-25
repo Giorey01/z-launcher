@@ -1,0 +1,191 @@
+{
+ "pickGame": [
+  {
+   "results": [
+    [
+     1,
+     "Metal Gear Solid 2: Sons of Liberty"
+    ],
+    [
+     2,
+     "Metal Gear Solid"
+    ]
+   ],
+   "title": "Metal Gear Solid",
+   "id": 2
+  },
+  {
+   "results": [
+    [
+     3,
+     "Baldur's Gate 3"
+    ]
+   ],
+   "title": "Baldurs Gate 3",
+   "id": 3
+  },
+  {
+   "results": [
+    [
+     4,
+     "Crash Team Racing"
+    ]
+   ],
+   "title": "Crash Bandicoot",
+   "id": null
+  },
+  {
+   "results": [
+    [
+     5,
+     "Zelda Ocarina of Time Master Quest"
+    ],
+    [
+     6,
+     "Zelda Ocarina of Time"
+    ]
+   ],
+   "title": "Zelda Ocarina of Time",
+   "id": 6,
+   "why": "exact beats a longer name listed first"
+  },
+  {
+   "results": [
+    [
+     7,
+     "Zelda Ocarina of Time"
+    ]
+   ],
+   "title": "Zelda Ocarina of Time Master Quest",
+   "id": 7,
+   "why": "the name is a word prefix of the title"
+  },
+  {
+   "results": [
+    [
+     8,
+     "Metal"
+    ]
+   ],
+   "title": "Metallica",
+   "id": null,
+   "why": "a prefix must end at a word"
+  },
+  {
+   "results": [
+    [
+     9,
+     "Pokémon Pokopia"
+    ]
+   ],
+   "title": "Pokemon Pokopia",
+   "id": 9
+  },
+  {
+   "results": [
+    [
+     10,
+     "Anything"
+    ]
+   ],
+   "title": "",
+   "id": null
+  }
+ ],
+ "pickImage": [
+  {
+   "why": "most net votes among clean grids",
+   "grids": [
+    {
+     "url": "https://cdn2.steamgriddb.com/grid/a.png",
+     "upvotes": 2
+    },
+    {
+     "url": "https://cdn2.steamgriddb.com/grid/b.png",
+     "upvotes": 9
+    },
+    {
+     "url": "https://cdn2.steamgriddb.com/grid/c.png",
+     "upvotes": 50,
+     "nsfw": true
+    },
+    {
+     "url": "https://cdn2.steamgriddb.com/grid/d.png",
+     "upvotes": 40,
+     "humor": true
+    }
+   ],
+   "url": "https://cdn2.steamgriddb.com/grid/b.png"
+  },
+  {
+   "why": "downvotes count",
+   "grids": [
+    {
+     "url": "https://cdn2.steamgriddb.com/grid/a.png",
+     "upvotes": 10,
+     "downvotes": 9
+    },
+    {
+     "url": "https://cdn2.steamgriddb.com/grid/b.png",
+     "upvotes": 2
+    }
+   ],
+   "url": "https://cdn2.steamgriddb.com/grid/b.png"
+  },
+  {
+   "why": "score breaks a tie",
+   "grids": [
+    {
+     "url": "https://cdn2.steamgriddb.com/grid/a.png",
+     "upvotes": 3,
+     "score": 1
+    },
+    {
+     "url": "https://cdn2.steamgriddb.com/grid/b.png",
+     "upvotes": 3,
+     "score": 5
+    }
+   ],
+   "url": "https://cdn2.steamgriddb.com/grid/b.png"
+  },
+  {
+   "why": "other hosts are refused",
+   "grids": [
+    {
+     "url": "https://elsewhere.com/x.png",
+     "upvotes": 5
+    }
+   ],
+   "url": null
+  },
+  {
+   "why": "a lookalike host is refused",
+   "grids": [
+    {
+     "url": "https://evil.example/cdn2.steamgriddb.com/x.png",
+     "upvotes": 5
+    }
+   ],
+   "url": null
+  },
+  {
+   "why": "none",
+   "grids": [],
+   "url": null
+  },
+  {
+   "why": "the first listed wins a full tie",
+   "grids": [
+    {
+     "url": "https://cdn2.steamgriddb.com/grid/a.png",
+     "upvotes": 4
+    },
+    {
+     "url": "https://cdn2.steamgriddb.com/grid/b.png",
+     "upvotes": 4
+    }
+   ],
+   "url": "https://cdn2.steamgriddb.com/grid/a.png"
+  }
+ ]
+}

@@ -14,6 +14,7 @@ zl-core = { path = "../zl-core" }
 zl-db = { path = "../zl-db" }
 zl-library = { path = "../zl-library" }
 zl-media = { path = "../zl-media" }
+zl-net = { path = "../zl-net" }
 zl-platforms = { path = "../zl-platforms" }
 zl-theme = { path = "../zl-theme" }
 thiserror = { workspace = true }

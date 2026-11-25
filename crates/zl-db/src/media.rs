@@ -16,7 +16,8 @@ const MEDIA_COLUMNS: &str = "game_id, kind, path, source, edit, protected";
 const BEST_FIRST: &str = "protected DESC,
     CASE WHEN source = 'user' THEN 3
          WHEN source = 'cocoon' AND edit IS NOT NULL THEN 2
-         WHEN source = 'cocoon' THEN 1 ELSE 0 END DESC,
+         WHEN source = 'cocoon' THEN 1
+         WHEN source = 'sgdb' THEN -1 ELSE 0 END DESC,
     edit DESC, path";
 
 /// Maps a row selected with [`MEDIA_COLUMNS`] to a [`MediaRow`].
@@ -64,6 +65,22 @@ impl Db {
             }
             Ok(())
         })
+    }
+
+    /// Adds one downloaded file of a game (kept by imports, which only replace their own source).
+    pub fn add_media(&self, item: &NewMedia) -> Result<(), DbError> {
+        self.conn.execute(
+            "INSERT OR IGNORE INTO game_media (game_id, kind, path, source, edit, protected)
+             VALUES (?1, ?2, ?3, ?4, ?5, 0)",
+            params![
+                item.game_id,
+                item.kind.as_str(),
+                item.path,
+                item.source.as_str(),
+                item.edit
+            ],
+        )?;
+        Ok(())
     }
 
     /// Sets the user's choice of one kind for a game: the file becomes a protected `user` row and

@@ -2,6 +2,7 @@
 
 use std::path::Path;
 
+use zl_config::media::{ESDE_GAMELISTS_FOLDER, ESDE_GAMELIST_FILE};
 use zl_db::{GameMeta, MetaField, ScrapeMode, ScraperSource};
 use zl_media::display_title;
 use zl_media::gamelist::{export_gamelist, parse_gamelist, GamelistEntry};
@@ -114,38 +115,49 @@ impl Service {
         Ok(())
     }
 
-    /// Imports metadata from an ES-DE gamelist.xml file, matching games by ROM filename.
+    /// Imports metadata from one ES-DE `gamelist.xml`, matching games of any platform by ROM
+    /// file name. Returns how many games got metadata.
     pub fn import_esde_gamelist(&self, xml_path: &str) -> Result<u32, CoreError> {
-        let content = std::fs::read_to_string(xml_path).map_err(|_| CoreError::Io)?;
-        let entries = parse_gamelist(&content).map_err(|_| CoreError::InvalidInput)?;
-        let games = self.db().query_games(&zl_db::GameQuery::default())?;
-        let mut matched = 0;
+        self.import_gamelist_file(Path::new(xml_path), None)
+    }
 
-        for entry in entries {
-            let stem = Path::new(&entry.path)
-                .file_stem()
-                .and_then(|s| s.to_str())
-                .unwrap_or("");
-            if let Some(game) = games.iter().find(|g| {
-                Path::new(&g.path)
-                    .file_stem()
-                    .is_some_and(|s| s.to_string_lossy().eq_ignore_ascii_case(stem))
-            }) {
-                let meta = GameMeta {
-                    game_id: game.id,
-                    description: entry.desc,
-                    release_date: entry.release_date,
-                    developer: entry.developer,
-                    publisher: entry.publisher,
-                    genres: entry.genre,
-                    players: entry.players.and_then(|p| p.parse().ok()),
-                    rating: entry.rating.map(|r| r * 5.0),
-                    source: "esde".to_string(),
-                    scraped_at: 0,
-                };
-                self.db().save_game_meta(&meta, false)?;
-                matched += 1;
+    /// Imports every `gamelists/<system>/gamelist.xml` of the ES-DE folder, each one matched
+    /// only against the games of the platform folder of the same name. Returns how many games
+    /// got metadata; a missing folder is zero.
+    pub fn import_esde_gamelists(&self) -> Result<u32, CoreError> {
+        let root = Path::new(&self.media_sources()?.esde_root).join(ESDE_GAMELISTS_FOLDER);
+        let Ok(dirs) = std::fs::read_dir(&root) else {
+            return Ok(0);
+        };
+        let mut matched = 0;
+        for dir in dirs.flatten() {
+            let file = dir.path().join(ESDE_GAMELIST_FILE);
+            let system = dir.file_name().to_string_lossy().to_lowercase();
+            if file.is_file() {
+                matched += self.import_gamelist_file(&file, Some(&system))?;
             }
+        }
+        Ok(matched)
+    }
+
+    /// Reads one gamelist and stores the metadata of the games it names (only those of
+    /// `platform`, the folder name as stored, when given).
+    fn import_gamelist_file(&self, file: &Path, platform: Option<&str>) -> Result<u32, CoreError> {
+        let content = std::fs::read_to_string(file).map_err(|_| CoreError::Io)?;
+        let entries = parse_gamelist(&content).map_err(|_| CoreError::InvalidInput)?;
+        let games: Vec<zl_db::Game> = self
+            .db()
+            .query_games(&zl_db::GameQuery::default())?
+            .into_iter()
+            .filter(|g| platform.is_none_or(|p| g.platform_id.eq_ignore_ascii_case(p)))
+            .collect();
+        let mut matched = 0;
+        for entry in entries {
+            let Some(game) = games.iter().find(|g| same_stem(&g.path, &entry.path)) else {
+                continue;
+            };
+            self.db().save_game_meta(&meta_of(game.id, entry), false)?;
+            matched += 1;
         }
         Ok(matched)
     }
@@ -220,5 +232,42 @@ fn apply_overrides(meta: &mut GameMeta, overrides: &[zl_db::MetaOverride]) {
             MetaField::Players => meta.players = ov.value.parse().ok(),
             MetaField::Rating => meta.rating = ov.value.parse().ok(),
         }
+    }
+}
+
+/// Whether two paths name the same file, ignoring folders, extension and case.
+fn same_stem(a: &str, b: &str) -> bool {
+    let stem = |p: &str| {
+        Path::new(p)
+            .file_stem()
+            .map(|s| s.to_string_lossy().to_lowercase())
+    };
+    stem(a).is_some_and(|s| Some(s) == stem(b))
+}
+
+/// The stored metadata of a gamelist entry. ES-DE dates (`20110919T000000`) become `2011-09-19`
+/// and its 0-1 rating becomes 0-5.
+fn meta_of(game_id: i64, entry: GamelistEntry) -> GameMeta {
+    GameMeta {
+        game_id,
+        description: entry.desc,
+        release_date: entry.release_date.map(|d| esde_date(&d)),
+        developer: entry.developer,
+        publisher: entry.publisher,
+        genres: entry.genre,
+        players: entry.players.and_then(|p| p.trim().parse().ok()),
+        rating: entry.rating.map(|r| r * 5.0),
+        source: "esde".to_string(),
+        scraped_at: 0,
+    }
+}
+
+/// `YYYYMMDDT...` as `YYYY-MM-DD`; anything else is kept as written.
+fn esde_date(text: &str) -> String {
+    let digits: String = text.chars().take(8).collect();
+    if digits.len() == 8 && digits.chars().all(|c| c.is_ascii_digit()) {
+        format!("{}-{}-{}", &digits[..4], &digits[4..6], &digits[6..8])
+    } else {
+        text.to_string()
     }
 }

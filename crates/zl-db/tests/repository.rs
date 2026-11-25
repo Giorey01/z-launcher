@@ -295,7 +295,8 @@ fn meta_crud_and_overrides() -> TestResult {
     Ok(())
 }
 
-/// A database created at version 3 with games and media is migrated to version 4 preserving data.
+/// A database created at version 3 with games and media is migrated to the latest version
+/// preserving data; the rebuilt media table then takes SteamGridDB rows, ranked after ES-DE.
 #[test]
 fn migration_from_v3_preserves_data() -> TestResult {
     let dir = tempfile::tempdir()?;
@@ -326,7 +327,7 @@ fn migration_from_v3_preserves_data() -> TestResult {
     }
 
     let db = Db::open(&db_path)?;
-    assert_eq!(db.schema_version()?, 4);
+    assert_eq!(db.schema_version()?, 5);
 
     let g = db.game(1)?.ok_or("game missing after migration")?;
     assert_eq!(g.title, "Pokemon");
@@ -338,5 +339,17 @@ fn migration_from_v3_preserves_data() -> TestResult {
 
     let meta = db.game_meta(1)?;
     assert!(meta.is_none());
+
+    db.add_media(&zl_db::NewMedia {
+        game_id: 1,
+        kind: zl_db::MediaKind::Icon,
+        path: "/data/sgdb/p.png".into(),
+        source: zl_db::MediaSource::SteamGridDb,
+        edit: None,
+    })?;
+    let media = db.game_media(1)?;
+    assert_eq!(media.len(), 2);
+    assert_eq!(media[0].path, "/m/p.png", "ES-DE art stays first");
+    assert_eq!(media[1].source, zl_db::MediaSource::SteamGridDb);
     Ok(())
 }

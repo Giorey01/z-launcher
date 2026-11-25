@@ -1,9 +1,6 @@
-//! Metadata scraper orchestrator and source integrations.
-//!
-//! Features:
-//! - Multi-source scraper pipeline: Libretro DB, ScreenScraper, SteamGridDB, IGDB, LaunchBox, HLTB.
-//! - Three scraping modes: MissingOnly, ChosenFields, ForceAll.
-//! - Immune to destructive overwrites: protected user overrides are always preserved.
+//! Online game art and metadata. Today one source: SteamGridDB, for covers, heroes and logos
+//! (`sources::steamgriddb`). The text metadata comes from ES-DE `gamelist.xml` files, read by
+//! `zl-media`.
 
 #![warn(
     missing_docs,
@@ -13,12 +10,13 @@
 )]
 
 pub mod error;
-pub mod model;
-pub mod orchestrator;
 pub mod sources;
 
 pub use error::MetaError;
-pub use model::{merge_scraped, ScrapeQuery, ScrapedGame, ScrapedMedia};
-pub use orchestrator::{default_source_priority, Orchestrator};
-pub use sources::steamgriddb::SteamGridDbSource;
-pub use sources::MetaSource;
+pub use sources::steamgriddb::{pick_game, pick_image, SgdbGame, SgdbImage, SteamGridDb};
+use zl_db::ScraperSource;
+
+/// The online sources in the order they are asked.
+pub fn default_source_priority() -> Vec<ScraperSource> {
+    vec![ScraperSource::SteamGridDb]
+}
