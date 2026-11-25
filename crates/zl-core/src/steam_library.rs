@@ -5,8 +5,8 @@
 //! every client (GameNative, GameHub, DroidDeck, ...) launches the games and they sit in the
 //! "PC" folder. Games already in the library by app id are skipped, and nothing is ever deleted.
 //! The play time Steam reports for each game is stored too (replaced on every import).
-//! The key and the account are kept in the settings table; the resolved SteamID64 is kept too,
-//! so a custom profile name is resolved once.
+//! The key is kept in the app's secret store (the Android Keystore), the account in the settings
+//! table; the resolved SteamID64 is kept too, so a custom profile name is resolved once.
 
 use std::collections::HashMap;
 use std::fs;
@@ -19,10 +19,9 @@ use zl_steam::{is_web_api_key, parse_account, AccountInput, OwnedGame, SteamErro
 
 use crate::app_games::{file_stem, free_path};
 use crate::error::CoreError;
+use crate::secrets::SECRET_STEAM_WEB;
 use crate::Service;
 
-/// Settings key of the Web API key.
-const KEY_STEAM_KEY: &str = "steam.web_api_key";
 /// Settings key of the account as the user typed it.
 const KEY_STEAM_ACCOUNT: &str = "steam.account";
 /// Settings key of the SteamID64 the account resolved to.
@@ -85,7 +84,7 @@ impl Service {
     pub fn steam_account(&self) -> Result<SteamAccount, CoreError> {
         let db = self.db();
         Ok(SteamAccount {
-            has_key: db.setting(KEY_STEAM_KEY)?.is_some_and(|k| !k.is_empty()),
+            has_key: self.secret(SECRET_STEAM_WEB).is_some(),
             account: db.setting(KEY_STEAM_ACCOUNT)?.filter(|a| !a.is_empty()),
         })
     }
@@ -105,10 +104,10 @@ impl Service {
         {
             return Err(CoreError::InvalidInput);
         }
-        let db = self.db();
         if let Some(k) = key {
-            db.set_setting(KEY_STEAM_KEY, k)?;
+            self.set_secret(SECRET_STEAM_WEB, Some(k).filter(|k| !k.is_empty()))?;
         }
+        let db = self.db();
         if let Some(a) = account {
             db.set_setting(KEY_STEAM_ACCOUNT, a)?;
             db.set_setting(KEY_STEAM_ID, "")?;
@@ -133,7 +132,7 @@ impl Service {
 
     /// The stored key, if any.
     fn steam_key(&self) -> Result<Option<String>, CoreError> {
-        Ok(self.db().setting(KEY_STEAM_KEY)?.filter(|k| !k.is_empty()))
+        Ok(self.secret(SECRET_STEAM_WEB))
     }
 
     /// Checks the stored key and account against Steam: `None` when the library can be read.

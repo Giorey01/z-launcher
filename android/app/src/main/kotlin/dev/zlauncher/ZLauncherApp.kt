@@ -12,6 +12,7 @@ import dev.zlauncher.apps.InstalledApps
 import dev.zlauncher.apps.RecentApps
 import dev.zlauncher.audio.SoundFx
 import dev.zlauncher.core.CoreProvider
+import dev.zlauncher.core.KeystoreSecrets
 import dev.zlauncher.ui.art.ArtResolver
 import dev.zlauncher.ui.theme.ThemeStore
 import dev.zlauncher.pods.PodRegistry
@@ -61,7 +62,7 @@ class ZLauncherApp : Application(), ImageLoaderFactory, ViewModelStoreOwner {
     /** Creates the shared objects. */
     override fun onCreate() {
         super.onCreate()
-        core = CoreProvider(filesDir)
+        core = CoreProvider(filesDir, KeystoreSecrets(this))
         apps = InstalledApps(packageManager)
         recent = RecentApps(this)
         art = ArtResolver(core)

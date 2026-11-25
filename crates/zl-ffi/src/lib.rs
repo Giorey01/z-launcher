@@ -17,6 +17,7 @@ mod core_object;
 mod error;
 mod meta_api;
 mod scan;
+mod secrets_api;
 mod sessions_api;
 mod steam_api;
 mod types;
@@ -28,6 +29,7 @@ pub use core_object::Core;
 pub use error::CoreError;
 pub use meta_api::{GameDetails, ImageScrapeReport, KeyCheck, ScrapeListener, ScrapeStop};
 pub use scan::{ScanEvent, ScanIssue, ScanListener, ScanSummary};
+pub use secrets_api::SecretStore;
 pub use sessions_api::{PendingSession, PlayStats, SessionEnd, UsageEvent, UsageKind};
 pub use steam_api::{SteamAccount, SteamImport, SteamProblem};
 pub use types::{
