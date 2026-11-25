@@ -1,0 +1,23 @@
+[package]
+name = "zl-pods"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+base64 = "0.22"
+ring = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tempfile = { workspace = true }
+thiserror = { workspace = true }
+zip = { workspace = true }
+zl-config = { path = "../zl-config" }
+zl-db = { path = "../zl-db" }
+zl-net = { path = "../zl-net" }
+
+[dev-dependencies]
+
+[lints]
+workspace = true

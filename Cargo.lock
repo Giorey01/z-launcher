@@ -1430,6 +1430,7 @@ dependencies = [
  "zl-meta",
  "zl-net",
  "zl-platforms",
+ "zl-pods",
  "zl-sessions",
  "zl-steam",
  "zl-theme",
@@ -1440,6 +1441,8 @@ name = "zl-db"
 version = "0.1.0"
 dependencies = [
  "rusqlite",
+ "serde",
+ "serde_json",
  "tempfile",
  "thiserror",
  "zl-config",
@@ -1521,6 +1524,22 @@ dependencies = [
  "tempfile",
  "thiserror",
  "zl-config",
+]
+
+[[package]]
+name = "zl-pods"
+version = "0.1.0"
+dependencies = [
+ "base64",
+ "ring",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror",
+ "zip",
+ "zl-config",
+ "zl-db",
+ "zl-net",
 ]
 
 [[package]]

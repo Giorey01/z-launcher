@@ -170,6 +170,7 @@ pub fn decode_tag_bytes(bytes: &[u8]) -> String {
     } else {
         return String::from_utf8_lossy(bytes).into_owned();
     };
+    #[allow(unknown_lints, clippy::chunks_exact_to_as_chunks)]
     let units = rest.chunks_exact(2).map(|c| from_pair([c[0], c[1]]));
     char::decode_utf16(units)
         .map(|r| r.unwrap_or(char::REPLACEMENT_CHARACTER))

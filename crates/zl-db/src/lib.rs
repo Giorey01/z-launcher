@@ -38,6 +38,7 @@ mod media;
 mod meta;
 pub mod migrations;
 mod models;
+mod pods;
 mod roots;
 mod sessions;
 mod settings;
@@ -49,4 +50,5 @@ pub use models::{
     MediaSource, MetaField, MetaOverride, NewGame, NewMedia, PlatformCount, Root, ScrapeMode,
     ScraperSource,
 };
+pub use pods::{InstalledPod, PodState};
 pub use sessions::{GameFlags, NewSession, PlayStats, SessionSource};

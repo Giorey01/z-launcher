@@ -18,6 +18,7 @@ zl-meta = { path = "../zl-meta" }
 zl-net = { path = "../zl-net" }
 zl-steam = { path = "../zl-steam" }
 zl-sessions = { path = "../zl-sessions" }
+zl-pods = { path = "../zl-pods" }
 serde = { workspace = true }
 
 [dev-dependencies]

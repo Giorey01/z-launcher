@@ -48,6 +48,12 @@ pub enum CoreError {
     /// File I/O failed.
     #[error("io")]
     Io,
+    /// A Pod operation failed; `issues` contains the structured issue codes.
+    #[error("pod {issues:?}")]
+    Pod {
+        /// Issue codes.
+        issues: Vec<String>,
+    },
 }
 
 impl From<DbError> for CoreError {
@@ -109,6 +115,26 @@ impl From<ThemeError> for CoreError {
         };
         CoreError::Theme {
             code: code.to_string(),
+        }
+    }
+}
+
+impl From<zl_pods::PodError> for CoreError {
+    /// Maps Pod operational and validation errors.
+    fn from(e: zl_pods::PodError) -> Self {
+        match e {
+            zl_pods::PodError::Validation(issues) => CoreError::Pod {
+                issues: issues
+                    .into_iter()
+                    .map(|i| i.as_code().to_string())
+                    .collect(),
+            },
+            zl_pods::PodError::Io(_) => CoreError::Io,
+            zl_pods::PodError::Db(d) => d.into(),
+            zl_pods::PodError::Zip(_) => CoreError::Pod {
+                issues: vec!["NOT_A_ZIP".to_string()],
+            },
+            zl_pods::PodError::Net(_) => CoreError::Io,
         }
     }
 }

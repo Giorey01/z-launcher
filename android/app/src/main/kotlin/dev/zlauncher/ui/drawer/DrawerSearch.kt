@@ -27,6 +27,10 @@ internal fun gridIndexOf(focused: String, recentKeys: List<String>, appKeys: Lis
     val inRecent = recentKeys.indexOf(focused)
     if (inRecent >= 0) return inRecent
     val inApps = appKeys.indexOf(focused)
-    if (inApps < 0) return null
-    return inApps + if (recentKeys.isEmpty()) 0 else recentKeys.size + 1
+    return if (inApps >= 0) {
+        val offset = if (recentKeys.isEmpty()) 0 else recentKeys.size + 1
+        inApps + offset
+    } else {
+        null
+    }
 }

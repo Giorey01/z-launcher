@@ -46,6 +46,12 @@ pub enum CoreError {
     /// An I/O error occurred.
     #[error("io")]
     Io,
+    /// A Pod operation failed.
+    #[error("pod {issues:?}")]
+    Pod {
+        /// Issue codes.
+        issues: Vec<String>,
+    },
 }
 
 impl From<ServiceError> for CoreError {
@@ -61,6 +67,7 @@ impl From<ServiceError> for CoreError {
             ServiceError::Theme { code } => CoreError::Theme { code },
             ServiceError::DockFull => CoreError::DockFull,
             ServiceError::Io => CoreError::Io,
+            ServiceError::Pod { issues } => CoreError::Pod { issues },
         }
     }
 }

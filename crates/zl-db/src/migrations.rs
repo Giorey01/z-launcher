@@ -167,8 +167,43 @@ CREATE TABLE game_sessions (
 CREATE INDEX game_sessions_game ON game_sessions(game_id, ended_at);
 ";
 
+/// Step 8: Pods (manifest data, active/disabled state, trust key pinning, and crash health log).
+const STEP_8: &str = "
+CREATE TABLE pods (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    version TEXT NOT NULL,
+    api INTEGER NOT NULL,
+    author_name TEXT NOT NULL,
+    signer TEXT NOT NULL,
+    entry TEXT NOT NULL,
+    description TEXT,
+    slots TEXT NOT NULL,
+    permissions TEXT NOT NULL,
+    abis TEXT,
+    homepage TEXT,
+    state TEXT NOT NULL CHECK (state IN ('active','disabled_by_user','disabled_by_crashes','incompatible')),
+    installed_at INTEGER NOT NULL,
+    updated_at INTEGER NOT NULL
+);
+CREATE TABLE pod_trust (
+    id TEXT PRIMARY KEY,
+    signer TEXT NOT NULL,
+    trusted_at INTEGER NOT NULL
+);
+CREATE TABLE pod_health (
+    id INTEGER PRIMARY KEY,
+    pod_id TEXT NOT NULL REFERENCES pods(id) ON DELETE CASCADE,
+    crashed_at INTEGER NOT NULL,
+    reason TEXT
+);
+CREATE INDEX pod_health_pod ON pod_health(pod_id, crashed_at);
+";
+
 /// All steps in order; step `n` is `MIGRATIONS[n - 1]`.
-pub const MIGRATIONS: &[&str] = &[STEP_1, STEP_2, STEP_3, STEP_4, STEP_5, STEP_6, STEP_7];
+pub const MIGRATIONS: &[&str] = &[
+    STEP_1, STEP_2, STEP_3, STEP_4, STEP_5, STEP_6, STEP_7, STEP_8,
+];
 
 /// Reads the schema version of the open database.
 pub fn current_version(conn: &Connection) -> Result<u32, DbError> {

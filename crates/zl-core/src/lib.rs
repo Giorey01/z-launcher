@@ -23,6 +23,7 @@ mod library;
 mod media;
 mod meta;
 mod platform_settings;
+mod pods;
 mod prefs;
 mod scrape;
 mod secrets;
@@ -52,6 +53,7 @@ pub use appearance_types::{
 };
 pub use error::CoreError;
 pub use media::{GameMedia, MediaCount, MediaImportReport, MediaItem, MediaSources};
+pub use pods::{IndexEntryView, IndexStoreView, InstalledPodView, PodPreview};
 pub use scrape::{ImageScrapeReport, KeyCheck, ScrapeProgress, ScrapeStop, ScrapeTarget};
 pub use secrets::{MemorySecrets, SecretStore};
 pub use sessions::{PendingSession, SessionEnd};

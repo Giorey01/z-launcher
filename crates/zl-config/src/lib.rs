@@ -20,6 +20,7 @@ pub mod library;
 pub mod media;
 pub mod net;
 pub mod platforms;
+pub mod pods;
 pub mod sessions;
 pub mod sounds;
 pub mod steam;
