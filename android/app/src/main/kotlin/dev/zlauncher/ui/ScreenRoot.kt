@@ -34,6 +34,7 @@ import dev.zlauncher.ui.menus.StartMenu
 import dev.zlauncher.nav.Overlay
 import dev.zlauncher.ui.onboarding.OnboardingScreen
 import dev.zlauncher.ui.pad.ProvidePlay
+import dev.zlauncher.ui.info.GameInfoScreen
 import dev.zlauncher.ui.picker.ConsolePickerScreen
 import dev.zlauncher.ui.picker.EmulatorPickerScreen
 import dev.zlauncher.ui.settings.SettingsAside
@@ -121,6 +122,7 @@ private fun ReadyScreens(app: AppViewModel, single: Boolean) {
         Screen.Drawer -> DrawerScreen(app)
         Screen.Picker -> EmulatorPickerScreen(app)
         is Screen.ConsolePicker -> ConsolePickerScreen(app, screen)
+        is Screen.GameInfo -> GameInfoScreen(app, screen)
         Screen.Settings -> if (single) SettingsMain(app) else SettingsAside(app)
     }
 }

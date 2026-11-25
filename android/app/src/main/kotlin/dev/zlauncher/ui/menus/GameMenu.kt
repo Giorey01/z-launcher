@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.RemoveCircleOutline
 import androidx.compose.material.icons.rounded.Star
@@ -113,6 +114,9 @@ private fun entries(
     val launch = MenuEntry(Icons.Rounded.PlayArrow, stringResource(R.string.menu_launch), submenu = targets.size > 1) {
         if (targets.size > 1) setSubmenu(true) else { app.overlay = null; app.launchGame(game) }
     }
+    val info = MenuEntry(Icons.Rounded.Info, stringResource(R.string.menu_info)) {
+        app.open(Screen.GameInfo(game))
+    }
     val edit = MenuEntry(Icons.Rounded.Edit, stringResource(R.string.menu_edit), badge = "Y") {
         app.overlay = null
         app.chooseEmulator(game)
@@ -132,7 +136,7 @@ private fun entries(
     val hide = MenuEntry(Icons.Rounded.VisibilityOff, stringResource(if (hidden) R.string.menu_unhide else R.string.menu_hide)) {
         app.library.setHidden(game, !hidden)
     }
-    return listOfNotNull(launch, favorite, edit.takeIf { game.appPackage == null }, art, hide, unfile)
+    return listOfNotNull(launch, info, favorite, edit.takeIf { game.appPackage == null }, art, hide, unfile)
 }
 
 /** The displays that are on, the larger as the top screen. */

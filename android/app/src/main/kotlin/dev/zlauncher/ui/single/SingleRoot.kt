@@ -46,7 +46,7 @@ fun SingleRoot(app: AppViewModel) {
     val settings = theme.settings
     WallpaperScreen(theme.wallpaperMain) {
         val fullScreen = app.top == Screen.Settings || app.top == Screen.Drawer || app.top == Screen.Picker
-        if (fullScreen || app.top is Screen.ConsolePicker) {
+        if (fullScreen || app.top is Screen.ConsolePicker || app.top is Screen.GameInfo) {
             GridContent(app, single = true)
         } else {
             SingleContent(app, settings)

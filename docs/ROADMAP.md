@@ -34,7 +34,7 @@ fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare.
 | RF-27 | Home | Dock in basso e cassetto delle app | 1 | Fatto (dock con pin da cassetto con Y) |
 | RF-28 | Home | Ruolo di Home del sistema | 1 | Fatto (richiesta del ruolo nel setup; l'esito dipende dall'utente) |
 | RF-29 | Home | Onboarding: permessi, cartelle, modalità, emulatori | 1 | Fatto |
-| RF-30 | Scheda gioco | Tab Info: descrizione, screenshot, trailer, badge HLTB, scelta di emulatore e display | 2 |  |
+| RF-30 | Scheda gioco | Tab Info: descrizione, screenshot, trailer, badge HLTB, scelta di emulatore e display | 2 | Parziale: descrizione, dati, ore, screenshot, trailer in streaming, emulatore per gioco; HLTB e display no |
 | RF-31 | Scheda gioco | Tab Activity: ore, sessioni, media, grafico settimanale | 3 |  |
 | RF-32 | Scheda gioco | Tab Achievements | 5 |  |
 | RF-33 | Scheda gioco | Tab Saves | 5 |  |

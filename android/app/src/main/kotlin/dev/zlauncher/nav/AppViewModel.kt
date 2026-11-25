@@ -222,7 +222,13 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /** Opens the emulator picker for [game]'s platform, listing the installed emulators that can launch it. */
-    fun chooseEmulator(game: GameEntry) {
+    fun chooseEmulator(game: GameEntry) = openPicker(game, forGame = false)
+
+    /** Opens the emulator picker for [game] alone: the pick overrides the platform's default for this game. */
+    fun chooseGameEmulator(game: GameEntry) = openPicker(game, forGame = true)
+
+    /** Opens the picker of the installed emulators that can launch [game]. */
+    private fun openPicker(game: GameEntry, forGame: Boolean) {
         viewModelScope.launch {
             try {
                 val packages = zl.apps.list().map { it.packageName }
@@ -231,7 +237,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                 if (candidates.isEmpty()) {
                     message = UiMessage(R.string.msg_no_emulator, listOf(game.platformName))
                 } else {
-                    choice = Choice(game, candidates)
+                    choice = Choice(game, candidates, forGame)
                     memories.remove("picker")
                     open(Screen.Picker)
                 }
@@ -289,11 +295,20 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    /** The user picked an emulator for the waiting game: remember it for the platform and launch. */
+    /**
+     * The user picked an emulator for the waiting game: remember it for the platform and launch, or, for a pick made
+     * for this game alone, remember it for the game.
+     */
     fun choose(candidate: Candidate) {
         val pending = choice ?: return
         viewModelScope.launch {
             try {
+                if (pending.forGame) {
+                    zl.core.call { it.setGameEmulator(pending.game.id, candidate.profile) }
+                    back()
+                    message = UiMessage(R.string.msg_game_emulator_set, listOf(candidate.emulatorName, pending.game.displayTitle))
+                    return@launch
+                }
                 zl.core.call { it.setPlatformDefault(pending.game.platformId, candidate.profile) }
                 back()
                 launchGame(pending.game)

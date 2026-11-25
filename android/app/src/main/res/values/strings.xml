@@ -348,4 +348,16 @@
     <string name="menu_hide">Hide</string>
     <string name="menu_unhide">Show again</string>
     <string name="msg_game_hidden">%1$s is hidden. It stays in the Hidden folder.</string>
+    <string name="menu_info">Info</string>
+    <string name="info_emulator_game">Emulator for this game</string>
+    <string name="info_trailer_hint">A: watch with sound</string>
+    <string name="info_no_description">No description yet. Settings, Library: Details from the Steam store, or import the ES-DE gamelists.</string>
+    <string name="info_time_device">%1$s on this device</string>
+    <string name="info_time_steam">%1$s on Steam</string>
+    <string name="info_never_played">Never played</string>
+    <string name="dur_under_minute">less than a minute</string>
+    <string name="dur_m">%1$d min</string>
+    <string name="dur_h">%1$d h</string>
+    <string name="dur_hm">%1$d h %2$d min</string>
+    <string name="msg_game_emulator_set">%2$s now starts with %1$s.</string>
 </resources>

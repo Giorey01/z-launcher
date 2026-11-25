@@ -1,6 +1,6 @@
 //! Details of Steam games from the public store (no key): description, release date,
-//! developers, publishers, genres, Metacritic score, and screenshots saved next to the other
-//! downloaded media.
+//! developers, publishers, genres, Metacritic score, screenshots saved next to the other
+//! downloaded media, and the first trailer kept as an address to stream.
 //!
 //! Only games with a `steamappid` tag are asked, and only those with no description yet, so
 //! metadata from ES-DE and the user's own edits (kept as overrides) are never replaced. The
@@ -121,7 +121,25 @@ impl Service {
             .game_meta(game.id)?
             .and_then(|m| m.description)
             .is_some_and(|d| !d.trim().is_empty());
-        Ok((!described).then(|| value.trim().parse().ok()).flatten())
+        let wanted = !described;
+        Ok(wanted.then(|| value.trim().parse().ok()).flatten())
+    }
+
+    /// Keeps the first trailer of a page that is on the store's hosts, as an address to stream
+    /// (trailers are not downloaded). A local video imported from ES-DE stays first.
+    fn save_trailer(&self, game_id: i64, app: &StoreApp) {
+        let Some(url) = app.trailers.iter().find(|u| on_steam_cdn(u)) else {
+            return;
+        };
+        let row = NewMedia {
+            game_id,
+            kind: MediaKind::Video,
+            path: url.clone(),
+            source: MediaSource::Steam,
+            edit: None,
+        };
+        // A failed write only means the game has no trailer.
+        let _ = self.db().add_media(&row);
     }
 
     /// Asks the store about one game and saves what it says.
@@ -142,6 +160,7 @@ impl Service {
         self.db()
             .save_game_meta(&meta_of(game.id, &app), false)
             .map_err(|_| SteamError::Parse("database".into()))?;
+        self.save_trailer(game.id, &app);
         Ok(Outcome::Saved(
             self.save_screenshots(http, game.id, appid, &app),
         ))

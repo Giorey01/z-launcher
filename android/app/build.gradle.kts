@@ -78,6 +78,8 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)
     implementation(libs.media3.exoplayer)
+    // Store trailers are streamed; newer store pages only offer an HLS playlist.
+    implementation(libs.media3.exoplayer.hls)
     implementation(libs.media3.ui)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)

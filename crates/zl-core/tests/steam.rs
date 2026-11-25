@@ -186,6 +186,11 @@ fn store_details_fill_steam_games_without_a_description() -> Res {
         .is_some_and(|d| d.starts_with("Portal™")));
     assert_eq!(details.screenshots.len(), 2);
     assert_eq!(fs::read_to_string(&details.screenshots[0])?, "jpeg-a");
+    assert_eq!(
+        details.video.as_deref(),
+        Some("https://video.akamai.steamstatic.com/t_max.mp4"),
+        "the trailer is streamed, not downloaded"
+    );
     let store_calls = |h: &MockHttpClient| {
         h.requested_urls()
             .iter()

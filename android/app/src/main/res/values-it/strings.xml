@@ -348,4 +348,16 @@
     <string name="menu_hide">Nascondi</string>
     <string name="menu_unhide">Mostra di nuovo</string>
     <string name="msg_game_hidden">%1$s è nascosto. Resta nella cartella Nascosti.</string>
+    <string name="menu_info">Info</string>
+    <string name="info_emulator_game">Emulatore per questo gioco</string>
+    <string name="info_trailer_hint">A: guarda con l\'audio</string>
+    <string name="info_no_description">Ancora nessuna descrizione. Impostazioni, Libreria: Dettagli dallo Steam Store, oppure importa le gamelist di ES-DE.</string>
+    <string name="info_time_device">%1$s su questo dispositivo</string>
+    <string name="info_time_steam">%1$s su Steam</string>
+    <string name="info_never_played">Mai giocato</string>
+    <string name="dur_under_minute">meno di un minuto</string>
+    <string name="dur_m">%1$d min</string>
+    <string name="dur_h">%1$d h</string>
+    <string name="dur_hm">%1$d h %2$d min</string>
+    <string name="msg_game_emulator_set">%2$s ora si avvia con %1$s.</string>
 </resources>

@@ -24,6 +24,12 @@ sealed interface Screen {
     /** The settings (the main part on the hero display in the dual-screen mode). */
     data object Settings : Screen
 
+    /** The Info tab of a game: details, play time, trailer and screenshots. */
+    data class GameInfo(
+        /** The game. */
+        val game: GameEntry,
+    ) : Screen
+
     /** The consoles an Android app (a recomp or port) can be filed under. */
     data class ConsolePicker(
         /** Package of the app. */
@@ -111,6 +117,8 @@ data class Choice(
     val game: GameEntry,
     /** Installed emulators that can launch it, preferred first. */
     val candidates: List<Candidate>,
+    /** The pick is for this game only (from its Info), not the platform's default, and nothing is launched. */
+    val forGame: Boolean = false,
 )
 
 /** What the app shows before the Home is ready. */
