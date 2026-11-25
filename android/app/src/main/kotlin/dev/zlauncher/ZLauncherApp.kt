@@ -14,6 +14,7 @@ import dev.zlauncher.audio.SoundFx
 import dev.zlauncher.core.CoreProvider
 import dev.zlauncher.ui.art.ArtResolver
 import dev.zlauncher.ui.theme.ThemeStore
+import dev.zlauncher.sessions.SessionTracker
 
 /**
  * The application: owns the objects every screen on every display shares (the Rust core, the installed-app
@@ -45,6 +46,10 @@ class ZLauncherApp : Application(), ImageLoaderFactory, ViewModelStoreOwner {
     lateinit var themeStore: ThemeStore
         private set
 
+    /** Play sessions from the system's usage events. */
+    lateinit var sessions: SessionTracker
+        private set
+
     /** The store of the process-wide view models. */
     override val viewModelStore: ViewModelStore = ViewModelStore()
 
@@ -57,6 +62,7 @@ class ZLauncherApp : Application(), ImageLoaderFactory, ViewModelStoreOwner {
         art = ArtResolver(core)
         sound = SoundFx()
         themeStore = ThemeStore(core, art, sound)
+        sessions = SessionTracker(this, core)
     }
 
     /** The image loader of the whole app: decodes animated GIF and WebP too. */

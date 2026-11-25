@@ -50,7 +50,7 @@ fun AppMenu(app: AppViewModel, menu: Overlay.AppMenu) {
     val pin = MenuEntry(
         Icons.Rounded.PushPin,
         stringResource(if (menu.pinned) R.string.menu_unpin_dock else R.string.menu_pin_dock),
-    ) { app.togglePin(menu.packageName) }
+    ) { app.library.togglePin(menu.packageName) }
     val file = MenuEntry(Icons.Rounded.SportsEsports, stringResource(R.string.menu_file_console), submenu = true) {
         app.open(Screen.ConsolePicker(menu.packageName, menu.label))
     }

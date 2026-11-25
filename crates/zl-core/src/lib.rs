@@ -25,6 +25,8 @@ mod meta;
 mod platform_settings;
 mod prefs;
 mod scrape;
+mod sessions;
+mod smart_folders;
 mod steam_details;
 mod steam_library;
 mod theme_files;
@@ -50,9 +52,10 @@ pub use appearance_types::{
 pub use error::CoreError;
 pub use media::{GameMedia, MediaCount, MediaImportReport, MediaItem, MediaSources};
 pub use scrape::{ImageScrapeReport, KeyCheck, ScrapeProgress, ScrapeStop, ScrapeTarget};
+pub use sessions::{PendingSession, SessionEnd};
 pub use steam_library::{SteamAccount, SteamImport, SteamProblem};
 pub use types::{
-    Candidate, Detection, GameDetails, GameEntry, InstalledView, LibraryMode, Plan,
+    Candidate, Detection, FolderKind, GameDetails, GameEntry, InstalledView, LibraryMode, Plan,
     PlatformEmulatorSetting, PlatformEntry, ProposedDefault, RootInfo, ScraperConfig,
 };
 

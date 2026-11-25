@@ -336,4 +336,16 @@
     <string name="msg_steam_details_result">%1$s giochi hanno ora i dettagli e %2$s screenshot. %3$s non hanno una pagina nello store.</string>
     <string name="msg_steam_details_cancelled">Interrotto. %1$s giochi hanno ora i dettagli.</string>
     <string name="msg_steam_store_offline">Lo Steam Store non è raggiungibile o chiede di rallentare. %1$s giochi hanno ora i dettagli; riprova più tardi.</string>
+    <string name="st_play_time">Tempo di gioco</string>
+    <string name="st_play_time_on">Contato dall\'uso delle app del sistema, al secondo, pause escluse.</string>
+    <string name="st_play_time_off">Stimato dal lancio al ritorno. Dai al launcher l\'accesso ai dati di utilizzo per il tempo esatto.</string>
+    <string name="folder_favorites">Preferiti</string>
+    <string name="folder_recent">Recenti</string>
+    <string name="folder_never_played">Mai giocati</string>
+    <string name="folder_hidden">Nascosti</string>
+    <string name="menu_favorite_add">Aggiungi ai preferiti</string>
+    <string name="menu_favorite_remove">Togli dai preferiti</string>
+    <string name="menu_hide">Nascondi</string>
+    <string name="menu_unhide">Mostra di nuovo</string>
+    <string name="msg_game_hidden">%1$s è nascosto. Resta nella cartella Nascosti.</string>
 </resources>

@@ -336,4 +336,16 @@
     <string name="msg_steam_details_result">%1$s games got their details and %2$s screenshots. %3$s have no store page.</string>
     <string name="msg_steam_details_cancelled">Stopped. %1$s games got their details.</string>
     <string name="msg_steam_store_offline">The Steam store cannot be reached, or asks to slow down. %1$s games got their details; try again later.</string>
+    <string name="st_play_time">Play time</string>
+    <string name="st_play_time_on">Counted from the system\'s app usage, to the second, pauses left out.</string>
+    <string name="st_play_time_off">Estimated from launch to return. Give the launcher usage access for the exact time.</string>
+    <string name="folder_favorites">Favorites</string>
+    <string name="folder_recent">Recent</string>
+    <string name="folder_never_played">Never played</string>
+    <string name="folder_hidden">Hidden</string>
+    <string name="menu_favorite_add">Add to favorites</string>
+    <string name="menu_favorite_remove">Remove from favorites</string>
+    <string name="menu_hide">Hide</string>
+    <string name="menu_unhide">Show again</string>
+    <string name="msg_game_hidden">%1$s is hidden. It stays in the Hidden folder.</string>
 </resources>

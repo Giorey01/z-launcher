@@ -110,6 +110,13 @@ fn import_writes_tag_files_and_skips_games_already_there() -> Res {
         .map(|g| g.title)
         .collect();
     assert_eq!(pc, ["My Hades", "Portal", "Portal 2 Coop"]);
+    let portal = svc.games(Some("pcgames"))?[1].id;
+    let stats = svc.play_stats(portal)?;
+    assert_eq!(
+        (stats.steam_seconds, stats.last_played),
+        (312 * 60, 1_700_000_000)
+    );
+    assert_eq!(stats.device_seconds, 0, "Steam time is kept apart");
     let again = svc.import_steam_library(&steam("owned_games")?, &NoProgress)?;
     assert_eq!(
         (again.added, again.present),

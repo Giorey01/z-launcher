@@ -14,8 +14,7 @@ import dev.zlauncher.core.nativecore.Candidate
 import dev.zlauncher.core.nativecore.CoreException
 import dev.zlauncher.core.nativecore.GameEntry
 import dev.zlauncher.core.nativecore.Plan
-import dev.zlauncher.core.nativecore.ScanEvent
-import dev.zlauncher.core.nativecore.ScanListener
+import dev.zlauncher.core.nativecore.SessionEnd
 import dev.zlauncher.core.nativecore.SoundAction
 import dev.zlauncher.launch.LaunchFailure
 import dev.zlauncher.launch.toMessage
@@ -28,12 +27,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-
-/** A scan listener that ignores the progress (filing an app rescans in the background). */
-private object QuietScan : ScanListener {
-    /** Progress is not shown. */
-    override fun onEvent(event: ScanEvent) = Unit
-}
 
 /** The root state of the launcher: which screen is on top, launching games and apps, and messages. */
 class AppViewModel(application: Application) : AndroidViewModel(application) {
@@ -151,9 +144,35 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         drawerSearching = false
     }
 
-    /** The launcher came back to the foreground. */
+    /** The launcher came back to the foreground: the game that was running is counted, then screens refresh. */
     fun onResumed() {
         resumeTick++
+        viewModelScope.launch {
+            try {
+                if (zl.sessions.end() is SessionEnd.Recorded) resumeTick++
+            } catch (e: CoreException) {
+                message = e.toMessage()
+            }
+        }
+    }
+
+    /** Favourites, hidden games, the dock and apps filed under consoles. */
+    val library = LibraryActions(this)
+
+    /** Asks every screen to read its lists again (after a change to the library). */
+    fun refresh() {
+        resumeTick++
+    }
+
+    /** [game] started through [packageName]: its play time starts counting. */
+    fun onGameStarted(game: GameEntry, packageName: String) {
+        viewModelScope.launch {
+            try {
+                zl.sessions.begin(game.id, packageName)
+            } catch (e: CoreException) {
+                message = e.toMessage()
+            }
+        }
     }
 
     /** [game] started on [displayId]: the other displays show it until the launcher is back there. */
@@ -191,56 +210,6 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         zl.recent.push(packageName)
         play(SoundAction.LAUNCH)
         eventChannel.trySend(UiEvent.StartApp(packageName))
-    }
-
-    /** Pins [packageName] to the dock or unpins it; the drawer reloads to show it. */
-    fun togglePin(packageName: String) {
-        overlay = null
-        viewModelScope.launch {
-            try {
-                zl.core.call { it.toggleDock(packageName) }
-                resumeTick++
-            } catch (e: CoreException) {
-                message = e.toMessage()
-            }
-        }
-    }
-
-    /**
-     * Files the app [packageName] under the console [platformId] as a game titled [label] (a recomp or port),
-     * then goes back to the drawer and says where it went.
-     */
-    fun fileApp(packageName: String, label: String, platformId: String, platformName: String) {
-        viewModelScope.launch {
-            message = try {
-                zl.core.call { it.fileApp(packageName, label, platformId, QuietScan) }
-                if (top is Screen.ConsolePicker) stack.removeLastOrNull()
-                resumeTick++
-                UiMessage(R.string.msg_app_filed, listOf(label, platformName))
-            } catch (_: CoreException.Io) {
-                UiMessage(R.string.msg_app_file_failed)
-            } catch (_: CoreException.NotFound) {
-                UiMessage(R.string.msg_app_no_folder)
-            } catch (e: CoreException) {
-                e.toMessage()
-            }
-        }
-    }
-
-    /** Takes [game], an app filed under a console, out of it again. */
-    fun unfileApp(game: GameEntry) {
-        overlay = null
-        viewModelScope.launch {
-            message = try {
-                zl.core.call { it.unfileApp(game.id, QuietScan) }
-                resumeTick++
-                UiMessage(R.string.msg_app_unfiled, listOf(game.displayTitle))
-            } catch (_: CoreException.Io) {
-                UiMessage(R.string.msg_app_file_failed)
-            } catch (e: CoreException) {
-                e.toMessage()
-            }
-        }
     }
 
     /** In a platform folder: replaces it with the previous ([step] -1) or next (1) platform of the Home. */

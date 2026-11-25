@@ -10,7 +10,7 @@ use zl_media::display_title;
 use zl_platforms::ANDROID_PACKAGE_TAG;
 
 use crate::error::CoreError;
-use crate::types::{GameEntry, PlatformEntry, RootInfo};
+use crate::types::{FolderKind, GameEntry, PlatformEntry, RootInfo};
 use crate::Service;
 
 /// Converts a stored root.
@@ -115,15 +115,16 @@ impl Service {
             .map_or_else(|| id.to_string(), |p| p.id.clone())
     }
 
-    /// Home folders that have games, with their counts, sorted by name. Folders that are aliases
-    /// of the same platform are merged, and so are the platforms of a group folder (Steam and
-    /// Windows under "PC").
+    /// The folders of the Home: the Smart Folders that have games (Favourites, Recent, Never
+    /// played, once something was played) first, then one folder per platform with its count, sorted by name, then Hidden
+    /// when some game is hidden. Folders that are aliases of the same platform are merged, and
+    /// so are the platforms of a group folder (Steam and Windows under "PC"). Hidden games count
+    /// nowhere but in Hidden.
     pub fn platforms(&self) -> Result<Vec<PlatformEntry>, CoreError> {
+        let visible = self.games(None)?;
         let mut merged: BTreeMap<String, u32> = BTreeMap::new();
-        for c in self.db().platform_counts()? {
-            let games = u32::try_from(c.games).unwrap_or(u32::MAX);
-            let folder = self.home_folder(&self.canonical_id(&c.platform_id));
-            *merged.entry(folder).or_default() += games;
+        for g in &visible {
+            *merged.entry(self.home_folder(&g.platform_id)).or_default() += 1;
         }
         let mut out: Vec<PlatformEntry> = merged
             .into_iter()
@@ -131,10 +132,14 @@ impl Service {
                 name: self.home_folder_name(&id),
                 id,
                 games,
+                kind: FolderKind::Platform,
             })
             .collect();
         out.sort_by_key(|p| p.name.to_lowercase());
-        Ok(out)
+        let mut folders = self.smart_entries(&visible)?;
+        folders.extend(out);
+        folders.extend(self.hidden_entry()?);
+        Ok(folders)
     }
 
     /// Whether a game of canonical platform `canonical` belongs to `wanted`: a group folder id
@@ -158,9 +163,9 @@ impl Service {
             .then_some(value)
     }
 
-    /// The games of one Home folder or platform (any id or alias), or of every platform with
-    /// `None`, by title. Missing games are left out.
-    pub fn games(&self, platform: Option<&str>) -> Result<Vec<GameEntry>, CoreError> {
+    /// The games of one platform or group folder (any id or alias), or of every platform with
+    /// `None`, by title, hidden ones included. Missing games are left out.
+    pub(crate) fn listed_games(&self, platform: Option<&str>) -> Result<Vec<GameEntry>, CoreError> {
         let wanted = platform.map(str::to_lowercase);
         let art = self.best_art()?;
         let db = self.db();
@@ -179,6 +184,7 @@ impl Service {
                 hero: art.get(&(g.id, MediaKind::Hero)).cloned(),
                 logo: art.get(&(g.id, MediaKind::Logo)).cloned(),
                 app_package: self.app_package_of(&db, &g, &canonical),
+                favorite: false,
                 title: g.title,
                 platform_name: self.platform_name(&canonical),
                 platform_id: canonical,

@@ -14,7 +14,7 @@ use zl_library::ScanProgress;
 use zl_platforms::ANDROID_PACKAGE_TAG;
 
 use crate::error::CoreError;
-use crate::types::PlatformEntry;
+use crate::types::{FolderKind, PlatformEntry};
 use crate::Service;
 
 /// Characters a file name may not hold on Android's shared storage (FAT and exFAT rules).
@@ -126,6 +126,7 @@ impl Service {
                 id: p.id.clone(),
                 name: p.name.clone(),
                 games: counts.get(&p.id).copied().unwrap_or(0),
+                kind: FolderKind::Platform,
             })
             .collect();
         out.sort_by_key(|p| (p.games == 0, p.name.to_lowercase()));

@@ -4,17 +4,18 @@
 //! enabled games folder (Cocoon's format, the same file a user writes by hand) and rescans, so
 //! every client (GameNative, GameHub, DroidDeck, ...) launches the games and they sit in the
 //! "PC" folder. Games already in the library by app id are skipped, and nothing is ever deleted.
+//! The play time Steam reports for each game is stored too (replaced on every import).
 //! The key and the account are kept in the settings table; the resolved SteamID64 is kept too,
 //! so a custom profile name is resolved once.
 
-use std::collections::HashSet;
+use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
 
 use zl_config::steam::STEAM_IMPORT_FOLDER;
 use zl_library::ScanProgress;
 use zl_net::HttpClient;
-use zl_steam::{is_web_api_key, parse_account, AccountInput, SteamError, SteamWeb};
+use zl_steam::{is_web_api_key, parse_account, AccountInput, OwnedGame, SteamError, SteamWeb};
 
 use crate::app_games::{file_stem, free_path};
 use crate::error::CoreError;
@@ -150,21 +151,34 @@ impl Service {
         })
     }
 
-    /// App ids of the Steam tag files already in the library.
-    fn steam_app_ids(&self) -> Result<HashSet<String>, CoreError> {
-        let games = self.games(Some(STEAM_PLATFORM))?;
+    /// The Steam tag files already in the library (hidden ones too): app id to game id.
+    fn steam_app_ids(&self) -> Result<HashMap<String, i64>, CoreError> {
+        let games = self.listed_games(Some(STEAM_PLATFORM))?;
         let db = self.db();
-        let mut ids = HashSet::new();
+        let mut ids = HashMap::new();
         for game in games {
             if let Some((_, v)) = db
                 .game_tags(game.id)?
                 .into_iter()
                 .find(|(k, _)| k == STEAM_TAG)
             {
-                ids.insert(v.trim().to_string());
+                ids.insert(v.trim().to_string(), game.id);
             }
         }
         Ok(ids)
+    }
+
+    /// Stores the account's Steam play time of every owned game that is in the library.
+    fn save_steam_playtime(&self, owned: &[OwnedGame]) -> Result<(), CoreError> {
+        let ids = self.steam_app_ids()?;
+        let db = self.db();
+        for game in owned {
+            if let Some(&id) = ids.get(&game.appid.to_string()) {
+                let seconds = i64::try_from(game.playtime_minutes * 60).unwrap_or(i64::MAX);
+                db.set_steam_playtime(id, seconds, game.last_played)?;
+            }
+        }
+        Ok(())
     }
 
     /// Imports the games the stored account owns (see the module docs), then rescans.
@@ -199,7 +213,7 @@ impl Service {
         fs::create_dir_all(&dir).map_err(|_| CoreError::Io)?;
         let present = self.steam_app_ids()?;
         for game in &owned {
-            if present.contains(&game.appid.to_string()) {
+            if present.contains_key(&game.appid.to_string()) {
                 report.present += 1;
                 continue;
             }
@@ -210,6 +224,7 @@ impl Service {
             report.added += 1;
         }
         self.scan(progress)?;
+        self.save_steam_playtime(&owned)?;
         Ok(report)
     }
 }

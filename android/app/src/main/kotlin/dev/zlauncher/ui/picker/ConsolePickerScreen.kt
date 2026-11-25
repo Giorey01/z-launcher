@@ -57,7 +57,7 @@ fun ConsolePickerScreen(app: AppViewModel, screen: Screen.ConsolePicker) {
         LazyColumn(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             items(list, key = ::key) { console ->
                 PadTile(
-                    { app.fileApp(screen.packageName, screen.label, console.id, console.name) },
+                    { app.library.fileApp(screen.packageName, screen.label, console.id, console.name) },
                     Modifier.fillMaxWidth().then(memory.track(key(console))),
                 ) {
                     Column(Modifier.padding(16.dp)) {

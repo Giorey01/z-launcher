@@ -1,6 +1,8 @@
 package dev.zlauncher.ui.settings
 
 import android.content.Context
+import android.content.Intent
+import android.provider.Settings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CreateNewFolder
 import androidx.compose.material.icons.rounded.Description
@@ -10,6 +12,7 @@ import androidx.compose.material.icons.rounded.Image
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Memory
 import androidx.compose.material.icons.rounded.Refresh
+import androidx.compose.material.icons.rounded.Timer
 import androidx.compose.material.icons.rounded.ViewModule
 import dev.zlauncher.R
 import dev.zlauncher.core.nativecore.LibraryMode
@@ -76,9 +79,26 @@ class LibraryRows(private val app: AppViewModel, private val model: SettingsMode
             resultOr("media", s(R.string.st_media_sub)),
             onActivate = ::importMedia
         )
+        rows += playTimeRow()
         rows += metadataRows()
         rows += scanRow()
         return rows
+    }
+
+    /** Usage access, for the play time: says whether it is given; A opens the system page where it is given. */
+    private fun playTimeRow(): SettingRow {
+        val granted = app.zl.sessions.hasUsageAccess()
+        return SettingRow(
+            "usage_access",
+            Icons.Rounded.Timer,
+            s(R.string.st_play_time),
+            s(if (granted) R.string.st_play_time_on else R.string.st_play_time_off),
+            Control.Chevron,
+            onActivate = {
+                val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                runCatching { context.startActivity(intent) }
+            }
+        )
     }
 
     /** The SteamGridDB download and the ES-DE gamelist import. */

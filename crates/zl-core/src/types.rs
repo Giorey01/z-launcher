@@ -16,15 +16,32 @@ pub struct RootInfo {
     pub enabled: bool,
 }
 
-/// A platform present in the library.
+/// What a folder of the Home is.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum FolderKind {
+    /// One platform, or a group of platforms ("PC"); its name comes with it.
+    Platform,
+    /// The favourite games.
+    Favorites,
+    /// The games played last, newest first.
+    Recent,
+    /// The games never played.
+    NeverPlayed,
+    /// The hidden games.
+    Hidden,
+}
+
+/// A folder of the Home: a platform present in the library, or a Smart Folder.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PlatformEntry {
-    /// Canonical platform id.
+    /// Canonical platform id, group folder id, or Smart Folder id (`@favorites`, ...).
     pub id: String,
-    /// English display name.
+    /// English display name of a platform; the apps name the Smart Folders by `kind`.
     pub name: String,
-    /// Games that are not missing.
+    /// Games that are not missing (nor hidden, outside the Hidden folder).
     pub games: u32,
+    /// What the folder is.
+    pub kind: FolderKind,
 }
 
 /// A game as listed on screen.
@@ -52,6 +69,8 @@ pub struct GameEntry {
     pub logo: Option<String>,
     /// For an Android app filed under a console (a recomp or port), its package.
     pub app_package: Option<String>,
+    /// Marked as a favourite.
+    pub favorite: bool,
 }
 
 /// A platform of the library with its default emulator, for the settings screen.

@@ -151,6 +151,7 @@ abstract class ScreenActivity : ComponentActivity() {
     private fun startGame(event: UiEvent.StartGame): LaunchFailure? {
         val target = event.displayId ?: launchDisplay()
         val failure = LaunchExecutor.launch(this, event.intent, target)
+        if (failure == null && event.game != null) app.onGameStarted(event.game, event.intent.`package`)
         val elsewhere = target?.takeIf { it != currentDisplayId() }
         if (failure == null && event.game != null && elsewhere != null) app.startNowPlaying(event.game, elsewhere)
         return failure

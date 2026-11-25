@@ -17,6 +17,8 @@ zl-theme = { path = "../zl-theme" }
 zl-meta = { path = "../zl-meta" }
 zl-net = { path = "../zl-net" }
 zl-steam = { path = "../zl-steam" }
+zl-sessions = { path = "../zl-sessions" }
+serde = { workspace = true }
 
 [dev-dependencies]
 serde_json = { workspace = true }

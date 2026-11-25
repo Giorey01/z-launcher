@@ -17,6 +17,9 @@ import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.RemoveCircleOutline
+import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material.icons.rounded.StarBorder
+import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material.icons.rounded.Smartphone
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,9 +41,13 @@ import dev.zlauncher.R
 import dev.zlauncher.display.DisplayRoles
 import dev.zlauncher.nav.AppViewModel
 import dev.zlauncher.nav.Overlay
+import dev.zlauncher.nav.Screen
 import dev.zlauncher.ui.art.CoverArt
 import dev.zlauncher.ui.home.rememberOverlay
 import dev.zlauncher.ui.theme.LocalZTheme
+
+/** Id of the Hidden Smart Folder (from the core). */
+private const val HIDDEN_FOLDER = "@hidden"
 
 /** Share of the screen width of the entries panel. */
 private const val PANEL_WIDTH = 0.49f
@@ -115,9 +122,17 @@ private fun entries(
         app.downloadArt(game)
     }
     val unfile = game.appPackage?.let {
-        MenuEntry(Icons.Rounded.RemoveCircleOutline, stringResource(R.string.menu_unfile_console)) { app.unfileApp(game) }
+        MenuEntry(Icons.Rounded.RemoveCircleOutline, stringResource(R.string.menu_unfile_console)) { app.library.unfileApp(game) }
     }
-    return listOfNotNull(launch, edit.takeIf { game.appPackage == null }, art, unfile)
+    val favorite = MenuEntry(
+        if (game.favorite) Icons.Rounded.Star else Icons.Rounded.StarBorder,
+        stringResource(if (game.favorite) R.string.menu_favorite_remove else R.string.menu_favorite_add),
+    ) { app.library.setFavorite(game, !game.favorite) }
+    val hidden = app.top.let { it is Screen.Platform && it.id == HIDDEN_FOLDER }
+    val hide = MenuEntry(Icons.Rounded.VisibilityOff, stringResource(if (hidden) R.string.menu_unhide else R.string.menu_hide)) {
+        app.library.setHidden(game, !hidden)
+    }
+    return listOfNotNull(launch, favorite, edit.takeIf { game.appPackage == null }, art, hide, unfile)
 }
 
 /** The displays that are on, the larger as the top screen. */

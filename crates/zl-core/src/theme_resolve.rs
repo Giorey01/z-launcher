@@ -111,6 +111,9 @@ impl Service {
     /// its own id, then each member platform in order, slot by slot.
     pub fn platform_art(&self, platform_id: &str) -> FolderArt {
         let wanted = platform_id.to_lowercase();
+        if let Some(kind) = crate::smart_folders::theme_type_of(&wanted) {
+            return self.smart_folder_art(kind);
+        }
         let files = self.theme_files();
         let Some(folder) = self.platforms.folder(&wanted) else {
             let id = self.canonical_id(&wanted);

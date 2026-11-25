@@ -17,11 +17,11 @@ fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare.
 | RF-10 | Lancio | Rilevamento degli emulatori installati e proposta automatica nell'onboarding | 1 | Fatto |
 | RF-11 | Lancio | Lancio di giochi PC con profili per GameNative, GameHub, Winlator e DroidDeck | 7 | Parziale: profili di tutti e quattro, giochi Steam e Windows in una sola cartella "PC"; DroidDeck non provato su dispositivo |
 | RF-12 | Lancio | Gestore emulatori: segnala gli aggiornamenti e scarica le release ufficiali | 7 |  |
-| RF-13 | Organizzazione | Smart Folders: Preferiti, Recenti, Più giocati, Mai giocati, Nuovi, App, Emulatori, Per piattaforma | 2 |  |
+| RF-13 | Organizzazione | Smart Folders: Preferiti, Recenti, Più giocati, Mai giocati, Nuovi, App, Emulatori, Per piattaforma | 2 | Parziale: Preferiti, Recenti, Mai giocati, Nascosti, Per piattaforma |
 | RF-14 | Organizzazione | Simple Mode, con tutti i giochi nella Home | 2 |  |
 | RF-15 | Organizzazione | Cartelle manuali e lo stesso gioco in più cartelle | 2 |  |
 | RF-16 | Organizzazione | Ricerca e ordinamenti; selezione multipla con sposta e rimuovi | 2 |  |
-| RF-17 | Organizzazione | Nascondi gioco, preferito, valutazione | 2 |  |
+| RF-17 | Organizzazione | Nascondi gioco, preferito, valutazione | 2 | Parziale: nascondi e preferito; valutazione no |
 | RF-18 | Metadati | Orchestratore con fonti in ordine scelto: libretro-db, ScreenScraper, SteamGridDB, IGDB, LaunchBox, HLTB | 2 | Parziale: SteamGridDB (immagini, chiave dell'utente), Steam Store (dettagli e screenshot, gratis), ES-DE; niente orchestratore |
 | RF-19 | Metadati | Tre modalità: solo mancanti, campi scelti, forza tutto | 2 |  |
 | RF-20 | Metadati | Campi protetti: una modifica manuale non viene sovrascritta | 2 |  |
@@ -44,7 +44,7 @@ fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare.
 | RF-37 | Controller | Glifi Nintendo, Xbox e PlayStation, automatici o manuali, e Corner Hints | 3 |  |
 | RF-38 | Controller | Remapping con profili per controller | 3 |  |
 | RF-39 | Controller | Tastiera, touch e pinch come alternative | 3 |  |
-| RF-40 | Sessioni | Tracciamento delle sessioni dall'uso delle app, al secondo, con pausa e ripresa | 3 |  |
+| RF-40 | Sessioni | Tracciamento delle sessioni dall'uso delle app, al secondo, con pausa e ripresa | 3 | Fatto (stima dal lancio al ritorno senza accesso ai dati di utilizzo); ore Steam importate a parte |
 | RF-41 | Sessioni | Modifica manuale delle sessioni ed esclusione di un'app | 3 |  |
 | RF-42 | Sessioni | Pod Log: totali, calendario, classifica | 3 |  |
 | RF-43 | Sessioni | Now Playing sullo schermo secondario | 6 |  |
