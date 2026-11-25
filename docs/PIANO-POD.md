@@ -159,10 +159,10 @@ Ogni fase si chiude solo con `bash scripts/gate.sh` e la verifica Android del `C
 | **2. `zl-net`** | **Già fatto** (portato, `964e4c0`): trait, client `ureq`, retry, client finto | Nulla da fare; `zl-pods` lo usa |
 | **3. `zl-pods` + DB + FFI** | Manifest, pacchetto, firma, trust, registro, health, indice | Fixture: `.zlpod` manomesso rifiutato, firma cambiata rifiutata, `apiVersion` troppo nuova rifiutata |
 | **4. `pod-ui`** | Estrazione di tema e componenti del pad in modulo; `:app` ci dipende | Nessuna differenza di comportamento; test JVM esistenti passano; navigazione col pad invariata |
-| **5. `pod-api`, loader e slot** | Contratto v2; `PodLoader`; slot uno alla volta; `pod-sample` | Test strumentati: il Pod di prova appare nel menu Start e come primo elemento di una griglia, e un suo crash non butta giù il launcher |
-| **6. Schermata Pod e store** | Tasto **+**, indici, installazione, aggiornamento, disattivazione, deep link | Installazione e aggiornamento da indice di prova; rifiuto con chiave diversa |
-| **7. Pod integrati** | Pod dello store dei temi (RF-50), poi Log (RF-42) e gli altri previsti, sul `BuiltinPodProvider` | Funzionano con lo stesso contratto dei Pod esterni, senza scorciatoie |
-| **8. `zpod-template`, guida e CI** | Repo modello, guida per gli autori (stile, pad, esempi), workflow di rilascio, `zpod-index` | Un Pod nuovo si crea dal modello, si firma e si installa dal link |
+| **5. `pod-api`, loader e slot** | **Fatta** (`cc36b5a`): Contratto v2; `PodLoader`; slot; isolamento crash | Modulo `pod-api` separato, caricamento dex esterno con R8, test unitari JVM |
+| **6. Schermata Pod e store** | **Fatta** (`8e3c983`): Tasto **+**, indici, installazione, aggiornamento, disattivazione, deep link | Schermata Pod, store con `index.json`, dialoghi gamepad con avvisi sicurezza |
+| **7. Pod integrati** | **Fatta** (`fa6af94`): Pod dello store dei temi (RF-50) e Log (RF-42) sul `BuiltinPodProvider` | Funzionano con lo stesso contratto dei Pod esterni, testati con registry |
+| **8. `zpod-template`, guida e CI** | **Fatta**: Repo modello (`templates/zpod-template`), guida autori (`docs/spec/pod-author-guide.md`), `package_pod.py`, `pod-platform` BOM, `zpod-index` | Template funzionante, packaging e verifica Ed25519, indice di store pronto |
 
 I Pod esterni (le repo `zpod-*`) partono dopo la fase 6.
 

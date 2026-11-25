@@ -1,0 +1,24 @@
+# Detekt configuration for Z-Launcher Pods
+# Enforces clean gamepad-first design and Pod SDK guidelines.
+
+complexity:
+  LongMethod:
+    active: true
+    threshold: 50
+  CyclomaticComplexMethod:
+    active: true
+    threshold: 15
+
+style:
+  MaxLineLength:
+    active: true
+    maxLineLength: 160
+  ForbiddenImport:
+    active: true
+    imports:
+      - value: 'androidx.compose.material.*'
+        reason: 'Pods must use gamepad-first components from dev.zlauncher.ui.* (pod-ui) and LocalZTheme instead of raw Material.'
+      - value: 'androidx.compose.material3.Button'
+        reason: 'Pods must use PadButton or PadTile from dev.zlauncher.ui.pad.* instead of standard touch buttons.'
+      - value: 'androidx.compose.material3.Card'
+        reason: 'Pods must use ZPanel from dev.zlauncher.ui.theme.ZPanel for themed elevated surfaces.'

@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "pods": [
+    {
+      "id": "sample.hello",
+      "name": "Hello World",
+      "version": "1.2.0",
+      "url": "https://raw.githubusercontent.com/Giorey01/z-launcher/main/fixtures/pods/packages/valid.zlpod",
+      "sha256": "b822c98ae43838bd93a8d434e65386a8abeec9dcaff43b0e0e50f290b19d322f",
+      "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+      "api": 1,
+      "description": "Un semplice Pod di prova che mostra il funzionamento del caricamento dinamico di Z-Launcher.",
+      "homepage": "https://github.com/Giorey01/z-launcher"
+    }
+  ]
+}

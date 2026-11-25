@@ -29,7 +29,7 @@ dependencies {
     api(project(":core:native"))
     api(project(":pod-ui"))
 
-    implementation(platform(libs.compose.bom))
+    implementation(platform(project(":pod-platform")))
     implementation(libs.compose.ui)
     implementation(libs.compose.foundation)
     implementation(libs.compose.material3)

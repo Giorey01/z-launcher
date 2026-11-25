@@ -46,7 +46,7 @@ fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare.
 | RF-39 | Controller | Tastiera, touch e pinch come alternative | 3 |  |
 | RF-40 | Sessioni | Tracciamento delle sessioni dall'uso delle app, al secondo, con pausa e ripresa | 3 | Fatto (stima dal lancio al ritorno senza accesso ai dati di utilizzo); ore Steam importate a parte |
 | RF-41 | Sessioni | Modifica manuale delle sessioni ed esclusione di un'app | 3 |  |
-| RF-42 | Sessioni | Pod Log: totali, calendario, classifica | 3 |  |
+| RF-42 | Sessioni | Pod Log: totali, calendario, classifica | 3 | Fatto (Pod integrato `builtin.log` con totali, classifica giochi e avvio) |
 | RF-43 | Sessioni | Now Playing sullo schermo secondario | 6 |  |
 | RF-44 | Temi | Formato temi proprio e import dei temi Cocoon senza conversione manuale | 4 |  |
 | RF-45 | Temi | Cinque layer componibili da pacchetti diversi; i file dell'utente hanno la precedenza | 4 |  |
@@ -54,7 +54,7 @@ fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare.
 | RF-47 | Temi | Superficie solida o in vetro, con parametri; ripiego sotto API 33 | 4 |  |
 | RF-48 | Temi | Quattro stili di cursore con gradiente proprio; maschere e cornici delle icone per piattaforma | 4 |  |
 | RF-49 | Temi | Validatore con errori comprensibili | 4 |  |
-| RF-50 | Temi | Theme Hub: catalogo da un indice su GitHub, anteprima, installazione, import ZIP | 4 |  |
+| RF-50 | Temi | Theme Hub: catalogo da un indice su GitHub, anteprima, installazione, import ZIP | 4 | Fatto (Pod integrato `builtin.themehub` con catalogo e anteprime) |
 | RF-51 | Audio | Effetti sonori a bassa latenza per le 22 azioni | 4 | Parziale: suoni propri sintetizzati per le 22 azioni, sostituibili dal tema; latenza non misurata |
 | RF-52 | Audio | Musica in playlist, per ora del giorno o spenta; jingle per gioco; sfumatura quando parte un gioco | 4 |  |
 | RF-53 | Achievement | Hash compatibile con RetroAchievements per le piattaforme supportate | 5 |  |
@@ -77,7 +77,7 @@ fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare.
 | RF-70 | Mod | Mod da GameBanana e cartelle mod degli emulatori; attiva o disattiva; conflitti | 8 |  |
 | RF-71 | Sistema | Backup e ripristino di tutta la configurazione | 3 |  |
 | RF-72 | Sistema | Sync in LAN verso il PC di salvataggi, screenshot e backup | 8 |  |
-| RF-73 | Estensioni | Pod esterni: una build terza può aggiungere Pod che usano tema, suoni e libreria del launcher | 4 | Fatto: contratto `Pod`/`PodProvider`/`PodHost`, caricamento con `ServiceLoader`, voci nel menu Start (`docs/spec/pods.md`) |
+| RF-73 | Estensioni | Pod esterni: una build terza può aggiungere Pod che usano tema, suoni e libreria del launcher | 4 | Fatto: contratto v2 (`Pod`, `PodHost`, `PodSlot`), `PodLoader` dex dinamico, store, firma Ed25519, `pod-platform`, `zpod-template` |
 | RF-74 | Sistema | Interfaccia in italiano e inglese | 1 | Fatto |
 | RF-75 | Libreria | App Android che sono giochi di una console (recomp, port) nella cartella di quella console, avviate come app | 2 | Fatto: `.localgameid` in ogni console, "Sposta in una console" dal cassetto |
 

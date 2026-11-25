@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "id": "com.example.sample",
+  "name": "Sample Pod",
+  "version": "1.0.0",
+  "api": 1,
+  "description": "A sample template demonstrating Z-Launcher Pod contract v2, gamepad navigation, and themes.",
+  "author": {
+    "name": "Pod Developer",
+    "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+  },
+  "homepage": "https://github.com/example/zpod-sample",
+  "entry": "dev.example.pod.SamplePodProvider",
+  "slots": [
+    "start_menu"
+  ],
+  "permissions": []
+}
