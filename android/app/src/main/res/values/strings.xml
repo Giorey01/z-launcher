@@ -24,9 +24,6 @@
     <string name="msg_invalid_input">That value is not valid.</string>
     <string name="msg_theme_import">Could not import the theme (%1$s).</string>
     <string name="msg_dock_full">The dock is full. Unpin an app first.</string>
-    <string name="msg_game_hidden">Game hidden.</string>
-    <string name="msg_game_favorite">Added to favorites.</string>
-    <string name="msg_game_added_home">Added to Home.</string>
     <string name="ob_continue">Continue</string>
     <string name="ob_start">Start</string>
     <string name="ob_welcome_title">Welcome to Z-Launcher</string>
@@ -85,9 +82,6 @@
     <string name="menu_launch">Launch</string>
     <string name="menu_emulator">Emulator</string>
     <string name="menu_edit">Edit</string>
-    <string name="menu_hide">Hide</string>
-    <string name="menu_favorite">Favorite</string>
-    <string name="menu_add_to_home">Add to Home</string>
     <string name="menu_search">Search</string>
     <string name="menu_screen_top">Top screen</string>
     <string name="menu_screen_bottom">Bottom screen</string>
@@ -274,8 +268,6 @@
     <string name="st_steamgrid_sub">Connect SteamGridDB as a scrape source for logos, heroes and icons</string>
     <string name="st_screenscraper">ScreenScraper</string>
     <string name="st_screenscraper_sub">ScreenScraper credentials for game media and covers</string>
-    <string name="st_reset_grid">Reset Grid Layout</string>
-    <string name="st_reset_grid_sub">Restore app grid layout to default</string>
     <string name="st_reset_data">Reset App Data</string>
     <string name="st_reset_data_sub">Clear all configurations and start fresh</string>
     <string name="st_screen_details">Display Information</string>

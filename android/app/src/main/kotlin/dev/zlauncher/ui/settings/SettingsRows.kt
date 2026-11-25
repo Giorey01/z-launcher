@@ -82,7 +82,10 @@ class SettingsRows(
     private fun s(id: Int, vararg args: Any): String = context.getString(id, *args)
 
     /** The rows of the current page. */
-    fun build(): List<SettingRow> = subpageRows() ?: when (val page = model.page) {
+    fun build(): List<SettingRow> = allRows().filter { it.id !in NOT_WIRED }
+
+    /** Every row of the current page, before the ones that do nothing yet are left out. */
+    private fun allRows(): List<SettingRow> = subpageRows() ?: when (val page = model.page) {
         Page.Root -> root()
         Page.Themes -> ThemeRows(app, model, theme, context).themes()
         is Page.ApplyTheme -> ThemeRows(app, model, theme, context).apply(page)
@@ -305,7 +308,6 @@ class SettingsRows(
             SettingRow("split", Icons.Rounded.ViewAgenda, s(R.string.st_hero_split), s(R.string.st_hero_split_sub), splitSlider),
             SettingRow("rows", Icons.Rounded.ViewStream, s(R.string.st_rows), s(R.string.st_rows_sub), rowsSlider),
             choice(rowStyleMeta, SingleRowStyle.entries, rowStyleLabels, st.singleRowStyle) { c, v -> c.setSingleRowStyle(v) },
-            SettingRow("reset_grid", Icons.Rounded.GridOn, s(R.string.st_reset_grid), s(R.string.st_reset_grid_sub), Control.Value("Reset")),
             SettingRow("setup", Icons.Rounded.RestartAlt, s(R.string.st_setup), s(R.string.st_setup_sub), Control.Chevron, onActivate = { app.reopenSetup() }),
         )
     }
@@ -345,3 +347,18 @@ fun formatUiMessage(context: Context, message: UiMessage): String {
         context.getString(res, args[0], args[1], args[2])
     }
 }
+
+/**
+ * Rows whose setting is stored but not used anywhere yet, so changing it would do nothing: they stay hidden
+ * until the feature behind them exists. Remove an id from here in the same change that makes it work.
+ */
+private val NOT_WIRED = setOf(
+    "app_icon_pack", // Android icon packs are not loaded yet
+    "jingles", // no background music or jingle player yet
+    "anim", // the animation speed is not applied to any animation
+    "fullscreen_folders", // folders always open the same way
+    "refraction", "highlight", "tiles", // glass options the surfaces do not draw
+    "discrete", // the grid always scrolls
+    "icon_size", // the art size is fixed in the tiles
+    "dock_bg", // the dock has no background to hide
+)
