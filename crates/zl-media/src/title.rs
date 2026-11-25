@@ -1,10 +1,42 @@
-//! The title shown on screen, derived from the one stored (which keeps the file name's tags).
+//! The title shown on screen, derived from the one stored (which keeps the file name's tags),
+//! and title normalization routines for cross-platform matching and searching.
 
-/// Strips the trailing `(...)` and `[...]` groups from a title (`Game (Europe) (En,Fr)` gives
-/// `Game`, `Mario Kart 8 [0005000010145000][v0]` gives `Mario Kart 8`), and reads a title that
-/// has no spaces at all as written with underscores (`Super_Mario_Land` gives `Super Mario
-/// Land`). Conservative: only trailing groups go, a title that would end up empty is kept as it
-/// is, and nothing else (articles, punctuation, case) is touched.
+use regex::Regex;
+use std::sync::LazyLock;
+use unicode_normalization::UnicodeNormalization;
+
+/// Compiles a static regex pattern known to be valid at development time.
+fn compile_regex(pattern: &str) -> Regex {
+    match Regex::new(pattern) {
+        Ok(re) => re,
+        Err(_) => unreachable!("static pattern is valid"),
+    }
+}
+
+/// Combining marks left after decomposing a character.
+static ACCENTS_RE: LazyLock<Regex> = LazyLock::new(|| compile_regex(r"\p{M}+"));
+
+/// Text enclosed in brackets or parentheses.
+static BRACKETS_RE: LazyLock<Regex> = LazyLock::new(|| compile_regex(r"\[[^\]]*\]|\([^)]*\)"));
+
+/// A run of Cyrillic letters.
+static CYRILLIC_RE: LazyLock<Regex> = LazyLock::new(|| compile_regex(r"[\u{0400}-\u{04ff}]+"));
+
+/// Platform name suffix occasionally found in titles.
+static PLATFORM_NAME_RE: LazyLock<Regex> =
+    LazyLock::new(|| compile_regex(r"(?i)\bfor nintendo switch\b|\bnintendo switch\b"));
+
+/// A release number prefix at the start (`1234 - `).
+static RELEASE_NUM_RE: LazyLock<Regex> = LazyLock::new(|| compile_regex(r"^\s*\d{3,5}\s+-\s+"));
+
+/// A version number or update/DLC/edition tail suffix.
+static VERSION_TAIL_RE: LazyLock<Regex> = LazyLock::new(|| {
+    compile_regex(r"(?i)\bv?\d+\.\d+(\.\d+)*\b|\b(update|dlc|deluxe edition|complete edition)\b.*$")
+});
+
+/// Anything that is not an ASCII lowercase letter or digit.
+static NON_ALNUM_RE: LazyLock<Regex> = LazyLock::new(|| compile_regex(r"[^a-z0-9]+"));
+
 /// Common suffixes appended by ROM dumping and decrypting utilities.
 const DUMP_SUFFIXES: &[&str] = &[
     "-decrypted",
@@ -154,9 +186,50 @@ fn trailing_group_start(text: &str) -> Option<usize> {
     None
 }
 
+/// Strips all combining accent and diacritic marks from `text`.
+pub fn strip_accents(text: &str) -> String {
+    let nfkd: String = text.nfkd().collect();
+    ACCENTS_RE.replace_all(&nfkd, "").to_string()
+}
+
+/// Returns a normalized, comparable form of a title: accents, brackets, Cyrillic characters,
+/// platform names, release numbers, and version/edition tails removed.
+pub fn normalize(title: &str) -> String {
+    let stripped = strip_accents(title);
+    let t = BRACKETS_RE.replace_all(&stripped, " ");
+    let t = CYRILLIC_RE.replace_all(&t, " ");
+    let t = PLATFORM_NAME_RE.replace_all(&t, " ");
+    let t = RELEASE_NUM_RE.replace_all(&t, " ");
+    let t = VERSION_TAIL_RE.replace_all(&t, " ");
+    let t = t.replace('&', " and ");
+    let t = t.to_lowercase();
+    let t = NON_ALNUM_RE.replace_all(&t, " ");
+    t.trim().to_string()
+}
+
+/// Grouping key across platforms: accents stripped, lowercased, and non-alphanumeric runs replaced with single spaces.
+pub fn title_key(title: &str) -> String {
+    let lower = strip_accents(title).to_lowercase();
+    NON_ALNUM_RE.replace_all(&lower, " ").trim().to_string()
+}
+
+/// Returns a URL-safe slug: lowercased ASCII words joined by hyphens, with quotes dropped.
+pub fn slugify(title: &str) -> String {
+    let stripped = strip_accents(title).to_lowercase();
+    let no_quotes = stripped.replace(['\'', '’'], "");
+    let hyphenated = NON_ALNUM_RE.replace_all(&no_quotes, "-");
+    hyphenated.trim_matches('-').to_string()
+}
+
+/// Returns a title key suitable for matching across search sources: apostrophes dropped,
+/// then normalized.
+pub fn match_key(title: &str) -> String {
+    normalize(&title.replace(['\'', '’'], ""))
+}
+
 #[cfg(test)]
 mod tests {
-    use super::display_title;
+    use super::{display_title, match_key, normalize, slugify, strip_accents, title_key};
 
     /// Region, language, revision and ID tags at the end go; the rest stays.
     #[test]
@@ -275,5 +348,58 @@ mod tests {
             "Castlevania"
         );
         assert_eq!(display_title("   "), "");
+    }
+
+    /// Accents and combining marks are stripped.
+    #[test]
+    fn test_strip_accents() {
+        assert_eq!(strip_accents("Pokémon"), "Pokemon");
+        assert_eq!(strip_accents("Castlevânia"), "Castlevania");
+        assert_eq!(strip_accents("Crème Brûlée"), "Creme Brulee");
+    }
+
+    /// Title keys drop accents, lowercase, and collapse non-alphanumerics.
+    #[test]
+    fn test_title_key() {
+        assert_eq!(title_key("Pokémon Gold & Silver"), "pokemon gold silver");
+        assert_eq!(title_key("Baldur's Gate 3"), "baldur s gate 3");
+        assert_eq!(
+            title_key("The Legend of Zelda: Ocarina of Time"),
+            "the legend of zelda ocarina of time"
+        );
+    }
+
+    /// Normalization strips brackets, platform markers, and version tails.
+    #[test]
+    fn test_normalize() {
+        assert_eq!(
+            normalize("001 - Super Mario World (USA) [!]"),
+            "super mario world"
+        );
+        assert_eq!(
+            normalize("Super Mario Odyssey for Nintendo Switch (Update 1.3.0)"),
+            "super mario odyssey"
+        );
+        assert_eq!(normalize("Mario & Luigi"), "mario and luigi");
+    }
+
+    /// Slugs produce clean lowercase hyphenated strings without quotes.
+    #[test]
+    fn test_slugify() {
+        assert_eq!(
+            slugify("The Legend of Zelda: Link's Awakening"),
+            "the-legend-of-zelda-links-awakening"
+        );
+        assert_eq!(slugify("Pokémon Red"), "pokemon-red");
+    }
+
+    /// Match keys compare equal regardless of apostrophes.
+    #[test]
+    fn test_match_key() {
+        assert_eq!(match_key("Baldur's Gate 3"), match_key("Baldurs Gate 3"));
+        assert_eq!(
+            match_key("Link's Crossbow Training"),
+            "links crossbow training"
+        );
     }
 }

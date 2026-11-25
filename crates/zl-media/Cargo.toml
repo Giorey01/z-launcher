@@ -7,6 +7,8 @@ license.workspace = true
 
 [dependencies]
 quick-xml = { workspace = true }
+regex = { workspace = true }
+unicode-normalization = { workspace = true }
 zip = { workspace = true }
 zl-config = { path = "../zl-config" }
 zl-db = { path = "../zl-db" }

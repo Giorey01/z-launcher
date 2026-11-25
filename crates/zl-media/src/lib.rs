@@ -28,4 +28,4 @@ pub use esde::{esde_media_dir, scan_esde};
 pub use found::FoundMedia;
 pub use gamelist::{export_gamelist, parse_gamelist, GamelistEntry};
 pub use keys::game_keys;
-pub use title::display_title;
+pub use title::{display_title, match_key, normalize, slugify, strip_accents, title_key};
