@@ -138,7 +138,7 @@ class LaunchFixtureTest {
     fun errorCasesReportTheirCode() {
         val core = newCore()
         val cases = doc.getJSONArray("error_cases")
-        assertTrue(cases.length() >= 3)
+        assertTrue(cases.length() >= 5)
         for (i in 0 until cases.length()) {
             val case = cases.getJSONObject(i)
             val error = runCatching { core.planRequest(packages(case), request(case.getJSONObject("request"))) }.exceptionOrNull()

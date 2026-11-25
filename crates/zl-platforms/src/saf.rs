@@ -26,6 +26,9 @@ const PRIMARY_VOLUME_ID: &str = "primary";
 /// Authority of the provider that serves the device's own storage and its removable volumes.
 const EXTERNAL_STORAGE_AUTHORITY: &str = "com.android.externalstorage.documents";
 
+/// Prefix of the per-user mounts of the internal storage (`/storage/emulated/<user id>`).
+const EMULATED_PREFIX: &str = "/storage/emulated/";
+
 /// Prefix of the mount points of removable volumes.
 const STORAGE_PREFIX: &str = "/storage/";
 
@@ -52,6 +55,10 @@ pub fn uri_decode(text: &str) -> Option<String> {
     while i < bytes.len() {
         if bytes[i] == b'%' {
             let hex = text.get(i + 1..i + 3)?;
+            // `from_str_radix` would also take `+f`: only two real hex digits are an escape.
+            if !hex.bytes().all(|b| b.is_ascii_hexdigit()) {
+                return None;
+            }
             out.push(u8::from_str_radix(hex, 16).ok()?);
             i += 3;
         } else {
@@ -77,6 +84,9 @@ fn split_tree_uri(tree_uri: &str) -> Option<(&str, String)> {
 /// `/storage/ABCD-1234/Roms`. `None` for an id without a volume.
 fn tree_base_path(doc_id: &str) -> Option<String> {
     let (volume, path) = doc_id.split_once(':')?;
+    if volume.is_empty() {
+        return None;
+    }
     let base = if volume == PRIMARY_VOLUME_ID {
         PRIMARY_VOLUME_PATH.to_string()
     } else {
@@ -96,10 +106,29 @@ pub fn tree_path(tree_uri: &str) -> Option<String> {
     tree_base_path(&doc_id)
 }
 
+/// Mount of the internal storage of another Android user (`/storage/emulated/10/...`), which
+/// the external storage provider also calls `primary`; any other path is returned as it is.
+fn primary_alias(path: &str) -> std::borrow::Cow<'_, str> {
+    let Some(rest) = path.strip_prefix(EMULATED_PREFIX) else {
+        return path.into();
+    };
+    let (user, tail) = rest.split_once('/').unwrap_or((rest, ""));
+    if user.is_empty() || !user.bytes().all(|b| b.is_ascii_digit()) {
+        return path.into();
+    }
+    if tail.is_empty() {
+        PRIMARY_VOLUME_PATH.into()
+    } else {
+        format!("{PRIMARY_VOLUME_PATH}/{tail}").into()
+    }
+}
+
 /// The tree URI the folder picker should start at for a folder (the inverse of [`tree_path`]);
 /// `None` for a path that is not on a storage volume.
 pub fn tree_uri_for_path(path: &str) -> Option<String> {
     let path = path.trim_end_matches('/');
+    let path = primary_alias(path);
+    let path = path.as_ref();
     let doc_id = match path.strip_prefix(PRIMARY_VOLUME_PATH) {
         Some("") => format!("{PRIMARY_VOLUME_ID}:"),
         Some(rest) => format!("{PRIMARY_VOLUME_ID}:{}", rest.strip_prefix('/')?),
@@ -115,11 +144,17 @@ pub fn tree_uri_for_path(path: &str) -> Option<String> {
     ))
 }
 
-/// Path of `file` below `base`, without a leading slash; `None` when it is not below it.
-fn relative_to<'a>(file: &'a str, base: &str) -> Option<&'a str> {
+/// Path of `file` below `base`, without a leading slash and with doubled slashes collapsed;
+/// `None` when it is not below it or climbs out with a `.` or `..` segment (a document id cannot
+/// carry those).
+fn relative_to(file: &str, base: &str) -> Option<String> {
     let rest = file.strip_prefix(base.trim_end_matches('/'))?;
     let rel = rest.strip_prefix('/')?;
-    (!rel.is_empty()).then_some(rel)
+    let segments: Vec<&str> = rel.split('/').filter(|s| !s.is_empty()).collect();
+    if segments.is_empty() || segments.iter().any(|s| matches!(*s, "." | "..")) {
+        return None;
+    }
+    Some(segments.join("/"))
 }
 
 /// The SAF document URI of `file_path`, a file under the folder the user granted as `tree_uri`.

@@ -45,7 +45,9 @@ fn launch_cases_match_expected_outcomes() -> Res {
 fn error_cases_report_their_code() -> Res {
     let doc = load()?;
     let db = PlatformDb::embedded()?;
-    for case in doc["error_cases"].as_array().ok_or("no error cases")? {
+    let cases = doc["error_cases"].as_array().ok_or("no error cases")?;
+    assert!(cases.len() >= 5, "fixture lost error cases");
+    for case in cases {
         let installed = db.detect_installed(&packages(&doc, case)?).installed;
         let request: LaunchRequest = serde_json::from_value(case["request"].clone())?;
         let err = db
