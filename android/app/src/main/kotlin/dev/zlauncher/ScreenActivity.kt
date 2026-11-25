@@ -85,6 +85,18 @@ abstract class ScreenActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         getSystemService(DisplayManager::class.java).registerDisplayListener(displayListener, null)
         hideSystemBars()
+        val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
+        Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+            if (app.top is Screen.Pod) {
+                android.util.Log.e("PodFaultIsolation", "Intercepted crash while Pod screen was active: ${throwable.message}", throwable)
+                runOnUiThread {
+                    app.goHome()
+                    android.widget.Toast.makeText(this, "Pod isolato dopo errore: ${throwable.message}", android.widget.Toast.LENGTH_LONG).show()
+                }
+            } else {
+                defaultHandler?.uncaughtException(thread, throwable)
+            }
+        }
         setContent {
             val theme by app.theme.collectAsState()
             val settings = theme?.settings

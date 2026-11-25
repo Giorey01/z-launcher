@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "id": "sample.spike",
+  "name": "Pod Spike",
+  "version": "1.0.0",
+  "api": 1,
+  "author": { "name": "Spike Test", "signer": "0000000000000000000000000000000000000000000000000000000000000000" },
+  "entry": "dev.zlauncher.podspike.SpikePodProvider",
+  "description": "Spike Pod di prova per caricamento dinamico",
+  "slots": ["start_menu"],
+  "permissions": [],
+  "abis": ["arm64-v8a"]
+}

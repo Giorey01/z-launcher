@@ -6,6 +6,26 @@
 -dontwarn java.awt.**
 -dontwarn com.sun.jna.**
 
-# Pods are found with ServiceLoader (META-INF/services/dev.zlauncher.pods.PodProvider): keep the providers and
-# their no-argument constructors, which nothing calls directly.
--keep class * implements dev.zlauncher.pods.PodProvider { <init>(); }
+# Pod interfaces and contracts
+-keep class dev.zlauncher.pods.** { *; }
+
+# Launcher UI contracts used by Pods
+-keep class dev.zlauncher.ui.theme.LocalZTheme* { *; }
+-keep class dev.zlauncher.ui.theme.ZTheme { *; }
+-keep class dev.zlauncher.ui.theme.ZThemeKt { *; }
+-keep class dev.zlauncher.ui.pad.PadButtonKt { *; }
+-keep class dev.zlauncher.ui.pad.PadTileKt { *; }
+-keep class dev.zlauncher.ui.pad.TileSurface { *; }
+
+# Compose APIs used by Pods
+-keep class androidx.compose.runtime.** { *; }
+-keep class androidx.compose.ui.** { *; }
+-keep class androidx.compose.foundation.** { *; }
+-keep class androidx.compose.material3.TextKt { *; }
+# Material icons used by pods
+-keep class androidx.compose.material.icons.Icons$Rounded { *; }
+-keep class androidx.compose.material.icons.rounded.StarKt { *; }
+
+# Kotlin stdlib and coroutines for dynamic dex compatibility
+-keep class kotlin.** { *; }
+-keep class kotlinx.coroutines.** { *; }

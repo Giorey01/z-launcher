@@ -16,6 +16,7 @@ import dev.zlauncher.core.KeystoreSecrets
 import dev.zlauncher.ui.art.ArtResolver
 import dev.zlauncher.ui.theme.ThemeStore
 import dev.zlauncher.pods.PodRegistry
+import dev.zlauncher.pods.SpikePodLoader
 import dev.zlauncher.sessions.SessionTracker
 
 /**
@@ -69,7 +70,8 @@ class ZLauncherApp : Application(), ImageLoaderFactory, ViewModelStoreOwner {
         sound = SoundFx()
         themeStore = ThemeStore(core, art, sound)
         sessions = SessionTracker(this, core)
-        pods = PodRegistry.load(classLoader)
+        val basePods = PodRegistry.load(classLoader)
+        pods = SpikePodLoader.loadSpikePod(this, basePods)
     }
 
     /** The image loader of the whole app: decodes animated GIF and WebP too. */
