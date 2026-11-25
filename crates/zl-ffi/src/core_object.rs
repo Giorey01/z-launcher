@@ -68,6 +68,35 @@ impl Core {
         Ok(games.into_iter().map(Into::into).collect())
     }
 
+    /// Consoles an Android app can be filed under, those with games first.
+    pub fn app_consoles(&self) -> Res<Vec<PlatformEntry>> {
+        Ok(self
+            .svc
+            .app_consoles()?
+            .into_iter()
+            .map(Into::into)
+            .collect())
+    }
+
+    /// Files the Android app `package` under the console `platform` as `title` (a
+    /// `.localgameid` file in the first enabled folder), rescans, and returns the game id.
+    pub fn file_app(
+        &self,
+        package: String,
+        title: String,
+        platform: String,
+        listener: Arc<dyn ScanListener>,
+    ) -> Res<i64> {
+        Ok(self
+            .svc
+            .file_app(&package, &title, &platform, &Bridge(listener))?)
+    }
+
+    /// Takes a filed Android app out of its console (deletes its tag file) and rescans.
+    pub fn unfile_app(&self, game_id: i64, listener: Arc<dyn ScanListener>) -> Res<()> {
+        Ok(self.svc.unfile_app(game_id, &Bridge(listener))?)
+    }
+
     /// Emulators among the installed `packages` and the proposed defaults for the library.
     pub fn detect_installed(&self, packages: Vec<String>) -> Res<Detection> {
         Ok(self.svc.detect(&packages)?.into())

@@ -102,7 +102,7 @@ mirror_enum! {
 }
 mirror_enum! {
     /// Where a media file comes from.
-    MediaSource <=> DbMediaSource { Cocoon, Esde, User, SteamGridDb }
+    MediaSource <=> DbMediaSource { Cocoon, Esde, User, SteamGridDb, Steam }
 }
 
 mirror_record! {

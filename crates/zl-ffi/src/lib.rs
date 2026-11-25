@@ -17,6 +17,9 @@ mod core_object;
 mod error;
 mod meta_api;
 mod scan;
+mod secrets_api;
+mod sessions_api;
+mod steam_api;
 mod types;
 
 uniffi::setup_scaffolding!();
@@ -26,10 +29,13 @@ pub use core_object::Core;
 pub use error::CoreError;
 pub use meta_api::{GameDetails, ImageScrapeReport, KeyCheck, ScrapeListener, ScrapeStop};
 pub use scan::{ScanEvent, ScanIssue, ScanListener, ScanSummary};
+pub use secrets_api::SecretStore;
+pub use sessions_api::{PendingSession, PlayStats, SessionEnd, UsageEvent, UsageKind};
+pub use steam_api::{SteamAccount, SteamImport, SteamProblem};
 pub use types::{
-    Candidate, ClipData, Detection, Extra, ExtraValue, GameEntry, GameKind, InstalledEmulator,
-    LaunchIntent, LibraryMode, Plan, PlatformEntry, ProfileRef, ProposedDefault, RawLaunchRequest,
-    ResolvedBy, RomRoot, UriGrant,
+    Candidate, ClipData, Detection, Extra, ExtraValue, FolderKind, GameEntry, GameKind,
+    InstalledEmulator, LaunchIntent, LibraryMode, Plan, PlatformEntry, ProfileRef, ProposedDefault,
+    RawLaunchRequest, ResolvedBy, RomRoot, UriGrant,
 };
 
 /// The version of the core library, taken from the workspace package version.

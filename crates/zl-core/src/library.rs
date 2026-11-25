@@ -4,12 +4,13 @@ use std::collections::BTreeMap;
 use std::path::PathBuf;
 
 use zl_config::platforms::FOLDER_GAME_RULES;
-use zl_db::{Db, GameQuery, MediaKind, Root};
+use zl_db::{Db, Game, GameKind, GameQuery, MediaKind, Root};
 use zl_library::{scan, ExtensionRules, FolderGameRule, RootSpec, ScanProgress, ScanSummary};
 use zl_media::display_title;
+use zl_platforms::ANDROID_PACKAGE_TAG;
 
 use crate::error::CoreError;
-use crate::types::{GameEntry, PlatformEntry, RootInfo};
+use crate::types::{FolderKind, GameEntry, PlatformEntry, RootInfo};
 use crate::Service;
 
 /// Converts a stored root.
@@ -47,11 +48,16 @@ impl Service {
     }
 
     /// The scanner rules: the extensions of every platform (also under each alias, so a folder
-    /// named `sfc` is read as `snes`) and the folder-per-game rules.
+    /// named `sfc` is read as `snes`), `.localgameid` everywhere, and the folder-per-game rules.
     fn extension_rules(&self) -> ExtensionRules {
         let mut rules = ExtensionRules::new();
         for p in self.platforms.platforms() {
-            let exts: Vec<&str> = p.extensions.iter().map(String::as_str).collect();
+            let mut exts: Vec<&str> = p.extensions.iter().map(String::as_str).collect();
+            // Every console folder takes `.localgameid` files: an Android app (a recomp or a
+            // port) filed under that console.
+            if !exts.contains(&ANDROID_PACKAGE_TAG) {
+                exts.push(ANDROID_PACKAGE_TAG);
+            }
             for name in std::iter::once(&p.id).chain(&p.aliases) {
                 rules.insert(name, &exts);
             }
@@ -88,6 +94,20 @@ impl Service {
             .map_or_else(|| id.to_string(), |p| p.name.clone())
     }
 
+    /// Id of the Home folder a canonical platform shows in: its group folder, else itself.
+    pub(crate) fn home_folder(&self, canonical: &str) -> String {
+        self.platforms
+            .folder_of(canonical)
+            .map_or_else(|| canonical.to_string(), |f| f.id.clone())
+    }
+
+    /// English name of a Home folder id: the group folder's name, else the platform's.
+    fn home_folder_name(&self, id: &str) -> String {
+        self.platforms
+            .folder(id)
+            .map_or_else(|| self.platform_name(id), |f| f.name.clone())
+    }
+
     /// Canonical id of a stored platform id (aliases such as `sfc` map to `snes`).
     pub(crate) fn canonical_id(&self, id: &str) -> String {
         self.platforms
@@ -95,30 +115,58 @@ impl Service {
             .map_or_else(|| id.to_string(), |p| p.id.clone())
     }
 
-    /// Platforms that have games, with their counts, sorted by name. Folders that are aliases of
-    /// the same platform are merged.
+    /// The folders of the Home: the Smart Folders that have games (Favourites, Recent, Never
+    /// played, once something was played) first, then one folder per platform with its count, sorted by name, then Hidden
+    /// when some game is hidden. Folders that are aliases of the same platform are merged, and
+    /// so are the platforms of a group folder (Steam and Windows under "PC"). Hidden games count
+    /// nowhere but in Hidden.
     pub fn platforms(&self) -> Result<Vec<PlatformEntry>, CoreError> {
+        let visible = self.games(None)?;
         let mut merged: BTreeMap<String, u32> = BTreeMap::new();
-        for c in self.db().platform_counts()? {
-            let games = u32::try_from(c.games).unwrap_or(u32::MAX);
-            *merged.entry(self.canonical_id(&c.platform_id)).or_default() += games;
+        for g in &visible {
+            *merged.entry(self.home_folder(&g.platform_id)).or_default() += 1;
         }
         let mut out: Vec<PlatformEntry> = merged
             .into_iter()
             .map(|(id, games)| PlatformEntry {
-                name: self.platform_name(&id),
+                name: self.home_folder_name(&id),
                 id,
                 games,
+                kind: FolderKind::Platform,
             })
             .collect();
         out.sort_by_key(|p| p.name.to_lowercase());
-        Ok(out)
+        let mut folders = self.smart_entries(&visible)?;
+        folders.extend(out);
+        folders.extend(self.hidden_entry()?);
+        Ok(folders)
     }
 
-    /// The games of one platform (any id or alias), or of every platform with `None`, by title.
-    /// Missing games are left out.
-    pub fn games(&self, platform: Option<&str>) -> Result<Vec<GameEntry>, CoreError> {
-        let wanted = platform.map(|p| self.canonical_id(p));
+    /// Whether a game of canonical platform `canonical` belongs to `wanted`: a group folder id
+    /// takes its member platforms, any other id only its own platform.
+    fn game_in(&self, wanted: &str, canonical: &str) -> bool {
+        match self.platforms.folder(wanted) {
+            Some(folder) => folder.platforms.iter().any(|p| p == canonical),
+            None => self.canonical_id(wanted) == canonical,
+        }
+    }
+
+    /// The package of a tag-file game that is an Android app filed under its console.
+    fn app_package_of(&self, db: &Db, game: &Game, canonical: &str) -> Option<String> {
+        if game.kind != GameKind::TagFile {
+            return None;
+        }
+        let tags = db.game_tags(game.id).ok()?;
+        let (_, value) = tags.into_iter().find(|(k, _)| k == ANDROID_PACKAGE_TAG)?;
+        self.platforms
+            .is_android_app(canonical, &value)
+            .then_some(value)
+    }
+
+    /// The games of one platform or group folder (any id or alias), or of every platform with
+    /// `None`, by title, hidden ones included. Missing games are left out.
+    pub(crate) fn listed_games(&self, platform: Option<&str>) -> Result<Vec<GameEntry>, CoreError> {
+        let wanted = platform.map(str::to_lowercase);
         let art = self.best_art()?;
         let db = self.db();
         let games = db.query_games(&GameQuery::default())?;
@@ -128,13 +176,15 @@ impl Service {
                 let canonical = self.canonical_id(&g.platform_id);
                 (g, canonical)
             })
-            .filter(|(_, c)| wanted.as_ref().is_none_or(|w| w == c))
+            .filter(|(_, c)| wanted.as_ref().is_none_or(|w| self.game_in(w, c)))
             .map(|(g, canonical)| GameEntry {
                 id: g.id,
                 display_title: display_title(&g.title),
                 icon: art.get(&(g.id, MediaKind::Icon)).cloned(),
                 hero: art.get(&(g.id, MediaKind::Hero)).cloned(),
                 logo: art.get(&(g.id, MediaKind::Logo)).cloned(),
+                app_package: self.app_package_of(&db, &g, &canonical),
+                favorite: false,
                 title: g.title,
                 platform_name: self.platform_name(&canonical),
                 platform_id: canonical,

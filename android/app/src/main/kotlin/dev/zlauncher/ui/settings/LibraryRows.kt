@@ -1,14 +1,18 @@
 package dev.zlauncher.ui.settings
 
 import android.content.Context
+import android.content.Intent
+import android.provider.Settings
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CreateNewFolder
 import androidx.compose.material.icons.rounded.Description
 import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material.icons.rounded.Image
+import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Memory
 import androidx.compose.material.icons.rounded.Refresh
+import androidx.compose.material.icons.rounded.Timer
 import androidx.compose.material.icons.rounded.ViewModule
 import dev.zlauncher.R
 import dev.zlauncher.core.nativecore.LibraryMode
@@ -75,9 +79,26 @@ class LibraryRows(private val app: AppViewModel, private val model: SettingsMode
             resultOr("media", s(R.string.st_media_sub)),
             onActivate = ::importMedia
         )
+        rows += playTimeRow()
         rows += metadataRows()
         rows += scanRow()
         return rows
+    }
+
+    /** Usage access, for the play time: says whether it is given; A opens the system page where it is given. */
+    private fun playTimeRow(): SettingRow {
+        val granted = app.zl.sessions.hasUsageAccess()
+        return SettingRow(
+            "usage_access",
+            Icons.Rounded.Timer,
+            s(R.string.st_play_time),
+            s(if (granted) R.string.st_play_time_on else R.string.st_play_time_off),
+            Control.Chevron,
+            onActivate = {
+                val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                runCatching { context.startActivity(intent) }
+            }
+        )
     }
 
     /** The SteamGridDB download and the ES-DE gamelist import. */
@@ -88,6 +109,13 @@ class LibraryRows(private val app: AppViewModel, private val model: SettingsMode
             s(R.string.st_sgdb_download),
             resultOr("sgdb_art", s(R.string.st_sgdb_download_sub)),
             onActivate = ::downloadArt
+        ),
+        SettingRow(
+            "steam_details",
+            Icons.Rounded.Info,
+            s(R.string.st_steam_details),
+            resultOr("steam_details", s(R.string.st_steam_details_sub)),
+            onActivate = ::downloadSteamDetails
         ),
         SettingRow(
             "gamelists",
@@ -121,6 +149,29 @@ class LibraryRows(private val app: AppViewModel, private val model: SettingsMode
                 app.zl.core.call { it.scrapeImages(null, null, download) }.toMessage()
             } finally {
                 model.artDownload = null
+            }
+        }
+    }
+
+    /**
+     * Fetches the store details of the Steam games that have no description (free, no key); pressed again while it
+     * runs, it asks the run to stop.
+     */
+    private fun downloadSteamDetails() {
+        val running = model.artDownload
+        when {
+            running != null -> running.requestCancel()
+            model.busy -> Unit
+            else -> {
+                val download = ArtDownload()
+                model.artDownload = download
+                model.work("steam_details") {
+                    try {
+                        app.zl.core.call { it.fetchSteamDetails(null, null, download) }.toSteamDetailsMessage()
+                    } finally {
+                        model.artDownload = null
+                    }
+                }
             }
         }
     }

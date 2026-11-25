@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import dev.zlauncher.R
@@ -32,8 +33,10 @@ private val ROW = 73.dp
 @Composable
 fun StartMenu(app: AppViewModel) {
     Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.35f))) {
+        val context = LocalContext.current
+        val pods = app.zl.pods.pods.map { pod -> MenuEntry(pod.icon, pod.title(context)) { app.open(Screen.Pod(pod.id)) } }
         MenuPanel(
-            listOf(
+            pods + listOf(
                 MenuEntry(Icons.Rounded.Apps, stringResource(R.string.menu_apps)) { app.open(Screen.Drawer) },
                 MenuEntry(Icons.Rounded.Search, stringResource(R.string.menu_search), badge = "X") {
                     app.drawerSearching = true

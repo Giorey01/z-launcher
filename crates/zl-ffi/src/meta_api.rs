@@ -91,7 +91,7 @@ pub trait ScrapeListener: Send + Sync {
 }
 
 /// Adapts the foreign listener to the core's progress trait.
-struct Bridge(Arc<dyn ScrapeListener>);
+pub(crate) struct Bridge(pub(crate) Arc<dyn ScrapeListener>);
 
 impl core::ScrapeProgress for Bridge {
     /// Forwards to Kotlin.

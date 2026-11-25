@@ -64,15 +64,23 @@ impl From<core::RootInfo> for RomRoot {
     }
 }
 
-/// A platform with games.
+mirror_enum! {
+    /// What a folder of the Home is: a platform (or group) with its own name, or a Smart Folder
+    /// the app names itself.
+    FolderKind <=> core::FolderKind { Platform, Favorites, Recent, NeverPlayed, Hidden }
+}
+
+/// A folder of the Home: a platform with games, or a Smart Folder.
 #[derive(Debug, Clone, PartialEq, Eq, uniffi::Record)]
 pub struct PlatformEntry {
-    /// Canonical id.
+    /// Canonical id, group id, or Smart Folder id (`@favorites`, ...).
     pub id: String,
-    /// English name.
+    /// English name of a platform (Smart Folders are named by `kind`).
     pub name: String,
     /// Games not missing.
     pub games: u32,
+    /// What the folder is.
+    pub kind: FolderKind,
 }
 
 impl From<core::PlatformEntry> for PlatformEntry {
@@ -82,6 +90,7 @@ impl From<core::PlatformEntry> for PlatformEntry {
             id: p.id,
             name: p.name,
             games: p.games,
+            kind: p.kind.into(),
         }
     }
 }
@@ -137,6 +146,10 @@ pub struct GameEntry {
     pub hero: Option<String>,
     /// Best logo.
     pub logo: Option<String>,
+    /// For an Android app filed under a console (a recomp or port), its package.
+    pub app_package: Option<String>,
+    /// Marked as a favourite.
+    pub favorite: bool,
 }
 
 impl From<core::GameEntry> for GameEntry {
@@ -153,6 +166,8 @@ impl From<core::GameEntry> for GameEntry {
             icon: g.icon,
             hero: g.hero,
             logo: g.logo,
+            app_package: g.app_package,
+            favorite: g.favorite,
         }
     }
 }
@@ -328,6 +343,8 @@ pub enum ResolvedBy {
     ExtensionRule,
     /// The only installed candidate.
     OnlyCandidate,
+    /// The game is an Android app filed under a console; the app itself starts.
+    AndroidApp,
 }
 
 impl From<plat::ResolvedBy> for ResolvedBy {
@@ -338,6 +355,7 @@ impl From<plat::ResolvedBy> for ResolvedBy {
             plat::ResolvedBy::PlatformDefault => ResolvedBy::PlatformDefault,
             plat::ResolvedBy::ExtensionRule => ResolvedBy::ExtensionRule,
             plat::ResolvedBy::OnlyCandidate => ResolvedBy::OnlyCandidate,
+            plat::ResolvedBy::AndroidApp => ResolvedBy::AndroidApp,
         }
     }
 }

@@ -53,6 +53,7 @@ import dev.zlauncher.apps.AppEntry
 import dev.zlauncher.core.nativecore.CoreException
 import dev.zlauncher.launch.toMessage
 import dev.zlauncher.nav.AppViewModel
+import dev.zlauncher.nav.Overlay
 import dev.zlauncher.ui.AppIcon
 import dev.zlauncher.ui.common.BackPill
 import dev.zlauncher.ui.common.HeaderTitle
@@ -87,7 +88,7 @@ data class DrawerUi(
     val pinned: Set<String> = emptySet(),
 )
 
-/** Loads the installed apps and pins them to the dock. */
+/** Loads the installed apps, the recent ones and the dock. */
 class DrawerViewModel(application: Application) : AndroidViewModel(application) {
     /** The shared application object. */
     private val zl = application as ZLauncherApp
@@ -112,18 +113,6 @@ class DrawerViewModel(application: Application) : AndroidViewModel(application) 
             state.value = DrawerUi(false, apps, zl.recent.list().mapNotNull { byPackage[it] }, pinned)
         }
     }
-
-    /** Pins or unpins [packageName]; a full dock is reported through [onError]. */
-    fun togglePin(packageName: String, onError: (CoreException) -> Unit) {
-        viewModelScope.launch {
-            try {
-                val dock = zl.core.call { it.toggleDock(packageName) }
-                state.value = state.value.copy(pinned = dock.toSet())
-            } catch (e: CoreException) {
-                onError(e)
-            }
-        }
-    }
 }
 
 /** Focus key of an app tile (recent apps use a different prefix, they are the same apps again). */
@@ -131,7 +120,8 @@ private fun key(app: AppEntry, recent: Boolean = false) = "${if (recent) "r" els
 
 /**
  * The app drawer: a glass screen with the back pill and title, a row of recent apps, the apps in alphabetical
- * order in five columns and the A to Z index on the right. A launches, Y pins to the dock, B goes back.
+ * order in five columns and the A to Z index on the right. A launches, Y opens the app's menu (dock, console),
+ * B goes back.
  */
 @Composable
 fun DrawerScreen(app: AppViewModel, vm: DrawerViewModel = viewModel()) {
@@ -158,7 +148,7 @@ fun DrawerScreen(app: AppViewModel, vm: DrawerViewModel = viewModel()) {
                     onBack = { if (searching) { app.drawerSearching = false; query = "" } else app.back() },
                     onToggleSearch = { app.drawerSearching = !app.drawerSearching }
                 )
-                DrawerBody(displayApps, ui.recent, searching, gridState, memory, app, vm, letter) { letter = it }
+                DrawerBody(displayApps, ui.recent, searching, gridState, memory, app, ui.pinned, letter) { letter = it }
             }
         }
         if (searching) {
@@ -187,7 +177,7 @@ private fun DrawerBody(
     gridState: androidx.compose.foundation.lazy.grid.LazyGridState,
     memory: dev.zlauncher.ui.pad.FocusMemory,
     app: AppViewModel,
-    vm: DrawerViewModel,
+    pinned: Set<String>,
     letter: Char?,
     onLetter: (Char?) -> Unit,
 ) {
@@ -198,7 +188,7 @@ private fun DrawerBody(
             gridState = gridState,
             memory = memory,
             app = app,
-            vm = vm,
+            pinned = pinned,
             onLetter = onLetter
         )
         Box(Modifier.weight(1f))
@@ -225,7 +215,7 @@ private fun DrawerGrid(
     gridState: androidx.compose.foundation.lazy.grid.LazyGridState,
     memory: dev.zlauncher.ui.pad.FocusMemory,
     app: AppViewModel,
-    vm: DrawerViewModel,
+    pinned: Set<String>,
     onLetter: (Char?) -> Unit,
 ) {
     LazyVerticalGrid(GridCells.Fixed(COLUMNS), Modifier.padding(start = 28.dp).width(GRID_WIDTH).fillMaxHeight(), gridState) {
@@ -233,7 +223,7 @@ private fun DrawerGrid(
             AppCell(
                 entry,
                 { app.launchApp(entry.packageName) },
-                { vm.togglePin(entry.packageName) { app.message = it.toMessage() } },
+                { app.overlay = Overlay.AppMenu(entry.packageName, entry.label, entry.packageName in pinned) },
                 Modifier.then(memory.track(key(entry, true))),
                 { onLetter(null) }
             )
@@ -243,7 +233,7 @@ private fun DrawerGrid(
             AppCell(
                 entry,
                 { app.launchApp(entry.packageName) },
-                { vm.togglePin(entry.packageName) { app.message = it.toMessage() } },
+                { app.overlay = Overlay.AppMenu(entry.packageName, entry.label, entry.packageName in pinned) },
                 Modifier.then(memory.track(key(entry))),
                 { onLetter(initialOf(entry)) }
             )

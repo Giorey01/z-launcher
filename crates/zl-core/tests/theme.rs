@@ -74,7 +74,11 @@ fn builtin_theme_by_default() -> Res {
         t.colors.accent_gradient_start
     );
     assert_eq!(t.sounds.len(), 22);
-    assert!(t.sounds.iter().all(|s| s.path.is_none()));
+    for sound in &t.sounds {
+        let path = sound.path.as_deref().ok_or("no built-in sound")?;
+        assert!(path.contains("/sounds/default/"), "{path}");
+        assert_eq!(&fs::read(path)?[..4], b"RIFF", "a WAV file");
+    }
     assert!(t.wallpaper_main.is_none());
     assert_eq!(t.settings, zl_core::UserSettings::default());
     Ok(())
@@ -225,12 +229,18 @@ fn music_and_sounds_resolve() -> Res {
     };
     assert!(path_of("navigate").is_some_and(|p| p.ends_with("navigate.wav")));
     assert!(path_of("select").is_some());
-    assert!(path_of("pop").is_none());
+    assert!(
+        path_of("pop").is_some_and(|p| p.contains("/sounds/default/")),
+        "an action the pack lacks falls back to the launcher's own sound"
+    );
     svc.apply_theme(Some("demo-theme-123abc"), true)?;
     assert_eq!(svc.active_theme()?.music.mode, MusicMode::Time);
     let after = svc.active_theme()?;
     assert!(
-        after.sounds.iter().all(|s| s.path.is_none()),
+        after.sounds.iter().all(|s| s
+            .path
+            .as_deref()
+            .is_some_and(|p| p.contains("/sounds/default/"))),
         "choosing a theme clears the layer packs"
     );
     Ok(())
@@ -410,5 +420,33 @@ fn zip_import() -> Res {
             code: "unsafe_path".into()
         })
     );
+    Ok(())
+}
+
+/// The "PC" group folder takes its own art first, then each member platform's, slot by slot.
+#[test]
+fn group_folder_art_falls_back_to_its_platforms() -> Res {
+    let (dir, svc) = imported()?;
+    let mine = dir.path().join("mine.png");
+    fs::write(&mine, b"x")?;
+    let path = mine.to_string_lossy();
+    assert_eq!(svc.platform_art("pcgames"), zl_core::FolderArt::default());
+    svc.set_user_folder_art("steam", true, FolderSlot::Hero, Some(&path))?;
+    svc.set_user_folder_art("steam", true, FolderSlot::Icon, Some(&path))?;
+    svc.set_user_folder_art("pcgames", true, FolderSlot::Icon, Some(&path))?;
+    let pc = svc.platform_art("PCGames");
+    assert!(
+        pc.icon
+            .as_deref()
+            .is_some_and(|p| p.contains("by_platform/pcgames/")),
+        "own icon first: {pc:?}"
+    );
+    assert!(
+        pc.hero
+            .as_deref()
+            .is_some_and(|p| p.contains("by_platform/steam/")),
+        "hero from a member: {pc:?}"
+    );
+    assert_eq!(pc.logo, None);
     Ok(())
 }

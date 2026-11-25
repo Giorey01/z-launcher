@@ -1,6 +1,6 @@
 {
  "schema": 1,
- "version": 1,
+ "version": 2,
  "sources": [
   "ES-DE (MIT) es_systems.xml / es_find_rules.xml for Android"
  ],
@@ -2694,6 +2694,16 @@
    "multi_disc": false,
    "cocoon": true,
    "tag_files": []
+  }
+ ],
+ "folders": [
+  {
+   "id": "pcgames",
+   "name": "PC",
+   "platforms": [
+    "windows",
+    "steam"
+   ]
   }
  ]
 }

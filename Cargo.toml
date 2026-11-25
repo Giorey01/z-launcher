@@ -11,6 +11,8 @@ members = [
     "crates/zl-theme",
     "crates/zl-meta",
     "crates/zl-net",
+    "crates/zl-steam",
+    "crates/zl-sessions",
     "crates/zl-ffi",
 ]
 

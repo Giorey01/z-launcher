@@ -27,16 +27,21 @@ import dev.zlauncher.ui.drawer.DrawerScreen
 import dev.zlauncher.ui.hero.HeroRoot
 import dev.zlauncher.ui.home.HomeScreen
 import dev.zlauncher.ui.home.PlatformScreen
+import dev.zlauncher.ui.menus.AppMenu
 import dev.zlauncher.ui.menus.GameMenu
 import dev.zlauncher.ui.nowplaying.NowPlayingScreen
 import dev.zlauncher.ui.menus.StartMenu
 import dev.zlauncher.nav.Overlay
 import dev.zlauncher.ui.onboarding.OnboardingScreen
 import dev.zlauncher.ui.pad.ProvidePlay
+import dev.zlauncher.ui.info.GameInfoScreen
+import dev.zlauncher.ui.picker.ConsolePickerScreen
+import dev.zlauncher.ui.pods.PodScreen
 import dev.zlauncher.ui.picker.EmulatorPickerScreen
 import dev.zlauncher.ui.settings.SettingsAside
 import dev.zlauncher.ui.settings.SettingsMain
 import dev.zlauncher.ui.settings.SgdbKeyDialog
+import dev.zlauncher.ui.settings.SteamAccountDialog
 import dev.zlauncher.ui.single.SingleRoot
 import dev.zlauncher.ui.theme.LocalZTheme
 import dev.zlauncher.ui.theme.WallpaperScreen
@@ -62,6 +67,9 @@ fun ScreenRoot(app: AppViewModel, role: Role, displayId: Int) {
             }
             if (app.settings.wantSgdbKey && role != Role.HERO) {
                 SgdbKeyDialog(app) { app.settings.wantSgdbKey = false }
+            }
+            if (app.settings.wantSteamAccount && role != Role.HERO) {
+                SteamAccountDialog(app) { app.settings.wantSteamAccount = false }
             }
             when (role) {
                 Role.GRID -> GridRoot(app)
@@ -101,6 +109,7 @@ fun GridContent(app: AppViewModel, single: Boolean) {
             null -> Unit
             is Overlay.GameMenu -> GameMenu(app, menu)
             Overlay.StartMenu -> StartMenu(app)
+            is Overlay.AppMenu -> AppMenu(app, menu)
         }
     }
 }
@@ -113,6 +122,9 @@ private fun ReadyScreens(app: AppViewModel, single: Boolean) {
         is Screen.Platform -> PlatformScreen(app, screen)
         Screen.Drawer -> DrawerScreen(app)
         Screen.Picker -> EmulatorPickerScreen(app)
+        is Screen.ConsolePicker -> ConsolePickerScreen(app, screen)
+        is Screen.GameInfo -> GameInfoScreen(app, screen)
+        is Screen.Pod -> PodScreen(app, screen)
         Screen.Settings -> if (single) SettingsMain(app) else SettingsAside(app)
     }
 }

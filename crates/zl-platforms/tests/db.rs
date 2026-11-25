@@ -232,3 +232,78 @@ fn multi_part_extension_rule_matches_the_longest_suffix() -> Res {
     assert!(db.plan_launch(&installed, &request).is_err());
     Ok(())
 }
+
+/// Steam and Windows share the "PC" folder; aliases find it, other platforms have none.
+#[test]
+fn pc_folder_groups_steam_and_windows() -> Res {
+    let db = PlatformDb::embedded()?;
+    let folder = db.folder("PCGames").ok_or("no pc folder")?;
+    assert_eq!(folder.name, "PC");
+    assert_eq!(folder.platforms, ["windows", "steam"]);
+    assert_eq!(
+        db.folder_of("steam").map(|f| f.id.as_str()),
+        Some("pcgames")
+    );
+    assert_eq!(
+        db.folder_of("WINDOWS").map(|f| f.id.as_str()),
+        Some("pcgames")
+    );
+    assert_eq!(db.folder_of("psx"), None);
+    assert_eq!(db.folder_of("nope"), None);
+    Ok(())
+}
+
+/// Builds a platforms text whose folder list is `folders` (raw JSON).
+fn with_folders(folders: &str) -> Result<String, Box<dyn Error>> {
+    let start = PLATFORMS.find("\"folders\"").ok_or("no folders")?;
+    Ok(format!(
+        "{}\"folders\": {folders}\n}}\n",
+        &PLATFORMS[..start]
+    ))
+}
+
+/// The code of the error a platforms text with `folders` gets.
+fn folder_error(folders: &str) -> Result<Option<&'static str>, Box<dyn Error>> {
+    Ok(
+        match PlatformDb::from_json(&with_folders(folders)?, EMULATORS) {
+            Err(DbError::Invalid { code, .. }) => Some(code),
+            _ => None,
+        },
+    )
+}
+
+#[test]
+fn validation_rejects_bad_folders() -> Res {
+    let cases = [
+        (
+            r#"[{"id": "dos", "name": "X", "platforms": ["steam"]}]"#,
+            "bad_or_duplicate_folder_id",
+        ),
+        (
+            r#"[{"id": "pc", "name": "X", "platforms": ["steam"]}]"#,
+            "bad_or_duplicate_folder_id",
+        ),
+        (
+            r#"[{"id": "Pc2", "name": "X", "platforms": ["steam"]}]"#,
+            "bad_or_duplicate_folder_id",
+        ),
+        (
+            r#"[{"id": "a", "name": "X", "platforms": []}]"#,
+            "empty_folder",
+        ),
+        (
+            r#"[{"id": "a", "name": "X", "platforms": ["sfc"]}]"#,
+            "unknown_folder_platform",
+        ),
+        (
+            r#"[{"id": "a", "name": "X", "platforms": ["steam"]},
+                {"id": "b", "name": "Y", "platforms": ["steam"]}]"#,
+            "platform_in_two_folders",
+        ),
+    ];
+    for (folders, code) in cases {
+        assert_eq!(folder_error(folders)?, Some(code), "{folders}");
+    }
+    assert_eq!(folder_error("[]")?, None, "no folders is fine");
+    Ok(())
+}

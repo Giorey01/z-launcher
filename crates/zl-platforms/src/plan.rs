@@ -46,8 +46,50 @@ pub enum Outcome {
     },
 }
 
+/// Tag that names an Android package (Cocoon's `.localgameid`). A format fact.
+pub const ANDROID_PACKAGE_TAG: &str = "localgameid";
+
+/// Emulator id of the profile reported for an Android app game; no real emulator may use it.
+pub const ANDROID_APP_EMULATOR: &str = "android";
+
+/// Profile id reported for an Android app game.
+pub const ANDROID_APP_PROFILE: &str = "app";
+
+/// Whether `value` reads as an Android package name: two or more dot-separated parts, each
+/// starting with a letter and made of letters, digits and underscores.
+fn is_package_name(value: &str) -> bool {
+    let parts: Vec<&str> = value.split('.').collect();
+    parts.len() >= 2
+        && parts.iter().all(|part| {
+            part.chars().next().is_some_and(|c| c.is_ascii_alphabetic())
+                && part.chars().all(|c| c.is_ascii_alphanumeric() || c == '_')
+        })
+}
+
+/// The launch of an Android app game: its launcher activity, in a new task.
+fn android_app_outcome(package: &str) -> Outcome {
+    Outcome::Launch {
+        intent: Box::new(LaunchIntent {
+            action: Some("android.intent.action.MAIN".into()),
+            package: package.to_string(),
+            categories: vec!["android.intent.category.LAUNCHER".into()],
+            flags: vec!["new_task".into()],
+            ..LaunchIntent::default()
+        }),
+        profile: ProfileRef {
+            emulator: ANDROID_APP_EMULATOR.into(),
+            profile: ANDROID_APP_PROFILE.into(),
+            core: None,
+        },
+        by: ResolvedBy::AndroidApp,
+    }
+}
+
 impl PlatformDb {
-    /// Resolves the profile (RF-08) and builds the intent (RF-09).
+    /// Resolves the profile (RF-08) and builds the intent (RF-09). A game of a console whose
+    /// `localgameid` tag names an Android package (a recomp or port filed under that console)
+    /// starts that app, whatever emulator is configured. Platforms whose own tag files carry
+    /// `localgameid` (Windows) keep resolving their emulators, which read the tag themselves.
     pub fn plan_launch(
         &self,
         installed: &[InstalledEmulator],
@@ -56,6 +98,10 @@ impl PlatformDb {
         let platform = self
             .platform(&request.context.platform)
             .ok_or_else(|| LaunchError::UnknownPlatform(request.context.platform.clone()))?;
+        let package = request.context.tags.get(ANDROID_PACKAGE_TAG);
+        if let Some(package) = package.filter(|p| self.is_android_app(&platform.id, p)) {
+            return Ok(android_app_outcome(package));
+        }
         let file_name = request
             .context
             .rom_path
@@ -85,6 +131,16 @@ impl PlatformDb {
                 })
             }
         }
+    }
+
+    /// Whether a game of `platform` (id or alias) whose `localgameid` tag is `value` is an
+    /// Android app filed under that console: the value reads as a package name and the
+    /// platform's own tag files do not use `localgameid` for something else (Windows).
+    pub fn is_android_app(&self, platform: &str, value: &str) -> bool {
+        let own_tag = self
+            .platform(platform)
+            .is_some_and(|p| p.tag_files.iter().any(|t| t.key == ANDROID_PACKAGE_TAG));
+        !own_tag && is_package_name(value)
     }
 
     /// Builds the intent of a resolved profile with the installed package.

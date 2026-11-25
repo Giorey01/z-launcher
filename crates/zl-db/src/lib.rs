@@ -20,6 +20,7 @@
 //!
 //! - `game_media` holds the media files of each game (cover, hero, logo, screenshots, video) with
 //!   their source; a `protected` row is the user's choice and imports leave it alone.
+//! - `game_flags` holds the user's favourite and hidden flags, `game_sessions` the play time.
 //!
 //! Timestamps are Unix time, `added_at` in seconds and file modification times in milliseconds.
 #![warn(
@@ -38,6 +39,7 @@ mod meta;
 pub mod migrations;
 mod models;
 mod roots;
+mod sessions;
 mod settings;
 
 pub use db::Db;
@@ -47,3 +49,4 @@ pub use models::{
     MediaSource, MetaField, MetaOverride, NewGame, NewMedia, PlatformCount, Root, ScrapeMode,
     ScraperSource,
 };
+pub use sessions::{GameFlags, NewSession, PlayStats, SessionSource};

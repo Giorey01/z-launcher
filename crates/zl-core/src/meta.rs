@@ -8,6 +8,7 @@ use zl_media::display_title;
 use zl_media::gamelist::{export_gamelist, parse_gamelist, GamelistEntry};
 
 use crate::error::CoreError;
+use crate::secrets::SECRET_STEAMGRIDDB;
 use crate::types::{GameDetails, ScraperConfig};
 use crate::Service;
 
@@ -17,8 +18,6 @@ const KEY_SCRAPER_SOURCES: &str = "scraper.sources_order";
 const KEY_SCRAPER_MODE: &str = "scraper.mode";
 /// Setting key for overwrite protected flag.
 const KEY_SCRAPER_OVERWRITE: &str = "scraper.overwrite_protected";
-/// Setting key for SteamGridDB key.
-const KEY_SGDB_KEY: &str = "scraper.steamgriddb_key";
 
 impl Service {
     /// Loads complete game details including metadata and best media.
@@ -83,7 +82,7 @@ impl Service {
             sources_order: sources,
             mode,
             overwrite_protected: overwrite,
-            steamgriddb_key: get(KEY_SGDB_KEY)?,
+            steamgriddb_key: self.secret(SECRET_STEAMGRIDDB),
         })
     }
 
@@ -108,11 +107,9 @@ impl Service {
                 "false"
             },
         )?;
-        db.set_setting(
-            KEY_SGDB_KEY,
-            config.steamgriddb_key.as_deref().unwrap_or(""),
-        )?;
-        Ok(())
+        drop(db);
+        let key = config.steamgriddb_key.as_deref().filter(|k| !k.is_empty());
+        self.set_secret(SECRET_STEAMGRIDDB, key)
     }
 
     /// Imports metadata from one ES-DE `gamelist.xml`, matching games of any platform by ROM

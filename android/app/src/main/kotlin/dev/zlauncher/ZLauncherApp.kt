@@ -12,8 +12,11 @@ import dev.zlauncher.apps.InstalledApps
 import dev.zlauncher.apps.RecentApps
 import dev.zlauncher.audio.SoundFx
 import dev.zlauncher.core.CoreProvider
+import dev.zlauncher.core.KeystoreSecrets
 import dev.zlauncher.ui.art.ArtResolver
 import dev.zlauncher.ui.theme.ThemeStore
+import dev.zlauncher.pods.PodRegistry
+import dev.zlauncher.sessions.SessionTracker
 
 /**
  * The application: owns the objects every screen on every display shares (the Rust core, the installed-app
@@ -45,18 +48,28 @@ class ZLauncherApp : Application(), ImageLoaderFactory, ViewModelStoreOwner {
     lateinit var themeStore: ThemeStore
         private set
 
+    /** Play sessions from the system's usage events. */
+    lateinit var sessions: SessionTracker
+        private set
+
+    /** The Pods this build adds (none in the open-source build). */
+    lateinit var pods: PodRegistry
+        private set
+
     /** The store of the process-wide view models. */
     override val viewModelStore: ViewModelStore = ViewModelStore()
 
     /** Creates the shared objects. */
     override fun onCreate() {
         super.onCreate()
-        core = CoreProvider(filesDir)
+        core = CoreProvider(filesDir, KeystoreSecrets(this))
         apps = InstalledApps(packageManager)
         recent = RecentApps(this)
         art = ArtResolver(core)
         sound = SoundFx()
         themeStore = ThemeStore(core, art, sound)
+        sessions = SessionTracker(this, core)
+        pods = PodRegistry.load(classLoader)
     }
 
     /** The image loader of the whole app: decodes animated GIF and WebP too. */

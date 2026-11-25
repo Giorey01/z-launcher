@@ -1418,6 +1418,7 @@ version = "0.1.0"
 name = "zl-core"
 version = "0.1.0"
 dependencies = [
+ "serde",
  "serde_json",
  "tempfile",
  "thiserror",
@@ -1429,6 +1430,8 @@ dependencies = [
  "zl-meta",
  "zl-net",
  "zl-platforms",
+ "zl-sessions",
+ "zl-steam",
  "zl-theme",
 ]
 
@@ -1456,6 +1459,7 @@ dependencies = [
  "zl-media",
  "zl-net",
  "zl-platforms",
+ "zl-sessions",
  "zl-theme",
 ]
 
@@ -1517,6 +1521,24 @@ dependencies = [
  "tempfile",
  "thiserror",
  "zl-config",
+]
+
+[[package]]
+name = "zl-sessions"
+version = "0.1.0"
+dependencies = [
+ "serde",
+]
+
+[[package]]
+name = "zl-steam"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+ "thiserror",
+ "zl-config",
+ "zl-net",
 ]
 
 [[package]]

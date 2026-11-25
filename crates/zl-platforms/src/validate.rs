@@ -37,12 +37,13 @@ fn plain_id(id: &str) -> bool {
 /// Checks both files together; returns the first broken rule.
 pub fn validate(p: &PlatformsFile, e: &EmulatorsFile) -> Result<(), DbError> {
     let ids = platform_ids(p)?;
+    validate_folders(p)?;
     let mut emu_ids = HashSet::new();
     for emu in &e.emulators {
         if !plain_id(&emu.id) {
             return Err(invalid("bad_id", &emu.id));
         }
-        if !emu_ids.insert(emu.id.as_str()) {
+        if emu.id == crate::plan::ANDROID_APP_EMULATOR || !emu_ids.insert(emu.id.as_str()) {
             return Err(invalid("duplicate_emulator_id", &emu.id));
         }
         validate_emulator(emu, &ids)?;
@@ -70,6 +71,39 @@ fn platform_ids(p: &PlatformsFile) -> Result<HashSet<&str>, DbError> {
         ids.insert(plat.id.as_str());
     }
     Ok(ids)
+}
+
+/// Checks the Home folders: lowercase ids unique and distinct from every platform id and alias,
+/// members that are canonical platform ids, and each platform in at most one folder.
+fn validate_folders(p: &PlatformsFile) -> Result<(), DbError> {
+    let names: HashSet<&str> = p
+        .platforms
+        .iter()
+        .flat_map(|plat| std::iter::once(&plat.id).chain(&plat.aliases))
+        .map(String::as_str)
+        .collect();
+    let canonical: HashSet<&str> = p.platforms.iter().map(|plat| plat.id.as_str()).collect();
+    let mut folder_ids = HashSet::new();
+    let mut grouped = HashSet::new();
+    for folder in &p.folders {
+        let id = folder.id.as_str();
+        if id.is_empty() || id != id.to_lowercase() || names.contains(id) || !folder_ids.insert(id)
+        {
+            return Err(invalid("bad_or_duplicate_folder_id", id));
+        }
+        if folder.platforms.is_empty() {
+            return Err(invalid("empty_folder", id));
+        }
+        for member in &folder.platforms {
+            if !canonical.contains(member.as_str()) {
+                return Err(invalid("unknown_folder_platform", member));
+            }
+            if !grouped.insert(member.as_str()) {
+                return Err(invalid("platform_in_two_folders", member));
+            }
+        }
+    }
+    Ok(())
 }
 
 /// Checks packages, profiles and cores of one emulator.
