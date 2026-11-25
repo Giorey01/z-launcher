@@ -77,7 +77,7 @@ fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare.
 | RF-70 | Mod | Mod da GameBanana e cartelle mod degli emulatori; attiva o disattiva; conflitti | 8 |  |
 | RF-71 | Sistema | Backup e ripristino di tutta la configurazione | 3 |  |
 | RF-72 | Sistema | Sync in LAN verso il PC di salvataggi, screenshot e backup | 8 |  |
-| RF-73 | Estensioni | Pod esterni: una build terza può aggiungere Pod che usano tema, suoni e libreria del launcher | 4 |  |
+| RF-73 | Estensioni | Pod esterni: una build terza può aggiungere Pod che usano tema, suoni e libreria del launcher | 4 | Fatto: contratto `Pod`/`PodProvider`/`PodHost`, caricamento con `ServiceLoader`, voci nel menu Start (`docs/spec/pods.md`) |
 | RF-74 | Sistema | Interfaccia in italiano e inglese | 1 | Fatto |
 | RF-75 | Libreria | App Android che sono giochi di una console (recomp, port) nella cartella di quella console, avviate come app | 2 | Fatto: `.localgameid` in ogni console, "Sposta in una console" dal cassetto |
 

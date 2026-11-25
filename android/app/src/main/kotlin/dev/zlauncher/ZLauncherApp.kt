@@ -14,6 +14,7 @@ import dev.zlauncher.audio.SoundFx
 import dev.zlauncher.core.CoreProvider
 import dev.zlauncher.ui.art.ArtResolver
 import dev.zlauncher.ui.theme.ThemeStore
+import dev.zlauncher.pods.PodRegistry
 import dev.zlauncher.sessions.SessionTracker
 
 /**
@@ -50,6 +51,10 @@ class ZLauncherApp : Application(), ImageLoaderFactory, ViewModelStoreOwner {
     lateinit var sessions: SessionTracker
         private set
 
+    /** The Pods this build adds (none in the open-source build). */
+    lateinit var pods: PodRegistry
+        private set
+
     /** The store of the process-wide view models. */
     override val viewModelStore: ViewModelStore = ViewModelStore()
 
@@ -63,6 +68,7 @@ class ZLauncherApp : Application(), ImageLoaderFactory, ViewModelStoreOwner {
         sound = SoundFx()
         themeStore = ThemeStore(core, art, sound)
         sessions = SessionTracker(this, core)
+        pods = PodRegistry.load(classLoader)
     }
 
     /** The image loader of the whole app: decodes animated GIF and WebP too. */

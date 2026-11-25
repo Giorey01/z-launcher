@@ -24,6 +24,12 @@ sealed interface Screen {
     /** The settings (the main part on the hero display in the dual-screen mode). */
     data object Settings : Screen
 
+    /** The screen of a Pod of this build. */
+    data class Pod(
+        /** The Pod's id. */
+        val id: String,
+    ) : Screen
+
     /** The Info tab of a game: details, play time, trailer and screenshots. */
     data class GameInfo(
         /** The game. */

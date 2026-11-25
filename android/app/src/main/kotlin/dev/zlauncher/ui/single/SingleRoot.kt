@@ -45,8 +45,7 @@ fun SingleRoot(app: AppViewModel) {
     val theme = LocalZTheme.current
     val settings = theme.settings
     WallpaperScreen(theme.wallpaperMain) {
-        val fullScreen = app.top == Screen.Settings || app.top == Screen.Drawer || app.top == Screen.Picker
-        if (fullScreen || app.top is Screen.ConsolePicker || app.top is Screen.GameInfo) {
+        if (isFullScreen(app.top)) {
             GridContent(app, single = true)
         } else {
             SingleContent(app, settings)
@@ -81,4 +80,10 @@ private fun SingleContent(app: AppViewModel, settings: UserSettings) {
             CompositionLocalProvider(LocalGridSpec provides spec) { GridContent(app, single = true) }
         }
     }
+}
+
+/** Whether [screen] takes the whole display in the single-screen layout (no hero area above it). */
+private fun isFullScreen(screen: Screen?): Boolean = when (screen) {
+    Screen.Settings, Screen.Drawer, Screen.Picker, is Screen.ConsolePicker, is Screen.GameInfo, is Screen.Pod -> true
+    null, is Screen.Platform -> false
 }

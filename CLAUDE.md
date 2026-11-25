@@ -9,6 +9,7 @@ Launcher Android open source, gamepad-first. Repo **pubblica**.
   porta e da dove. Mai copiarne nomi o percorsi in file versionati.
 - `docs/ROADMAP.md`: requisiti funzionali e stato.
 - `docs/spec/cocoon-theme.md`: formato dei temi (Cocoon e nostre estensioni).
+- `docs/spec/pods.md`: il contratto dei Pod per chi estende il launcher.
 - `docs/reference/cocoon-wiki.md`: comportamento di Cocoon da raggiungere.
 
 ## Regole
