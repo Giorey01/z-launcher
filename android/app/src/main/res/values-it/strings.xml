@@ -416,4 +416,17 @@
     <string name="pod_error_download">Impossibile scaricare il pacchetto.</string>
     <string name="pod_error_index">Impossibile caricare l\'indice dello store.</string>
     <string name="pod_incompatible_api">Versione API non compatibile</string>
+
+    <!-- Built-in Pods (§7, RF-42, RF-50) -->
+    <string name="theme_hub_title">Theme Hub</string>
+    <string name="theme_hub_sub">Esplora e scarica temi per Z-Launcher</string>
+    <string name="theme_hub_active">Tema attivo</string>
+    <string name="theme_hub_apply">Applica tema</string>
+    <string name="pod_log_title">Log</string>
+    <string name="pod_log_sub">Totali tempo di gioco, calendario e classifica giochi</string>
+    <string name="pod_log_total_time">Tempo totale di gioco</string>
+    <string name="pod_log_played_games">Giochi avviati</string>
+    <string name="pod_log_no_stats">Nessuna sessione di gioco registrata finora. Avvia un gioco per iniziare il registro!</string>
+    <string name="pod_log_rank">Posizione #%1$d</string>
+    <string name="pod_log_hours">%1$.1f ore</string>
 </resources>
