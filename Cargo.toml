@@ -10,6 +10,7 @@ members = [
     "crates/zl-tags",
     "crates/zl-theme",
     "crates/zl-meta",
+    "crates/zl-net",
     "crates/zl-ffi",
 ]
 
@@ -30,6 +31,8 @@ uniffi = "0.29"
 rusqlite = { version = "0.37", features = ["bundled"] }
 quick-xml = "0.37"
 ureq = { version = "2.10", default-features = false, features = ["tls", "json"] }
+regex = "1.11"
+unicode-normalization = "0.1"
 
 [workspace.lints.clippy]
 unwrap_used = "deny"

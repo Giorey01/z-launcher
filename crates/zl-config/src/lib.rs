@@ -18,5 +18,6 @@ pub mod appearance;
 pub mod db;
 pub mod library;
 pub mod media;
+pub mod net;
 pub mod platforms;
 pub mod theme;

@@ -1,0 +1,14 @@
+[package]
+name = "zl-net"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+thiserror = { workspace = true }
+ureq = { workspace = true }
+zl-config = { path = "../zl-config" }
+
+[lints]
+workspace = true

@@ -58,3 +58,28 @@ pub const SCRAPER_MAX_RETRIES: u32 = 3;
 
 /// Initial backoff delay in milliseconds when a 429 Too Many Requests response is encountered.
 pub const SCRAPER_BACKOFF_INITIAL_MS: u64 = 1_000;
+
+/// CDN URL prefix required for SteamGridDB artwork to prevent spoofed hosts.
+pub const SGDB_CDN_PREFIX: &str = "https://cdn2.steamgriddb.com/";
+
+/// Query parameters for static grids filtering dimensions and content.
+pub const SGDB_GRID_QUERY: &str =
+    "dimensions=600x900,1024x1024,512x512&types=static&nsfw=false&humor=false";
+
+/// Query parameters for heroes/wallpapers filtering content.
+pub const SGDB_HERO_QUERY: &str = "types=static&nsfw=false&humor=false";
+
+/// Query parameters for logos filtering content.
+pub const SGDB_LOGO_QUERY: &str = "types=static&nsfw=false&humor=false";
+
+/// Query parameters for icons filtering content.
+pub const SGDB_ICON_QUERY: &str = "types=static&nsfw=false&humor=false";
+
+/// Maximum number of game IDs per batch grids request.
+pub const SGDB_GRIDS_PER_CALL: usize = 100;
+
+/// Minimum valid length of a SteamGridDB API key.
+pub const SGDB_MIN_KEY_LEN: usize = 16;
+
+/// Maximum valid length of a SteamGridDB API key.
+pub const SGDB_MAX_KEY_LEN: usize = 64;
