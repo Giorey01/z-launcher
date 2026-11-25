@@ -24,6 +24,10 @@ Questa repo è pubblica e non nomina nessun Pod esterno né chi lo scrive: tutto
 
 ## 2. Livelli
 
+L'insieme di `pod-api`, `pod-ui`, `pod-platform`, plugin Gradle e `zpod-template` è il **Pod SDK**:
+chi scrive un Pod dichiara una dipendenza e ha contratto, stile, build e firma. Vale per tutti,
+autori esterni e maintainer.
+
 ```
 ┌──────────────────────── zpod-* (repo esterne) ───────────────────────┐
 │ Pod: Kotlin/Compose con pod-ui + (facoltativo) .so Rust + asset       │
@@ -158,7 +162,7 @@ Ogni fase si chiude solo con `bash scripts/gate.sh` e la verifica Android del `C
 | **5. `pod-api`, loader e slot** | Contratto v2; `PodLoader`; slot uno alla volta; `pod-sample` | Test strumentati: il Pod di prova appare nel menu Start e come primo elemento di una griglia, e un suo crash non butta giù il launcher |
 | **6. Schermata Pod e store** | Tasto **+**, indici, installazione, aggiornamento, disattivazione, deep link | Installazione e aggiornamento da indice di prova; rifiuto con chiave diversa |
 | **7. Pod integrati** | Pod dello store dei temi (RF-50), poi Log (RF-42) e gli altri previsti, sul `BuiltinPodProvider` | Funzionano con lo stesso contratto dei Pod esterni, senza scorciatoie |
-| **8. `zpod-template` e CI** | Repo modello, workflow di rilascio, `zpod-index` | Un Pod nuovo si crea dal modello, si firma e si installa dal link |
+| **8. `zpod-template`, guida e CI** | Repo modello, guida per gli autori (stile, pad, esempi), workflow di rilascio, `zpod-index` | Un Pod nuovo si crea dal modello, si firma e si installa dal link |
 
 I Pod esterni (le repo `zpod-*`) partono dopo la fase 6.
 
