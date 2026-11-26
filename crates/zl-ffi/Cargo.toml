@@ -9,6 +9,7 @@ license.workspace = true
 crate-type = ["cdylib", "lib"]
 
 [dependencies]
+zl-archive = { path = "../zl-archive" }
 zl-config = { path = "../zl-config" }
 zl-core = { path = "../zl-core" }
 zl-db = { path = "../zl-db" }
@@ -32,6 +33,7 @@ required-features = ["bindgen"]
 
 [dev-dependencies]
 tempfile = { workspace = true }
+zip = { workspace = true }
 
 [lints]
 workspace = true

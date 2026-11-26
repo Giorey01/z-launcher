@@ -8,12 +8,14 @@
 )]
 
 pub mod client;
+pub mod download;
 pub mod error;
 pub mod host;
 pub mod mock;
 pub mod ureq_client;
 
 pub use client::{HttpClient, HttpResponse};
+pub use download::{Downloader, Progress};
 pub use error::HttpError;
 pub use host::HostPolicy;
 pub use mock::MockHttpClient;

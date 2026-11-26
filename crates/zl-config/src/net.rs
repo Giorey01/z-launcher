@@ -14,3 +14,14 @@ pub const MAX_BACKOFF_SECS: u64 = 5;
 
 /// Default number of parallel connections to a host that has no policy of its own.
 pub const DEFAULT_MAX_CONNECTIONS: usize = 4;
+
+/// Seconds to connect to one address of a download before trying the next one (a host whose
+/// IPv6 route is broken never answers on it).
+pub const DOWNLOAD_CONNECT_SECS: u64 = 4;
+
+/// Seconds a download may go without receiving a byte before it fails. There is no limit on
+/// the whole download: a big file on a slow link takes as long as it takes.
+pub const DOWNLOAD_READ_SECS: u64 = 30;
+
+/// Bytes read from the network at a time by a download.
+pub const DOWNLOAD_CHUNK: usize = 64 * 1024;

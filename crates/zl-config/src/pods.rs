@@ -24,7 +24,7 @@ pub const ENTRY_RATIO_THRESHOLD_BYTES: u64 = 1024 * 1024;
 pub const MAX_MANIFEST_SIZE_BYTES: u64 = 64 * 1024;
 
 /// Current API version supported by the launcher host.
-pub const API_CURRENT: u32 = 1;
+pub const API_CURRENT: u32 = 2;
 
 /// Minimum API version supported by the launcher host.
 pub const API_MIN: u32 = 1;

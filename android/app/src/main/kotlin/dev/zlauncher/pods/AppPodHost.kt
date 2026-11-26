@@ -218,14 +218,24 @@ class AppPodHost(
     /** The name of a Pod's secret in the launcher's store: one namespace per Pod, so no Pod reads another's. */
     private fun secretName(key: String): String = "pod.$podId.$key"
 
-    override suspend fun httpGet(url: String): ByteArray {
+    override suspend fun httpGet(url: String, headers: Map<String, String>): ByteArray {
         requirePerm("http")
-        return ByteArray(0)
+        return HostTransfers.get(url, headers)
     }
 
-    override suspend fun httpPost(url: String, body: ByteArray, contentType: String): ByteArray {
+    override suspend fun httpPost(url: String, body: ByteArray, contentType: String, headers: Map<String, String>): ByteArray {
         requirePerm("http")
-        return ByteArray(0)
+        return HostTransfers.post(url, body, contentType, headers)
+    }
+
+    override suspend fun download(url: String, dest: File, headers: Map<String, String>, progress: (Long, Long?) -> Unit): Long {
+        requirePerm("http")
+        return HostTransfers.download(url, dest, headers, progress)
+    }
+
+    override suspend fun extract(archive: File, dest: File, password: String?, progress: (Long, Long?) -> Unit): List<File> {
+        requirePerm("archive")
+        return HostTransfers.extract(archive, dest, password, progress)
     }
 
     override val work: PodWork

@@ -459,6 +459,7 @@
     <string name="pod_open">Open</string>
     <string name="pod_perm_work">• Run long tasks in the background</string>
     <string name="pod_perm_notifications">• Show notifications</string>
+    <string name="pod_perm_archive">• Extract zip, 7z and RAR archives</string>
     <string name="pod_error_file">Could not read the file.</string>
     <string name="pod_work_channel">Pod tasks</string>
     <string name="pod_work_more">+%1$d more</string>

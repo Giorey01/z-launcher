@@ -33,3 +33,8 @@ Poppins typeface - SIL Open Font License 1.1
   Copyright 2020 The Poppins Project Authors (https://github.com/itfoundry/Poppins)
   Used: the interface font (android/app/src/main/res/font/poppins_*.ttf, obtained from Google Fonts).
   License text: android/app/src/main/assets/licenses/OFL.txt
+
+HatchZip - MIT OR Apache-2.0
+  https://github.com/xevrion/hatchzip
+  Used: two RAR 4 test archives (fixtures/archive/rar/rar4-volumes and rar4-solid, made with
+  RAR 6.24), read by the tests of crates/zl-archive.

@@ -20,7 +20,7 @@ from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "fixtures" / "pods"
-API_CURRENT = 1
+API_CURRENT = 2
 API_MIN = 1
 DEX = b"dex\n035\x00 test classes\n"
 ZIP_TIME = (2026, 1, 1, 0, 0, 0)

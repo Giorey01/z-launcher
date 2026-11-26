@@ -100,6 +100,7 @@ internal fun permissionText(permission: String): String = when (permission) {
     "launch" -> stringResource(R.string.pod_perm_launch)
     "secrets" -> stringResource(R.string.pod_perm_secrets)
     "http" -> stringResource(R.string.pod_perm_http)
+    "archive" -> stringResource(R.string.pod_perm_archive)
     "work" -> stringResource(R.string.pod_perm_work)
     "notifications" -> stringResource(R.string.pod_perm_notifications)
     "folders" -> stringResource(R.string.pod_perm_folders)

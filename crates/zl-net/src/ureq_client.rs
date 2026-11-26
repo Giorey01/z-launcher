@@ -91,6 +91,55 @@ impl UreqClient {
     }
 }
 
+impl UreqClient {
+    /// POSTs `body` as `content_type` to `url` with the policy headers and `headers`; the bytes
+    /// of the answer. A 429 or 5xx is retried as a GET is (the server refused it unprocessed); a
+    /// transport failure is not, since the server may have acted on the request already.
+    pub fn post_bytes(
+        &self,
+        url: &str,
+        body: &[u8],
+        content_type: &str,
+        headers: &[(&str, &str)],
+    ) -> Result<Vec<u8>, HttpError> {
+        let mut backoff = Duration::from_millis(cfg::INITIAL_BACKOFF_MS);
+        for attempt in 1.. {
+            let mut req = self.agent.post(url).set("Content-Type", content_type);
+            if let Some(p) = &self.policy {
+                for (k, v) in &p.headers {
+                    req = req.set(k, v);
+                }
+            }
+            for (k, v) in headers {
+                req = req.set(k, v);
+            }
+            match req.send_bytes(body) {
+                Ok(resp) => return read_bytes(resp),
+                Err(ureq::Error::Status(status, resp)) => {
+                    let ra = resp.header("Retry-After").map(str::to_string);
+                    match wait_before_retry(status, ra.as_deref(), attempt, backoff) {
+                        Some(wait) => std::thread::sleep(wait),
+                        None => return Err(HttpError::Status(status)),
+                    }
+                }
+                Err(ureq::Error::Transport(err)) => {
+                    return Err(HttpError::Network(err.to_string()))
+                }
+            }
+            backoff = grow(backoff);
+        }
+        Err(HttpError::MaxRetriesExceeded(url.to_string()))
+    }
+}
+
+/// The body of `resp` as bytes.
+fn read_bytes(resp: ureq::Response) -> Result<Vec<u8>, HttpError> {
+    let mut bytes = Vec::new();
+    std::io::Read::read_to_end(&mut resp.into_reader(), &mut bytes)
+        .map_err(|e| HttpError::Io(e.to_string()))?;
+    Ok(bytes)
+}
+
 impl Default for UreqClient {
     fn default() -> Self {
         Self::new()
