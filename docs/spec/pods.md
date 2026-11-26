@@ -219,8 +219,8 @@ l'host chiama `Pod.Content(host, route)`. Il manifest elenca i tipi di slot che 
 | --- | --- | --- |
 | `start_menu` | Voce nel menu Start | etichetta, icona, route |
 | `platform_grid_lead` | **Primo elemento** della griglia di una console (il tasto **+**) | piattaforme (insieme di id, o tutte), etichetta, icona, route in funzione della piattaforma |
-| `game_actions` | Bottoni nella scheda del gioco | etichetta, icona, condizione sul gioco, route in funzione del gioco |
-| `settings_section` | Riga nelle impostazioni | etichetta, route |
+| `game_actions` | Voci nel menu del gioco (Y), dopo quelle del launcher; una condizione che fallisce nasconde la voce | etichetta, icona, condizione sul gioco, route in funzione del gioco |
+| `settings_section` | Riga nella categoria Integrazioni delle impostazioni, che apre la route del Pod | etichetta, route |
 | `status_widget` | Widget nella barra della Home (per esempio un mini player) | contenuto Compose compatto, larghezza massima |
 | `home_shortcut` | Scorciatoia nella Home | etichetta, icona, route |
 
@@ -240,14 +240,14 @@ Sempre disponibili: `theme`, `play(action)`, `strings`, `storage`, `close()`, `n
 
 | Permesso | Servizio |
 | --- | --- |
-| `library.read` | `folders()`, `games(folder)`, `details(id)`, `playStats(id)`, eventi di gioco |
-| `library.rescan` | `rescan(platformId)`: nuova scansione di una console |
+| `library.read` | `folders()`, `games(folder)`, `details(id)` (con `path`, il file principale del gioco), `playStats(id)`, eventi di gioco |
+| `library.rescan` | `rescan(platformId)`: nuova scansione (oggi di tutta la libreria); le schermate aperte si aggiornano e arriva `LibraryChanged` |
 | `launch` | `launch(game)` con la stessa scelta di emulatore, display e conteggio del tempo |
-| `secrets` | archivio chiave-valore per Pod nel Keystore |
+| `secrets` | `getSecret`/`setSecret`: valori cifrati con una chiave del Keystore, con nomi separati per Pod (`pod.<id>.<chiave>`) |
 | `http` | richieste HTTP con retry, backoff e limiti per host (`zl-net`) |
-| `work` | lavori in background con vincoli, e servizio in primo piano per i lunghi |
+| `work` | `work.start(id, titolo) { … }`: lavori lunghi nel processo del launcher, tenuti vivi da un servizio in primo piano con una notifica di avanzamento; un lavoro che lancia un'eccezione conta come guasto; i lavori non sopravvivono alla fine del processo (il Pod tiene la sua coda) |
 | `notifications` | notifiche del Pod, con canale proprio |
-| `folders` | `platformRoot(id)`: la radice della console nella libreria; `pick()`: cartella scelta dall'utente e ricordata per il Pod |
+| `folders` | `platformRoot(id)`: la cartella della console nella libreria (percorso assoluto: quella di una cartella ROM che ne contiene i giochi, altrimenti quella col nome della piattaforma o di un alias); `pick()` (da fare): cartella scelta dall'utente e ricordata per il Pod |
 | `audio` | richiesta di focus audio; abbassare o sostituire la musica del launcher |
 
 - `storage`: una cartella di file privata e una di cache, più preferenze chiave-valore. Niente
@@ -289,8 +289,18 @@ senza slot funziona come oggi, e `Content(host)` diventa `Content(host, route)` 
 lettura, `DexClassLoader` con il classloader del launcher come padre, libreria nativa da
 `lib/<abi>/`, istanza della classe `entry`. Il launcher ha la precedenza sulle librerie: il Pod
 **non include** quelle fornite da `pod-platform` (Compose, coroutines, Coil, WorkManager,
-serialization, `pod-api`, `pod-ui`); include le altre (per esempio Room). R8 conserva il pacchetto
-`dev.zlauncher.pods`. I Pod integrati si registrano con `ServiceLoader`, come oggi.
+serialization, `pod-api`, `pod-ui`); include le altre (per esempio Room). R8 conserva per intero, nomi e membri, `dev.zlauncher.pods`,
+`dev.zlauncher.ui` e le librerie fornite (regole in `app/proguard-rules.pro`): il dex di un Pod usa
+parti che il launcher non usa, e senza queste regole fallisce solo nelle build release.
+I Pod integrati si registrano con `ServiceLoader`, come oggi.
+
+**Librerie native con UniFFI.** Il `DexClassLoader` riceve `lib/<abi>/` come cartella delle librerie,
+ma JNA carica per nome e non guarda il classloader. Un Pod con binding UniFFI chiede il percorso al
+proprio classloader (`BaseDexClassLoader.findLibrary(nome)`) e lo passa ai binding con la proprietà
+di sistema `uniffi.component.<nome>.libraryOverride` prima della prima chiamata.
+
+**Un Pod che non si carica** (eccezione, `LinkageError` per una classe o un metodo che il launcher
+non ha) conta come guasto (§10) e la causa va nel log con il tag `PodLoader`.
 
 ## 10. Guasti e modalità sicura
 
@@ -310,8 +320,11 @@ mentre una schermata del Pod era aperta.
 
 - La schermata dei Pod elenca integrati e installati, con stato, versione e autore; accende,
   spegne, aggiorna e disinstalla.
-- Il tasto **+** apre lo store (gli indici, con il loro elenco) e il campo per il link, con la
-  tastiera a schermo del launcher.
+- Il tasto **+** apre lo store: installazione **da file** (scelta di un documento di sistema),
+  **da link** (con la tastiera a schermo del launcher) e gli indici con il loro elenco.
+- Nel doppio schermo l'elenco sta sul display della griglia e il dettaglio della riga sotto il
+  cursore (stato, impronta, permessi) sul display grande; a schermo singolo stanno affiancati.
+  L1 e R1 cambiano scheda.
 - Prima di installare: nome, versione, autore, impronta in gruppi, permessi con una riga ciascuno,
   dimensione, e l'avviso **"Un Pod gira con gli stessi permessi del launcher: installa solo Pod di
   cui ti fidi."** I testi stanno in `strings.xml` (italiano e inglese).

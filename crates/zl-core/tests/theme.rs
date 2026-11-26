@@ -32,6 +32,27 @@ fn imported() -> Result<(TempDir, Service), Box<dyn Error>> {
     Ok((dir, svc))
 }
 
+/// With no music in the theme the launcher's own tracks play, by name; a theme's music wins.
+#[test]
+fn builtin_music_when_the_theme_has_none() -> Res {
+    let (dir, svc) = imported()?;
+    let own = dir
+        .path()
+        .join("data")
+        .join(zl_config::theme::DEFAULT_MUSIC_DIR_NAME);
+    fs::create_dir_all(&own)?;
+    fs::write(own.join("b.ogg"), b"x")?;
+    fs::write(own.join("a.ogg"), b"x")?;
+    let playlist = svc.active_theme()?.music.playlist;
+    assert_eq!(playlist.len(), 2);
+    assert!(playlist[0].ends_with("a.ogg") && playlist[1].ends_with("b.ogg"));
+    svc.apply_theme(Some("demo-theme-123abc"), false)?;
+    let playlist = svc.active_theme()?.music.playlist;
+    assert_eq!(playlist.len(), 1);
+    assert!(playlist[0].ends_with("music/yotsuba dekakeru.mp3"));
+    Ok(())
+}
+
 /// A pack with a theme is copied once; the second import skips everything.
 #[test]
 fn cocoon_import_copies_then_skips() -> Res {

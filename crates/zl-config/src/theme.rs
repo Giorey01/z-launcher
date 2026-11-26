@@ -39,6 +39,10 @@ pub const COCOON_DATA_DIR_CANDIDATES: [&str; 1] = ["/storage/emulated/0/Document
 /// over every pack and theme.
 pub const USER_ART_DIR_NAME: &str = "user";
 
+/// Folder of the data directory with the launcher's own music (the app copies its built-in
+/// tracks there): it plays when the theme and its packs have none.
+pub const DEFAULT_MUSIC_DIR_NAME: &str = "default-music";
+
 /// Name of the folder (inside the app data folder) where a theme ZIP is extracted before its
 /// themes are moved to `themes/`; deleted right after.
 pub const IMPORT_STAGING_DIR_NAME: &str = "import-staging";

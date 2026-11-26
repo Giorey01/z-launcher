@@ -10,6 +10,9 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import dev.zlauncher.apps.InstalledApps
 import dev.zlauncher.apps.RecentApps
+import dev.zlauncher.audio.DefaultMusic
+import dev.zlauncher.audio.MusicPlayer
+import dev.zlauncher.audio.MusicVisibility
 import dev.zlauncher.audio.SoundFx
 import dev.zlauncher.core.CoreProvider
 import dev.zlauncher.core.KeystoreSecrets
@@ -50,6 +53,10 @@ class ZLauncherApp : Application(), ImageLoaderFactory, ViewModelStoreOwner {
     lateinit var sound: SoundFx
         private set
 
+    /** The background music of the theme, playing while a launcher screen is visible. */
+    lateinit var music: MusicPlayer
+        private set
+
     /** The resolved theme shared by all screens. */
     lateinit var themeStore: ThemeStore
         private set
@@ -73,7 +80,10 @@ class ZLauncherApp : Application(), ImageLoaderFactory, ViewModelStoreOwner {
         recent = RecentApps(this)
         art = ArtResolver(core)
         sound = SoundFx()
-        themeStore = ThemeStore(core, art, sound)
+        DefaultMusic.install(this, filesDir)
+        music = MusicPlayer(this)
+        registerActivityLifecycleCallbacks(MusicVisibility(music))
+        themeStore = ThemeStore(core, art, sound, music)
         sessions = SessionTracker(this, core)
         val activePodFile = File(filesDir, "active_pod")
         if (activePodFile.exists()) {

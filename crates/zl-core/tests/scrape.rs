@@ -152,3 +152,40 @@ fn cancel_and_key_shape() -> Res {
     assert_eq!(svc.scraper_config()?.steamgriddb_key, None);
     Ok(())
 }
+
+/// After a scan only the games it added are looked up: the older game SteamGridDB does not know
+/// is not asked again.
+#[test]
+fn only_the_games_a_scan_added() -> Res {
+    let dir = tempfile::tempdir()?;
+    let svc = library(dir.path())?;
+    svc.set_steamgriddb_key(Some(KEY))?;
+    let since = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)?
+        .as_secs() as i64
+        + 1;
+    std::thread::sleep(Duration::from_millis(1100));
+    std::fs::write(
+        dir.path().join("roms/gba/Advance Wars 2 (USA).gba"),
+        b"rom2",
+    )?;
+    svc.scan(&NoProgress)?;
+    let http = mock();
+    http.register(
+        "/search/autocomplete/Advance%20Wars%202",
+        r#"{"success":true,"data":[]}"#,
+    );
+    let report = svc.scrape_images(
+        &ScrapeTarget::AddedSince(since),
+        &http,
+        &Progress::default(),
+        Duration::ZERO,
+    )?;
+    assert_eq!(report.games, 1);
+    let asked = http.requested_urls();
+    assert!(
+        !asked.iter().any(|u| u.contains("Nothing%20Like%20This")),
+        "{asked:?}"
+    );
+    Ok(())
+}

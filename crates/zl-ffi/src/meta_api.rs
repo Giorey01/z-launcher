@@ -52,6 +52,8 @@ mirror_record! {
         plain platform_name: String,
         /// Stored title.
         plain title: String,
+        /// Path of the primary file (or folder): Pods read ids from it (a Switch title id, a disc header).
+        plain path: String,
         /// Title to show.
         plain display_title: String,
         /// Synopsis.
@@ -136,6 +138,22 @@ impl Core {
             (None, Some(p)) => core::ScrapeTarget::Platform(p),
             (None, None) => core::ScrapeTarget::All,
         };
+        let pause = Duration::from_millis(cfg::SGDB_PAUSE_MS);
+        let report =
+            self.service()
+                .scrape_images(&target, &UreqClient::new(), &Bridge(listener), pause)?;
+        Ok(report.into())
+    }
+
+    /// Downloads the missing cover, hero and logo of the games added at or after `since` (Unix
+    /// seconds): what a scan just added. Without a SteamGridDB key the report says so and nothing
+    /// is asked. Blocks: call it off the main thread.
+    pub fn scrape_new_images(
+        &self,
+        since: i64,
+        listener: Arc<dyn ScrapeListener>,
+    ) -> Res<ImageScrapeReport> {
+        let target = core::ScrapeTarget::AddedSince(since);
         let pause = Duration::from_millis(cfg::SGDB_PAUSE_MS);
         let report =
             self.service()

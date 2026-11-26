@@ -15,6 +15,7 @@ import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Timer
 import androidx.compose.material.icons.rounded.ViewModule
 import dev.zlauncher.R
+import dev.zlauncher.core.NewArt
 import dev.zlauncher.core.nativecore.LibraryMode
 import dev.zlauncher.core.nativecore.ScanEvent
 import dev.zlauncher.core.nativecore.ScanListener
@@ -207,7 +208,9 @@ class LibraryRows(private val app: AppViewModel, private val model: SettingsMode
     private fun scan() {
         if (model.busy) return
         model.work("scan") {
+            val since = NewArt.now()
             val summary = app.zl.core.call { it.scan(SilentScan) }
+            NewArt.afterScan(app.zl, since, summary.added) { app.resumeTick++ }
             UiMessage(R.string.st_scan_result, listOf(summary.added.toString(), summary.updated.toString(), summary.missing.toString()))
         }
     }

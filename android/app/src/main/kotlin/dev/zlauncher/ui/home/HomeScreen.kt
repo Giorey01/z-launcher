@@ -20,6 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -67,6 +68,7 @@ fun HomeScreen(app: AppViewModel, vm: HomeViewModel = viewModel()) {
     val firstKey = initialHomeKey(ui)
     val gridState = rememberLazyGridState()
     val dockOnTop = LocalZTheme.current.settings.dockOnTop
+    val gridKeys = if (ui.mode == LibraryMode.SIMPLE) ui.games.map { gameKey(it.id) } else ui.platforms.map { platformKey(it.id) }
     val dock: @Composable () -> Unit = {
         Dock(
             ui.dock,
@@ -74,7 +76,10 @@ fun HomeScreen(app: AppViewModel, vm: HomeViewModel = viewModel()) {
             { app.open(Screen.Drawer) },
             { app.launchApp(it.packageName) },
             { app.hero = HeroTarget.None },
-            dockOnTop
+            dockOnTop,
+            // From the dock into the grid: the folder left last if it is on screen, else the first one
+            // shown. Left to the geometric search, the focus got lost on the way.
+            toGrid = { gridEntry(memory, gridKeys, gridState) },
         )
     }
     Column(Modifier.fillMaxSize()) {
@@ -87,6 +92,13 @@ fun HomeScreen(app: AppViewModel, vm: HomeViewModel = viewModel()) {
         val keys = if (ui.mode == LibraryMode.SIMPLE) ui.games.map { gameKey(it.id) } else ui.platforms.map { platformKey(it.id) }
         keys.indexOf(key).takeIf { it >= 0 }?.let { gridState.scrollToItem(it) }
     }
+}
+
+/** The grid element the dock leads to: the one focused last if it is on screen, else the first on screen. */
+private fun gridEntry(memory: FocusMemory, keys: List<String>, state: LazyGridState): FocusRequester {
+    val visible = state.layoutInfo.visibleItemsInfo.map { it.index }.filter { it in keys.indices }.map { keys[it] }
+    val key = memory.lastWhere { it in visible } ?: visible.firstOrNull() ?: return FocusRequester.Default
+    return memory.requesterOf(key)
 }
 
 /** The body of the Home: loading spinner, empty library prompt, or game/platform grid. */

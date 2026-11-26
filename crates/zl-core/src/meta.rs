@@ -240,6 +240,7 @@ fn build_game_details(
         platform_id: plat_id,
         platform_name: plat_name,
         title: game.title,
+        path: game.path,
         display_title,
         description: meta.description,
         release_date: meta.release_date,

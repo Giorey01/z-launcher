@@ -243,6 +243,8 @@ mirror_record! {
         plain animation_speed: AnimationSpeed,
         /// Dimming factor of the now playing screen, 0-1.
         plain now_playing_dimming: f32,
+        /// Brightness of the secondary screen's interface, 0.2-1 (1: as drawn).
+        plain secondary_brightness: f32,
         /// Saturation factor of the now playing screen, 0-1.
         plain now_playing_saturation: f32,
         /// Seconds without a touch before the now playing screen dims.

@@ -32,6 +32,9 @@ pub enum ScrapeTarget {
     Platform(String),
     /// One game.
     Game(i64),
+    /// The games added at or after this Unix time in seconds: those of the last scan, so a game
+    /// SteamGridDB does not know is asked once, not after every scan.
+    AddedSince(i64),
 }
 
 /// Why a run ended before the last game.
@@ -191,6 +194,13 @@ impl Service {
                 .into_iter()
                 .filter(|g| g.id == *id)
                 .collect(),
+            ScrapeTarget::AddedSince(since) => {
+                let ids = self.db().games_added_since(*since)?;
+                self.games(None)?
+                    .into_iter()
+                    .filter(|g| ids.binary_search(&g.id).is_ok())
+                    .collect()
+            }
         })
     }
 

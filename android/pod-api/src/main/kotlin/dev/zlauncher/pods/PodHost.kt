@@ -101,18 +101,63 @@ interface PodHost {
     /** Launches a game using user-configured emulators and settings. Requires permission `launch`. */
     fun launch(game: GameEntry)
 
-    /** Retrieves an encrypted secret from the Android Keystore. Requires permission `secrets`. */
+    /**
+     * A secret of this Pod (an API key, a token), decrypted, or `null`. Kept encrypted with a key of the
+     * Android Keystore, apart from every other Pod's. Requires permission `secrets`.
+     */
     suspend fun getSecret(key: String): String?
 
-    /** Stores an encrypted secret in the Android Keystore. Requires permission `secrets`. */
+    /** Stores [value] encrypted under [key] (`null` removes it); throws when the key store fails. Requires permission `secrets`. */
     suspend fun setSecret(key: String, value: String?)
 
-    /** Performs an HTTP GET request with retries and rate limiting. Requires permission `http`. */
-    suspend fun httpGet(url: String): ByteArray
+    /**
+     * GETs [url] with [headers]; the body. Retries a busy server (429, 5xx) with backoff. Throws
+     * [dev.zlauncher.core.nativecore.TransferException] (`Status`, `Network`…). Requires permission `http`.
+     */
+    suspend fun httpGet(url: String, headers: Map<String, String> = emptyMap()): ByteArray
 
-    /** Performs an HTTP POST request with retries and rate limiting. Requires permission `http`. */
-    suspend fun httpPost(url: String, body: ByteArray, contentType: String): ByteArray
+    /**
+     * POSTs [body] as [contentType] to [url]; the body of the answer. Only a refusal the server did
+     * not act on (429, 5xx) is retried. Throws [dev.zlauncher.core.nativecore.TransferException].
+     * Requires permission `http`.
+     */
+    suspend fun httpPost(url: String, body: ByteArray, contentType: String, headers: Map<String, String> = emptyMap()): ByteArray
 
-    /** Obtains the root directory path of a platform. Requires permission `folders`. */
+    /**
+     * Downloads [url] into the file [dest], telling [progress] the bytes so far and the total (null when
+     * the server does not say); the size of the file. It writes `dest.part` and renames it at the end: a
+     * download stopped (the coroutine cancelled) or failed leaves the part, and the next call for the same
+     * [dest] resumes it when the server can. There is no limit on the whole download, only on silence.
+     * Requires permission `http` (API 2).
+     */
+    suspend fun download(
+        url: String,
+        dest: File,
+        headers: Map<String, String> = emptyMap(),
+        progress: (done: Long, total: Long?) -> Unit = { _, _ -> },
+    ): Long
+
+    /**
+     * Extracts [archive] (.zip, .7z, or the first volume of a .rar set, told by the extension) into the
+     * folder [dest], telling [progress] the bytes written and the total; the files written. Every entry
+     * stays inside [dest] (one that would leave it fails the extraction), and on any failure, cancelling
+     * the coroutine included, what was written is removed. Throws
+     * [dev.zlauncher.core.nativecore.TransferException] (`Unsupported`, `Unsafe`, `Password`, `Damaged`,
+     * `NoSpace`…). Requires permission `archive` (API 2).
+     */
+    suspend fun extract(
+        archive: File,
+        dest: File,
+        password: String? = null,
+        progress: (done: Long, total: Long?) -> Unit = { _, _ -> },
+    ): List<File>
+
+    /**
+     * The folder of a platform in the library (absolute path), where a game of that platform
+     * belongs; `null` when the library has none. Requires permission `folders`.
+     */
     suspend fun platformRoot(platformId: String): String?
+
+    /** Long tasks kept running by the launcher with a notification. Requires permission `work`. */
+    val work: PodWork
 }

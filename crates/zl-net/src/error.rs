@@ -20,4 +20,8 @@ pub enum HttpError {
     /// Response could not be read or decoded.
     #[error("I/O error: {0}")]
     Io(String),
+
+    /// The caller asked to stop.
+    #[error("cancelled")]
+    Cancelled,
 }

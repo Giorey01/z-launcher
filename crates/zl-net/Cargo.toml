@@ -10,5 +10,8 @@ thiserror = { workspace = true }
 ureq = { workspace = true }
 zl-config = { path = "../zl-config" }
 
+[dev-dependencies]
+tempfile = { workspace = true }
+
 [lints]
 workspace = true

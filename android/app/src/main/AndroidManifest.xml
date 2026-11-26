@@ -11,6 +11,10 @@
 
     <!-- "All files access": the main storage mode (RNF-10); the folder picker is used on top to hand ROMs to emulators. -->
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <!-- Long tasks of the Pods (a download) run in a foreground service with a notification. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <!-- Usage access (granted by the user in the system settings): play time from the app usage events (RF-40). -->
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions" />
@@ -61,5 +65,9 @@
             android:resizeableActivity="true"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|keyboard|navigation|uiMode|density"
             android:stateNotNeeded="true" />
+        <service
+            android:name=".pods.work.PodWorkService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
     </application>
 </manifest>

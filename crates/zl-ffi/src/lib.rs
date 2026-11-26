@@ -21,6 +21,7 @@ mod scan;
 mod secrets_api;
 mod sessions_api;
 mod steam_api;
+mod transfer_api;
 mod types;
 
 uniffi::setup_scaffolding!();
@@ -34,6 +35,9 @@ pub use scan::{ScanEvent, ScanIssue, ScanListener, ScanSummary};
 pub use secrets_api::SecretStore;
 pub use sessions_api::{PendingSession, PlayStats, SessionEnd, UsageEvent, UsageKind};
 pub use steam_api::{SteamAccount, SteamImport, SteamProblem};
+pub use transfer_api::{
+    download_file, extract_archive, http_get, http_post, TransferError, TransferListener,
+};
 pub use types::{
     Candidate, ClipData, Detection, Extra, ExtraValue, FolderKind, GameEntry, GameKind,
     InstalledEmulator, LaunchIntent, LibraryMode, Plan, PlatformEntry, ProfileRef, ProposedDefault,
@@ -62,6 +66,19 @@ pub fn suggested_rom_folder() -> String {
 #[uniffi::export]
 pub fn dock_slots() -> u32 {
     u32::try_from(zl_config::app::DOCK_SLOTS).unwrap_or(u32::MAX)
+}
+
+/// The tracks of the theme's music to play now, in order (empty when music is off):
+/// `minute_of_day` is the local time, `seed` varies a shuffled playlist between sessions.
+#[uniffi::export]
+pub fn music_queue(music: MusicSetup, minute_of_day: u32, seed: u64) -> Vec<String> {
+    zl_core::music_queue(&music.into(), minute_of_day, seed)
+}
+
+/// The folder of the data directory the app copies its built-in music into.
+#[uniffi::export]
+pub fn default_music_dir_name() -> String {
+    zl_config::theme::DEFAULT_MUSIC_DIR_NAME.to_string()
 }
 
 /// The default URL for the public Pod store index.

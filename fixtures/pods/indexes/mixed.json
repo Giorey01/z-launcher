@@ -83,7 +83,7 @@
       "id": "future.pod",
       "name": "Future.Pod",
       "version": "1.0.0",
-      "api": 2,
+      "api": 3,
       "description": "Sample entry.",
       "url": "https://example.invalid/pods/future.pod-1.0.0.zlpod",
       "sha256": "b822c98ae43838bd93a8d434e65386a8abeec9dcaff43b0e0e50f290b19d322f",

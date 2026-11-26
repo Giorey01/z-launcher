@@ -4,9 +4,9 @@
 //! thousand tiles does not touch the disk.
 
 use std::collections::BTreeMap;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
-use zl_config::theme::USER_ART_DIR_NAME;
+use zl_config::theme::{DEFAULT_MUSIC_DIR_NAME, USER_ART_DIR_NAME};
 use zl_theme::{
     list_installed, read_package, read_theme_layers, resolve_music_file, resolve_slot,
     slots_of_package, AssetCategory, AssetPack, ColorScheme, InstalledContent, LayerSet,
@@ -218,6 +218,20 @@ fn pick_music(
         })
 }
 
+/// The launcher's own tracks in `dir`, by name; none when the folder is missing.
+fn default_music(dir: &Path) -> Vec<String> {
+    let mut tracks: Vec<String> = std::fs::read_dir(dir)
+        .into_iter()
+        .flatten()
+        .flatten()
+        .map(|e| e.path())
+        .filter(|p| p.is_file())
+        .map(|p| p.to_string_lossy().into_owned())
+        .collect();
+    tracks.sort();
+    tracks
+}
+
 /// The mode a source declares for its music.
 fn declared_mode(pkg: Option<&ThemePackage>, referenced: Option<&AssetPack>) -> Option<MusicMode> {
     pkg.and_then(|p| p.manifest.as_ref())
@@ -281,11 +295,14 @@ impl Service {
             find_pack(&content, category, &id)
         };
         let layers = self.layer_list(&content, pkg.as_ref());
-        let music = pick_music(
+        let mut music = pick_music(
             pkg.as_ref(),
             explicit(AssetCategory::Music),
             referenced(AssetCategory::Music),
         );
+        if music.playlist.is_empty() && music.schedule.is_empty() {
+            music.playlist = default_music(&self.data_dir.join(DEFAULT_MUSIC_DIR_NAME));
+        }
         let declared_music_mode = declared_mode(pkg.as_ref(), referenced(AssetCategory::Music));
         self.assemble(wanted, pkg, layers, music, declared_music_mode)
     }

@@ -1,0 +1,195 @@
+{
+  "_doc": "RAR archives (fixtures/archive/rar/) and their expected contents (sha256 per extracted file, from the official UnRAR); names: which file names start a RAR set. Rebuilt by fixtures/archive/rar/make.sh.",
+  "password": "Secret123",
+  "cases": [
+    {
+      "name": "rar5-single",
+      "first": "archive/rar/rar5-single/set.rar",
+      "password": null,
+      "solid": false,
+      "volumes": 1,
+      "files": {
+        "game/data/disc.bin": "fc145c00ec1f79f609a09e472c1fdcdddf5e4f1f407aef7dc648477d35262439",
+        "game/data/track00.raw": "a0cb085a1ac19cdac3ce6089123c8a5054433ac6363f190f7bc0c810d8a0562b",
+        "game/data/track01.raw": "9161728e8dea6673c08aede67d7a300c58116f8baf61c52da960ec06be7023e4",
+        "game/data/track02.raw": "fd5274d0264a3affafd22d69651136ef6ba956cd990b580b74eae80f48404541",
+        "game/data/track03.raw": "99d5ec7c0f9c3aa14b6185ae81e1876e101a956918775e2454a36388475250bb",
+        "game/data/track04.raw": "bc0d8cd6c417cf440375ae6c11f77acd715b9fcacbd50bba92cb3c2f4ee37d30",
+        "game/readme.txt": "c41f82d536e0d0e40266d8872418088c3e773d89e4750de0b49a5c7ff35e55b1"
+      }
+    },
+    {
+      "name": "rar5-volumes",
+      "first": "archive/rar/rar5-volumes/set.part1.rar",
+      "password": null,
+      "solid": false,
+      "volumes": 4,
+      "files": {
+        "game/data/disc.bin": "fc145c00ec1f79f609a09e472c1fdcdddf5e4f1f407aef7dc648477d35262439",
+        "game/data/track00.raw": "a0cb085a1ac19cdac3ce6089123c8a5054433ac6363f190f7bc0c810d8a0562b",
+        "game/data/track01.raw": "9161728e8dea6673c08aede67d7a300c58116f8baf61c52da960ec06be7023e4",
+        "game/data/track02.raw": "fd5274d0264a3affafd22d69651136ef6ba956cd990b580b74eae80f48404541",
+        "game/data/track03.raw": "99d5ec7c0f9c3aa14b6185ae81e1876e101a956918775e2454a36388475250bb",
+        "game/data/track04.raw": "bc0d8cd6c417cf440375ae6c11f77acd715b9fcacbd50bba92cb3c2f4ee37d30",
+        "game/readme.txt": "c41f82d536e0d0e40266d8872418088c3e773d89e4750de0b49a5c7ff35e55b1"
+      }
+    },
+    {
+      "name": "rar5-solid-volumes",
+      "first": "archive/rar/rar5-solid-volumes/set.part1.rar",
+      "password": null,
+      "solid": true,
+      "volumes": 4,
+      "files": {
+        "game/data/disc.bin": "fc145c00ec1f79f609a09e472c1fdcdddf5e4f1f407aef7dc648477d35262439",
+        "game/data/track00.raw": "a0cb085a1ac19cdac3ce6089123c8a5054433ac6363f190f7bc0c810d8a0562b",
+        "game/data/track01.raw": "9161728e8dea6673c08aede67d7a300c58116f8baf61c52da960ec06be7023e4",
+        "game/data/track02.raw": "fd5274d0264a3affafd22d69651136ef6ba956cd990b580b74eae80f48404541",
+        "game/data/track03.raw": "99d5ec7c0f9c3aa14b6185ae81e1876e101a956918775e2454a36388475250bb",
+        "game/data/track04.raw": "bc0d8cd6c417cf440375ae6c11f77acd715b9fcacbd50bba92cb3c2f4ee37d30",
+        "game/readme.txt": "c41f82d536e0d0e40266d8872418088c3e773d89e4750de0b49a5c7ff35e55b1"
+      }
+    },
+    {
+      "name": "rar5-password",
+      "first": "archive/rar/rar5-password/set.part1.rar",
+      "password": "Secret123",
+      "solid": false,
+      "volumes": 4,
+      "files": {
+        "game/data/disc.bin": "fc145c00ec1f79f609a09e472c1fdcdddf5e4f1f407aef7dc648477d35262439",
+        "game/data/track00.raw": "a0cb085a1ac19cdac3ce6089123c8a5054433ac6363f190f7bc0c810d8a0562b",
+        "game/data/track01.raw": "9161728e8dea6673c08aede67d7a300c58116f8baf61c52da960ec06be7023e4",
+        "game/data/track02.raw": "fd5274d0264a3affafd22d69651136ef6ba956cd990b580b74eae80f48404541",
+        "game/data/track03.raw": "99d5ec7c0f9c3aa14b6185ae81e1876e101a956918775e2454a36388475250bb",
+        "game/data/track04.raw": "bc0d8cd6c417cf440375ae6c11f77acd715b9fcacbd50bba92cb3c2f4ee37d30",
+        "game/readme.txt": "c41f82d536e0d0e40266d8872418088c3e773d89e4750de0b49a5c7ff35e55b1"
+      }
+    },
+    {
+      "name": "rar5-headers",
+      "first": "archive/rar/rar5-headers/set.rar",
+      "password": "Secret123",
+      "solid": false,
+      "volumes": 1,
+      "files": {
+        "game/data/disc.bin": "fc145c00ec1f79f609a09e472c1fdcdddf5e4f1f407aef7dc648477d35262439",
+        "game/data/track00.raw": "a0cb085a1ac19cdac3ce6089123c8a5054433ac6363f190f7bc0c810d8a0562b",
+        "game/data/track01.raw": "9161728e8dea6673c08aede67d7a300c58116f8baf61c52da960ec06be7023e4",
+        "game/data/track02.raw": "fd5274d0264a3affafd22d69651136ef6ba956cd990b580b74eae80f48404541",
+        "game/data/track03.raw": "99d5ec7c0f9c3aa14b6185ae81e1876e101a956918775e2454a36388475250bb",
+        "game/data/track04.raw": "bc0d8cd6c417cf440375ae6c11f77acd715b9fcacbd50bba92cb3c2f4ee37d30",
+        "game/readme.txt": "c41f82d536e0d0e40266d8872418088c3e773d89e4750de0b49a5c7ff35e55b1"
+      }
+    },
+    {
+      "name": "rar4-volumes",
+      "first": "archive/rar/rar4-volumes/set.rar",
+      "password": null,
+      "solid": false,
+      "volumes": 7,
+      "files": {
+        "game/a.pak": "9e4f1cb31ca7419504de17df4be87bcd6c6919aeea90c315433688b9e7de3006",
+        "game/b.pak": "ebdc00e84338b8e75c6b045b3488d7f9f73864f197bc291d94349297b20b37b9",
+        "game/c.pak": "a7b6b9f00388c66b5b308dd1d06983692426a65e208e82c18f97e8244e87f086",
+        "game/config/settings.ini": "4527ea4d4f90b488f0643e828481f7ecc7547e28e665d8f0765009ed5b51e5d2",
+        "game/d.pak": "17b437edbf8009d24a42c8c2da4341060f6c0618275dad9f040117e0834dfa6e",
+        "game/e.pak": "134867b294bc40a052e0ed9e070379bea8824da34db7f586f548294e426e6202",
+        "game/empty.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "game/many/file00.txt": "1732d4f64a5b350e72283bf59b240f5b9030dffc8d400f864d1ae15bf9b893bb",
+        "game/many/file01.txt": "80926cfff7f3d268bf673dbc8507d6b7f235901462f443480da93b4d48ee3379",
+        "game/many/file02.txt": "22f7e109dfa1caf998e2deae6a791457aa356764c1f49f2e853c3b71eb033382",
+        "game/many/file03.txt": "beb880b333f5a8896de70e91659aeb61451464b24e2ae4d80853461871ec59f9",
+        "game/many/file04.txt": "9f378a1c888dd59eeca4704d2dd598214ab339000a3f8f48a76958601a4bc2f6",
+        "game/many/file05.txt": "cf3672ff6762b3b4a579eaa1d15db0209d2aa616b90ae89b45fc8d2854a8c083",
+        "game/many/file06.txt": "6b8efa171d44638d0bf98f846118b8671fd0c84c0ddd0619635c3062012c7060",
+        "game/many/file07.txt": "eebbdc99147d794aedbefe4f47077e2ed3f5b3fa24e2fa0588fae3d0bd1bcfc5",
+        "game/many/file08.txt": "21b973dcf6f72f8b7ac1a62958d749d71ce15efb1b8f8d6febd618ed2ecc4448",
+        "game/many/file09.txt": "c9d57ab4c06be4487749218e31a1f739d36799b4639894556cff9d6109421c67",
+        "game/naïve résumé/日本語.txt": "9b338548a304cd0d6e71301dc07e902ff5ae9576f1d9048f2f915f95f81984e0"
+      }
+    },
+    {
+      "name": "rar4-solid",
+      "first": "archive/rar/rar4-solid/set.rar",
+      "password": null,
+      "solid": true,
+      "volumes": 1,
+      "files": {
+        "game/config/settings.ini": "4527ea4d4f90b488f0643e828481f7ecc7547e28e665d8f0765009ed5b51e5d2",
+        "game/d.pak": "17b437edbf8009d24a42c8c2da4341060f6c0618275dad9f040117e0834dfa6e",
+        "game/empty.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "game/many/file00.txt": "1732d4f64a5b350e72283bf59b240f5b9030dffc8d400f864d1ae15bf9b893bb",
+        "game/many/file01.txt": "80926cfff7f3d268bf673dbc8507d6b7f235901462f443480da93b4d48ee3379",
+        "game/many/file02.txt": "22f7e109dfa1caf998e2deae6a791457aa356764c1f49f2e853c3b71eb033382",
+        "game/many/file03.txt": "beb880b333f5a8896de70e91659aeb61451464b24e2ae4d80853461871ec59f9",
+        "game/many/file04.txt": "9f378a1c888dd59eeca4704d2dd598214ab339000a3f8f48a76958601a4bc2f6",
+        "game/many/file05.txt": "cf3672ff6762b3b4a579eaa1d15db0209d2aa616b90ae89b45fc8d2854a8c083",
+        "game/many/file06.txt": "6b8efa171d44638d0bf98f846118b8671fd0c84c0ddd0619635c3062012c7060",
+        "game/many/file07.txt": "eebbdc99147d794aedbefe4f47077e2ed3f5b3fa24e2fa0588fae3d0bd1bcfc5",
+        "game/many/file08.txt": "21b973dcf6f72f8b7ac1a62958d749d71ce15efb1b8f8d6febd618ed2ecc4448",
+        "game/many/file09.txt": "c9d57ab4c06be4487749218e31a1f739d36799b4639894556cff9d6109421c67",
+        "game/naïve résumé/日本語.txt": "9b338548a304cd0d6e71301dc07e902ff5ae9576f1d9048f2f915f95f81984e0"
+      }
+    }
+  ],
+  "names": {
+    "first": [
+      "Game.rar",
+      "game.part1.rar",
+      "Game.Part01.RAR",
+      "game.part001.rar",
+      "game.v1.2.rar",
+      "my.party.rar"
+    ],
+    "later": [
+      "game.part2.rar",
+      "game.part02.rar",
+      "Game.PART10.rar",
+      "game.part0.rar",
+      "game.r00",
+      "game.r01",
+      "game.zip",
+      "game.rar.txt"
+    ],
+    "splitCount": [
+      {
+        "names": [
+          "g.part1.rar",
+          "g.part2.rar",
+          "g.part3.rar"
+        ],
+        "parts": 3
+      },
+      {
+        "names": [
+          "g.part1.rar",
+          "g.part1.rar",
+          "G.PART2.RAR"
+        ],
+        "parts": 2
+      },
+      {
+        "names": [
+          "g.rar",
+          "g.r00",
+          "g.r01"
+        ],
+        "parts": 3
+      },
+      {
+        "names": [
+          "Game.rar"
+        ],
+        "parts": 0
+      },
+      {
+        "names": [
+          "Game",
+          "Game.zip"
+        ],
+        "parts": 0
+      }
+    ]
+  }
+}

@@ -1,5 +1,6 @@
 package dev.zlauncher.ui.theme
 
+import dev.zlauncher.audio.MusicPlayer
 import dev.zlauncher.audio.SoundFx
 import dev.zlauncher.core.CoreProvider
 import dev.zlauncher.core.nativecore.CoreException
@@ -11,9 +12,11 @@ import kotlinx.coroutines.flow.asStateFlow
 /**
  * Holds the [ZTheme] every screen on every display draws with. [reload] asks the core for the active
  * theme again (after the user changed a setting, applied a theme or imported one), drops the art caches
- * and refreshes the sounds.
+ * and refreshes the sounds and the music.
  */
-class ThemeStore(private val core: CoreProvider, private val art: ArtResolver, private val sound: SoundFx) {
+class ThemeStore(private val core: CoreProvider, private val art: ArtResolver, private val sound: SoundFx,
+    private val music: MusicPlayer,
+) {
     /** Backing state; `null` until the first load. */
     private val state = MutableStateFlow<ZTheme?>(null)
 
@@ -30,6 +33,7 @@ class ThemeStore(private val core: CoreProvider, private val art: ArtResolver, p
         art.reset()
         val next = resolved.toZTheme(++revision)
         sound.apply(next)
+        music.apply(resolved.music, next.settings.musicVolume)
         state.value = next
     }
 }

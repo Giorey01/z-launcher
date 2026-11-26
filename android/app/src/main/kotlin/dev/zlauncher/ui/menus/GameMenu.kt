@@ -177,7 +177,14 @@ private fun mainEntries(
     val hide = MenuEntry(Icons.Rounded.VisibilityOff, stringResource(if (hidden) R.string.menu_unhide else R.string.menu_hide)) {
         app.library.setHidden(game, !hidden)
     }
-    return listOfNotNull(launch, info, favorite, rating, edit.takeIf { game.appPackage == null }, art, hide, unfile)
+    // The actions of the Pods, after the launcher's own and before hiding.
+    val pods = app.zl.pods.gameActionSlots(game).map { slot ->
+        MenuEntry(slot.icon, slot.label) {
+            app.overlay = null
+            app.open(Screen.Pod(slot.podId, slot.route))
+        }
+    }
+    return listOfNotNull(launch, info, favorite, rating, edit.takeIf { game.appPackage == null }, art) + pods + listOfNotNull(hide, unfile)
 }
 
 /** The displays that are on, the larger as the top screen. */

@@ -39,6 +39,25 @@ impl From<ProfileRef> for plat::ProfileRef {
     }
 }
 
+/// The folder of a platform in the library, where a game of that platform belongs.
+#[derive(Debug, Clone, PartialEq, Eq, uniffi::Record)]
+pub struct PlatformFolder {
+    /// Absolute path of the folder.
+    pub path: String,
+    /// SAF tree URI of the ROM folder it is in, if one was granted.
+    pub saf_tree: Option<String>,
+}
+
+impl From<core::PlatformRoot> for PlatformFolder {
+    /// One to one.
+    fn from(r: core::PlatformRoot) -> Self {
+        PlatformFolder {
+            path: r.path,
+            saf_tree: r.saf_tree,
+        }
+    }
+}
+
 /// A ROM folder.
 #[derive(Debug, Clone, PartialEq, Eq, uniffi::Record)]
 pub struct RomRoot {

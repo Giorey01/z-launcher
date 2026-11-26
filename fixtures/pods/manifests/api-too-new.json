@@ -3,7 +3,7 @@
   "id": "sample.hello",
   "name": "Hello",
   "version": "1.2.0",
-  "api": 2,
+  "api": 3,
   "author": {
     "name": "Example",
     "signer": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"

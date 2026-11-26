@@ -21,8 +21,21 @@ class FocusMemory {
     /** Key of the element that had the focus last, `null` before any. */
     var lastKey: String? by mutableStateOf(null)
 
-    /** The requester attached to the element whose key is [lastKey]. */
-    val requester = FocusRequester()
+    /**
+     * One requester per element, attached for good: adding a requester to an element just as it
+     * took the focus changed its modifiers, and the focus could be dropped on the way (from the dock
+     * down into the grid, the cursor vanished until A was pressed).
+     */
+    private val requesters = HashMap<String, FocusRequester>()
+
+    /** The requester of the element with [key] (attached once the element is composed with [track]). */
+    fun requesterOf(key: String): FocusRequester = requesters.getOrPut(key) { FocusRequester() }
+
+    /** The last focused key that [accept]s, `null` when none was focused yet. */
+    fun lastWhere(accept: (String) -> Boolean): String? = history.lastOrNull(accept)
+
+    /** The keys in the order they last had the focus, the latest at the end. */
+    private val history = LinkedHashSet<String>()
 
     /** Marks an element as the one to focus when nothing was focused before. */
     fun defaultTo(key: String) {
@@ -31,8 +44,13 @@ class FocusMemory {
 
     /** Asks the remembered element for the focus; `false` when it is not on screen (not composed yet). */
     fun restore(): Boolean = try {
-        requester.requestFocus()
-        true
+        val key = lastKey
+        if (key == null) {
+            false
+        } else {
+            requesterOf(key).requestFocus()
+            true
+        }
     } catch (_: IllegalStateException) {
         false
     }
@@ -46,10 +64,16 @@ class FocusMemory {
         return false
     }
 
-    /** Wires an element in: it carries the requester while it is the remembered one and reports when it gets the focus. */
+    /** Wires an element in: it always carries its own requester and reports when it gets the focus. */
     fun track(key: String): Modifier = Modifier
-        .then(if (lastKey == key) Modifier.focusRequester(requester) else Modifier)
-        .onFocusChanged { if (it.isFocused) lastKey = key }
+        .focusRequester(requesterOf(key))
+        .onFocusChanged {
+            if (it.isFocused) {
+                lastKey = key
+                history.remove(key)
+                history.add(key)
+            }
+        }
 }
 
 /** Asks this requester for the focus, retrying over the next frames until its element is laid out. */

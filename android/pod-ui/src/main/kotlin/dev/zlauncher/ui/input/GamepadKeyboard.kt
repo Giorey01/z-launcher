@@ -1,4 +1,4 @@
-package dev.zlauncher.ui.drawer
+package dev.zlauncher.ui.input
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

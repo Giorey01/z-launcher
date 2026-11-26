@@ -383,3 +383,32 @@ fn android_apps_filed_under_a_console() -> Res {
     );
     Ok(())
 }
+
+/// The folder of a platform: the one holding its games, then one named after it, else none.
+#[test]
+fn platform_root_is_where_its_games_are() -> Res {
+    let f = fixture(Some("content://tree/games"))?;
+    let ps2 = f.svc.platform_root("ps2")?.ok_or("no ps2 folder")?;
+    assert_eq!(
+        ps2.path,
+        format!("{}/Ps2", f.root),
+        "the folder of its game, as written on disk"
+    );
+    assert_eq!(ps2.saf_tree.as_deref(), Some("content://tree/games"));
+    let switch = f.svc.platform_root("switch")?.ok_or("no switch folder")?;
+    assert_eq!(
+        switch.path,
+        format!("{}/Switch", f.root),
+        "the first folder, not Games/ under it"
+    );
+    fs::create_dir_all(Path::new(&f.root).join("n64"))?;
+    let n64 = f.svc.platform_root("n64")?.ok_or("no n64 folder")?;
+    assert_eq!(
+        n64.path,
+        format!("{}/n64", f.root),
+        "no game yet: the folder named after it"
+    );
+    assert_eq!(f.svc.platform_root("gba")?, None, "no game and no folder");
+    assert_eq!(f.svc.platform_root("not-a-platform")?, None);
+    Ok(())
+}

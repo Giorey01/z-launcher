@@ -2,6 +2,7 @@ package dev.zlauncher.pods
 
 import android.content.Context
 import androidx.compose.ui.graphics.vector.ImageVector
+import dev.zlauncher.core.nativecore.GameEntry
 import java.util.ServiceLoader
 
 /** Characters an id may have (see [Pod.id]). */
@@ -123,6 +124,18 @@ class PodRegistry(
         }.map {
             LeadTileSlotItem(entry.pod.id, it.label, it.icon, it.routeForPlatform(platformId))
         }
+    }
+
+    /** The actions the Pods add to the menu of [game] (§7): those whose condition holds; a condition that fails is left out. */
+    fun gameActionSlots(game: GameEntry): List<LeadTileSlotItem> = entries.flatMap { entry ->
+        validSlots(entry).filterIsInstance<PodSlot.GameActions>()
+            .filter { runCatching { it.condition(game) }.getOrDefault(false) }
+            .mapNotNull { slot -> runCatching { LeadTileSlotItem(entry.pod.id, slot.label, slot.icon, slot.routeForGame(game)) }.getOrNull() }
+    }
+
+    /** The sections the Pods add to the launcher's settings (§7), with their Pod. */
+    fun settingsSectionSlots(): List<Pair<String, PodSlot.SettingsSection>> = entries.flatMap { entry ->
+        validSlots(entry).filterIsInstance<PodSlot.SettingsSection>().map { entry.pod.id to it }
     }
 
     /** Builds registries from services files, external pods, or a raw list. */

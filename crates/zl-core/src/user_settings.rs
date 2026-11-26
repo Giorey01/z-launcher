@@ -44,6 +44,8 @@ impl UserSettings {
         self.music_volume = clamp(self.music_volume, cfg::VOLUME_RANGE);
         self.jingle_volume = clamp(self.jingle_volume, cfg::VOLUME_RANGE);
         self.now_playing_dimming = clamp(self.now_playing_dimming, cfg::NOW_PLAYING_RANGE);
+        self.secondary_brightness =
+            clamp(self.secondary_brightness, cfg::SECONDARY_BRIGHTNESS_RANGE);
         self.now_playing_saturation = clamp(self.now_playing_saturation, cfg::NOW_PLAYING_RANGE);
         let idle = cfg::NOW_PLAYING_IDLE_RANGE;
         self.now_playing_idle_seconds = self.now_playing_idle_seconds.clamp(idle.0, idle.1);
@@ -160,6 +162,7 @@ fn system_pairs(s: &UserSettings) -> Vec<(&'static str, String)> {
         ("discrete_paging", flag(s.discrete_paging)),
         ("animation_speed", s.animation_speed.as_str().into()),
         ("now_playing_dimming", s.now_playing_dimming.to_string()),
+        ("secondary_brightness", s.secondary_brightness.to_string()),
         (
             "now_playing_saturation",
             s.now_playing_saturation.to_string(),
@@ -261,6 +264,7 @@ fn read_rest(r: &Reader<'_>, base: UserSettings) -> Result<UserSettings, CoreErr
 fn read_play(r: &Reader<'_>, base: UserSettings) -> Result<UserSettings, CoreError> {
     Ok(UserSettings {
         now_playing_dimming: r.num("now_playing_dimming", base.now_playing_dimming)?,
+        secondary_brightness: r.num("secondary_brightness", base.secondary_brightness)?,
         now_playing_saturation: r.num("now_playing_saturation", base.now_playing_saturation)?,
         now_playing_idle_seconds: r
             .text("now_playing_idle_seconds")?
@@ -385,6 +389,7 @@ mod tests {
             app_icon_pack: Some("org.example.pack".to_string()),
             now_playing_dimming: 0.75,
             now_playing_saturation: 0.25,
+            secondary_brightness: 0.2,
             ..initial
         };
         svc.set_user_settings(&modified)?;
@@ -399,6 +404,7 @@ mod tests {
         assert_eq!(loaded.app_icon_pack.as_deref(), Some("org.example.pack"));
         assert!((loaded.now_playing_dimming - 0.75).abs() < 1e-4);
         assert!((loaded.now_playing_saturation - 0.25).abs() < 1e-4);
+        assert!((loaded.secondary_brightness - 0.2).abs() < 1e-4);
         Ok(())
     }
 

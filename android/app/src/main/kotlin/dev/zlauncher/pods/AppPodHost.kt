@@ -1,6 +1,8 @@
 package dev.zlauncher.pods
 
 import android.content.Context
+import dev.zlauncher.core.KeystoreSecrets
+import dev.zlauncher.core.NewArt
 import dev.zlauncher.core.nativecore.GameDetails
 import dev.zlauncher.core.nativecore.GameEntry
 import dev.zlauncher.core.nativecore.PlatformEntry
@@ -10,11 +12,16 @@ import dev.zlauncher.core.nativecore.ScanListener
 import dev.zlauncher.core.nativecore.SoundAction
 import dev.zlauncher.nav.AppViewModel
 import dev.zlauncher.nav.Screen
+import dev.zlauncher.pods.work.PodWorkRunner
 import dev.zlauncher.ui.theme.ZTheme
-import java.io.File
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
 
 /** A scan listener that discards progress events during background rescan. */
 private object QuietScan : ScanListener {
@@ -66,9 +73,45 @@ class MemoryPodStorage(
     }
 }
 
-/** Simple fallback strings provider returning the key or formatted string. */
-class AppPodStrings : PodStrings {
-    override fun get(key: String): String = key
+/** Largest `i18n/<language>.json` read for a Pod: a text table, never this big in practice. */
+private const val MAX_I18N_BYTES = 1L shl 20
+
+/**
+ * The texts of a Pod (§8): the table of the app's language from `i18n/<language>.json`, then the
+ * English one, then the key itself. A file that is missing, too big or not a JSON object is skipped.
+ */
+class AppPodStrings(
+    /** The tables in lookup order (the app's language first, English last). */
+    private val tables: List<Map<String, String>> = emptyList(),
+) : PodStrings {
+    override fun get(key: String): String = tables.firstNotNullOfOrNull { it[key] } ?: key
+
+    override fun get(key: String, vararg args: Any): String {
+        val text = get(key)
+        return runCatching { text.format(*args) }.getOrDefault(text)
+    }
+
+    /** Loading of the tables from a Pod's `i18n/` folder. */
+    companion object {
+        /** The tables of [language] and of English from [dir]; no folder gives the keys back. */
+        fun load(dir: File?, language: String): AppPodStrings {
+            if (dir == null) return AppPodStrings()
+            val languages = listOf(language.lowercase(), "en").distinct()
+            return AppPodStrings(languages.mapNotNull { readTable(File(dir, "$it.json")) })
+        }
+
+        /** One `key → text` object; null when the file is missing, too big or not an object of strings. */
+        @Suppress("SwallowedException")
+        private fun readTable(file: File): Map<String, String>? {
+            if (!file.isFile || file.length() > MAX_I18N_BYTES) return null
+            return try {
+                val json = org.json.JSONObject(file.readText())
+                json.keys().asSequence().mapNotNull { k -> (json.opt(k) as? String)?.let { k to it } }.toMap()
+            } catch (e: org.json.JSONException) {
+                null
+            }
+        }
+    }
 }
 
 /** The launcher's side of [PodHost], with runtime permission enforcement (§8). */
@@ -87,7 +130,8 @@ class AppPodHost(
         permissions: Set<String>,
         app: AppViewModel,
         theme: ZTheme,
-    ) : this(podId, permissions, app, theme, AppPodStrings(), AppPodStorage(app.zl, podId))
+        i18nDir: File? = null,
+    ) : this(podId, permissions, app, theme, AppPodStrings.load(i18nDir, java.util.Locale.getDefault().language), AppPodStorage(app.zl, podId))
 
     private val _events = MutableSharedFlow<PodEvent>(extraBufferCapacity = 64)
     override val events: SharedFlow<PodEvent> = _events.asSharedFlow()
@@ -144,7 +188,13 @@ class AppPodHost(
 
     override suspend fun rescan(platformId: String) {
         requirePerm("library.rescan")
-        app?.zl?.core?.call { it.scan(QuietScan) }
+        val app = app ?: return
+        val since = NewArt.now()
+        val summary = app.zl.core.call { it.scan(QuietScan) }
+        // The open screens read the library again, as after any scan of the app.
+        withContext(Dispatchers.Main) { app.resumeTick++ }
+        dispatchEvent(PodEvent.LibraryChanged(setOf(platformId)))
+        NewArt.afterScan(app.zl, since, summary.added) { app.resumeTick++ }
     }
 
     override fun launch(game: GameEntry) {
@@ -154,25 +204,51 @@ class AppPodHost(
 
     override suspend fun getSecret(key: String): String? {
         requirePerm("secrets")
-        return null
+        val app = app ?: return null
+        return withContext(Dispatchers.IO) { KeystoreSecrets(app.zl).get(secretName(key)) }
     }
 
     override suspend fun setSecret(key: String, value: String?) {
         requirePerm("secrets")
+        val app = app ?: return
+        val saved = withContext(Dispatchers.IO) { KeystoreSecrets(app.zl).set(secretName(key), value) }
+        check(saved) { "the key store did not save the secret" }
     }
 
-    override suspend fun httpGet(url: String): ByteArray {
+    /** The name of a Pod's secret in the launcher's store: one namespace per Pod, so no Pod reads another's. */
+    private fun secretName(key: String): String = "pod.$podId.$key"
+
+    override suspend fun httpGet(url: String, headers: Map<String, String>): ByteArray {
         requirePerm("http")
-        return ByteArray(0)
+        return HostTransfers.get(url, headers)
     }
 
-    override suspend fun httpPost(url: String, body: ByteArray, contentType: String): ByteArray {
+    override suspend fun httpPost(url: String, body: ByteArray, contentType: String, headers: Map<String, String>): ByteArray {
         requirePerm("http")
-        return ByteArray(0)
+        return HostTransfers.post(url, body, contentType, headers)
     }
+
+    override suspend fun download(url: String, dest: File, headers: Map<String, String>, progress: (Long, Long?) -> Unit): Long {
+        requirePerm("http")
+        return HostTransfers.download(url, dest, headers, progress)
+    }
+
+    override suspend fun extract(archive: File, dest: File, password: String?, progress: (Long, Long?) -> Unit): List<File> {
+        requirePerm("archive")
+        return HostTransfers.extract(archive, dest, password, progress)
+    }
+
+    override val work: PodWork
+        get() {
+            requirePerm("work")
+            val app = checkNotNull(app) { "no app: work needs the launcher's process" }
+            return PodWorkRunner.forPod(app.zl, podId) { error ->
+                CoroutineScope(Dispatchers.IO).launch { runCatching { app.zl.core.call { it.recordPodCrash(podId, "Task failed: $error") } } }
+            }
+        }
 
     override suspend fun platformRoot(platformId: String): String? {
         requirePerm("folders")
-        return null
+        return app?.zl?.core?.call { it.platformFolder(platformId) }?.path
     }
 }

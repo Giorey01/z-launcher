@@ -24,6 +24,7 @@ pub const KNOWN_PERMISSIONS: &[&str] = &[
     "launch",
     "secrets",
     "http",
+    "archive",
     "work",
     "notifications",
     "folders",

@@ -233,6 +233,8 @@ pub struct UserSettings {
     pub animation_speed: AnimationSpeed,
     /// Dimming factor of the now playing screen, 0-1.
     pub now_playing_dimming: f32,
+    /// Brightness of the secondary screen's interface, 0.2-1 (1: as drawn).
+    pub secondary_brightness: f32,
     /// Saturation factor of the now playing screen, 0-1.
     pub now_playing_saturation: f32,
     /// Seconds without a touch before the now playing screen dims.
@@ -302,6 +304,7 @@ impl UserSettings {
         self.animation_speed =
             AnimationSpeed::parse_text(defaults::ANIMATION_SPEED).unwrap_or(AnimationSpeed::Normal);
         self.now_playing_dimming = defaults::NOW_PLAYING_DIMMING;
+        self.secondary_brightness = defaults::SECONDARY_BRIGHTNESS;
         self.now_playing_saturation = defaults::NOW_PLAYING_SATURATION;
         self.now_playing_idle_seconds = defaults::NOW_PLAYING_IDLE_SECONDS;
         self.launch_screen =
@@ -363,6 +366,7 @@ impl UserSettings {
             discrete_paging: true,
             animation_speed: AnimationSpeed::Normal,
             now_playing_dimming: 0.0,
+            secondary_brightness: 0.0,
             now_playing_saturation: 0.0,
             now_playing_idle_seconds: 0,
             launch_screen: LaunchScreen::Hero,

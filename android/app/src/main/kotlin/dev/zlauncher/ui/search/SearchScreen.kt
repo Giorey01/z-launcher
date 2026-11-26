@@ -45,7 +45,7 @@ import dev.zlauncher.nav.AppViewModel
 import dev.zlauncher.nav.HeroTarget
 import dev.zlauncher.nav.Overlay
 import dev.zlauncher.nav.Screen
-import dev.zlauncher.ui.drawer.GamepadKeyboard
+import dev.zlauncher.ui.input.GamepadKeyboard
 import dev.zlauncher.ui.pad.PadButton
 import dev.zlauncher.ui.pad.PadTile
 import dev.zlauncher.ui.pad.TileSurface

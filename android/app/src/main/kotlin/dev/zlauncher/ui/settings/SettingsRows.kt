@@ -10,6 +10,7 @@ import androidx.compose.material.icons.rounded.BlurOn
 import androidx.compose.material.icons.rounded.Brush
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.CropFree
+import androidx.compose.material.icons.rounded.BrightnessMedium
 import androidx.compose.material.icons.rounded.Devices
 import androidx.compose.material.icons.rounded.Dock
 import androidx.compose.material.icons.rounded.Extension
@@ -64,6 +65,9 @@ private fun percent(value: Float): String = "${Math.round(value * PERCENT)}%"
 
 private const val PERCENT = 100
 private const val PERCENT_STEP = 0.05f
+
+/** Lowest brightness of the second screen (the core keeps the same floor). */
+private const val MIN_BRIGHTNESS = 0.2f
 private const val MIN_HIGHLIGHT_THICKNESS = 0.5f
 private const val MAX_HIGHLIGHT_THICKNESS = 1.0f
 private const val MIN_HERO_SPLIT = 0.2f
@@ -303,6 +307,7 @@ class SettingsRows(
                 c.setScreenMode(v)
             },
             toggle(reverseMeta, st.reverseDisplayRoles) { c, v -> c.setReverseDisplayRoles(v) },
+            brightnessRow(st.secondaryBrightness),
             choice(launchMeta, LaunchScreen.entries, launchLabels, st.launchScreen) { c, v -> c.setLaunchScreen(v) },
             choice(dockingMeta, ExternalDisplayDocking.entries, dockingLabels, st.externalDisplayDocking) { c, v ->
                 c.setExternalDisplayDocking(v)
@@ -316,6 +321,12 @@ class SettingsRows(
             ),
             SettingRow("setup", Icons.Rounded.RestartAlt, s(R.string.st_setup), s(R.string.st_setup_sub), Control.Chevron, onActivate = { app.reopenSetup() }),
         )
+    }
+
+    /** The brightness of the second screen's interface, from 20% to 100% (as drawn). */
+    private fun brightnessRow(value: Float): SettingRow {
+        val slider = Control.Slider(value, MIN_BRIGHTNESS, 1f, PERCENT_STEP, percent(value)) { v -> model.change { it.setSecondaryBrightness(v) } }
+        return SettingRow("brightness2", Icons.Rounded.BrightnessMedium, s(R.string.st_brightness), s(R.string.st_brightness_sub), slider)
     }
 
     /** The about list. */

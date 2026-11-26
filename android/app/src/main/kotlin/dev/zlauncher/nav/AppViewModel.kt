@@ -47,9 +47,12 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     /** The message on screen, if any. */
     var message by mutableStateOf<UiMessage?>(null)
 
-    /** Incremented every time the launcher comes back to the foreground; screens restore their focus on it. */
+    /**
+     * Incremented every time the launcher comes back to the foreground, and when a Pod's scan
+     * changes the library; screens read the library again and restore their focus on it.
+     */
     var resumeTick by mutableIntStateOf(0)
-        private set
+        internal set
 
     /** The state of the settings screens, shared by both displays. */
     val settings = SettingsModel(this)
@@ -140,10 +143,11 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
             drawerSearching = false
             return true
         }
-        val handledSettings = top == Screen.Settings && settings.pop()
-        val screen = if (handledSettings) null else stack.removeLastOrNull()
+        // A dialog of the Pod screen or a settings subpage closes before the screen does.
+        val handledInside = (top == Screen.PodManagement && podManager.dismissDialog()) || (top == Screen.Settings && settings.pop())
+        val screen = if (handledInside) null else stack.removeLastOrNull()
         if (screen == Screen.Picker) choice = null
-        return handledSettings || screen != null
+        return handledInside || screen != null
     }
 
     /** Returns to the Home from anywhere (the system Home button while the launcher is the Home). */
@@ -219,6 +223,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun launchApp(packageName: String) {
         zl.recent.push(packageName)
         play(SoundAction.LAUNCH)
+        zl.music.leave()
         eventChannel.trySend(UiEvent.StartApp(packageName))
     }
 
@@ -274,6 +279,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         when (plan) {
             is Plan.Launch -> {
                 play(SoundAction.LAUNCH)
+                zl.music.leave()
                 eventChannel.trySend(UiEvent.StartGame(plan.intent, displayId, game))
             }
             is Plan.NeedsChoice -> if (plan.candidates.isEmpty()) {

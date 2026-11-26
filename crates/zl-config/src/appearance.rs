@@ -135,6 +135,13 @@ pub const MUSIC_PLAYBACK_MODE: &str = "IN ORDER";
 /// Range of the three volumes.
 pub const VOLUME_RANGE: (f32, f32) = (0.0, 1.0);
 
+/// Default brightness of the secondary screen's interface (1 is as drawn): dimmer than the main
+/// one, because a second screen at full light next to the game glares. The app darkens what it
+/// draws there; the backlight is the system's (Android 13 has one override for every display).
+pub const SECONDARY_BRIGHTNESS: f32 = 0.6;
+/// Range of the secondary screen's brightness: never fully dark, so it stays usable.
+pub const SECONDARY_BRIGHTNESS_RANGE: (f32, f32) = (0.2, 1.0);
+
 /// Default screen mode: `DUAL` (grid on one display, hero on the other). The app decides at
 /// first start whether the device has two displays and stores `SINGLE` when it has not; the core
 /// only keeps the choice.

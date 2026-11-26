@@ -28,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -38,10 +39,10 @@ import dev.zlauncher.nav.AppViewModel
 import dev.zlauncher.ui.common.BackPill
 import dev.zlauncher.ui.common.HeaderTitle
 import dev.zlauncher.ui.pad.FocusCursor
-import androidx.compose.ui.unit.IntOffset
 import dev.zlauncher.ui.theme.LocalBackdrop
 import dev.zlauncher.ui.theme.LocalZTheme
 import dev.zlauncher.ui.theme.ZPanel
+import kotlin.math.roundToInt
 
 /** Width of the category rail. */
 private val RAIL_WIDTH = 243.dp
@@ -174,10 +175,21 @@ private fun SettingsList(model: SettingsModel, rows: List<SettingRow>, modifier:
 /** The cursor brackets over the focused row, drawn outside the panel's clip so they may overhang its edge. */
 @Composable
 private fun RowCursor(state: androidx.compose.foundation.lazy.LazyListState, index: Int) {
-    val info = state.layoutInfo.visibleItemsInfo.firstOrNull { it.index == index } ?: return
-    val density = androidx.compose.ui.platform.LocalDensity.current
-    val dividerPx = with(density) { 1.5.dp.toPx() }
-    Box(Modifier.offset { IntOffset(0, info.offset) }.fillMaxWidth().height(with(density) { (info.size - dividerPx).toDp() })) {
+    val dividerPx = with(androidx.compose.ui.platform.LocalDensity.current) { 1.5.dp.toPx() }
+    Box(
+        Modifier.fillMaxWidth().layout { measurable, constraints ->
+            // Read while laying out, after the list placed its rows in this same frame: read while composing,
+            // the position was a frame behind and the cursor trailed the row during a scroll.
+            val info = state.layoutInfo.visibleItemsInfo.firstOrNull { it.index == index }
+            if (info == null) {
+                layout(0, 0) {}
+            } else {
+                val height = (info.size - dividerPx).roundToInt().coerceAtLeast(0)
+                val placeable = measurable.measure(constraints.copy(minHeight = height, maxHeight = height))
+                layout(placeable.width, height) { placeable.place(0, info.offset) }
+            }
+        },
+    ) {
         FocusCursor(Modifier.matchParentSize(), 5.dp, 26.dp)
     }
 }

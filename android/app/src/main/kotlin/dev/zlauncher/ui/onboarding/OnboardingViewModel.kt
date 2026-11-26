@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import dev.zlauncher.R
 import dev.zlauncher.ZLauncherApp
+import dev.zlauncher.core.NewArt
 import dev.zlauncher.core.nativecore.CocoonDataDir
 import dev.zlauncher.core.nativecore.Core
 import dev.zlauncher.core.nativecore.CoreException
@@ -214,7 +215,9 @@ class OnboardingViewModel(application: Application) : AndroidViewModel(applicati
         if (state.value.scan.running) return
         state.update { it.copy(scan = ScanUi(running = true)) }
         viewModelScope.launch {
+            val since = NewArt.now()
             val summary = core { it.scan(listener) }
+            summary?.let { NewArt.afterScan(zl, since, it.added) }
             state.update { it.copy(scan = it.scan.copy(running = false, summary = summary ?: it.scan.summary)) }
         }
     }

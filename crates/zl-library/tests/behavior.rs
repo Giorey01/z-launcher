@@ -170,6 +170,58 @@ fn titles_and_disc_groups() -> TestResult {
     Ok(())
 }
 
+/// Switch updates, DLC and a second dump of a game join the base game they name by title id;
+/// an update without its base stays a game of its own.
+#[test]
+fn switch_addons_join_their_game() -> TestResult {
+    let dir = tempfile::tempdir()?;
+    write(
+        dir.path(),
+        "switch/Hollow Knight/Hollow Knight [0100633007D48000][v0].nsp",
+        "b",
+    )?;
+    write(
+        dir.path(),
+        "switch/Hollow Knight/Hollow Knight [0100633007D48800][v589824].nsp",
+        "u",
+    )?;
+    write(
+        dir.path(),
+        "switch/Updates/Boomerang Fu [DLC][010081A00EE63002].nsp",
+        "d",
+    )?;
+    write(
+        dir.path(),
+        "switch/Boomerang Fu [010081A00EE62000][v0][Base].nsp",
+        "b",
+    )?;
+    write(
+        dir.path(),
+        "switch/Boomerang Fu [010081A00EE62000][v0].nsz",
+        "b2",
+    )?;
+    write(
+        dir.path(),
+        "switch/Only Update [0100AAAA0000A800][v65536].nsp",
+        "u",
+    )?;
+    let db = Db::open_in_memory()?;
+    let mut rules = basic_rules();
+    rules.insert("switch", &["nsp", "nsz", "xci"]);
+    quiet_scan(&db, &[root(dir.path())], &rules)?;
+    let mut titles: Vec<String> = db
+        .query_games(&GameQuery::default())?
+        .into_iter()
+        .map(|g| g.title)
+        .collect();
+    titles.sort();
+    assert_eq!(titles.len(), 3, "{titles:?}");
+    assert!(titles.iter().any(|t| t.starts_with("Hollow Knight")));
+    assert!(titles.iter().any(|t| t.starts_with("Boomerang Fu")));
+    assert!(titles.iter().any(|t| t.starts_with("Only Update")));
+    Ok(())
+}
+
 /// Events arrive in order: started, platforms 1..N of N, files seen, finished.
 #[test]
 fn progress_events() -> TestResult {

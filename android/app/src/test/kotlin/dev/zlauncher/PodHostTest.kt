@@ -130,6 +130,44 @@ class PodHostTest {
     }
 
     @Test
+    fun archiveRequiredForExtract() {
+        val host = AppPodHost(podId = "test.pod", permissions = setOf("http"), app = null, theme = theme)
+        val dir = Files.createTempDirectory("pod-archive").toFile()
+        val err = assertThrows(PermissionNotDeclaredException::class.java) {
+            runBlocking { host.extract(java.io.File(dir, "a.zip"), dir) }
+        }
+        assertEquals("archive", err.permission)
+    }
+
+    @Test
+    fun extractGoesThroughTheCoreAndKeepsEntriesInside() {
+        val host = AppPodHost(podId = "test.pod", permissions = setOf("archive"), app = null, theme = theme)
+        val dir = Files.createTempDirectory("pod-archive").toFile()
+        val zip = java.io.File(dir, "mod.zip")
+        java.util.zip.ZipOutputStream(zip.outputStream()).use { out ->
+            out.putNextEntry(java.util.zip.ZipEntry("/"))
+            out.closeEntry()
+            out.putNextEntry(java.util.zip.ZipEntry("Mod/romfs/a.bin"))
+            out.write(ByteArray(1000) { 7 })
+            out.closeEntry()
+        }
+        var last = -1L
+        val files = runBlocking { host.extract(zip, java.io.File(dir, "out")) { done, _ -> last = done } }
+        assertEquals(listOf("a.bin"), files.map { it.name })
+        assertEquals(1000L, java.io.File(dir, "out/Mod/romfs/a.bin").length())
+        assertEquals(1000L, last)
+        val bad = java.io.File(dir, "bad.zip")
+        java.util.zip.ZipOutputStream(bad.outputStream()).use { out ->
+            out.putNextEntry(java.util.zip.ZipEntry("../evil.bin"))
+            out.write(1)
+            out.closeEntry()
+        }
+        assertThrows(dev.zlauncher.core.nativecore.TransferException.Unsafe::class.java) {
+            runBlocking { host.extract(bad, java.io.File(dir, "out2")) }
+        }
+    }
+
+    @Test
     fun foldersRequiredForPlatformRoot() {
         val host = AppPodHost(
             podId = "test.pod",
