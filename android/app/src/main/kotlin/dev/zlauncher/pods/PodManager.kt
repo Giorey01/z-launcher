@@ -168,6 +168,20 @@ class PodManager(private val app: AppViewModel) {
         selectTab(next)
     }
 
+    /** Closes the open dialog, if any (B in the Pod screen); `false` when none was open. */
+    fun dismissDialog(): Boolean {
+        val s = state
+        if (s.pendingPreview != null) {
+            cancelPendingInstall()
+            return true
+        }
+        val open = s.showExternalPrompt || s.showUrlDialog || s.showUninstallConfirm != null || s.actionsFor != null
+        if (open) {
+            state = s.copy(showExternalPrompt = false, pendingUrlAfterPrompt = null, showUrlDialog = false, showUninstallConfirm = null, actionsFor = null)
+        }
+        return open
+    }
+
     /** Remembers the row under the cursor for the details panel. */
     fun focus(focus: PodFocus) {
         state = state.copy(focus = focus)

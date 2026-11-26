@@ -26,6 +26,7 @@
 -keep class androidx.compose.material3.** { *; }
 -keep class androidx.lifecycle.** { *; }
 -keep class androidx.core.** { *; }
+-keep class androidx.activity.** { *; }
 -keep class coil.** { *; }
 -keep class okhttp3.** { *; }
 -keep class okio.** { *; }

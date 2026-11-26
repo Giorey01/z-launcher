@@ -1,6 +1,9 @@
 package dev.zlauncher.ui.pods
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.focusGroup
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,7 +24,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
@@ -29,7 +37,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import dev.zlauncher.R
 import dev.zlauncher.core.nativecore.InstalledPodView
 import dev.zlauncher.core.nativecore.PodPreview
@@ -45,6 +52,9 @@ import dev.zlauncher.ui.pad.PadButton
 import dev.zlauncher.ui.theme.LocalZTheme
 import dev.zlauncher.ui.theme.ZPanel
 
+/** Opacity of the dim layer behind a dialog. */
+private const val SCRIM_ALPHA = 0.45f
+
 /** All the dialogs of the Pod screen, at most one at a time. */
 @Composable
 internal fun PodDialogs(app: AppViewModel, manager: PodManager) {
@@ -58,13 +68,29 @@ internal fun PodDialogs(app: AppViewModel, manager: PodManager) {
     }
 }
 
-/** A dialog card with a title; the content is a column. */
+/**
+ * A dialog card with a title over a dim layer, drawn in the screen's own window: a system dialog
+ * window on a secondary display does not get the gamepad keys. The focus cannot leave the card,
+ * B closes it (see [PodManager.dismissDialog]) and a tap outside does too.
+ */
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun PodDialog(title: String, onDismiss: () -> Unit, maxWidth: Dp = 480.dp, content: @Composable ColumnScope.() -> Unit) {
     val theme = LocalZTheme.current
-    Dialog(onDismissRequest = onDismiss) {
-        ZPanel(Modifier.widthIn(max = maxWidth), RoundedCornerShape(22.dp), elevation = 8.dp) {
-            Column(Modifier.padding(24.dp).verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Box(
+        Modifier.fillMaxSize().background(Color.Black.copy(alpha = SCRIM_ALPHA)).pointerInput(Unit) { detectTapGestures { onDismiss() } },
+        contentAlignment = Alignment.Center,
+    ) {
+        ZPanel(
+            Modifier.padding(16.dp).widthIn(max = maxWidth).pointerInput(Unit) { detectTapGestures { } },
+            RoundedCornerShape(22.dp),
+            elevation = 8.dp,
+        ) {
+            Column(
+                Modifier.focusProperties { exit = { FocusRequester.Cancel } }.focusGroup()
+                    .padding(24.dp).verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
                 Text(title, color = theme.textPrimary, fontSize = 21.sp, fontWeight = FontWeight.Bold)
                 content()
             }

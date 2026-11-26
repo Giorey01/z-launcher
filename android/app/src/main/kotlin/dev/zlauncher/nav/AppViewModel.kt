@@ -140,10 +140,11 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
             drawerSearching = false
             return true
         }
-        val handledSettings = top == Screen.Settings && settings.pop()
-        val screen = if (handledSettings) null else stack.removeLastOrNull()
+        // A dialog of the Pod screen or a settings subpage closes before the screen does.
+        val handledInside = (top == Screen.PodManagement && podManager.dismissDialog()) || (top == Screen.Settings && settings.pop())
+        val screen = if (handledInside) null else stack.removeLastOrNull()
         if (screen == Screen.Picker) choice = null
-        return handledSettings || screen != null
+        return handledInside || screen != null
     }
 
     /** Returns to the Home from anywhere (the system Home button while the launcher is the Home). */
