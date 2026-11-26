@@ -12,6 +12,7 @@ Launcher Android open source, gamepad-first. Repo **pubblica**.
 - `docs/PIANO-POD.md`: piano dei Pod (moduli, formato, store, fasi); il contratto è in `spec/pods.md`.
 - `docs/spec/pods.md`: il contratto dei Pod per chi estende il launcher.
 - `docs/reference/cocoon-wiki.md`: comportamento di Cocoon da raggiungere.
+- `docs/reference/cocoon-news.md`: funzioni annunciate nelle news di Cocoon, con il rimando alla roadmap.
 
 ## Regole
 - **Un solo core.** La logica (libreria, piattaforme, lancio, temi, metadati, sessioni,

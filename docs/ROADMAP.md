@@ -80,6 +80,21 @@ fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare.
 | RF-73 | Estensioni | Pod esterni: una build terza può aggiungere Pod che usano tema, suoni e libreria del launcher | 4 | Fatto: contratto v2 (`Pod`, `PodHost`, `PodSlot`), `PodLoader` dex dinamico, store, firma Ed25519, `pod-platform`, `zpod-template` |
 | RF-74 | Sistema | Interfaccia in italiano e inglese | 1 | Fatto |
 | RF-75 | Libreria | App Android che sono giochi di una console (recomp, port) nella cartella di quella console, avviate come app | 2 | Fatto: `.localgameid` in ogni console, "Sposta in una console" dal cassetto |
+| RF-76 | Controller | Cursore che scivola senza ritardo e senza superare l'elemento; la lista scorre solo vicino ai bordi, con margine; l'inerzia si ferma al primo tasto | 3 |  |
+| RF-77 | Home | Stile e velocità delle animazioni regolabili; menu e dialoghi che si trasformano l'uno nell'altro | 4 |  |
+| RF-78 | Home | Scorciatoie ai Pod e alle impostazioni nella griglia, che si tolgono e si rimettono dal menu Start | 3 |  |
+| RF-79 | Home | Modifica della griglia tenendo premuto A: sposta, ridimensiona (anche i giochi), le vicine fanno spazio, X toglie con annulla | 3 |  |
+| RF-80 | Organizzazione | Griglia "Aggiungi giochi" con i giochi non ancora nella Home, scelti in blocco | 3 |  |
+| RF-81 | Sessioni | Gioco sospeso con Home: resta indicato nella Home, A riprende, X chiude (anche le app accanto); emulatore crashato gestito | 6 |  |
+| RF-82 | Lancio | Animazione di lancio: l'artwork cresce fino a riempire gli schermi; al ritorno si torna sul gioco | 4 |  |
+| RF-83 | Sistema | Prestazioni sui dispositivi lenti: baseline profile, artwork animati spegnibili, animazioni ferme mentre si gioca | 4 |  |
+| RF-84 | Scheda gioco | Logo spostabile e ridimensionabile sopra l'hero, per gioco | 4 |  |
+| RF-85 | Libreria | Scorciatoie fissate di altre app usate come giochi, con piattaforma assegnabile | 7 |  |
+| RF-86 | Home | Icona delle app personalizzabile (icona del launcher colorata o da icon pack), anche solo nel dock | 4 |  |
+| RF-87 | Sistema | Permessi delle cartelle persi rilevati con guida per ridarli; avvio ritardato dopo il riavvio | 3 |  |
+| RF-88 | Sistema | Aggiornamento dal launcher stesso, con le novità mostrate prima di installare | 8 |  |
+| RF-89 | Estensioni | Pod manager e store nello stile delle altre schermate: card grandi, schede con LB/RB, dettaglio con anteprime, azioni sui tasti | 4 |  |
+| RF-90 | Estensioni | Collegamento a un server RomM (sfoglia, scarica, cancella), come Pod | 8 |  |
 
 ## Requisiti non funzionali
 
