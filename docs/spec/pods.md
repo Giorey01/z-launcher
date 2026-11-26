@@ -219,8 +219,8 @@ l'host chiama `Pod.Content(host, route)`. Il manifest elenca i tipi di slot che 
 | --- | --- | --- |
 | `start_menu` | Voce nel menu Start | etichetta, icona, route |
 | `platform_grid_lead` | **Primo elemento** della griglia di una console (il tasto **+**) | piattaforme (insieme di id, o tutte), etichetta, icona, route in funzione della piattaforma |
-| `game_actions` | Bottoni nella scheda del gioco | etichetta, icona, condizione sul gioco, route in funzione del gioco |
-| `settings_section` | Riga nelle impostazioni | etichetta, route |
+| `game_actions` | Voci nel menu del gioco (Y), dopo quelle del launcher; una condizione che fallisce nasconde la voce | etichetta, icona, condizione sul gioco, route in funzione del gioco |
+| `settings_section` | Riga nella categoria Integrazioni delle impostazioni, che apre la route del Pod | etichetta, route |
 | `status_widget` | Widget nella barra della Home (per esempio un mini player) | contenuto Compose compatto, larghezza massima |
 | `home_shortcut` | Scorciatoia nella Home | etichetta, icona, route |
 

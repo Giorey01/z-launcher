@@ -325,6 +325,7 @@
     <string name="st_steam_key_label">Chiave Web API</string>
     <string name="st_steam_key_label_set">Chiave Web API (salvata; lascia vuoto per tenerla)</string>
     <string name="st_steam_account_label">Profilo</string>
+    <string name="st_pod_section">Impostazioni di questo Pod</string>
     <string name="st_steam_import">Importa la libreria Steam</string>
     <string name="st_steam_import_sub">Aggiunge alla cartella PC tutti i giochi che possiedi. Li avvia qualunque client Steam installato.</string>
     <string name="msg_steam_ready">Account Steam salvato. La libreria si può importare.</string>

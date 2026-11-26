@@ -5,6 +5,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import dev.zlauncher.core.nativecore.GameEntry
+import dev.zlauncher.core.nativecore.GameKind
 import dev.zlauncher.core.nativecore.InstalledPodView
 import dev.zlauncher.pods.LeadTileSlotItem
 import dev.zlauncher.pods.MAX_LEAD_TILES
@@ -19,11 +21,11 @@ import dev.zlauncher.pods.PodRoute
 import dev.zlauncher.pods.PodSlot
 import dev.zlauncher.pods.PodWithMetadata
 import dev.zlauncher.pods.StartMenuSlotItem
-import java.io.File
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.io.File
 
 /** A Pod that only has an id and optional slots (the registry never draws it). */
 class FakePod(
@@ -158,6 +160,24 @@ class PodRegistryTest {
         val psxLeads = registry.platformGridLeadSlots("psx")
         assertEquals(1, psxLeads.size)
         assertEquals("Action 2", psxLeads.first().label)
+    }
+
+    /** Game actions follow their condition (a failing one is left out); settings sections keep their Pod (§7). */
+    @Test
+    fun gameActionsAndSettingsSections() {
+        val slots = listOf(
+            PodSlot.GameActions(label = "Only SNES", icon = Icons.Rounded.Star, condition = { it.platformId == "snes" }),
+            PodSlot.GameActions(label = "Broken", icon = Icons.Rounded.Star, condition = { error("boom") }),
+            PodSlot.SettingsSection(label = "Pod settings"),
+        )
+        val registry = PodRegistry.from(listOf(PodWithMetadata(FakePod("p1", slots), emptySet(), emptySet())))
+        val game = GameEntry(
+            id = 7L, title = "Game", platformId = "snes", platformName = "Super Nintendo", kind = GameKind.ROM, missing = false,
+            displayTitle = "Game", icon = null, hero = null, logo = null, appPackage = null, favorite = false,
+        )
+        assertEquals(listOf("Only SNES"), registry.gameActionSlots(game).map { it.label })
+        assertEquals(emptyList<String>(), registry.gameActionSlots(game.copy(platformId = "gba")).map { it.label })
+        assertEquals(listOf("p1" to "Pod settings"), registry.settingsSectionSlots().map { (id, slot) -> id to slot.label })
     }
 
     /** Sentinel file loading triggers safe mode and reports crash (§10). */

@@ -14,6 +14,7 @@ import dev.zlauncher.ui.theme.ZTheme
 import java.io.File
 import dev.zlauncher.core.KeystoreSecrets
 import dev.zlauncher.pods.work.PodWorkRunner
+import dev.zlauncher.ui.settings.ArtDownload
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -192,6 +193,21 @@ class AppPodHost(
         // The open screens read the library again, as after any scan of the app.
         withContext(Dispatchers.Main) { app.resumeTick++ }
         dispatchEvent(PodEvent.LibraryChanged(setOf(platformId)))
+        fetchArt(app, platformId)
+    }
+
+    /**
+     * Downloads the missing art of [platformId]'s games (a game a Pod just added has none) when the
+     * user set a SteamGridDB key, apart from the Pod's call: it goes slowly, as the service asks.
+     * Without a key, or on any failure, the games keep their titles as before.
+     */
+    private fun fetchArt(app: AppViewModel, platformId: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val done = runCatching { app.zl.core.call { it.scrapeImages(platformId, null, ArtDownload()) } }
+            if ((done.getOrNull()?.images ?: 0u) > 0u) {
+                withContext(Dispatchers.Main) { app.resumeTick++ }
+            }
+        }
     }
 
     override fun launch(game: GameEntry) {

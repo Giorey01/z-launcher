@@ -3,12 +3,14 @@ package dev.zlauncher.ui.settings
 import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CloudDownload
+import androidx.compose.material.icons.rounded.Extension
 import androidx.compose.material.icons.rounded.Image
 import androidx.compose.material.icons.rounded.SportsEsports
 import dev.zlauncher.R
 import dev.zlauncher.core.nativecore.ScanEvent
 import dev.zlauncher.core.nativecore.ScanListener
 import dev.zlauncher.nav.AppViewModel
+import dev.zlauncher.nav.Screen
 import dev.zlauncher.nav.UiMessage
 
 /** A scan listener that ignores the progress (the row only shows the result). */
@@ -31,7 +33,19 @@ class IntegrationsRows(
     private fun s(id: Int, vararg args: Any): String = context.getString(id, *args)
 
     /** Builds all rows of the Integrations root list. */
-    fun root(): List<SettingRow> = listOf(steamGridDbRow(), steamAccountRow(), steamImportRow())
+    fun root(): List<SettingRow> = listOf(steamGridDbRow(), steamAccountRow(), steamImportRow()) + podRows()
+
+    /** The settings sections of the Pods: A opens the Pod's own screen for them. */
+    private fun podRows(): List<SettingRow> = app.zl.pods.settingsSectionSlots().map { (podId, slot) ->
+        SettingRow(
+            id = "pod:$podId:${slot.label}",
+            icon = Icons.Rounded.Extension,
+            title = slot.label,
+            subtitle = s(R.string.st_pod_section),
+            control = Control.Chevron,
+            onActivate = { app.open(Screen.Pod(podId, slot.route)) },
+        )
+    }
 
     /** The SteamGridDB key: says whether one is stored; A opens the editor. */
     private fun steamGridDbRow(): SettingRow = SettingRow(
