@@ -157,6 +157,15 @@ impl Db {
         })
     }
 
+    /// Ids of the games added at or after `since` (Unix seconds), missing ones excluded.
+    pub fn games_added_since(&self, since: i64) -> Result<Vec<i64>, DbError> {
+        let mut stmt = self
+            .conn
+            .prepare("SELECT id FROM games WHERE added_at >= ?1 AND missing = 0 ORDER BY id")?;
+        let ids = stmt.query_map(params![since], |row| row.get(0))?;
+        Ok(ids.collect::<Result<Vec<i64>, _>>()?)
+    }
+
     /// Looks up one game by id.
     pub fn game(&self, game_id: i64) -> Result<Option<Game>, DbError> {
         let sql = format!("SELECT {GAME_COLUMNS} FROM games WHERE id = ?1");

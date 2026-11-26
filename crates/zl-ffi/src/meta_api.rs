@@ -143,6 +143,22 @@ impl Core {
         Ok(report.into())
     }
 
+    /// Downloads the missing cover, hero and logo of the games added at or after `since` (Unix
+    /// seconds): what a scan just added. Without a SteamGridDB key the report says so and nothing
+    /// is asked. Blocks: call it off the main thread.
+    pub fn scrape_new_images(
+        &self,
+        since: i64,
+        listener: Arc<dyn ScrapeListener>,
+    ) -> Res<ImageScrapeReport> {
+        let target = core::ScrapeTarget::AddedSince(since);
+        let pause = Duration::from_millis(cfg::SGDB_PAUSE_MS);
+        let report =
+            self.service()
+                .scrape_images(&target, &UreqClient::new(), &Bridge(listener), pause)?;
+        Ok(report.into())
+    }
+
     /// Imports the metadata of every ES-DE gamelist of the ES-DE folder; returns the games
     /// that got metadata.
     pub fn import_esde_gamelists(&self) -> Res<u32> {

@@ -1,6 +1,8 @@
 package dev.zlauncher.pods
 
 import android.content.Context
+import dev.zlauncher.core.KeystoreSecrets
+import dev.zlauncher.core.NewArt
 import dev.zlauncher.core.nativecore.GameDetails
 import dev.zlauncher.core.nativecore.GameEntry
 import dev.zlauncher.core.nativecore.PlatformEntry
@@ -10,18 +12,16 @@ import dev.zlauncher.core.nativecore.ScanListener
 import dev.zlauncher.core.nativecore.SoundAction
 import dev.zlauncher.nav.AppViewModel
 import dev.zlauncher.nav.Screen
-import dev.zlauncher.ui.theme.ZTheme
-import java.io.File
-import dev.zlauncher.core.KeystoreSecrets
 import dev.zlauncher.pods.work.PodWorkRunner
-import dev.zlauncher.ui.settings.ArtDownload
+import dev.zlauncher.ui.theme.ZTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 /** A scan listener that discards progress events during background rescan. */
 private object QuietScan : ScanListener {
@@ -189,25 +189,12 @@ class AppPodHost(
     override suspend fun rescan(platformId: String) {
         requirePerm("library.rescan")
         val app = app ?: return
-        app.zl.core.call { it.scan(QuietScan) }
+        val since = NewArt.now()
+        val summary = app.zl.core.call { it.scan(QuietScan) }
         // The open screens read the library again, as after any scan of the app.
         withContext(Dispatchers.Main) { app.resumeTick++ }
         dispatchEvent(PodEvent.LibraryChanged(setOf(platformId)))
-        fetchArt(app, platformId)
-    }
-
-    /**
-     * Downloads the missing art of [platformId]'s games (a game a Pod just added has none) when the
-     * user set a SteamGridDB key, apart from the Pod's call: it goes slowly, as the service asks.
-     * Without a key, or on any failure, the games keep their titles as before.
-     */
-    private fun fetchArt(app: AppViewModel, platformId: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val done = runCatching { app.zl.core.call { it.scrapeImages(platformId, null, ArtDownload()) } }
-            if ((done.getOrNull()?.images ?: 0u) > 0u) {
-                withContext(Dispatchers.Main) { app.resumeTick++ }
-            }
-        }
+        NewArt.afterScan(app.zl, since, summary.added) { app.resumeTick++ }
     }
 
     override fun launch(game: GameEntry) {
