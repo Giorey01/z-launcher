@@ -1422,6 +1422,7 @@ dependencies = [
  "serde_json",
  "tempfile",
  "thiserror",
+ "unicode-normalization",
  "zip",
  "zl-config",
  "zl-db",

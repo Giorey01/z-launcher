@@ -429,4 +429,10 @@
     <string name="pod_log_no_stats">Nessuna sessione di gioco registrata finora. Avvia un gioco per iniziare il registro!</string>
     <string name="pod_log_rank">Posizione #%1$d</string>
     <string name="pod_log_hours">%1$.1f ore</string>
+
+    <!-- Search (§RF-16) -->
+    <string name="search_hint">Digita il titolo del gioco…</string>
+    <string name="search_no_results">Nessun gioco trovato per “%1$s”</string>
+    <string name="search_count">%1$d giochi</string>
+    <string name="search_keyboard">Tastiera</string>
 </resources>

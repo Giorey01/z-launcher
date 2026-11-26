@@ -42,8 +42,7 @@ fun StartMenu(app: AppViewModel) {
             pods + listOf(
                 MenuEntry(Icons.Rounded.Apps, stringResource(R.string.menu_apps)) { app.open(Screen.Drawer) },
                 MenuEntry(Icons.Rounded.Search, stringResource(R.string.menu_search), badge = "X") {
-                    app.drawerSearching = true
-                    app.open(Screen.Drawer)
+                    app.open(Screen.Search)
                 },
                 MenuEntry(Icons.Rounded.Settings, stringResource(R.string.menu_settings), submenu = true) {
                     app.open(Screen.Settings)

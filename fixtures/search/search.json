@@ -1,0 +1,92 @@
+{
+  "_": "Typo-tolerant search: trigram candidates, then Damerau-Levenshtein per word.",
+  "titles": [
+    "The Legend of Zelda: Breath of the Wild",
+    "The Legend of Zelda: Tears of the Kingdom",
+    "Mario Kart 8 Deluxe",
+    "Super Mario Odyssey",
+    "Pokémon Legends: Z-A",
+    "Pokémon Scarlet",
+    "Grand Theft Auto V / GTA 5",
+    "Hollow Knight",
+    "Celeste",
+    "Hades",
+    "Final Fantasy VII Remake",
+    "Animal Crossing: New Horizons",
+    "Metroid Dread",
+    "Kirby and the Forgotten Land",
+    "Xenoblade Chronicles 3",
+    "Red Dead Redemption",
+    "Hyrule Warriors: Definitive Edition",
+    "Astral Chain"
+  ],
+  "cases": [
+    {
+      "q": "zelda",
+      "first": "The Legend of Zelda: Breath of the Wild",
+      "has": [
+        "The Legend of Zelda: Tears of the Kingdom"
+      ]
+    },
+    {
+      "q": "zelad",
+      "has": [
+        "The Legend of Zelda: Breath of the Wild",
+        "The Legend of Zelda: Tears of the Kingdom"
+      ]
+    },
+    {
+      "q": "mrio kart",
+      "first": "Mario Kart 8 Deluxe"
+    },
+    {
+      "q": "pokemon legends",
+      "first": "Pokémon Legends: Z-A"
+    },
+    {
+      "q": "pokémon",
+      "has": [
+        "Pokémon Legends: Z-A",
+        "Pokémon Scarlet"
+      ]
+    },
+    {
+      "q": "hollow knigth",
+      "first": "Hollow Knight"
+    },
+    {
+      "q": "gta",
+      "first": "Grand Theft Auto V / GTA 5",
+      "not": [
+        "Hades"
+      ]
+    },
+    {
+      "q": "red ded",
+      "first": "Red Dead Redemption"
+    },
+    {
+      "q": "crossing",
+      "first": "Animal Crossing: New Horizons"
+    },
+    {
+      "q": "metroid",
+      "first": "Metroid Dread",
+      "not": [
+        "Mario Kart 8 Deluxe",
+        "Super Mario Odyssey"
+      ]
+    },
+    {
+      "q": "xyzzy",
+      "none": true
+    },
+    {
+      "q": "hades",
+      "first": "Hades",
+      "not": [
+        "Celeste"
+      ]
+    }
+  ]
+}

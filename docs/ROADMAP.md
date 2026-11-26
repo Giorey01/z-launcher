@@ -20,7 +20,7 @@ fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare.
 | RF-13 | Organizzazione | Smart Folders: Preferiti, Recenti, Più giocati, Mai giocati, Nuovi, App, Emulatori, Per piattaforma | 2 | Parziale: Preferiti, Recenti, Mai giocati, Nascosti, Per piattaforma |
 | RF-14 | Organizzazione | Simple Mode, con tutti i giochi nella Home | 2 |  |
 | RF-15 | Organizzazione | Cartelle manuali e lo stesso gioco in più cartelle | 2 |  |
-| RF-16 | Organizzazione | Ricerca e ordinamenti; selezione multipla con sposta e rimuovi | 2 |  |
+| RF-16 | Organizzazione | Ricerca e ordinamenti; selezione multipla con sposta e rimuovi | 2 | Parziale: ricerca fuzzy typo-tolerant e schermata di ricerca gamepad-first |
 | RF-17 | Organizzazione | Nascondi gioco, preferito, valutazione | 2 | Parziale: nascondi e preferito; valutazione no |
 | RF-18 | Metadati | Orchestratore con fonti in ordine scelto: libretro-db, ScreenScraper, SteamGridDB, IGDB, LaunchBox, HLTB | 2 | Parziale: SteamGridDB (immagini, chiave dell'utente), Steam Store (dettagli e screenshot, gratis), ES-DE; niente orchestratore |
 | RF-19 | Metadati | Tre modalità: solo mancanti, campi scelti, forza tutto | 2 |  |

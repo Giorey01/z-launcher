@@ -54,6 +54,26 @@ impl Service {
         Ok(games)
     }
 
+    /// Searches games matching `query` using typo-tolerant fuzzy matching (RF-16).
+    /// If `query` is blank, returns the first `limit` games in alphabetical order.
+    pub fn search_games(&self, query: &str, limit: usize) -> Result<Vec<GameEntry>, CoreError> {
+        let all = self.games(None)?;
+        let trimmed = query.trim();
+        if trimmed.is_empty() {
+            return Ok(all.into_iter().take(limit).collect());
+        }
+        let titles: Vec<String> = all.iter().map(|g| g.display_title.clone()).collect();
+        let fuzzy = crate::search::FuzzySearch::new(&titles);
+        let matches = fuzzy.search(trimmed, limit);
+        let mut results = Vec::with_capacity(matches.len());
+        for idx in matches {
+            if let Some(game) = all.get(idx) {
+                results.push(game.clone());
+            }
+        }
+        Ok(results)
+    }
+
     /// The games of one Smart Folder.
     fn smart_games(
         &self,

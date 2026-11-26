@@ -127,6 +127,11 @@ class AppPodHost(
         return app?.zl?.core?.call { it.games(folder) } ?: emptyList()
     }
 
+    override suspend fun search(query: String, limit: Int): List<GameEntry> {
+        requirePerm("library.read")
+        return app?.zl?.core?.call { it.searchGames(query, limit.toUInt()) } ?: emptyList()
+    }
+
     override suspend fun details(gameId: Long): GameDetails {
         requirePerm("library.read")
         return checkNotNull(app?.zl?.core?.call { it.gameDetails(gameId) })

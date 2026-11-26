@@ -429,4 +429,10 @@
     <string name="pod_log_no_stats">No gameplay sessions recorded yet. Launch a game to start logging!</string>
     <string name="pod_log_rank">Rank #%1$d</string>
     <string name="pod_log_hours">%1$.1f hours</string>
+
+    <!-- Search (§RF-16) -->
+    <string name="search_hint">Type game title…</string>
+    <string name="search_no_results">No games found matching “%1$s”</string>
+    <string name="search_count">%1$d games</string>
+    <string name="search_keyboard">Keyboard</string>
 </resources>

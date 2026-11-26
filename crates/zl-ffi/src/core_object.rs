@@ -68,6 +68,12 @@ impl Core {
         Ok(games.into_iter().map(Into::into).collect())
     }
 
+    /// Searches games matching `query` using typo-tolerant fuzzy matching (RF-16).
+    pub fn search_games(&self, query: String, limit: u32) -> Res<Vec<GameEntry>> {
+        let games = self.svc.search_games(&query, limit as usize)?;
+        Ok(games.into_iter().map(Into::into).collect())
+    }
+
     /// Consoles an Android app can be filed under, those with games first.
     pub fn app_consoles(&self) -> Res<Vec<PlatformEntry>> {
         Ok(self

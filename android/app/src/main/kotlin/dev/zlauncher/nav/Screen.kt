@@ -35,6 +35,9 @@ sealed interface Screen {
     /** The Pod management and store screen (§11). */
     data object PodManagement : Screen
 
+    /** The game search screen across all platforms (RF-16). */
+    data object Search : Screen
+
     /** The Info tab of a game: details, play time, trailer and screenshots. */
     data class GameInfo(
         /** The game. */

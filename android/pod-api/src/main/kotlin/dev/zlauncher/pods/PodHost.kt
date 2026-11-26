@@ -86,6 +86,9 @@ interface PodHost {
     /** Lists games in a folder (`null` for all). Requires permission `library.read`. */
     suspend fun games(folder: String?): List<GameEntry>
 
+    /** Searches games matching [query] with typo-tolerant fuzzy ranking. Requires permission `library.read`. */
+    suspend fun search(query: String, limit: Int = 50): List<GameEntry>
+
     /** Fetches details for a specific game. Requires permission `library.read`. */
     suspend fun details(gameId: Long): GameDetails
 

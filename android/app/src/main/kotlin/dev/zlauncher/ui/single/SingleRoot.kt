@@ -85,6 +85,6 @@ private fun SingleContent(app: AppViewModel, settings: UserSettings) {
 /** Whether [screen] takes the whole display in the single-screen layout (no hero area above it). */
 private fun isFullScreen(screen: Screen?): Boolean = when (screen) {
     Screen.Settings, Screen.Drawer, Screen.Picker, is Screen.ConsolePicker, is Screen.GameInfo, is Screen.Pod,
-    Screen.PodManagement -> true
+    Screen.PodManagement, Screen.Search -> true
     null, is Screen.Platform -> false
 }
