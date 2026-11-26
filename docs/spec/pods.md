@@ -240,7 +240,7 @@ Sempre disponibili: `theme`, `play(action)`, `strings`, `storage`, `close()`, `n
 
 | Permesso | Servizio |
 | --- | --- |
-| `library.read` | `folders()`, `games(folder)`, `details(id)`, `playStats(id)`, eventi di gioco |
+| `library.read` | `folders()`, `games(folder)`, `details(id)` (con `path`, il file principale del gioco), `playStats(id)`, eventi di gioco |
 | `library.rescan` | `rescan(platformId)`: nuova scansione (oggi di tutta la libreria); le schermate aperte si aggiornano e arriva `LibraryChanged` |
 | `launch` | `launch(game)` con la stessa scelta di emulatore, display e conteggio del tempo |
 | `secrets` | `getSecret`/`setSecret`: valori cifrati con una chiave del Keystore, con nomi separati per Pod (`pod.<id>.<chiave>`) |

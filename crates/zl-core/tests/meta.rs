@@ -38,6 +38,11 @@ fn test_game_details_and_overrides() -> TestResult {
     let details = service.game_details(game_id)?;
     assert_eq!(details.display_title, "Metroid Fusion");
     assert_eq!(details.platform_name, "Nintendo Game Boy Advance");
+    assert!(
+        details.path.ends_with(".gba") && Path::new(&details.path).is_file(),
+        "{}",
+        details.path
+    );
 
     service.set_game_override(game_id, MetaField::Title, "Custom Metroid Title")?;
     service.set_game_override(game_id, MetaField::Description, "Custom synopsis by user")?;

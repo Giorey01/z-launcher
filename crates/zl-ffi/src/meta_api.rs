@@ -52,6 +52,8 @@ mirror_record! {
         plain platform_name: String,
         /// Stored title.
         plain title: String,
+        /// Path of the primary file (or folder): Pods read ids from it (a Switch title id, a disc header).
+        plain path: String,
         /// Title to show.
         plain display_title: String,
         /// Synopsis.

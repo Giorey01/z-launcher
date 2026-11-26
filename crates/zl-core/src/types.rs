@@ -167,6 +167,8 @@ pub struct GameDetails {
     pub platform_name: String,
     /// Original file title.
     pub title: String,
+    /// Path of the primary file (or folder) of the game.
+    pub path: String,
     /// Clean display title (with user override applied if set).
     pub display_title: String,
     /// Synopsis or description.
