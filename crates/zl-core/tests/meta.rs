@@ -49,6 +49,25 @@ fn test_game_details_and_overrides() -> TestResult {
         Some("Custom synopsis by user")
     );
 
+    // Test rating setting and clearing
+    assert_eq!(updated.rating, None);
+    service.set_game_rating(game_id, Some(4.5))?;
+    let rated = service.game_details(game_id)?;
+    assert_eq!(rated.rating, Some(4.5));
+
+    service.set_game_rating(game_id, None)?;
+    let unrated = service.game_details(game_id)?;
+    assert_eq!(unrated.rating, None);
+
+    // Test title helper and listed_games integration
+    service.set_game_title(game_id, Some("Super Metroid Custom"))?;
+    let listed = service.games(Some("gba"))?;
+    assert_eq!(listed[0].display_title, "Super Metroid Custom");
+
+    service.set_game_title(game_id, None)?;
+    let restored_list = service.games(Some("gba"))?;
+    assert_eq!(restored_list[0].display_title, "Metroid Fusion");
+
     service.clear_game_override(game_id, MetaField::Title)?;
     let restored = service.game_details(game_id)?;
     assert_eq!(restored.display_title, "Metroid Fusion");

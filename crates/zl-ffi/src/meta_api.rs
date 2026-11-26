@@ -153,4 +153,21 @@ impl Core {
     pub fn game_details(&self, game_id: i64) -> Res<GameDetails> {
         Ok(self.service().game_details(game_id)?.into())
     }
+
+    /// Sets or clears the user rating of a game (0.0 to 5.0).
+    pub fn set_game_rating(&self, game_id: i64, rating: Option<f32>) -> Res<()> {
+        Ok(self.service().set_game_rating(game_id, rating)?)
+    }
+
+    /// Sets or clears a custom title for a game.
+    pub fn set_game_title(&self, game_id: i64, title: Option<String>) -> Res<()> {
+        Ok(self.service().set_game_title(game_id, title.as_deref())?)
+    }
+
+    /// Sets or clears a custom synopsis/description for a game.
+    pub fn set_game_description(&self, game_id: i64, description: Option<String>) -> Res<()> {
+        Ok(self
+            .service()
+            .set_game_description(game_id, description.as_deref())?)
+    }
 }

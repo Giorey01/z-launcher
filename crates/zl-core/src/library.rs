@@ -169,6 +169,9 @@ impl Service {
         let wanted = platform.map(str::to_lowercase);
         let art = self.best_art()?;
         let db = self.db();
+        let title_overrides = db
+            .all_meta_overrides(zl_db::MetaField::Title)
+            .unwrap_or_default();
         let games = db.query_games(&GameQuery::default())?;
         let mut out: Vec<GameEntry> = games
             .into_iter()
@@ -177,19 +180,25 @@ impl Service {
                 (g, canonical)
             })
             .filter(|(_, c)| wanted.as_ref().is_none_or(|w| self.game_in(w, c)))
-            .map(|(g, canonical)| GameEntry {
-                id: g.id,
-                display_title: display_title(&g.title),
-                icon: art.get(&(g.id, MediaKind::Icon)).cloned(),
-                hero: art.get(&(g.id, MediaKind::Hero)).cloned(),
-                logo: art.get(&(g.id, MediaKind::Logo)).cloned(),
-                app_package: self.app_package_of(&db, &g, &canonical),
-                favorite: false,
-                title: g.title,
-                platform_name: self.platform_name(&canonical),
-                platform_id: canonical,
-                kind: g.kind,
-                missing: g.missing,
+            .map(|(g, canonical)| {
+                let disp_title = title_overrides
+                    .get(&g.id)
+                    .cloned()
+                    .unwrap_or_else(|| display_title(&g.title));
+                GameEntry {
+                    id: g.id,
+                    display_title: disp_title,
+                    icon: art.get(&(g.id, MediaKind::Icon)).cloned(),
+                    hero: art.get(&(g.id, MediaKind::Hero)).cloned(),
+                    logo: art.get(&(g.id, MediaKind::Logo)).cloned(),
+                    app_package: self.app_package_of(&db, &g, &canonical),
+                    favorite: false,
+                    title: g.title,
+                    platform_name: self.platform_name(&canonical),
+                    platform_id: canonical,
+                    kind: g.kind,
+                    missing: g.missing,
+                }
             })
             .collect();
         out.sort_by_key(|g| g.title.to_lowercase());

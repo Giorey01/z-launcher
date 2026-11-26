@@ -93,4 +93,30 @@ class LibraryActions(private val app: AppViewModel) {
             }
         }
     }
+
+    /** Sets or clears the user rating for a game (0.0 to 5.0). */
+    fun setRating(gameId: Long, rating: Float?, onDone: (() -> Unit)? = null) {
+        app.viewModelScope.launch {
+            try {
+                app.zl.core.call { it.setGameRating(gameId, rating) }
+                app.refresh()
+                onDone?.invoke()
+            } catch (e: CoreException) {
+                app.message = e.toMessage()
+            }
+        }
+    }
+
+    /** Sets or clears a custom title override for a game. */
+    fun setTitle(gameId: Long, title: String?, onDone: (() -> Unit)? = null) {
+        app.viewModelScope.launch {
+            try {
+                app.zl.core.call { it.setGameTitle(gameId, title) }
+                app.refresh()
+                onDone?.invoke()
+            } catch (e: CoreException) {
+                app.message = e.toMessage()
+            }
+        }
+    }
 }

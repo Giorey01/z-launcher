@@ -96,13 +96,15 @@ private const val PLAY_KEY = "info:play"
 private fun InfoText(app: AppViewModel, screen: Screen.GameInfo, info: InfoData, modifier: Modifier, memory: dev.zlauncher.ui.pad.FocusMemory) {
     val context = LocalContext.current
     val d = info.details
+    var currentRating by remember(d.id) { mutableStateOf(d.rating) }
+    val displayDetails = remember(d, currentRating) { d.copy(rating = currentRating) }
     Column(modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
         if (d.logo != null) {
             ArtImage(d.logo, Modifier.fillMaxWidth().height(110.dp), ContentScale.Fit)
         } else {
             Text(d.displayTitle, color = Color.White, fontSize = 30.sp, fontWeight = FontWeight.Bold, maxLines = 2)
         }
-        factsLine(d)?.let { Text(it, color = Color.White, fontSize = 17.sp, fontWeight = FontWeight.SemiBold) }
+        factsLine(displayDetails)?.let { Text(it, color = Color.White, fontSize = 17.sp, fontWeight = FontWeight.SemiBold) }
         Text(playTimeLine(context, info.stats), color = Color.White.copy(alpha = 0.8f), fontSize = 15.sp)
         Column(Modifier.weight(1f).verticalScroll(rememberScrollState())) {
             Text(
@@ -112,13 +114,19 @@ private fun InfoText(app: AppViewModel, screen: Screen.GameInfo, info: InfoData,
                 overflow = TextOverflow.Ellipsis,
             )
         }
-        Actions(app, screen, memory)
+        Actions(app, screen, currentRating, { currentRating = it }, memory)
     }
 }
 
-/** Play, favourite and (for games run by an emulator) the emulator of this game. */
+/** Play, favourite, rating and (for games run by an emulator) the emulator of this game. */
 @Composable
-private fun Actions(app: AppViewModel, screen: Screen.GameInfo, memory: dev.zlauncher.ui.pad.FocusMemory) {
+private fun Actions(
+    app: AppViewModel,
+    screen: Screen.GameInfo,
+    rating: Float?,
+    onRatingChange: (Float?) -> Unit,
+    memory: dev.zlauncher.ui.pad.FocusMemory,
+) {
     val game = screen.game
     var favorite by remember(game.id) { mutableStateOf(game.favorite) }
     Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -127,6 +135,19 @@ private fun Actions(app: AppViewModel, screen: Screen.GameInfo, memory: dev.zlau
             favorite = !favorite
             app.library.setFavorite(game, favorite)
         }, memory.track("info:favorite"))
+        val ratingText = rating?.let { "★ %.0f".format(it) } ?: stringResource(R.string.menu_rating)
+        PadButton(ratingText, {
+            val next = when (rating?.toInt()) {
+                5 -> 4.0f
+                4 -> 3.0f
+                3 -> 2.0f
+                2 -> 1.0f
+                1 -> null
+                else -> 5.0f
+            }
+            onRatingChange(next)
+            app.library.setRating(game.id, next)
+        }, memory.track("info:rating"))
         if (game.appPackage == null) {
             PadButton(stringResource(R.string.info_emulator_game), { app.chooseGameEmulator(game) }, memory.track("info:emulator"))
         }

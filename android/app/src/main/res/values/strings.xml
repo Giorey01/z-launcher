@@ -87,6 +87,8 @@
     <string name="menu_search">Search</string>
     <string name="menu_screen_top">Top screen</string>
     <string name="menu_screen_bottom">Bottom screen</string>
+    <string name="menu_rating">Rating</string>
+    <string name="menu_rating_remove">Remove rating</string>
     <string name="sort_manual">Manual</string>
     <string name="st_title">Settings</string>
     <string name="st_cat_personalization">Personalization</string>

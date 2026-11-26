@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.activity.compose.BackHandler
 import dev.zlauncher.R
+import dev.zlauncher.core.nativecore.GameEntry
 import dev.zlauncher.display.DisplayRoles
 import dev.zlauncher.nav.AppViewModel
 import dev.zlauncher.nav.Overlay
@@ -67,6 +68,13 @@ private data class Target(
     val big: Boolean,
 )
 
+/** Submenu level for the game menu. */
+private enum class MenuLevel {
+    Main,
+    Displays,
+    Rating,
+}
+
 /**
  * The Y menu of a game: its preview and title at the left, the entries at the right. Launch starts the game
  * (with several displays it opens a submenu to pick the screen); Emulator picks the emulator for the platform.
@@ -75,16 +83,16 @@ private data class Target(
 @Composable
 fun GameMenu(app: AppViewModel, menu: Overlay.GameMenu) {
     val game = menu.game
-    var submenu by remember { mutableStateOf(false) }
+    var level by remember { mutableStateOf(MenuLevel.Main) }
     val targets = displayTargets()
-    BackHandler(submenu) { submenu = false }
+    BackHandler(level != MenuLevel.Main) { level = MenuLevel.Main }
     Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.35f))) {
         Row(Modifier.fillMaxSize().padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically) {
             Preview(game.icon, game.platformId, game.displayTitle, Modifier.weight(1f))
             MenuPanel(
-                entries(app, menu, targets, submenu) { submenu = it },
+                entries(app, menu, targets, level) { level = it },
                 ROW,
-                submenu,
+                level != MenuLevel.Main,
                 RoundedCornerShape(28.dp),
                 Modifier.fillMaxWidth(PANEL_WIDTH).padding(start = 4.dp)
             )
@@ -98,24 +106,61 @@ private fun entries(
     app: AppViewModel,
     menu: Overlay.GameMenu,
     targets: List<Target>,
-    submenu: Boolean,
-    setSubmenu: (Boolean) -> Unit
-): List<MenuEntry> {
-    val game = menu.game
-    if (submenu) {
-        return targets.map { target ->
-            val res = if (target.big) R.string.menu_screen_top else R.string.menu_screen_bottom
-            MenuEntry(Icons.Rounded.Smartphone, stringResource(res)) {
-                app.overlay = null
-                app.launchGame(game, target.displayId)
-            }
+    level: MenuLevel,
+    setLevel: (MenuLevel) -> Unit,
+): List<MenuEntry> = when (level) {
+    MenuLevel.Displays -> targetEntries(app, menu.game, targets)
+    MenuLevel.Rating -> ratingEntries(app, menu.game.id)
+    MenuLevel.Main -> mainEntries(app, menu, targets, setLevel)
+}
+
+@Composable
+private fun targetEntries(app: AppViewModel, game: GameEntry, targets: List<Target>): List<MenuEntry> =
+    targets.map { target ->
+        val res = if (target.big) R.string.menu_screen_top else R.string.menu_screen_bottom
+        MenuEntry(Icons.Rounded.Smartphone, stringResource(res)) {
+            app.overlay = null
+            app.launchGame(game, target.displayId)
         }
     }
+
+@Composable
+private fun ratingEntries(app: AppViewModel, gameId: Long): List<MenuEntry> {
+    val stars = listOf(5.0f, 4.0f, 3.0f, 2.0f, 1.0f)
+    val entries = stars.map { rating ->
+        val label = "★".repeat(rating.toInt()) + "☆".repeat(5 - rating.toInt()) + "  (${rating.toInt()}/5)"
+        MenuEntry(Icons.Rounded.Star, label) {
+            app.overlay = null
+            app.library.setRating(gameId, rating)
+        }
+    }
+    val remove = MenuEntry(Icons.Rounded.StarBorder, stringResource(R.string.menu_rating_remove)) {
+        app.overlay = null
+        app.library.setRating(gameId, null)
+    }
+    return entries + remove
+}
+
+@Composable
+private fun mainEntries(
+    app: AppViewModel,
+    menu: Overlay.GameMenu,
+    targets: List<Target>,
+    setLevel: (MenuLevel) -> Unit,
+): List<MenuEntry> {
+    val game = menu.game
     val launch = MenuEntry(Icons.Rounded.PlayArrow, stringResource(R.string.menu_launch), submenu = targets.size > 1) {
-        if (targets.size > 1) setSubmenu(true) else { app.overlay = null; app.launchGame(game) }
+        if (targets.size > 1) setLevel(MenuLevel.Displays) else { app.overlay = null; app.launchGame(game) }
     }
     val info = MenuEntry(Icons.Rounded.Info, stringResource(R.string.menu_info)) {
         app.open(Screen.GameInfo(game))
+    }
+    val favorite = MenuEntry(
+        if (game.favorite) Icons.Rounded.Star else Icons.Rounded.StarBorder,
+        stringResource(if (game.favorite) R.string.menu_favorite_remove else R.string.menu_favorite_add),
+    ) { app.library.setFavorite(game, !game.favorite) }
+    val rating = MenuEntry(Icons.Rounded.Star, stringResource(R.string.menu_rating), submenu = true) {
+        setLevel(MenuLevel.Rating)
     }
     val edit = MenuEntry(Icons.Rounded.Edit, stringResource(R.string.menu_edit), badge = "Y") {
         app.overlay = null
@@ -128,15 +173,11 @@ private fun entries(
     val unfile = game.appPackage?.let {
         MenuEntry(Icons.Rounded.RemoveCircleOutline, stringResource(R.string.menu_unfile_console)) { app.library.unfileApp(game) }
     }
-    val favorite = MenuEntry(
-        if (game.favorite) Icons.Rounded.Star else Icons.Rounded.StarBorder,
-        stringResource(if (game.favorite) R.string.menu_favorite_remove else R.string.menu_favorite_add),
-    ) { app.library.setFavorite(game, !game.favorite) }
     val hidden = app.top.let { it is Screen.Platform && it.id == HIDDEN_FOLDER }
     val hide = MenuEntry(Icons.Rounded.VisibilityOff, stringResource(if (hidden) R.string.menu_unhide else R.string.menu_hide)) {
         app.library.setHidden(game, !hidden)
     }
-    return listOfNotNull(launch, info, favorite, edit.takeIf { game.appPackage == null }, art, hide, unfile)
+    return listOfNotNull(launch, info, favorite, rating, edit.takeIf { game.appPackage == null }, art, hide, unfile)
 }
 
 /** The displays that are on, the larger as the top screen. */

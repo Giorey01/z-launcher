@@ -87,6 +87,8 @@
     <string name="menu_search">Cerca</string>
     <string name="menu_screen_top">Schermo sopra</string>
     <string name="menu_screen_bottom">Schermo sotto</string>
+    <string name="menu_rating">Valutazione</string>
+    <string name="menu_rating_remove">Rimuovi valutazione</string>
     <string name="sort_manual">Manuale</string>
     <string name="st_title">Impostazioni</string>
     <string name="st_cat_personalization">Personalizzazione</string>

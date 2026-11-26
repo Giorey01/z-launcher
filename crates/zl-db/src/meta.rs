@@ -1,5 +1,7 @@
 //! Repository: game metadata and user overrides.
 
+use std::collections::HashMap;
+
 use rusqlite::{params, Row};
 
 use crate::db::Db;
@@ -137,6 +139,22 @@ impl Db {
             }
         }
         Ok(out)
+    }
+
+    /// Returns all overrides for a specific field as a map from game_id to value.
+    pub fn all_meta_overrides(&self, field: MetaField) -> Result<HashMap<i64, String>, DbError> {
+        let mut stmt = self
+            .conn
+            .prepare("SELECT game_id, value FROM game_meta_overrides WHERE field = ?1")?;
+        let rows = stmt.query_map(params![field.as_str()], |row| {
+            Ok((row.get(0)?, row.get(1)?))
+        })?;
+        let mut map = HashMap::new();
+        for item in rows {
+            let (id, val): (i64, String) = item?;
+            map.insert(id, val);
+        }
+        Ok(map)
     }
 }
 

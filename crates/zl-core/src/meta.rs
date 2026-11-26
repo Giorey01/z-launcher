@@ -61,6 +61,46 @@ impl Service {
         Ok(())
     }
 
+    /// Sets or clears the user rating of a game (0.0 to 5.0).
+    pub fn set_game_rating(&self, game_id: i64, rating: Option<f32>) -> Result<(), CoreError> {
+        let db = self.db();
+        db.game(game_id)?.ok_or(CoreError::NotFound)?;
+        match rating {
+            Some(r) => {
+                let clamped = r.clamp(0.0, 5.0);
+                db.set_meta_override(game_id, MetaField::Rating, &format!("{:.1}", clamped))?;
+            }
+            None => db.clear_meta_override(game_id, MetaField::Rating)?,
+        }
+        Ok(())
+    }
+
+    /// Sets or clears a user title override for a game.
+    pub fn set_game_title(&self, game_id: i64, title: Option<&str>) -> Result<(), CoreError> {
+        let db = self.db();
+        db.game(game_id)?.ok_or(CoreError::NotFound)?;
+        match title.map(str::trim).filter(|s| !s.is_empty()) {
+            Some(t) => db.set_meta_override(game_id, MetaField::Title, t)?,
+            None => db.clear_meta_override(game_id, MetaField::Title)?,
+        }
+        Ok(())
+    }
+
+    /// Sets or clears a user description override for a game.
+    pub fn set_game_description(
+        &self,
+        game_id: i64,
+        description: Option<&str>,
+    ) -> Result<(), CoreError> {
+        let db = self.db();
+        db.game(game_id)?.ok_or(CoreError::NotFound)?;
+        match description.map(str::trim).filter(|s| !s.is_empty()) {
+            Some(d) => db.set_meta_override(game_id, MetaField::Description, d)?,
+            None => db.clear_meta_override(game_id, MetaField::Description)?,
+        }
+        Ok(())
+    }
+
     /// Reads scraper configuration settings.
     pub fn scraper_config(&self) -> Result<ScraperConfig, CoreError> {
         let db = self.db();
