@@ -64,6 +64,19 @@ pub fn dock_slots() -> u32 {
     u32::try_from(zl_config::app::DOCK_SLOTS).unwrap_or(u32::MAX)
 }
 
+/// The tracks of the theme's music to play now, in order (empty when music is off):
+/// `minute_of_day` is the local time, `seed` varies a shuffled playlist between sessions.
+#[uniffi::export]
+pub fn music_queue(music: MusicSetup, minute_of_day: u32, seed: u64) -> Vec<String> {
+    zl_core::music_queue(&music.into(), minute_of_day, seed)
+}
+
+/// The folder of the data directory the app copies its built-in music into.
+#[uniffi::export]
+pub fn default_music_dir_name() -> String {
+    zl_config::theme::DEFAULT_MUSIC_DIR_NAME.to_string()
+}
+
 /// The default URL for the public Pod store index.
 #[uniffi::export]
 pub fn default_pod_index_url() -> String {

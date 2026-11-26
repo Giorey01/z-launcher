@@ -22,6 +22,7 @@ mod launch;
 mod library;
 mod media;
 mod meta;
+mod music;
 mod platform_root;
 mod platform_settings;
 mod pods;
@@ -55,6 +56,7 @@ pub use appearance_types::{
 };
 pub use error::CoreError;
 pub use media::{GameMedia, MediaCount, MediaImportReport, MediaItem, MediaSources};
+pub use music::music_queue;
 pub use platform_root::PlatformRoot;
 pub use pods::{IndexEntryView, IndexStoreView, InstalledPodView, PodPreview};
 pub use scrape::{ImageScrapeReport, KeyCheck, ScrapeProgress, ScrapeStop, ScrapeTarget};

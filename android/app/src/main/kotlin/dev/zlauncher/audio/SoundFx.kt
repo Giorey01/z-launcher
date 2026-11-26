@@ -21,7 +21,9 @@ class SoundFx {
         .setMaxStreams(MAX_STREAMS)
         .setAudioAttributes(
             AudioAttributes.Builder()
-                .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                // The media volume, like the games: the system (sonification) stream is often muted
+                // on handhelds, and its sounds would never be heard (seen on an AYN Thor).
+                .setUsage(AudioAttributes.USAGE_GAME)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                 .build()
         )

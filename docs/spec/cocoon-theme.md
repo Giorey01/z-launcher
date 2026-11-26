@@ -137,6 +137,9 @@ all'intervallo; un enum sconosciuto è un avviso e la chiave viene ignorata.
 - Stringa vuota = nessun valore.
 - `music_playback_mode`: `IN ORDER` | `SHUFFLE` (con lo spazio; tolleriamo `IN_ORDER`).
 - `sfx_volume`, `music_volume`, `jingle_volume`: 0.0–1.0.
+- **Nostra estensione:** se il tema e i suoi pacchetti non hanno musica, suona la musica del
+  launcher (tracce originali copiate dall'app in `default-music/` della cartella dati, in ordine di
+  nome). Il brano incluso si rigenera con `scripts/make_default_music.py`.
 
 ### 3.7 `asset_refs`
 

@@ -229,6 +229,8 @@ fun LeadTile(
     ) {
         Box(
             Modifier
+                // Centred like a game cover, so the cursor (drawn on the whole tile) frames it the same way.
+                .align(Alignment.Center)
                 .fillMaxSize(GAME_COVER_FRACTION)
                 .clip(shape)
                 .background(theme.cardBrush())
