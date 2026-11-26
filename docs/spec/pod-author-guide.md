@@ -110,6 +110,19 @@ Se un Pod tenta di invocare un'operazione dell'host senza aver dichiarato il rel
 ### Isolamento da Crash e Safe Mode
 Se un Pod va in crash più di 3 volte in 24 ore, Z-Launcher lo disattiva automaticamente marcandolo come `disabled_by_crashes` per impedire blocchi all'avvio del dispositivo. L'utente può riabilitarlo manualmente dalle Impostazioni dei Pod.
 
+### Librerie native (`lib/arm64-v8a/`)
+Il launcher passa la cartella `lib/<abi>/` del pacchetto al `DexClassLoader` del Pod. Una libreria
+caricata con `System.loadLibrary` la trova da sola; i binding UniFFI invece caricano con JNA, che non
+guarda il classloader. Prima della prima chiamata FFI, chiedi il percorso al classloader del Pod e
+passalo ai binding:
+
+```kotlin
+val path = (MyPod::class.java.classLoader as? dalvik.system.BaseDexClassLoader)?.findLibrary("mio_core")
+if (path != null) System.setProperty("uniffi.component.mio_core.libraryOverride", path)
+```
+
+JNA non va messa nel Pod: la fornisce il launcher (dichiarala `compileOnly`, alla versione del suo catalogo).
+
 ---
 
 ## 5. Creazione di un Pod con `zpod-template`
@@ -154,6 +167,11 @@ Se un Pod va in crash più di 3 volte in 24 ore, Z-Launcher lo disattiva automat
 ---
 
 ## 6. Distribuzione
+
+### Da file (sviluppo e distribuzione privata)
+Copia il `.zlpod` sul dispositivo (per esempio `adb push mio.zlpod /sdcard/Download/`), poi in
+Z-Launcher: **Pod → Store → Installa da file**. Il pacchetto passa gli stessi controlli di uno
+scaricato e chiede la stessa conferma. L'opzione "Pod esterni" deve essere accesa.
 
 ### Tramite Deep Link
 Z-Launcher intercetta i link nel formato:

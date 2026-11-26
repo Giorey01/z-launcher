@@ -230,10 +230,15 @@ abstract class ScreenActivity : ComponentActivity() {
         true
     } else false
 
-    /** Steps platforms when in a folder. */
+    /** Steps platforms when in a folder, tabs in the Pod screen. */
     private fun handleBumper(delta: Int): Boolean = when {
         app.top is Screen.Platform && app.overlay == null -> {
             app.stepPlatform(delta)
+            true
+        }
+        app.top == Screen.PodManagement -> {
+            app.podManager.stepTab(delta)
+            app.play(SoundAction.NAVIGATE)
             true
         }
         else -> false

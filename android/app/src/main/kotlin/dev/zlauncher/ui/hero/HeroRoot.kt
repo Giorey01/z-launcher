@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.zlauncher.nav.AppViewModel
 import dev.zlauncher.nav.Screen
+import dev.zlauncher.ui.pods.PodAside
 import dev.zlauncher.ui.settings.SettingsMain
 import dev.zlauncher.ui.theme.LocalZTheme
 import dev.zlauncher.ui.theme.WallpaperScreen
@@ -21,6 +22,8 @@ fun HeroRoot(app: AppViewModel) {
     WallpaperScreen(theme.wallpaperExternal) {
         if (app.top == Screen.Settings) {
             SettingsMain(app)
+        } else if (app.top == Screen.PodManagement) {
+            PodAside(app)
         } else {
             HeroArea(app.hero)
             StatusPill(Modifier.align(Alignment.TopEnd).padding(top = 10.dp, end = 16.dp))

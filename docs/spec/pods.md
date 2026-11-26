@@ -289,8 +289,18 @@ senza slot funziona come oggi, e `Content(host)` diventa `Content(host, route)` 
 lettura, `DexClassLoader` con il classloader del launcher come padre, libreria nativa da
 `lib/<abi>/`, istanza della classe `entry`. Il launcher ha la precedenza sulle librerie: il Pod
 **non include** quelle fornite da `pod-platform` (Compose, coroutines, Coil, WorkManager,
-serialization, `pod-api`, `pod-ui`); include le altre (per esempio Room). R8 conserva il pacchetto
-`dev.zlauncher.pods`. I Pod integrati si registrano con `ServiceLoader`, come oggi.
+serialization, `pod-api`, `pod-ui`); include le altre (per esempio Room). R8 conserva per intero, nomi e membri, `dev.zlauncher.pods`,
+`dev.zlauncher.ui` e le librerie fornite (regole in `app/proguard-rules.pro`): il dex di un Pod usa
+parti che il launcher non usa, e senza queste regole fallisce solo nelle build release.
+I Pod integrati si registrano con `ServiceLoader`, come oggi.
+
+**Librerie native con UniFFI.** Il `DexClassLoader` riceve `lib/<abi>/` come cartella delle librerie,
+ma JNA carica per nome e non guarda il classloader. Un Pod con binding UniFFI chiede il percorso al
+proprio classloader (`BaseDexClassLoader.findLibrary(nome)`) e lo passa ai binding con la proprietà
+di sistema `uniffi.component.<nome>.libraryOverride` prima della prima chiamata.
+
+**Un Pod che non si carica** (eccezione, `LinkageError` per una classe o un metodo che il launcher
+non ha) conta come guasto (§10) e la causa va nel log con il tag `PodLoader`.
 
 ## 10. Guasti e modalità sicura
 
@@ -310,8 +320,11 @@ mentre una schermata del Pod era aperta.
 
 - La schermata dei Pod elenca integrati e installati, con stato, versione e autore; accende,
   spegne, aggiorna e disinstalla.
-- Il tasto **+** apre lo store (gli indici, con il loro elenco) e il campo per il link, con la
-  tastiera a schermo del launcher.
+- Il tasto **+** apre lo store: installazione **da file** (scelta di un documento di sistema),
+  **da link** (con la tastiera a schermo del launcher) e gli indici con il loro elenco.
+- Nel doppio schermo l'elenco sta sul display della griglia e il dettaglio della riga sotto il
+  cursore (stato, impronta, permessi) sul display grande; a schermo singolo stanno affiancati.
+  L1 e R1 cambiano scheda.
 - Prima di installare: nome, versione, autore, impronta in gruppi, permessi con una riga ciascuno,
   dimensione, e l'avviso **"Un Pod gira con gli stessi permessi del launcher: installa solo Pod di
   cui ti fidi."** I testi stanno in `strings.xml` (italiano e inglese).

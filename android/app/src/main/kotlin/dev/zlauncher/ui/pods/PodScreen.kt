@@ -18,7 +18,7 @@ fun PodScreen(app: AppViewModel, screen: Screen.Pod) {
     val entry = app.zl.pods.findEntry(screen.id) ?: return
     val theme = LocalZTheme.current
     val host = remember(theme, screen.id) {
-        AppPodHost(screen.id, entry.permissions, app, theme)
+        AppPodHost(screen.id, entry.permissions, app, theme, entry.i18nDir)
     }
 
     DisposableEffect(screen.id) {

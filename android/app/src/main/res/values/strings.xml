@@ -437,4 +437,24 @@
     <string name="search_no_results">No games found matching “%1$s”</string>
     <string name="search_count">%1$d games</string>
     <string name="search_keyboard">Keyboard</string>
+    <string name="pod_status_crashed_short">Crashed</string>
+    <string name="pod_status_incompatible_short">Incompatible</string>
+    <string name="pod_switch_on">On</string>
+    <string name="pod_switch_off">Off</string>
+    <string name="pod_install_file">Install from file</string>
+    <string name="pod_install_file_sub">Choose a .zlpod on this device</string>
+    <string name="pod_install_file_details">Opens the system file picker. The package is checked (signature, paths, manifest) before anything is installed, and you confirm author, fingerprint and permissions first.</string>
+    <string name="pod_install_url_sub">Type a link with the on-screen keyboard</string>
+    <string name="pod_install_url_details">Downloads a .zlpod from an https link, checks it and asks you to confirm before installing.</string>
+    <string name="pod_refresh_store">Reload the store</string>
+    <string name="pod_refresh_store_sub">Read the store index again</string>
+    <string name="pod_details_permissions">Permissions</string>
+    <string name="pod_details_signer">Signer</string>
+    <string name="pod_details_hint_installed">Press A for its actions: open, turn off or on, uninstall.</string>
+    <string name="pod_summary">%1$d installed · %2$d active</string>
+    <string name="pod_external_details">When off, installed external Pods are not loaded and their entries do not appear. Built-in Pods always work. A change takes effect at the next start of the launcher.</string>
+    <string name="pod_open">Open</string>
+    <string name="pod_perm_work">• Run long tasks in the background</string>
+    <string name="pod_perm_notifications">• Show notifications</string>
+    <string name="pod_error_file">Could not read the file.</string>
 </resources>

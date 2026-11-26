@@ -66,9 +66,45 @@ class MemoryPodStorage(
     }
 }
 
-/** Simple fallback strings provider returning the key or formatted string. */
-class AppPodStrings : PodStrings {
-    override fun get(key: String): String = key
+/** Largest `i18n/<language>.json` read for a Pod: a text table, never this big in practice. */
+private const val MAX_I18N_BYTES = 1L shl 20
+
+/**
+ * The texts of a Pod (§8): the table of the app's language from `i18n/<language>.json`, then the
+ * English one, then the key itself. A file that is missing, too big or not a JSON object is skipped.
+ */
+class AppPodStrings(
+    /** The tables in lookup order (the app's language first, English last). */
+    private val tables: List<Map<String, String>> = emptyList(),
+) : PodStrings {
+    override fun get(key: String): String = tables.firstNotNullOfOrNull { it[key] } ?: key
+
+    override fun get(key: String, vararg args: Any): String {
+        val text = get(key)
+        return runCatching { text.format(*args) }.getOrDefault(text)
+    }
+
+    /** Loading of the tables from a Pod's `i18n/` folder. */
+    companion object {
+        /** The tables of [language] and of English from [dir]; no folder gives the keys back. */
+        fun load(dir: File?, language: String): AppPodStrings {
+            if (dir == null) return AppPodStrings()
+            val languages = listOf(language.lowercase(), "en").distinct()
+            return AppPodStrings(languages.mapNotNull { readTable(File(dir, "$it.json")) })
+        }
+
+        /** One `key → text` object; null when the file is missing, too big or not an object of strings. */
+        @Suppress("SwallowedException")
+        private fun readTable(file: File): Map<String, String>? {
+            if (!file.isFile || file.length() > MAX_I18N_BYTES) return null
+            return try {
+                val json = org.json.JSONObject(file.readText())
+                json.keys().asSequence().mapNotNull { k -> (json.opt(k) as? String)?.let { k to it } }.toMap()
+            } catch (e: org.json.JSONException) {
+                null
+            }
+        }
+    }
 }
 
 /** The launcher's side of [PodHost], with runtime permission enforcement (§8). */
@@ -87,7 +123,8 @@ class AppPodHost(
         permissions: Set<String>,
         app: AppViewModel,
         theme: ZTheme,
-    ) : this(podId, permissions, app, theme, AppPodStrings(), AppPodStorage(app.zl, podId))
+        i18nDir: File? = null,
+    ) : this(podId, permissions, app, theme, AppPodStrings.load(i18nDir, java.util.Locale.getDefault().language), AppPodStorage(app.zl, podId))
 
     private val _events = MutableSharedFlow<PodEvent>(extraBufferCapacity = 64)
     override val events: SharedFlow<PodEvent> = _events.asSharedFlow()

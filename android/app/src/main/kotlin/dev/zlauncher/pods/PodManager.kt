@@ -1,5 +1,6 @@
 package dev.zlauncher.pods
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -30,6 +31,48 @@ enum class PodTab {
 
     /** Store index and remote installation. */
     STORE,
+}
+
+/** A row of the Pod screen that is not a Pod: the switch and the install actions. */
+enum class PodAction {
+    /** The "external Pods" switch (§6). */
+    EXTERNAL_TOGGLE,
+
+    /** Install a `.zlpod` chosen with the system file picker. */
+    INSTALL_FILE,
+
+    /** Install a `.zlpod` from a link typed with the on-screen keyboard. */
+    INSTALL_URL,
+
+    /** Load the store index again. */
+    REFRESH_STORE,
+}
+
+/** What the cursor is on in the Pod screen: the details panel describes it. */
+sealed interface PodFocus {
+    /** An installed external Pod. */
+    data class Installed(
+        /** The Pod. */
+        val pod: InstalledPodView,
+    ) : PodFocus
+
+    /** A Pod built into this launcher. */
+    data class Builtin(
+        /** The Pod and its declarations. */
+        val entry: PodWithMetadata,
+    ) : PodFocus
+
+    /** An entry of the store index. */
+    data class Store(
+        /** The index entry. */
+        val entry: IndexEntryView,
+    ) : PodFocus
+
+    /** One of the action rows. */
+    data class Action(
+        /** Which action. */
+        val action: PodAction,
+    ) : PodFocus
 }
 
 /** State of the Pod management and store screens (§11). */
@@ -68,6 +111,12 @@ data class PodManagementState(
     val activeTab: PodTab = PodTab.INSTALLED,
     /** Pending URL remembered while asking to enable external Pods. */
     val pendingUrlAfterPrompt: String? = null,
+    /** The row under the cursor, described by the details panel. */
+    val focus: PodFocus? = null,
+    /** The screen should open the system file picker for a `.zlpod`. */
+    val wantFile: Boolean = false,
+    /** Installed Pod whose actions (open, enable, uninstall…) are shown. */
+    val actionsFor: InstalledPodView? = null,
 )
 
 /** Characters shown from the signer fingerprint (§4). */
@@ -109,9 +158,77 @@ class PodManager(private val app: AppViewModel) {
     var state by mutableStateOf(PodManagementState())
         private set
 
+    /** The tabs to show: Built-in only when this build has built-in Pods. */
+    fun tabs(): List<PodTab> = PodTab.entries.filter { it != PodTab.BUILTIN || state.builtinPods.isNotEmpty() }
+
+    /** Moves to the previous ([delta] < 0) or next tab, stopping at the ends (L1 and R1). */
+    fun stepTab(delta: Int) {
+        val tabs = tabs()
+        val next = tabs.getOrNull(tabs.indexOf(state.activeTab) + delta) ?: return
+        selectTab(next)
+    }
+
+    /** Remembers the row under the cursor for the details panel. */
+    fun focus(focus: PodFocus) {
+        state = state.copy(focus = focus)
+    }
+
+    /** Shows or hides the actions of an installed Pod. */
+    fun showActions(pod: InstalledPodView?) {
+        state = state.copy(actionsFor = pod)
+    }
+
+    /** Asks the screen for the file picker; with external Pods off, asks to turn them on first (§6). */
+    fun requestFile() {
+        state = if (state.externalPodsEnabled) state.copy(wantFile = true) else state.copy(showExternalPrompt = true)
+    }
+
+    /** The screen opened the file picker. */
+    fun fileRequested() {
+        state = state.copy(wantFile = false)
+    }
+
+    /** Copies the chosen `.zlpod` into the cache and inspects it, like a download (§6). */
+    @Suppress("TooGenericExceptionCaught")
+    fun inspectUri(uri: Uri) {
+        app.viewModelScope.launch {
+            state = state.copy(inspecting = true)
+            val tempFile = File(app.zl.cacheDir, "pod_${System.currentTimeMillis()}.zlpod")
+            try {
+                withContext(Dispatchers.IO) {
+                    val input = checkNotNull(app.zl.contentResolver.openInputStream(uri)) { "no stream for $uri" }
+                    input.use { i -> tempFile.outputStream().use { o -> i.copyTo(o) } }
+                }
+                inspectDownloaded(tempFile, null, null)
+            } catch (_: Exception) {
+                tempFile.delete()
+                state = state.copy(inspecting = false)
+                app.message = UiMessage(R.string.pod_error_file)
+            }
+        }
+    }
+
+    /** Inspects a package already on disk and shows the confirmation (§6); a bad package shows its codes. */
+    private suspend fun inspectDownloaded(file: File, expectedHash: String?, expectedSigner: String?) {
+        try {
+            val preview = app.zl.core.call { it.inspectPod(file.absolutePath) }
+            state = state.copy(
+                inspecting = false,
+                pendingPreview = preview,
+                pendingPackageFile = file,
+                pendingHash = expectedHash,
+                pendingSigner = expectedSigner,
+            )
+        } catch (e: CoreException) {
+            file.delete()
+            state = state.copy(inspecting = false)
+            app.message = e.toMessage()
+        }
+    }
+
     /** Selects the active tab. */
     fun selectTab(tab: PodTab) {
-        state = state.copy(activeTab = tab)
+        state = state.copy(activeTab = tab, focus = null)
         if (tab == PodTab.STORE && state.storeEntries.isEmpty() && !state.storeLoading) {
             fetchStoreIndex()
         }
@@ -230,19 +347,13 @@ class PodManager(private val app: AppViewModel) {
                         }
                     }
                 }
-                val preview = app.zl.core.call { it.inspectPod(tempFile.absolutePath) }
-                state = state.copy(
-                    inspecting = false,
-                    pendingPreview = preview,
-                    pendingPackageFile = tempFile,
-                    pendingHash = expectedHash,
-                    pendingSigner = expectedSigner,
-                )
             } catch (_: Exception) {
                 tempFile.delete()
                 state = state.copy(inspecting = false)
                 app.message = UiMessage(R.string.pod_error_download)
+                return@launch
             }
+            inspectDownloaded(tempFile, expectedHash, expectedSigner)
         }
     }
 
@@ -310,7 +421,8 @@ class PodManager(private val app: AppViewModel) {
     /** Called when the user confirms enabling external Pods in the prompt dialog. */
     fun onExternalPromptConfirmed() {
         val pendingUrl = state.pendingUrlAfterPrompt
-        state = state.copy(showExternalPrompt = false, pendingUrlAfterPrompt = null)
+        // The switch is saved in the background: the pending install must already see it on.
+        state = state.copy(showExternalPrompt = false, pendingUrlAfterPrompt = null, externalPodsEnabled = true)
         setExternalEnabled(true)
         if (!pendingUrl.isNullOrBlank()) {
             downloadAndInspect(pendingUrl)

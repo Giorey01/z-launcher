@@ -437,4 +437,24 @@
     <string name="search_no_results">Nessun gioco trovato per “%1$s”</string>
     <string name="search_count">%1$d giochi</string>
     <string name="search_keyboard">Tastiera</string>
+    <string name="pod_status_crashed_short">Guasto</string>
+    <string name="pod_status_incompatible_short">Incompatibile</string>
+    <string name="pod_switch_on">Sì</string>
+    <string name="pod_switch_off">No</string>
+    <string name="pod_install_file">Installa da file</string>
+    <string name="pod_install_file_sub">Scegli un .zlpod su questo dispositivo</string>
+    <string name="pod_install_file_details">Apre la scelta dei file di sistema. Il pacchetto si controlla (firma, percorsi, manifest) prima di installare qualsiasi cosa, e prima confermi autore, impronta e permessi.</string>
+    <string name="pod_install_url_sub">Scrivi un link con la tastiera a schermo</string>
+    <string name="pod_install_url_details">Scarica un .zlpod da un link https, lo controlla e chiede conferma prima di installarlo.</string>
+    <string name="pod_refresh_store">Ricarica lo store</string>
+    <string name="pod_refresh_store_sub">Rilegge l\'indice dello store</string>
+    <string name="pod_details_permissions">Permessi</string>
+    <string name="pod_details_signer">Firmatario</string>
+    <string name="pod_details_hint_installed">Premi A per le azioni: apri, spegni o accendi, disinstalla.</string>
+    <string name="pod_summary">%1$d installati · %2$d attivi</string>
+    <string name="pod_external_details">Da spenta, i Pod esterni installati non si caricano e le loro voci non compaiono. I Pod integrati funzionano sempre. Il cambio vale dal prossimo avvio del launcher.</string>
+    <string name="pod_open">Apri</string>
+    <string name="pod_perm_work">• Eseguire lavori lunghi in background</string>
+    <string name="pod_perm_notifications">• Mostrare notifiche</string>
+    <string name="pod_error_file">Impossibile leggere il file.</string>
 </resources>

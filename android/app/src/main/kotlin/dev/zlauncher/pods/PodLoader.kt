@@ -4,6 +4,9 @@ import android.content.Context
 import dev.zlauncher.core.nativecore.InstalledPodView
 import java.io.File
 
+/** Log tag of the Pod loader. */
+private const val LOG_TAG = "PodLoader"
+
 /** Result of initializing external Pod loading at app startup (§10). */
 data class PodLoadResult(
     /** Loaded external pods with metadata. */
@@ -24,6 +27,8 @@ data class PodWithMetadata(
     val permissions: Set<String>,
     /** Whether this is an externally installed Pod (`true`) or a builtin Pod (`false`). */
     val isExternal: Boolean = false,
+    /** The `i18n/` folder of an installed Pod, null for a built-in one (§8). */
+    val i18nDir: File? = null,
 )
 
 /**
@@ -79,14 +84,24 @@ class PodLoader(
                     declaredSlots = info.slots.toSet(),
                     permissions = info.permissions.toSet(),
                     isExternal = true,
+                    i18nDir = File(podDir, "i18n"),
                 )
             }
         } catch (e: Exception) {
-            onCrash(info.id, "Failed to load entry class: ${e.message}")
+            loadFailed(info.id, e, onCrash)
+        } catch (e: LinkageError) {
+            // A Pod built against classes or methods this launcher does not have (another version, or code R8 removed).
+            loadFailed(info.id, e, onCrash)
         } finally {
             sentinelFile.delete()
         }
         return result
+    }
+
+    /** Records a Pod that did not load as a crash (§10) and writes the cause to the log. */
+    private fun loadFailed(id: String, error: Throwable, onCrash: (podId: String, reason: String) -> Unit) {
+        android.util.Log.w(LOG_TAG, "Pod $id did not load", error)
+        onCrash(id, "Failed to load entry class: $error")
     }
 
     private fun createClassLoader(dexFile: File, nativeLibDir: File): ClassLoader {
