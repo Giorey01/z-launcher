@@ -20,7 +20,6 @@ import androidx.compose.material.icons.rounded.Storefront
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -47,8 +46,7 @@ import dev.zlauncher.ui.theme.ZPanel
  * when the tab opens, so the pad always has somewhere to go.
  */
 @Composable
-internal fun PodList(app: AppViewModel, manager: PodManager, modifier: Modifier) {
-    val first = remember(manager.state.activeTab) { FocusRequester() }
+internal fun PodList(app: AppViewModel, manager: PodManager, first: FocusRequester, modifier: Modifier) {
     LaunchedEffect(manager.state.activeTab) { runCatching { first.requestFocus() } }
     ZPanel(modifier, RoundedCornerShape(topStart = 18.dp, topEnd = 18.dp), elevation = 6.dp) {
         LazyColumn(Modifier.fillMaxSize()) {

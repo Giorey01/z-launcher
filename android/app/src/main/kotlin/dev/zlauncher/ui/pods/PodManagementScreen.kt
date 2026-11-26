@@ -22,8 +22,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -61,15 +64,19 @@ fun PodManagementScreen(app: AppViewModel, single: Boolean) {
     val manager = app.podManager
     LaunchedEffect(Unit) { manager.reload() }
     FilePickerEffect(manager)
+    // The list's first row, where down leads from the header and the tabs: left to the geometric
+    // search, the focus moving into the list from above was lost.
+    val first = remember(manager.state.activeTab) { FocusRequester() }
+    val intoList = Modifier.focusProperties { down = first }
     CompositionLocalProvider(LocalBackdrop provides null) {
         Box(Modifier.fillMaxSize().background(theme.backgroundBrush())) {
             val band = Brush.verticalGradient(listOf(theme.textPrimary.copy(alpha = 0.16f), Color.Transparent))
             Box(Modifier.fillMaxWidth().height(HEADER_BAND).background(band))
             Column(Modifier.fillMaxSize().padding(start = 16.dp, end = 16.dp, top = 8.dp)) {
-                PodHeader(app, manager)
-                PodTabs(manager, Modifier.padding(top = 14.dp, bottom = 12.dp))
+                PodHeader(app, manager, intoList)
+                PodTabs(manager, Modifier.padding(top = 14.dp, bottom = 12.dp), intoList)
                 Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                    PodList(app, manager, Modifier.weight(1f).fillMaxHeight())
+                    PodList(app, manager, first, Modifier.weight(1f).fillMaxHeight())
                     if (single) PodDetails(app, manager.state.focus, Modifier.width(DETAILS_WIDTH).fillMaxHeight().padding(bottom = 16.dp))
                 }
             }
@@ -92,7 +99,7 @@ private fun FilePickerEffect(manager: PodManager) {
 
 /** "B ←", the title and the **+** (store) on the right. */
 @Composable
-private fun PodHeader(app: AppViewModel, manager: PodManager) {
+private fun PodHeader(app: AppViewModel, manager: PodManager, intoList: Modifier) {
     val theme = LocalZTheme.current
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         BackPill(onClick = { app.back() })
@@ -100,7 +107,7 @@ private fun PodHeader(app: AppViewModel, manager: PodManager) {
         if (manager.state.inspecting) {
             Text(stringResource(R.string.pod_inspecting), color = theme.textSecondary, fontSize = 13.sp, modifier = Modifier.padding(end = 12.dp))
         }
-        PadTile({ manager.selectTab(PodTab.STORE) }, Modifier.size(40.dp), shape = RoundedCornerShape(50)) {
+        PadTile({ manager.selectTab(PodTab.STORE) }, intoList.size(40.dp), shape = RoundedCornerShape(50)) {
             Icon(Icons.Rounded.Add, null, Modifier.align(Alignment.Center).size(24.dp), tint = theme.accentStart)
         }
     }
@@ -108,7 +115,7 @@ private fun PodHeader(app: AppViewModel, manager: PodManager) {
 
 /** The tabs; Built-in only when this build has built-in Pods. L1 and R1 step through them. */
 @Composable
-private fun PodTabs(manager: PodManager, modifier: Modifier) {
+private fun PodTabs(manager: PodManager, modifier: Modifier, intoList: Modifier) {
     Row(modifier, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         for (tab in manager.tabs()) {
             val label = when (tab) {
@@ -116,17 +123,17 @@ private fun PodTabs(manager: PodManager, modifier: Modifier) {
                 PodTab.BUILTIN -> stringResource(R.string.pod_tab_builtin)
                 PodTab.STORE -> stringResource(R.string.pod_tab_store)
             }
-            TabPill(label, manager.state.activeTab == tab) { manager.selectTab(tab) }
+            TabPill(label, manager.state.activeTab == tab, intoList) { manager.selectTab(tab) }
         }
     }
 }
 
 /** One tab: the selected one is a card with the title in the accent colour, the others plain text. */
 @Composable
-private fun TabPill(label: String, selected: Boolean, onClick: () -> Unit) {
+private fun TabPill(label: String, selected: Boolean, modifier: Modifier, onClick: () -> Unit) {
     val theme = LocalZTheme.current
     val shape = RoundedCornerShape(50)
-    PadTile(onClick, Modifier.height(38.dp), shape = shape, surface = if (selected) TileSurface.CARD else TileSurface.NONE) {
+    PadTile(onClick, modifier.height(38.dp), shape = shape, surface = if (selected) TileSurface.CARD else TileSurface.NONE) {
         Text(
             label,
             Modifier.align(Alignment.Center).padding(horizontal = 18.dp),
