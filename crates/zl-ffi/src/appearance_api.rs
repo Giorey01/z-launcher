@@ -195,6 +195,13 @@ impl Core {
         Ok(())
     }
 
+    /// Sets the brightness of the secondary screen's interface (0.2-1; 1: as drawn).
+    pub fn set_secondary_brightness(&self, value: f32) -> Res<()> {
+        self.service()
+            .update_user_settings(|s| s.secondary_brightness = value)?;
+        Ok(())
+    }
+
     /// Sets the volume of the music (0-1).
     pub fn set_music_volume(&self, value: f32) -> Res<()> {
         self.service()

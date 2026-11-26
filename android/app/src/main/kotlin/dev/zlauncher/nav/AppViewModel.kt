@@ -223,6 +223,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     fun launchApp(packageName: String) {
         zl.recent.push(packageName)
         play(SoundAction.LAUNCH)
+        zl.music.leave()
         eventChannel.trySend(UiEvent.StartApp(packageName))
     }
 
@@ -278,6 +279,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         when (plan) {
             is Plan.Launch -> {
                 play(SoundAction.LAUNCH)
+                zl.music.leave()
                 eventChannel.trySend(UiEvent.StartGame(plan.intent, displayId, game))
             }
             is Plan.NeedsChoice -> if (plan.candidates.isEmpty()) {

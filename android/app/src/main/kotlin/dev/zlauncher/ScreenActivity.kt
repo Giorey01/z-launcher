@@ -10,6 +10,9 @@ import android.view.KeyEvent
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -18,6 +21,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -40,9 +45,9 @@ import dev.zlauncher.nav.UiEvent
 import dev.zlauncher.ui.ScreenRoot
 import dev.zlauncher.ui.settings.SettingsKeys
 import dev.zlauncher.ui.theme.ZLauncherTheme
-import java.lang.ref.WeakReference
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.lang.ref.WeakReference
 
 /**
  * One window of the launcher. Which part of the UI it shows depends on the display it is on (see
@@ -100,7 +105,16 @@ abstract class ScreenActivity : ComponentActivity() {
                 }
             }
             LaunchedEffect(computed) { onRoleChanged(computed) }
-            theme?.let { ZLauncherTheme(it) { ScreenRoot(app, role, displayId) } }
+            theme?.let {
+                ZLauncherTheme(it) {
+                    ScreenRoot(app, role, displayId)
+                    // The second screen beside the game, darkened as the settings say (the touches go through).
+                    val veil = 1f - it.settings.secondaryBrightness
+                    if (displayId != Display.DEFAULT_DISPLAY && veil > 0f) {
+                        Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = veil)))
+                    }
+                }
+            }
         }
         lifecycleScope.launch { repeatOnLifecycle(Lifecycle.State.STARTED) { followEvents() } }
         lifecycleScope.launch {

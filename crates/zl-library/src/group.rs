@@ -10,7 +10,9 @@
 //! 5. `rom` entries of one folder that differ only by a `(Disc N)` marker merge into a
 //!    `multidisc` game (two or more needed);
 //! 6. in a sub-folder, two or more bare disc files (`Disc 1`, `Disc 2`) merge into a `folder`
-//!    game named after the folder.
+//!    game named after the folder;
+//! 7. files named with the title id of an update, a DLC or a second dump of a game that is there
+//!    become members of that game (`title_ids`).
 
 use std::collections::{BTreeMap, HashMap, HashSet};
 use std::path::{Component, Path, PathBuf};
@@ -429,6 +431,7 @@ pub(crate) fn group_platform(
     let units = merge_discs(files, units, &stems);
     let mut units = merge_folders(files, platform_dir, units, &stems);
     units.sort_by_key(|u| u.primary);
+    let units = crate::title_ids::merge_addons(files, units);
     Grouped {
         units,
         issues: g.issues,

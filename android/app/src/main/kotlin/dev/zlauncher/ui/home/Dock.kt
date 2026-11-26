@@ -15,6 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -56,7 +58,7 @@ private fun dockShape(): Shape = when (LocalZTheme.current.settings.dockIconShap
 /**
  * The dock: a row of small app icons centred at the top of the grid screen, starting with "All apps" then the
  * pinned apps. The slots are focusable and reached with the D-pad like the rest of the Home; focusing one
- * clears the hero area.
+ * clears the hero area. [toGrid] names where the D-pad goes from the dock into the grid.
  */
 @Composable
 fun Dock(
@@ -66,9 +68,12 @@ fun Dock(
     onApp: (AppEntry) -> Unit,
     onFocused: () -> Unit,
     onTop: Boolean = true,
+    toGrid: (() -> FocusRequester)? = null,
 ) {
     val theme = LocalZTheme.current
     val shape = dockShape()
+    // On every slot: the focus properties apply to the focus target that follows them.
+    val exit = Modifier.focusProperties { toGrid?.let { if (onTop) down = it() else up = it() } }
     Row(
         Modifier
             .fillMaxWidth()
@@ -79,7 +84,7 @@ fun Dock(
         val allApps = stringResource(R.string.dock_all_apps)
         PadTile(
             onAllApps,
-            Modifier.size(DOCK_ICON).then(memory.track(DOCK_ALL_APPS_KEY)).semantics { contentDescription = allApps },
+            exit.size(DOCK_ICON).then(memory.track(DOCK_ALL_APPS_KEY)).semantics { contentDescription = allApps },
             shape = shape,
             surface = TileSurface.NONE,
             cursorOutset = 3.dp,
@@ -92,7 +97,7 @@ fun Dock(
         apps.forEach { app ->
             PadTile(
                 { onApp(app) },
-                Modifier.size(DOCK_ICON).then(memory.track("dock:${app.packageName}")),
+                exit.size(DOCK_ICON).then(memory.track("dock:${app.packageName}")),
                 shape = shape,
                 surface = TileSurface.NONE,
                 cursorOutset = 3.dp,

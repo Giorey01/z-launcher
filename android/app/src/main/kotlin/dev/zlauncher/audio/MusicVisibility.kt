@@ -3,6 +3,7 @@ package dev.zlauncher.audio
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import dev.zlauncher.MainActivity
 
 /**
  * Tells the [MusicPlayer] whether a launcher screen is visible: it counts the started activities
@@ -28,8 +29,10 @@ class MusicVisibility(private val music: MusicPlayer) : Application.ActivityLife
     /** Not needed. */
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) = Unit
 
-    /** Not needed. */
-    override fun onActivityResumed(activity: Activity) = Unit
+    /** The home in front again (a game or an app was closed): the music may come back. */
+    override fun onActivityResumed(activity: Activity) {
+        if (activity is MainActivity) music.back()
+    }
 
     /** Not needed. */
     override fun onActivityPaused(activity: Activity) = Unit

@@ -26,6 +26,7 @@ mod group;
 mod rules;
 mod scan;
 mod sheets;
+mod title_ids;
 mod walk;
 
 pub use events::{IssueCode, NoProgress, ScanEvent, ScanIssue, ScanProgress, ScanSummary};

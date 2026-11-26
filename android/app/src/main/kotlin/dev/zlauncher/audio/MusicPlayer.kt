@@ -1,6 +1,9 @@
 package dev.zlauncher.audio
 
+import android.content.Context
 import android.media.AudioAttributes
+import android.media.AudioFocusRequest
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.util.Log
 import dev.zlauncher.core.nativecore.MusicSetup
@@ -14,9 +17,26 @@ private const val TAG = "ZMusic"
  * The background music of the active theme. The core says which tracks play now
  * ([musicQueue]: the playlist, or the scheduled track); this plays them one after the other and
  * starts again, at the music volume of the settings. It only plays while a launcher screen is
- * visible ([setVisible]): a game started from the launcher is not covered by the music.
+ * visible ([setVisible]) and no game or app started from the launcher is in front ([leave], until a
+ * home screen is resumed: on a dual-screen device the other screen stays visible under the game).
+ * It also yields the audio focus: an app that takes it (an emulator) silences the music.
  */
-class MusicPlayer {
+class MusicPlayer(context: Context) {
+    /** The system's audio, for the focus. */
+    private val audio = context.getSystemService(AudioManager::class.java)
+
+    /** The focus request of the music; losing the focus pauses it. */
+    private val focus = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+        .setAudioAttributes(attributes())
+        .setOnAudioFocusChangeListener { change -> onFocus(change) }
+        .build()
+
+    /** A game or an app started from the launcher is in front. */
+    private var away = false
+
+    /** Another app holds the audio focus. */
+    private var focusLost = false
+
     /** The setup of the theme, with the user's mode. */
     private var setup: MusicSetup? = null
 
@@ -55,13 +75,55 @@ class MusicPlayer {
     fun setVisible(now: Boolean) {
         if (now == visible) return
         visible = now
-        if (now) {
-            // The scheduled track may have changed while away.
-            queueNow().takeIf { it != queue }?.let { queue = it; index = 0; restart() } ?: player?.start() ?: restart()
-        } else {
+        refresh()
+    }
+
+    /** A game or an app is being started from the launcher: silence until [back]. */
+    @Synchronized
+    fun leave() {
+        away = true
+        refresh()
+    }
+
+    /** A home screen of the launcher is in front again. */
+    @Synchronized
+    fun back() {
+        if (!away) return
+        away = false
+        focusLost = false
+        refresh()
+    }
+
+    /** Whether the music may play now. */
+    private fun audible() = visible && !away && !focusLost
+
+    /** Plays or pauses as [audible] says; the scheduled track may have changed while silent. */
+    private fun refresh() {
+        if (!audible()) {
             player?.takeIf { it.isPlaying }?.pause()
+            audio.abandonAudioFocusRequest(focus)
+            return
+        }
+        val fresh = queueNow()
+        if (fresh != queue || player == null) {
+            queue = fresh
+            index = 0
+            restart()
+        } else {
+            requestFocus()
+            player?.start()
         }
     }
+
+    /** The audio focus changed: another app took it (pause) or gave it back (play again). */
+    @Synchronized
+    private fun onFocus(change: Int) {
+        focusLost = change != AudioManager.AUDIOFOCUS_GAIN
+        refresh()
+    }
+
+    /** Asks the audio focus; refused, the music stays silent. */
+    private fun requestFocus(): Boolean = audio.requestAudioFocus(focus) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
 
     /** The tracks the core says to play at this minute. */
     private fun queueNow(): List<String> {
@@ -75,15 +137,13 @@ class MusicPlayer {
         player?.release()
         player = null
         val path = queue.getOrNull(index) ?: return
-        if (!visible || volume == 0f) return
+        if (!audible() || volume == 0f || !requestFocus()) return
         player = runCatching { open(path) }.onFailure { Log.w(TAG, "cannot play $path", it) }.getOrNull()
     }
 
     /** A player on [path], started; at its end the next track follows. */
     private fun open(path: String): MediaPlayer = MediaPlayer().apply {
-        setAudioAttributes(
-            AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_GAME).setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build(),
-        )
+        setAudioAttributes(attributes())
         setDataSource(path)
         // A single track loops; a list goes to the next one.
         isLooping = queue.size == 1
@@ -106,6 +166,10 @@ class MusicPlayer {
         restart()
     }
 }
+
+/** How the music plays: on the media volume, as music. */
+private fun attributes(): AudioAttributes =
+    AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_GAME).setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
 
 /** Minutes in an hour, for the minute of the day. */
 private const val MINUTES_PER_HOUR = 60

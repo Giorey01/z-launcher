@@ -81,7 +81,7 @@ class ZLauncherApp : Application(), ImageLoaderFactory, ViewModelStoreOwner {
         art = ArtResolver(core)
         sound = SoundFx()
         DefaultMusic.install(this, filesDir)
-        music = MusicPlayer()
+        music = MusicPlayer(this)
         registerActivityLifecycleCallbacks(MusicVisibility(music))
         themeStore = ThemeStore(core, art, sound, music)
         sessions = SessionTracker(this, core)

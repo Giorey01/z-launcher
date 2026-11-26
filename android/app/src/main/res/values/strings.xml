@@ -326,6 +326,8 @@
     <string name="st_steam_key_label_set">Web API key (saved; leave empty to keep it)</string>
     <string name="st_steam_account_label">Profile</string>
     <string name="st_pod_section">Settings of this Pod</string>
+    <string name="st_brightness">Second screen brightness</string>
+    <string name="st_brightness_sub">The screen without the game; lower it so it does not glare</string>
     <string name="st_steam_import">Import the Steam library</string>
     <string name="st_steam_import_sub">Adds every game you own to the PC folder. Any Steam client installed starts them.</string>
     <string name="msg_steam_ready">Steam account saved. Your library can be imported.</string>
