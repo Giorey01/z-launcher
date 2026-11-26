@@ -14,8 +14,8 @@ android {
         applicationId = "dev.zlauncher"
         minSdk = 29
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.2.0"
         // Only the languages the app is translated into.
         resourceConfigurations += listOf("en", "it")
         // The Rust core (core/native) is built for arm64 only.
