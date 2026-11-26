@@ -8,7 +8,8 @@ use zl_core::Service;
 use crate::error::CoreError;
 use crate::scan::{Bridge, ScanListener, ScanSummary};
 use crate::types::{
-    Detection, GameEntry, LibraryMode, Plan, PlatformEntry, ProfileRef, RawLaunchRequest, RomRoot,
+    Detection, GameEntry, LibraryMode, Plan, PlatformEntry, PlatformFolder, ProfileRef,
+    RawLaunchRequest, RomRoot,
 };
 
 /// Result of a core call.
@@ -50,6 +51,12 @@ impl Core {
     /// Includes or excludes a folder from scans.
     pub fn set_root_enabled(&self, root_id: i64, enabled: bool) -> Res<()> {
         Ok(self.svc.set_root_enabled(root_id, enabled)?)
+    }
+
+    /// The folder of `platform` (id or alias) in the library, `None` when there is none: the
+    /// folder of a ROM root that holds its games, else one named after it.
+    pub fn platform_folder(&self, platform: String) -> Res<Option<PlatformFolder>> {
+        Ok(self.svc.platform_root(&platform)?.map(Into::into))
     }
 
     /// Scans the enabled folders; events go to `listener` on the calling thread.

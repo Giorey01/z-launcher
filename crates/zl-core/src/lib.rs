@@ -22,6 +22,7 @@ mod launch;
 mod library;
 mod media;
 mod meta;
+mod platform_root;
 mod platform_settings;
 mod pods;
 mod prefs;
@@ -54,6 +55,7 @@ pub use appearance_types::{
 };
 pub use error::CoreError;
 pub use media::{GameMedia, MediaCount, MediaImportReport, MediaItem, MediaSources};
+pub use platform_root::PlatformRoot;
 pub use pods::{IndexEntryView, IndexStoreView, InstalledPodView, PodPreview};
 pub use scrape::{ImageScrapeReport, KeyCheck, ScrapeProgress, ScrapeStop, ScrapeTarget};
 pub use search::FuzzySearch;

@@ -47,9 +47,12 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     /** The message on screen, if any. */
     var message by mutableStateOf<UiMessage?>(null)
 
-    /** Incremented every time the launcher comes back to the foreground; screens restore their focus on it. */
+    /**
+     * Incremented every time the launcher comes back to the foreground, and when a Pod's scan
+     * changes the library; screens read the library again and restore their focus on it.
+     */
     var resumeTick by mutableIntStateOf(0)
-        private set
+        internal set
 
     /** The state of the settings screens, shared by both displays. */
     val settings = SettingsModel(this)

@@ -12,9 +12,15 @@ import dev.zlauncher.nav.AppViewModel
 import dev.zlauncher.nav.Screen
 import dev.zlauncher.ui.theme.ZTheme
 import java.io.File
+import dev.zlauncher.core.KeystoreSecrets
+import dev.zlauncher.pods.work.PodWorkRunner
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.withContext
 
 /** A scan listener that discards progress events during background rescan. */
 private object QuietScan : ScanListener {
@@ -181,7 +187,11 @@ class AppPodHost(
 
     override suspend fun rescan(platformId: String) {
         requirePerm("library.rescan")
-        app?.zl?.core?.call { it.scan(QuietScan) }
+        val app = app ?: return
+        app.zl.core.call { it.scan(QuietScan) }
+        // The open screens read the library again, as after any scan of the app.
+        withContext(Dispatchers.Main) { app.resumeTick++ }
+        dispatchEvent(PodEvent.LibraryChanged(setOf(platformId)))
     }
 
     override fun launch(game: GameEntry) {
@@ -191,12 +201,19 @@ class AppPodHost(
 
     override suspend fun getSecret(key: String): String? {
         requirePerm("secrets")
-        return null
+        val app = app ?: return null
+        return withContext(Dispatchers.IO) { KeystoreSecrets(app.zl).get(secretName(key)) }
     }
 
     override suspend fun setSecret(key: String, value: String?) {
         requirePerm("secrets")
+        val app = app ?: return
+        val saved = withContext(Dispatchers.IO) { KeystoreSecrets(app.zl).set(secretName(key), value) }
+        check(saved) { "the key store did not save the secret" }
     }
+
+    /** The name of a Pod's secret in the launcher's store: one namespace per Pod, so no Pod reads another's. */
+    private fun secretName(key: String): String = "pod.$podId.$key"
 
     override suspend fun httpGet(url: String): ByteArray {
         requirePerm("http")
@@ -208,8 +225,17 @@ class AppPodHost(
         return ByteArray(0)
     }
 
+    override val work: PodWork
+        get() {
+            requirePerm("work")
+            val app = checkNotNull(app) { "no app: work needs the launcher's process" }
+            return PodWorkRunner.forPod(app.zl, podId) { error ->
+                CoroutineScope(Dispatchers.IO).launch { runCatching { app.zl.core.call { it.recordPodCrash(podId, "Task failed: $error") } } }
+            }
+        }
+
     override suspend fun platformRoot(platformId: String): String? {
         requirePerm("folders")
-        return null
+        return app?.zl?.core?.call { it.platformFolder(platformId) }?.path
     }
 }

@@ -457,4 +457,6 @@
     <string name="pod_perm_work">• Run long tasks in the background</string>
     <string name="pod_perm_notifications">• Show notifications</string>
     <string name="pod_error_file">Could not read the file.</string>
+    <string name="pod_work_channel">Pod tasks</string>
+    <string name="pod_work_more">+%1$d more</string>
 </resources>

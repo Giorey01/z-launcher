@@ -241,13 +241,13 @@ Sempre disponibili: `theme`, `play(action)`, `strings`, `storage`, `close()`, `n
 | Permesso | Servizio |
 | --- | --- |
 | `library.read` | `folders()`, `games(folder)`, `details(id)`, `playStats(id)`, eventi di gioco |
-| `library.rescan` | `rescan(platformId)`: nuova scansione di una console |
+| `library.rescan` | `rescan(platformId)`: nuova scansione (oggi di tutta la libreria); le schermate aperte si aggiornano e arriva `LibraryChanged` |
 | `launch` | `launch(game)` con la stessa scelta di emulatore, display e conteggio del tempo |
-| `secrets` | archivio chiave-valore per Pod nel Keystore |
+| `secrets` | `getSecret`/`setSecret`: valori cifrati con una chiave del Keystore, con nomi separati per Pod (`pod.<id>.<chiave>`) |
 | `http` | richieste HTTP con retry, backoff e limiti per host (`zl-net`) |
-| `work` | lavori in background con vincoli, e servizio in primo piano per i lunghi |
+| `work` | `work.start(id, titolo) { … }`: lavori lunghi nel processo del launcher, tenuti vivi da un servizio in primo piano con una notifica di avanzamento; un lavoro che lancia un'eccezione conta come guasto; i lavori non sopravvivono alla fine del processo (il Pod tiene la sua coda) |
 | `notifications` | notifiche del Pod, con canale proprio |
-| `folders` | `platformRoot(id)`: la radice della console nella libreria; `pick()`: cartella scelta dall'utente e ricordata per il Pod |
+| `folders` | `platformRoot(id)`: la cartella della console nella libreria (percorso assoluto: quella di una cartella ROM che ne contiene i giochi, altrimenti quella col nome della piattaforma o di un alias); `pick()` (da fare): cartella scelta dall'utente e ricordata per il Pod |
 | `audio` | richiesta di focus audio; abbassare o sostituire la musica del launcher |
 
 - `storage`: una cartella di file privata e una di cache, più preferenze chiave-valore. Niente

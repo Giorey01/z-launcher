@@ -101,10 +101,13 @@ interface PodHost {
     /** Launches a game using user-configured emulators and settings. Requires permission `launch`. */
     fun launch(game: GameEntry)
 
-    /** Retrieves an encrypted secret from the Android Keystore. Requires permission `secrets`. */
+    /**
+     * A secret of this Pod (an API key, a token), decrypted, or `null`. Kept encrypted with a key of the
+     * Android Keystore, apart from every other Pod's. Requires permission `secrets`.
+     */
     suspend fun getSecret(key: String): String?
 
-    /** Stores an encrypted secret in the Android Keystore. Requires permission `secrets`. */
+    /** Stores [value] encrypted under [key] (`null` removes it); throws when the key store fails. Requires permission `secrets`. */
     suspend fun setSecret(key: String, value: String?)
 
     /** Performs an HTTP GET request with retries and rate limiting. Requires permission `http`. */
@@ -113,6 +116,12 @@ interface PodHost {
     /** Performs an HTTP POST request with retries and rate limiting. Requires permission `http`. */
     suspend fun httpPost(url: String, body: ByteArray, contentType: String): ByteArray
 
-    /** Obtains the root directory path of a platform. Requires permission `folders`. */
+    /**
+     * The folder of a platform in the library (absolute path), where a game of that platform
+     * belongs; `null` when the library has none. Requires permission `folders`.
+     */
     suspend fun platformRoot(platformId: String): String?
+
+    /** Long tasks kept running by the launcher with a notification. Requires permission `work`. */
+    val work: PodWork
 }

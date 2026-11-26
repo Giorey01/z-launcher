@@ -457,4 +457,6 @@
     <string name="pod_perm_work">• Eseguire lavori lunghi in background</string>
     <string name="pod_perm_notifications">• Mostrare notifiche</string>
     <string name="pod_error_file">Impossibile leggere il file.</string>
+    <string name="pod_work_channel">Lavori dei Pod</string>
+    <string name="pod_work_more">altri %1$d</string>
 </resources>
