@@ -18,6 +18,8 @@ import dev.zlauncher.core.nativecore.SessionEnd
 import dev.zlauncher.core.nativecore.SoundAction
 import dev.zlauncher.launch.LaunchFailure
 import dev.zlauncher.launch.toMessage
+import dev.zlauncher.pods.PodHostRegistry
+import dev.zlauncher.ui.info.InfoTabs
 import dev.zlauncher.ui.pad.FocusMemory
 import dev.zlauncher.ui.settings.ArtDownload
 import dev.zlauncher.ui.settings.SettingsModel
@@ -122,6 +124,12 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
     /** Manages external and built-in pods, store browsing and installation. */
     val podManager = dev.zlauncher.pods.PodManager(this)
 
+    /** The tabs of the game sheet: which one is open and the dialogs of the Activity tab (RF-31, RF-41). */
+    val infoTabs = InfoTabs()
+
+    /** The hosts of the Pod screens and tabs on screen: they get the events of the launcher (§8). */
+    val podHosts = PodHostRegistry()
+
     /** Opens a screen above the current one. */
     fun open(screen: Screen) {
         if (screen == Screen.Settings) settings.reset()
@@ -144,7 +152,9 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
             return true
         }
         // A dialog of the Pod screen or a settings subpage closes before the screen does.
-        val handledInside = (top == Screen.PodManagement && podManager.dismissDialog()) || (top == Screen.Settings && settings.pop())
+        val handledInside = (top == Screen.PodManagement && podManager.dismissDialog()) ||
+            (top == Screen.Settings && settings.pop()) ||
+            (top is Screen.GameInfo && infoTabs.dismissDialog())
         val screen = if (handledInside) null else stack.removeLastOrNull()
         if (screen == Screen.Picker) choice = null
         return handledInside || screen != null
@@ -163,7 +173,13 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         resumeTick++
         viewModelScope.launch {
             try {
-                if (zl.sessions.end() is SessionEnd.Recorded) resumeTick++
+                val end = zl.sessions.end()
+                if (end is SessionEnd.Recorded) {
+                    resumeTick++
+                    podHosts.announceGameEnded(end.gameId, end.seconds) { id ->
+                        zl.core.call { core -> core.games(null) }.firstOrNull { it.id == id }
+                    }
+                }
             } catch (e: CoreException) {
                 message = e.toMessage()
             }

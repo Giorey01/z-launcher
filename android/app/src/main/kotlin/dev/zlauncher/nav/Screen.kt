@@ -119,11 +119,19 @@ sealed interface UiEvent {
 
 /** A translated message, shown for a few seconds. [args] fill the placeholders of the string. */
 data class UiMessage(
-    /** String resource. */
+    /** String resource (unused when [literal] is set). */
     @StringRes val res: Int,
     /** Values for the placeholders. */
     val args: List<String> = emptyList(),
-)
+    /** A text already in the user's language, from a Pod's notice (RF-80); it replaces [res]. */
+    val literal: String? = null,
+) {
+    /** The kinds of message. */
+    companion object {
+        /** A message that is a text already written, which a Pod hands over. */
+        fun literal(text: String): UiMessage = UiMessage(0, emptyList(), text)
+    }
+}
 
 /** A game waiting for the user to pick an emulator. */
 data class Choice(

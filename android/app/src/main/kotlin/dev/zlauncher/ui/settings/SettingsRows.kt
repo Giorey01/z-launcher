@@ -354,7 +354,9 @@ fun Color.toArgbUInt(): UInt = toArgb().toUInt()
 fun formatUiMessage(context: Context, message: UiMessage): String {
     val args = message.args
     val res = message.res
-    return if (args.isEmpty()) {
+    return if (message.literal != null) {
+        message.literal
+    } else if (args.isEmpty()) {
         context.getString(res)
     } else if (args.size == 1) {
         context.getString(res, args[0])

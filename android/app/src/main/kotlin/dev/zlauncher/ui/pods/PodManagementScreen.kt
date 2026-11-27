@@ -30,7 +30,6 @@ import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.zlauncher.R
@@ -39,8 +38,8 @@ import dev.zlauncher.pods.PodManager
 import dev.zlauncher.pods.PodTab
 import dev.zlauncher.ui.common.BackPill
 import dev.zlauncher.ui.common.HeaderTitle
+import dev.zlauncher.ui.common.TabPill
 import dev.zlauncher.ui.pad.PadTile
-import dev.zlauncher.ui.pad.TileSurface
 import dev.zlauncher.ui.theme.LocalBackdrop
 import dev.zlauncher.ui.theme.LocalZTheme
 
@@ -125,22 +124,5 @@ private fun PodTabs(manager: PodManager, modifier: Modifier, intoList: Modifier)
             }
             TabPill(label, manager.state.activeTab == tab, intoList) { manager.selectTab(tab) }
         }
-    }
-}
-
-/** One tab: the selected one is a card with the title in the accent colour, the others plain text. */
-@Composable
-private fun TabPill(label: String, selected: Boolean, modifier: Modifier, onClick: () -> Unit) {
-    val theme = LocalZTheme.current
-    val shape = RoundedCornerShape(50)
-    PadTile(onClick, modifier.height(38.dp), shape = shape, surface = if (selected) TileSurface.CARD else TileSurface.NONE) {
-        Text(
-            label,
-            Modifier.align(Alignment.Center).padding(horizontal = 18.dp),
-            color = if (selected) theme.accentStart else theme.textPrimary.copy(alpha = 0.6f),
-            fontSize = 15.sp,
-            fontWeight = if (selected) FontWeight.Bold else FontWeight.SemiBold,
-            maxLines = 1,
-        )
     }
 }

@@ -69,6 +69,14 @@ interface PodHost {
     /** Isolated storage and preferences for this Pod. Always available. */
     val storage: PodStorage
 
+    /**
+     * Shows [text] as a notice of the launcher (the line at the bottom of the screen, gone after a few seconds) and
+     * plays the theme's sound of [sound] (`null` for silence; the theme may have none for it). Works on any screen and
+     * when the launcher comes back from a game, for example on [PodEvent.GameEnded]. The text is cut at
+     * `MAX_TOAST_CHARS`; a newer notice replaces the one on screen. Always available (API 3).
+     */
+    fun toast(text: String, sound: SoundAction? = SoundAction.NOTIFICATION)
+
     /** Closes the active Pod screen, returning to the previous screen. Always available. */
     fun close()
 

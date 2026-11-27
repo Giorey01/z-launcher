@@ -75,7 +75,7 @@ internal fun PodDialogs(app: AppViewModel, manager: PodManager) {
  */
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun PodDialog(title: String, onDismiss: () -> Unit, maxWidth: Dp = 480.dp, content: @Composable ColumnScope.() -> Unit) {
+internal fun PodDialog(title: String, onDismiss: () -> Unit, maxWidth: Dp = 480.dp, content: @Composable ColumnScope.() -> Unit) {
     val theme = LocalZTheme.current
     Box(
         Modifier.fillMaxSize().background(Color.Black.copy(alpha = SCRIM_ALPHA)).pointerInput(Unit) { detectTapGestures { onDismiss() } },
@@ -100,7 +100,7 @@ private fun PodDialog(title: String, onDismiss: () -> Unit, maxWidth: Dp = 480.d
 
 /** Cancel and a confirm button on the right; the confirm one takes the focus. */
 @Composable
-private fun DialogButtons(confirm: String, onConfirm: () -> Unit, onCancel: () -> Unit) {
+internal fun DialogButtons(confirm: String, onConfirm: () -> Unit, onCancel: () -> Unit) {
     val focus = remember { FocusRequester() }
     LaunchedEffect(Unit) { runCatching { focus.requestFocus() } }
     Row(Modifier.fillMaxWidth().padding(top = 6.dp), horizontalArrangement = Arrangement.End) {
