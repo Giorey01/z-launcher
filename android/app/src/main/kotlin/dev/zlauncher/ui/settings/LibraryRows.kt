@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CreateNewFolder
 import androidx.compose.material.icons.rounded.Description
 import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material.icons.rounded.Fingerprint
 import androidx.compose.material.icons.rounded.Folder
 import androidx.compose.material.icons.rounded.Image
 import androidx.compose.material.icons.rounded.Info
@@ -16,6 +17,8 @@ import androidx.compose.material.icons.rounded.Timer
 import androidx.compose.material.icons.rounded.ViewModule
 import dev.zlauncher.R
 import dev.zlauncher.core.NewArt
+import dev.zlauncher.core.RomHashing
+import dev.zlauncher.core.nativecore.HashRun
 import dev.zlauncher.core.nativecore.LibraryMode
 import dev.zlauncher.core.nativecore.ScanEvent
 import dev.zlauncher.core.nativecore.ScanListener
@@ -82,6 +85,7 @@ class LibraryRows(private val app: AppViewModel, private val model: SettingsMode
         )
         rows += playTimeRow()
         rows += metadataRows()
+        rows += hashRow()
         rows += scanRow()
         return rows
     }
@@ -186,6 +190,26 @@ class LibraryRows(private val app: AppViewModel, private val model: SettingsMode
         }
     }
 
+    /** The checksums of the ROM files: how much of the library is covered; A starts the hashing or stops it. */
+    private fun hashRow(): SettingRow = SettingRow(
+        "rom_hashes",
+        Icons.Rounded.Fingerprint,
+        s(R.string.st_hashes),
+        hashSubtitle(),
+        onActivate = model::toggleHashing
+    )
+
+    /** What the hashing row says: progress while it runs, else how many games are covered. */
+    private fun hashSubtitle(): String {
+        val status = model.hashStatus ?: return s(R.string.st_hashes_sub)
+        return when {
+            status.run == HashRun.STOPPING -> s(R.string.st_hashes_stopping)
+            status.run == HashRun.RUNNING -> s(R.string.st_hashes_running, status.done.toInt(), status.total.toInt())
+            status.libraryGames == 0u -> s(R.string.st_hashes_sub)
+            else -> s(R.string.st_hashes_done, status.libraryHashed.toInt(), status.libraryGames.toInt())
+        }
+    }
+
     /** The "scan the library" action. */
     private fun scanRow(): SettingRow = SettingRow(
         "scan",
@@ -211,6 +235,8 @@ class LibraryRows(private val app: AppViewModel, private val model: SettingsMode
             val since = NewArt.now()
             val summary = app.zl.core.call { it.scan(SilentScan) }
             NewArt.afterScan(app.zl, since, summary.added) { app.resumeTick++ }
+            RomHashing.afterScan(app.zl)
+            model.refreshHash()
             UiMessage(R.string.st_scan_result, listOf(summary.added.toString(), summary.updated.toString(), summary.missing.toString()))
         }
     }
