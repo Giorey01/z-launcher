@@ -153,6 +153,11 @@
     <string name="st_media">Importa i media</string>
     <string name="st_media_sub">Copertine, loghi e hero da ES-DE e Cocoon</string>
     <string name="st_media_result">Media importati: %1$s immagini abbinate, %2$s senza gioco</string>
+    <string name="st_hashes">Checksum delle ROM</string>
+    <string name="st_hashes_sub">CRC32, MD5 e SHA1 dei file dei giochi, anche dentro zip, 7z e CHD; servono a trovare le info dei giochi</string>
+    <string name="st_hashes_running">Controllo… %1$d giochi su %2$d (A ferma)</string>
+    <string name="st_hashes_stopping">Mi fermo…</string>
+    <string name="st_hashes_done">%1$d giochi su %2$d controllati (A controlla il resto)</string>
     <string name="st_rescan">Scansiona la libreria</string>
     <string name="st_rescan_sub">Cerca giochi nuovi e rimossi</string>
     <string name="st_working">Un momento…</string>

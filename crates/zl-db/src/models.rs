@@ -459,3 +459,72 @@ impl ScraperSource {
         }
     }
 }
+
+/// The digests of one file of a game, or of one entry of an archive, to store.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct NewRomHash {
+    /// Path inside the archive; empty for a plain file or a CHD.
+    pub entry: String,
+    /// Size of the file on disk when it was hashed.
+    pub file_size: i64,
+    /// Modification time of the file when it was hashed, Unix milliseconds.
+    pub file_mtime: i64,
+    /// How the file stores its content: `raw`, `zip`, `7z` or `chd`.
+    pub container: String,
+    /// Size of the content in bytes.
+    pub size: i64,
+    /// CRC32, 8 lower-case hex digits.
+    pub crc32: Option<String>,
+    /// MD5, 32 hex digits.
+    pub md5: Option<String>,
+    /// SHA1, 40 hex digits.
+    pub sha1: Option<String>,
+    /// Bytes of header left out of the `hl_*` digests (0 when there is none).
+    pub header_bytes: i64,
+    /// CRC32 of the content without its header.
+    pub hl_crc32: Option<String>,
+    /// MD5 of the content without its header.
+    pub hl_md5: Option<String>,
+    /// SHA1 of the content without its header.
+    pub hl_sha1: Option<String>,
+    /// Stable code of the lasting reason the file could not be hashed (`too_large`, `password`,
+    /// `damaged`, `unsupported`, `empty`); the digests are empty then.
+    pub error: Option<String>,
+}
+
+/// A stored row of `rom_hashes`.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RomHash {
+    /// Game the file belongs to.
+    pub game_id: i64,
+    /// Path of the file.
+    pub file_path: String,
+    /// Path inside the archive; empty for a plain file or a CHD.
+    pub entry: String,
+    /// Size of the file on disk when it was hashed.
+    pub file_size: i64,
+    /// Modification time of the file when it was hashed, Unix milliseconds.
+    pub file_mtime: i64,
+    /// `raw`, `zip`, `7z` or `chd`.
+    pub container: String,
+    /// Size of the content in bytes.
+    pub size: i64,
+    /// CRC32.
+    pub crc32: Option<String>,
+    /// MD5.
+    pub md5: Option<String>,
+    /// SHA1.
+    pub sha1: Option<String>,
+    /// Bytes of header left out of the `hl_*` digests.
+    pub header_bytes: i64,
+    /// CRC32 without the header.
+    pub hl_crc32: Option<String>,
+    /// MD5 without the header.
+    pub hl_md5: Option<String>,
+    /// SHA1 without the header.
+    pub hl_sha1: Option<String>,
+    /// Code of the lasting failure, if the file could not be hashed.
+    pub error: Option<String>,
+    /// When the row was written, Unix seconds.
+    pub hashed_at: i64,
+}

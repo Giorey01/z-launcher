@@ -3,6 +3,7 @@ package dev.zlauncher.pods
 import android.content.Context
 import dev.zlauncher.core.KeystoreSecrets
 import dev.zlauncher.core.NewArt
+import dev.zlauncher.core.RomHashing
 import dev.zlauncher.core.nativecore.GameDetails
 import dev.zlauncher.core.nativecore.GameEntry
 import dev.zlauncher.core.nativecore.PlatformEntry
@@ -195,6 +196,7 @@ class AppPodHost(
         withContext(Dispatchers.Main) { app.resumeTick++ }
         dispatchEvent(PodEvent.LibraryChanged(setOf(platformId)))
         NewArt.afterScan(app.zl, since, summary.added) { app.resumeTick++ }
+        RomHashing.afterScan(app.zl)
     }
 
     override fun launch(game: GameEntry) {

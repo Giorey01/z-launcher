@@ -9,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import dev.zlauncher.core.nativecore.AssetCategory
 import dev.zlauncher.core.nativecore.CocoonDataDir
 import dev.zlauncher.core.nativecore.CoreException
+import dev.zlauncher.core.nativecore.HashRun
+import dev.zlauncher.core.nativecore.HashStatus
 import dev.zlauncher.core.nativecore.InstalledPack
 import dev.zlauncher.core.nativecore.InstalledTheme
 import dev.zlauncher.core.nativecore.LibraryMode
@@ -18,6 +20,8 @@ import dev.zlauncher.core.nativecore.SteamAccount
 import dev.zlauncher.launch.toMessage
 import dev.zlauncher.nav.AppViewModel
 import dev.zlauncher.nav.UiMessage
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /** The categories of the left rail matching Cocoon. */
@@ -177,6 +181,13 @@ class SettingsModel(private val app: AppViewModel) {
     /** The art download running now, `null` when none. */
     var artDownload by mutableStateOf<ArtDownload?>(null)
 
+    /** The state of the background hashing of the ROM files, `null` until read. */
+    var hashStatus by mutableStateOf<HashStatus?>(null)
+        private set
+
+    /** The coroutine that reads [hashStatus] again while a run is going. */
+    private var hashPoll: Job? = null
+
     /** Cursor row remembered per page, to come back to the same row. */
     private val rowMemory = HashMap<Any, Int>()
 
@@ -193,6 +204,7 @@ class SettingsModel(private val app: AppViewModel) {
         result = null
         resultRow = null
         reload()
+        refreshHash()
     }
 
     /** Selects a category (the rail) and shows its root list. */
@@ -235,6 +247,37 @@ class SettingsModel(private val app: AppViewModel) {
 
     /** Key of the current page in [rowMemory]. */
     private fun pageKey(): Any = category to page
+
+    /** Reads the hashing status, and again every second while a run is going. */
+    fun refreshHash() {
+        if (hashPoll?.isActive == true) return
+        hashPoll = app.viewModelScope.launch {
+            do {
+                val status = try {
+                    app.zl.core.call { it.hashStatus() }
+                } catch (e: CoreException) {
+                    app.message = e.toMessage()
+                    null
+                }
+                hashStatus = status
+                val going = status != null && status.run != HashRun.IDLE
+                if (going) delay(HASH_POLL_MS)
+            } while (going)
+        }
+    }
+
+    /** Starts the hashing of the files that have no checksums, or asks the run that is going to stop. */
+    fun toggleHashing() {
+        app.viewModelScope.launch {
+            try {
+                val running = hashStatus?.run?.let { it != HashRun.IDLE } ?: false
+                app.zl.core.call { if (running) it.stopHashing() else it.startHashing(null) }
+            } catch (e: CoreException) {
+                app.message = e.toMessage()
+            }
+            refreshHash()
+        }
+    }
 
     /** Reads the data the lists need from the core again. */
     fun reload() {
@@ -310,3 +353,6 @@ class SettingsModel(private val app: AppViewModel) {
         }
     }
 }
+
+/** Milliseconds between two reads of the hashing status while a run is going. */
+private const val HASH_POLL_MS = 1000L

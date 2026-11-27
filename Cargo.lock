@@ -893,6 +893,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ef1d73c59a56771343712b22ea5615092c612c16ba291c0979e3105dfeec4890"
 
 [[package]]
+name = "md-5"
+version = "0.10.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d89e7ee0cfbedfc4da3340218492196241d89eefb6dab27de5df917a6d2e78cf"
+dependencies = [
+ "cfg-if",
+ "digest 0.10.7",
+]
+
+[[package]]
 name = "memchr"
 version = "2.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2035,6 +2045,7 @@ dependencies = [
  "zip",
  "zl-config",
  "zl-db",
+ "zl-hash",
  "zl-library",
  "zl-media",
  "zl-meta",
@@ -2076,6 +2087,23 @@ dependencies = [
  "zl-platforms",
  "zl-sessions",
  "zl-theme",
+]
+
+[[package]]
+name = "zl-hash"
+version = "0.2.0"
+dependencies = [
+ "crc32fast",
+ "md-5",
+ "serde",
+ "serde_json",
+ "sevenz-rust2",
+ "sha1 0.10.7",
+ "tempfile",
+ "thiserror",
+ "zip",
+ "zl-archive",
+ "zl-config",
 ]
 
 [[package]]

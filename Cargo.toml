@@ -15,6 +15,7 @@ members = [
     "crates/zl-sessions",
     "crates/zl-pods",
     "crates/zl-archive",
+    "crates/zl-hash",
     "crates/zl-ffi",
 ]
 

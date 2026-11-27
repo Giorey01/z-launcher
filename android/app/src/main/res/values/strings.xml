@@ -153,6 +153,11 @@
     <string name="st_media">Import media</string>
     <string name="st_media_sub">Covers, logos and heroes from ES-DE and Cocoon</string>
     <string name="st_media_result">Media imported: %1$s images matched, %2$s without a game</string>
+    <string name="st_hashes">ROM checksums</string>
+    <string name="st_hashes_sub">CRC32, MD5 and SHA1 of the game files, also inside zip, 7z and CHD; used to find game info</string>
+    <string name="st_hashes_running">Checking… %1$d of %2$d games (A stops)</string>
+    <string name="st_hashes_stopping">Stopping…</string>
+    <string name="st_hashes_done">%1$d of %2$d games checked (A checks the rest)</string>
     <string name="st_rescan">Scan the library</string>
     <string name="st_rescan_sub">Look for new and removed games</string>
     <string name="st_working">Working…</string>
