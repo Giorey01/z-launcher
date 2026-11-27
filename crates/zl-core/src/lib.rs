@@ -13,6 +13,7 @@
     clippy::cognitive_complexity
 )]
 
+mod activity;
 mod app_folders;
 mod app_games;
 mod appearance_types;
@@ -52,6 +53,7 @@ use zl_config::app::DATABASE_FILE_NAME;
 use zl_db::Db;
 use zl_platforms::PlatformDb;
 
+pub use activity::GameActivity;
 pub use appearance_types::{
     argb, AnimationSpeed, CocoonDataDir, ExternalDisplayDocking, FolderArt, FolderSlot,
     ImportReport, InstalledPack, InstalledTheme, LaunchScreen, LayerChoice, MusicSetup, OverlayArt,

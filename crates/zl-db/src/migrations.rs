@@ -200,7 +200,7 @@ CREATE TABLE pod_health (
 CREATE INDEX pod_health_pod ON pod_health(pod_id, crashed_at);
 ";
 
-/// Step 10: the digests of the files of each game (CRC32, MD5, SHA1), for matching metadata
+/// Step 9: the digests of the files of each game (CRC32, MD5, SHA1), for matching metadata
 /// and, later, achievements. One row per file, or per entry for a zip or a 7z (`entry` is the
 /// path inside, empty otherwise). `file_size` and `file_mtime` are those of the file when it was
 /// hashed: the row is current only while they equal the ones in `game_files`, so an unchanged
@@ -248,9 +248,31 @@ CREATE TABLE collection_games (
 CREATE INDEX collection_games_game ON collection_games(game_id);
 ";
 
+/// Step 11: hand-made sessions and the apps left out of tracking (RF-41). SQLite cannot change a
+/// CHECK, so `game_sessions` is rebuilt with the same rows and a `manual` source;
+/// `session_excluded_apps` lists the packages whose play time is not recorded.
+const STEP_11: &str = "
+CREATE TABLE game_sessions_new (
+    id INTEGER PRIMARY KEY,
+    game_id INTEGER NOT NULL REFERENCES games(id) ON DELETE CASCADE,
+    started_at INTEGER NOT NULL,
+    ended_at INTEGER NOT NULL,
+    seconds INTEGER NOT NULL CHECK (seconds >= 0),
+    source TEXT NOT NULL CHECK (source IN ('usage','estimated','steam','manual'))
+);
+INSERT INTO game_sessions_new SELECT id, game_id, started_at, ended_at, seconds, source
+    FROM game_sessions;
+DROP TABLE game_sessions;
+ALTER TABLE game_sessions_new RENAME TO game_sessions;
+CREATE INDEX game_sessions_game ON game_sessions(game_id, ended_at);
+CREATE TABLE session_excluded_apps (
+    package TEXT PRIMARY KEY
+) WITHOUT ROWID;
+";
+
 /// All steps in order; step `n` is `MIGRATIONS[n - 1]`.
 pub const MIGRATIONS: &[&str] = &[
-    STEP_1, STEP_2, STEP_3, STEP_4, STEP_5, STEP_6, STEP_7, STEP_8, STEP_9, STEP_10,
+    STEP_1, STEP_2, STEP_3, STEP_4, STEP_5, STEP_6, STEP_7, STEP_8, STEP_9, STEP_10, STEP_11,
 ];
 
 /// Reads the schema version of the open database.

@@ -20,16 +20,27 @@ fun PodScreen(app: AppViewModel, screen: Screen.Pod) {
     val host = remember(theme, screen.id) {
         AppPodHost(screen.id, entry.permissions, app, theme, entry.i18nDir)
     }
-
-    DisposableEffect(screen.id) {
-        val sentinel = File(app.zl.filesDir, "active_pod")
-        runCatching { sentinel.writeText(screen.id) }
-        onDispose {
-            runCatching { sentinel.delete() }
-        }
-    }
+    PodAlive(app, host, screen.id)
 
     Box(Modifier.fillMaxSize()) {
         entry.pod.Content(host, screen.route)
+    }
+}
+
+/**
+ * While this is in the composition the Pod [podId] has something of its own on screen: its host gets the launcher's
+ * events, and a marker file names the Pod, so that if the process dies while it is drawn the next start counts it as a
+ * crash of that Pod (§10). Composition cannot be wrapped in a `try`, so this is how a Pod's screen or tab is isolated.
+ */
+@Composable
+fun PodAlive(app: AppViewModel, host: AppPodHost, podId: String) {
+    DisposableEffect(host) {
+        val sentinel = File(app.zl.filesDir, "active_pod")
+        runCatching { sentinel.writeText(podId) }
+        app.podHosts.add(host)
+        onDispose {
+            app.podHosts.remove(host)
+            runCatching { sentinel.delete() }
+        }
     }
 }

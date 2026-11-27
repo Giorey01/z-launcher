@@ -16,6 +16,8 @@ pub enum SessionSource {
     Estimated,
     /// The account's total as Steam reports it.
     Steam,
+    /// Entered or corrected by hand by the user (RF-41).
+    Manual,
 }
 
 impl SessionSource {
@@ -25,8 +27,38 @@ impl SessionSource {
             SessionSource::Usage => "usage",
             SessionSource::Estimated => "estimated",
             SessionSource::Steam => "steam",
+            SessionSource::Manual => "manual",
         }
     }
+
+    /// The source stored under `text`, `None` for a spelling this version does not know.
+    pub fn parse(text: &str) -> Option<SessionSource> {
+        [
+            SessionSource::Usage,
+            SessionSource::Estimated,
+            SessionSource::Steam,
+            SessionSource::Manual,
+        ]
+        .into_iter()
+        .find(|s| s.as_str() == text)
+    }
+}
+
+/// A recorded session as stored, with its id so it can be corrected or removed.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SessionRow {
+    /// Row id.
+    pub id: i64,
+    /// The game.
+    pub game_id: i64,
+    /// Start, Unix seconds.
+    pub started_at: i64,
+    /// End, Unix seconds.
+    pub ended_at: i64,
+    /// Seconds played.
+    pub seconds: i64,
+    /// Where the time comes from.
+    pub source: SessionSource,
 }
 
 /// The favourite and hidden flags of a game.
@@ -109,8 +141,8 @@ impl Db {
         Ok(())
     }
 
-    /// Records one session.
-    pub fn add_session(&self, s: &NewSession) -> Result<(), DbError> {
+    /// Records one session; its row id.
+    pub fn add_session(&self, s: &NewSession) -> Result<i64, DbError> {
         self.conn.execute(
             "INSERT INTO game_sessions (game_id, started_at, ended_at, seconds, source)
              VALUES (?1, ?2, ?3, ?4, ?5)",
@@ -122,7 +154,77 @@ impl Db {
                 s.source.as_str()
             ],
         )?;
+        Ok(self.conn.last_insert_rowid())
+    }
+
+    /// The sessions measured or entered on this device for a game (Steam's total is not a
+    /// session), newest first.
+    pub fn game_sessions(&self, game_id: i64) -> Result<Vec<SessionRow>, DbError> {
+        let mut stmt = self.conn.prepare(
+            "SELECT id, game_id, started_at, ended_at, seconds, source FROM game_sessions
+             WHERE game_id = ?1 AND source <> 'steam' ORDER BY started_at DESC, id DESC",
+        )?;
+        let rows = stmt.query_map(params![game_id], |r| {
+            let source: String = r.get(5)?;
+            Ok(SessionRow {
+                id: r.get(0)?,
+                game_id: r.get(1)?,
+                started_at: r.get(2)?,
+                ended_at: r.get(3)?,
+                seconds: r.get(4)?,
+                source: SessionSource::parse(&source).unwrap_or(SessionSource::Estimated),
+            })
+        })?;
+        Ok(rows.collect::<Result<_, _>>()?)
+    }
+
+    /// Sets the duration of a session that is not Steam's total, moving its end to match.
+    /// `false` when there is no such session.
+    pub fn set_session_seconds(&self, id: i64, seconds: i64) -> Result<bool, DbError> {
+        let changed = self.conn.execute(
+            "UPDATE game_sessions SET seconds = ?2, ended_at = started_at + ?2
+             WHERE id = ?1 AND source <> 'steam'",
+            params![id, seconds.max(0)],
+        )?;
+        Ok(changed > 0)
+    }
+
+    /// Removes a session that is not Steam's total. `false` when there is no such session.
+    pub fn delete_session(&self, id: i64) -> Result<bool, DbError> {
+        let changed = self.conn.execute(
+            "DELETE FROM game_sessions WHERE id = ?1 AND source <> 'steam'",
+            params![id],
+        )?;
+        Ok(changed > 0)
+    }
+
+    /// Leaves an app out of the tracking, or puts it back (RF-41).
+    pub fn set_app_excluded(&self, package: &str, excluded: bool) -> Result<(), DbError> {
+        if excluded {
+            self.conn.execute(
+                "INSERT OR IGNORE INTO session_excluded_apps (package) VALUES (?1)",
+                params![package],
+            )?;
+        } else {
+            self.conn.execute(
+                "DELETE FROM session_excluded_apps WHERE package = ?1",
+                params![package],
+            )?;
+        }
         Ok(())
+    }
+
+    /// Whether the app's play time is left out of the tracking.
+    pub fn is_app_excluded(&self, package: &str) -> Result<bool, DbError> {
+        Ok(self
+            .conn
+            .query_row(
+                "SELECT 1 FROM session_excluded_apps WHERE package = ?1",
+                params![package],
+                |_| Ok(()),
+            )
+            .optional()?
+            .is_some())
     }
 
     /// Replaces the Steam total of a game (`seconds` 0 removes it).

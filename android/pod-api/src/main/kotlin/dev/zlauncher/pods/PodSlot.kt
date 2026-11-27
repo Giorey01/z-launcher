@@ -85,4 +85,33 @@ sealed interface PodSlot {
     ) : PodSlot {
         override val manifestSlotName: String get() = "home_shortcut"
     }
+
+    /**
+     * A tab in the game's sheet (RF-78, API 3): the launcher draws the tab row and the frame, the Pod draws [content]
+     * inside it with the launcher's components. Tabs show after the launcher's own (Info, Activity), in the order the
+     * Pods were installed, at most `MAX_GAME_TABS` per game.
+     */
+    data class GameTab(
+        /** Title on the tab. */
+        val label: String,
+        /** Predicate checking whether the tab applies to the game; a tab whose condition fails or throws is left out. */
+        val condition: (game: GameEntry) -> Boolean = { true },
+        /** The tab's content for the game; the focus of the pad moves into it from the tab row. */
+        val content: @Composable (host: PodHost, game: GameEntry) -> Unit,
+    ) : PodSlot {
+        override val manifestSlotName: String get() = "game_tab"
+    }
+
+    /**
+     * A short text the Pod puts on the game's sheet (RF-79, API 3), as "12/40" for the achievements won. The launcher
+     * draws it as a badge; [text] returns `null` or a blank text for no badge, and the host cuts it at
+     * `MAX_BADGE_CHARS`. It may suspend (the Pod reads its own data); a failure counts as a crash of the Pod and
+     * the badge is left out.
+     */
+    data class GameBadge(
+        /** The text for the game, or `null` when the Pod has nothing to say about it. */
+        val text: suspend (game: GameEntry) -> String?,
+    ) : PodSlot {
+        override val manifestSlotName: String get() = "game_badge"
+    }
 }

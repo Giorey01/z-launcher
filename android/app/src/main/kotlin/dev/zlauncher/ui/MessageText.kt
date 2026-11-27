@@ -7,4 +7,4 @@ import dev.zlauncher.nav.UiMessage
 /** The text of a message in the current language (`stringResource` takes the placeholder values as a vararg). */
 @Composable
 @Suppress("SpreadOperator")
-fun UiMessage.text(): String = stringResource(res, *args.toTypedArray())
+fun UiMessage.text(): String = literal ?: stringResource(res, *args.toTypedArray())

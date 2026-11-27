@@ -13,6 +13,7 @@ import dev.zlauncher.core.nativecore.ScanListener
 import dev.zlauncher.core.nativecore.SoundAction
 import dev.zlauncher.nav.AppViewModel
 import dev.zlauncher.nav.Screen
+import dev.zlauncher.nav.UiMessage
 import dev.zlauncher.pods.work.PodWorkRunner
 import dev.zlauncher.ui.theme.ZTheme
 import kotlinx.coroutines.CoroutineScope
@@ -23,6 +24,9 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+
+/** The text of a Pod's notice as shown (RF-80): trimmed and cut at [MAX_TOAST_CHARS]; `null` when nothing is left. */
+fun toastText(raw: String): String? = raw.trim().take(MAX_TOAST_CHARS).trimEnd().ifEmpty { null }
 
 /** A scan listener that discards progress events during background rescan. */
 private object QuietScan : ScanListener {
@@ -152,6 +156,14 @@ class AppPodHost(
 
     override fun play(action: SoundAction) {
         app?.play(action)
+    }
+
+    override fun toast(text: String, sound: SoundAction?) {
+        val app = app ?: return
+        val shown = toastText(text) ?: return
+        // The message line and the sound pool take a write from any thread; a Pod's notice may come from its own coroutine.
+        app.message = UiMessage.literal(shown)
+        sound?.let(app::play)
     }
 
     override fun close() {

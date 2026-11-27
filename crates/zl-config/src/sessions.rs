@@ -14,3 +14,13 @@ pub const MAX_ESTIMATED_SECONDS: i64 = 4 * 60 * 60;
 
 /// Games in the Recent folder, newest first.
 pub const RECENT_LIMIT: usize = 30;
+
+/// Weeks the weekly chart of a game's Activity tab covers, the current week included (RF-31).
+pub const ACTIVITY_WEEKS: usize = 12;
+
+/// Sessions the Activity tab lists, newest first (RF-31); older ones still count in the totals.
+pub const ACTIVITY_SESSION_LIMIT: usize = 100;
+
+/// Longest session (seconds) the user can type in by hand, as a correction or a new entry (RF-41):
+/// a day, so a typo of one digit cannot add months of play time.
+pub const MAX_MANUAL_SESSION_SECONDS: i64 = 24 * 60 * 60;

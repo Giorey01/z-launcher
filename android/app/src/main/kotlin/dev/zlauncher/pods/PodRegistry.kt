@@ -1,9 +1,11 @@
 package dev.zlauncher.pods
 
 import android.content.Context
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import dev.zlauncher.core.nativecore.GameEntry
 import java.util.ServiceLoader
+import kotlin.coroutines.cancellation.CancellationException
 
 /** Characters an id may have (see [Pod.id]). */
 private val ID_PATTERN = Regex("[a-z0-9._-]+")
@@ -16,6 +18,18 @@ const val MAX_SLOTS_PER_POD: Int = 16
 
 /** Maximum lead tiles shown on a platform grid (§7). */
 const val MAX_LEAD_TILES: Int = 3
+
+/** Maximum tabs the Pods add to a game's sheet (§7, `zl-config` `MAX_GAME_TABS`). */
+const val MAX_GAME_TABS: Int = 4
+
+/** Maximum badges the Pods put on a game's sheet (§7, `zl-config` `MAX_GAME_BADGES`). */
+const val MAX_GAME_BADGES: Int = 4
+
+/** Longest text of a game badge, in characters (§7, `zl-config` `MAX_BADGE_CHARS`). */
+const val MAX_BADGE_CHARS: Int = 12
+
+/** Longest text of a Pod's notice (§8, `zl-config` `MAX_TOAST_CHARS`). */
+const val MAX_TOAST_CHARS: Int = 120
 
 /** Why a Pod was left out. */
 enum class PodProblem {
@@ -51,6 +65,24 @@ data class LeadTileSlotItem(
     val icon: ImageVector,
     /** Target navigation route for the platform. */
     val route: PodRoute,
+)
+
+/** A resolved tab of a game's sheet (RF-78). */
+data class GameTabItem(
+    /** Originating Pod id. */
+    val podId: String,
+    /** Title on the tab. */
+    val label: String,
+    /** The Pod's content for the game. */
+    val content: @Composable (host: PodHost, game: GameEntry) -> Unit,
+)
+
+/** A resolved badge of a game's sheet (RF-79): the text is already cut to size. */
+data class GameBadgeItem(
+    /** Originating Pod id. */
+    val podId: String,
+    /** The short text. */
+    val text: String,
 )
 
 /** The Pods of this build, their resolved slots, and what was left out. */
@@ -132,6 +164,38 @@ class PodRegistry(
             .filter { runCatching { it.condition(game) }.getOrDefault(false) }
             .mapNotNull { slot -> runCatching { LeadTileSlotItem(entry.pod.id, slot.label, slot.icon, slot.routeForGame(game)) }.getOrNull() }
     }
+
+    /**
+     * The tabs the Pods add to the sheet of [game] (§7), at most [MAX_GAME_TABS]: those whose condition holds; a
+     * condition that fails counts as a crash of the Pod and leaves the tab out.
+     */
+    fun gameTabSlots(game: GameEntry): List<GameTabItem> = entries.flatMap { entry ->
+        validSlots(entry).filterIsInstance<PodSlot.GameTab>()
+            .filter { slot -> guarded(entry, "game tab condition") { slot.condition(game) } == true }
+            .map { slot -> GameTabItem(entry.pod.id, slot.label, slot.content) }
+    }.take(MAX_GAME_TABS)
+
+    /**
+     * The badges the Pods put on the sheet of [game] (§7), at most [MAX_GAME_BADGES]: the text of each, cut at
+     * [MAX_BADGE_CHARS]; a blank one, or one whose Pod failed (counted as a crash), is left out.
+     */
+    suspend fun gameBadges(game: GameEntry): List<GameBadgeItem> {
+        val out = mutableListOf<GameBadgeItem>()
+        for (entry in entries) {
+            for (slot in validSlots(entry).filterIsInstance<PodSlot.GameBadge>()) {
+                val result = runCatching { slot.text(game) }
+                val failure = result.exceptionOrNull()
+                if (failure is CancellationException) throw failure
+                failure?.let { onCrash?.invoke(entry.pod.id, "Exception in game badge: " + it.message) }
+                result.getOrNull()?.trim()?.takeIf { it.isNotEmpty() }?.take(MAX_BADGE_CHARS)?.let { out += GameBadgeItem(entry.pod.id, it) }
+            }
+        }
+        return out.take(MAX_GAME_BADGES)
+    }
+
+    /** Runs [block] for [entry]; an exception is reported as a crash of its Pod and gives `null`. */
+    private fun <T> guarded(entry: PodWithMetadata, what: String, block: () -> T): T? =
+        runCatching(block).onFailure { onCrash?.invoke(entry.pod.id, "Exception in " + what + ": " + it.message) }.getOrNull()
 
     /** The sections the Pods add to the launcher's settings (§7), with their Pod. */
     fun settingsSectionSlots(): List<Pair<String, PodSlot.SettingsSection>> = entries.flatMap { entry ->

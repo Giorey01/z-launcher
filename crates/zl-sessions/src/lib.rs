@@ -13,6 +13,10 @@
     clippy::cognitive_complexity
 )]
 
+mod activity;
+
+pub use activity::{summarize, week_start, ActivitySummary, SessionRecord, WeekBucket};
+
 use serde::{Deserialize, Serialize};
 
 /// What happened to an activity of the game.

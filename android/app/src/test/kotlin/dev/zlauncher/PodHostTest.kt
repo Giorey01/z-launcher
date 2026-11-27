@@ -3,12 +3,18 @@ package dev.zlauncher
 import dev.zlauncher.core.nativecore.Core
 import dev.zlauncher.core.nativecore.GameEntry
 import dev.zlauncher.core.nativecore.GameKind
+import dev.zlauncher.core.nativecore.SoundAction
 import dev.zlauncher.pods.AppPodHost
 import dev.zlauncher.pods.PermissionNotDeclaredException
+import dev.zlauncher.pods.PodEvent
+import dev.zlauncher.pods.PodHostRegistry
 import dev.zlauncher.ui.theme.ZTheme
 import dev.zlauncher.ui.theme.toZTheme
 import java.nio.file.Files
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.yield
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test
@@ -196,5 +202,37 @@ class PodHostTest {
         assertEquals(true, host.storage.getBoolean("flag"))
         host.storage.setInt("count", 42)
         assertEquals(42, host.storage.getInt("count"))
+    }
+
+    /** The notice needs no permission and, with no launcher behind the host (a test), does nothing and does not throw. */
+    @Test
+    fun toastNeedsNoPermission() {
+        val host = AppPodHost(podId = "test.pod", permissions = emptySet(), app = null, theme = theme)
+        host.toast("Level up", SoundAction.NOTIFICATION)
+        host.toast("   ", null)
+    }
+
+    /** The end of a game reaches the hosts on screen that may read the library, and only them. */
+    @Test
+    fun gameEndedReachesTheHostsOnScreen() = runBlocking {
+        val reader = AppPodHost(podId = "reader", permissions = setOf("library.read"), app = null, theme = theme)
+        val blind = AppPodHost(podId = "blind", permissions = emptySet(), app = null, theme = theme)
+        val away = AppPodHost(podId = "away", permissions = setOf("library.read"), app = null, theme = theme)
+        val hosts = PodHostRegistry()
+        hosts.add(reader)
+        hosts.add(blind)
+        hosts.add(away)
+        hosts.remove(away)
+        assertEquals(2, hosts.size())
+        val seen = mutableListOf<PodEvent>()
+        val job = launch(start = CoroutineStart.UNDISPATCHED) { reader.events.collect { seen += it } }
+        var asked = 0L
+        hosts.announceGameEnded(dummyGame().id, 600L) { id -> dummyGame().also { asked = id } }
+        yield()
+        job.cancel()
+        assertEquals(dummyGame().id, asked)
+        assertEquals(listOf<PodEvent>(PodEvent.GameEnded(dummyGame(), 600L)), seen)
+        val none = PodHostRegistry()
+        none.announceGameEnded(1L, 1L) { error("nobody listens: the game is not looked up") }
     }
 }

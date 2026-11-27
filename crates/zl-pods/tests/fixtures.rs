@@ -310,3 +310,18 @@ fn test_install_fixtures() -> Res {
     }
     Ok(())
 }
+
+/// The game sheet's slots (`game_tab`, `game_badge`) are known, need API 3, and an API above the
+/// launcher's is refused.
+#[test]
+fn test_game_sheet_slots_and_api_version() -> Res {
+    let dir = fixtures_dir()?;
+    let bytes = fs::read(dir.join("manifests").join("valid-game-slots.json"))?;
+    let manifest = parse_manifest(&bytes).map_err(|e| format!("{e:?}"))?;
+    assert_eq!(manifest.slots, ["game_tab", "game_badge"]);
+    assert_eq!(manifest.api, 3);
+    assert_eq!(zl_config::pods::API_CURRENT, 3);
+    let too_new = fs::read(dir.join("manifests").join("api-too-new.json"))?;
+    assert!(parse_manifest(&too_new).is_err());
+    Ok(())
+}
