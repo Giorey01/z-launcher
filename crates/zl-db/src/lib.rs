@@ -22,6 +22,9 @@
 //!   their source; a `protected` row is the user's choice and imports leave it alone.
 //! - `game_flags` holds the user's favourite and hidden flags, `game_sessions` the play time.
 //!
+//! - `collections` and `collection_games` hold the manual folders and the games in them, with
+//!   their hand-made order.
+//!
 //! Timestamps are Unix time, `added_at` in seconds and file modification times in milliseconds.
 #![warn(
     missing_docs,
@@ -30,6 +33,7 @@
     clippy::cognitive_complexity
 )]
 
+mod collections;
 mod db;
 mod emulators;
 mod error;
@@ -43,6 +47,7 @@ mod roots;
 mod sessions;
 mod settings;
 
+pub use collections::Collection;
 pub use db::Db;
 pub use error::DbError;
 pub use models::{

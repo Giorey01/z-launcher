@@ -166,6 +166,13 @@ impl Db {
         Ok(ids.collect::<Result<Vec<i64>, _>>()?)
     }
 
+    /// When each game was added to the library (Unix seconds), by game id.
+    pub fn all_added_at(&self) -> Result<std::collections::HashMap<i64, i64>, DbError> {
+        let mut stmt = self.conn.prepare("SELECT id, added_at FROM games")?;
+        let rows = stmt.query_map([], |row| Ok((row.get(0)?, row.get(1)?)))?;
+        Ok(rows.collect::<Result<_, _>>()?)
+    }
+
     /// Looks up one game by id.
     pub fn game(&self, game_id: i64) -> Result<Option<Game>, DbError> {
         let sql = format!("SELECT {GAME_COLUMNS} FROM games WHERE id = ?1");

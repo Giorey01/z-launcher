@@ -200,9 +200,27 @@ CREATE TABLE pod_health (
 CREATE INDEX pod_health_pod ON pod_health(pod_id, crashed_at);
 ";
 
+/// Step 9: manual folders (collections) the user creates. A game can be in several folders;
+/// `position` is its place inside one, for the hand-made order. Deleting a folder or a game
+/// removes the memberships.
+const STEP_9: &str = "
+CREATE TABLE collections (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE COLLATE NOCASE,
+    created_at INTEGER NOT NULL DEFAULT (unixepoch())
+);
+CREATE TABLE collection_games (
+    collection_id INTEGER NOT NULL REFERENCES collections(id) ON DELETE CASCADE,
+    game_id INTEGER NOT NULL REFERENCES games(id) ON DELETE CASCADE,
+    position INTEGER NOT NULL,
+    PRIMARY KEY (collection_id, game_id)
+) WITHOUT ROWID;
+CREATE INDEX collection_games_game ON collection_games(game_id);
+";
+
 /// All steps in order; step `n` is `MIGRATIONS[n - 1]`.
 pub const MIGRATIONS: &[&str] = &[
-    STEP_1, STEP_2, STEP_3, STEP_4, STEP_5, STEP_6, STEP_7, STEP_8,
+    STEP_1, STEP_2, STEP_3, STEP_4, STEP_5, STEP_6, STEP_7, STEP_8, STEP_9,
 ];
 
 /// Reads the schema version of the open database.
