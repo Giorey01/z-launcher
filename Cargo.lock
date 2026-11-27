@@ -2045,6 +2045,7 @@ dependencies = [
  "zip",
  "zl-config",
  "zl-db",
+ "zl-hash",
  "zl-library",
  "zl-media",
  "zl-meta",

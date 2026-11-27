@@ -18,6 +18,7 @@ mod appearance_types;
 mod default_sounds;
 mod detect;
 mod error;
+mod hashing;
 mod launch;
 mod library;
 mod media;
@@ -55,6 +56,7 @@ pub use appearance_types::{
     ThemeIssue, ThemeSelection, UserSettings, Wallpaper, WallpaperKind,
 };
 pub use error::CoreError;
+pub use hashing::{HashEvent, HashObserver, HashReport, HashRun, HashStatus, RomHash};
 pub use media::{GameMedia, MediaCount, MediaImportReport, MediaItem, MediaSources};
 pub use music::music_queue;
 pub use platform_root::PlatformRoot;
@@ -84,6 +86,8 @@ pub struct Service {
     theme_cache: Mutex<Option<Arc<theme_files::ThemeFiles>>>,
     /// Where the API keys are kept (in memory until the app sets its own store).
     secrets: Mutex<Arc<dyn secrets::SecretStore>>,
+    /// The background hashing of the library's files: its flags, progress and last report.
+    hashing: Arc<hashing::HashShared>,
 }
 
 impl Service {
@@ -105,6 +109,7 @@ impl Service {
             data_dir: data_dir.to_path_buf(),
             theme_cache: Mutex::new(None),
             secrets: Mutex::new(Arc::new(secrets::MemorySecrets::default())),
+            hashing: Arc::default(),
         })
     }
 
