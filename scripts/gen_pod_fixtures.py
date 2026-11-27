@@ -20,7 +20,7 @@ from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "fixtures" / "pods"
-API_CURRENT = 2
+API_CURRENT = 3
 API_MIN = 1
 DEX = b"dex\n035\x00 test classes\n"
 ZIP_TIME = (2026, 1, 1, 0, 0, 0)
@@ -88,7 +88,10 @@ def manifest_cases():
         description="A sample Pod.", slots=["start_menu", "platform_grid_lead"],
         permissions=["library.read", "library.rescan"], abis=["arm64-v8a"],
         homepage="https://example.com/hello")
-    cases = [("valid-minimal", minimal, ok(minimal)), ("valid-full", full, ok(full))]
+    game_slots = base_manifest(
+        id="sample.gamesheet", api=3, slots=["game_tab", "game_badge"], permissions=["library.read"])
+    cases = [("valid-minimal", minimal, ok(minimal)), ("valid-full", full, ok(full)),
+             ("valid-game-slots", game_slots, ok(game_slots))]
     bad = lambda name, content, code: cases.append((name, content, {"issues": [code]}))
     bad("invalid-json", b"{ not json", "MANIFEST_INVALID_JSON")
     bad("not-an-object", b"[]\n", "MANIFEST_INVALID_JSON")

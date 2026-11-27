@@ -24,7 +24,7 @@ pub const ENTRY_RATIO_THRESHOLD_BYTES: u64 = 1024 * 1024;
 pub const MAX_MANIFEST_SIZE_BYTES: u64 = 64 * 1024;
 
 /// Current API version supported by the launcher host.
-pub const API_CURRENT: u32 = 2;
+pub const API_CURRENT: u32 = 3;
 
 /// Minimum API version supported by the launcher host.
 pub const API_MIN: u32 = 1;
@@ -37,6 +37,18 @@ pub const CRASH_WINDOW_HOURS: i64 = 24;
 
 /// Maximum lead tiles displayed on a platform grid slot.
 pub const MAX_LEAD_TILES: usize = 3;
+
+/// Maximum tabs the Pods add to the sheet of one game (`game_tab`, RF-78).
+pub const MAX_GAME_TABS: usize = 4;
+
+/// Maximum badges the Pods put on the sheet of one game (`game_badge`, RF-79).
+pub const MAX_GAME_BADGES: usize = 4;
+
+/// Longest text of a game badge, in characters; a longer one is cut (RF-79).
+pub const MAX_BADGE_CHARS: usize = 12;
+
+/// Longest text of a notice a Pod shows with `PodHost.toast`, in characters (RF-80).
+pub const MAX_TOAST_CHARS: usize = 120;
 
 /// Maximum number of slot declarations evaluated per Pod.
 pub const MAX_SLOTS_PER_POD: usize = 16;

@@ -1,6 +1,6 @@
 {
   "constants": {
-    "api_current": 2,
+    "api_current": 3,
     "api_min": 1
   },
   "manifests": {
@@ -12,6 +12,11 @@
     "valid-full.json": {
       "ok": true,
       "id": "sample.hello",
+      "version": "1.2.0"
+    },
+    "valid-game-slots.json": {
+      "ok": true,
+      "id": "sample.gamesheet",
       "version": "1.2.0"
     },
     "invalid-json.json": {

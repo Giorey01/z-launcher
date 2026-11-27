@@ -1,4 +1,4 @@
-# Pod: il contratto (versione 2, `api` = 1)
+# Pod: il contratto (versione 2, `api` = 3)
 
 Un **Pod** è un componente che si aggiunge al front-end del launcher: ha schermate e logica
 proprie, ma si disegna solo con i componenti del launcher e vive dentro il suo processo. Può
@@ -102,7 +102,7 @@ Campi sconosciuti si ignorano (compatibilità in avanti). I valori sono questi:
 | `id` | obbligatorio; minuscole, cifre, `.`, `-`, `_`; 1–64 caratteri | `MISSING_FIELD`, `BAD_ID` |
 | `name` | obbligatorio; 1–40 caratteri, senza controlli | `MISSING_FIELD`, `BAD_NAME` |
 | `version` | obbligatorio; `MAJOR.MINOR.PATCH`, tre numeri interi senza segno (niente prerelease) | `BAD_VERSION` |
-| `api` | obbligatorio, intero; deve stare tra `API_MIN` e `API_CURRENT` (oggi `1` e `1`) | `API_TOO_NEW`, `API_TOO_OLD` |
+| `api` | obbligatorio, intero; deve stare tra `API_MIN` e `API_CURRENT` (oggi `1` e `3`) | `API_TOO_NEW`, `API_TOO_OLD` |
 | `author.name` | obbligatorio; 1–60 caratteri | `MISSING_FIELD` |
 | `author.signer` | obbligatorio; impronta intera, 64 cifre esadecimali minuscole | `BAD_SIGNER` |
 | `entry` | obbligatorio; nome di classe Java pienamente qualificato che implementa `PodProvider` | `BAD_ENTRY` |
@@ -223,20 +223,29 @@ l'host chiama `Pod.Content(host, route)`. Il manifest elenca i tipi di slot che 
 | `settings_section` | Riga nella categoria Integrazioni delle impostazioni, che apre la route del Pod | etichetta, route |
 | `status_widget` | Widget nella barra della Home (per esempio un mini player) | contenuto Compose compatto, larghezza massima |
 | `home_shortcut` | Scorciatoia nella Home | etichetta, icona, route |
+| `game_tab` | Tab nella scheda del gioco, dopo Info e Activity (api 3) | etichetta, condizione sul gioco, contenuto Compose in funzione del gioco |
+| `game_badge` | Badge con un testo breve nella scheda del gioco (api 3) | testo in funzione del gioco (può sospendere; `null` o vuoto: nessun badge) |
 
 **Regole di disegno**
 
 - Più Pod sullo stesso slot: ordine di installazione. In una griglia, al massimo
   `MAX_LEAD_TILES` (3) elementi iniziali; i successivi non si mostrano.
 - Al massimo `MAX_SLOTS_PER_POD` (16) dichiarazioni per Pod; le altre si ignorano.
+- **Scheda del gioco** (`game_tab`, `game_badge`): il launcher disegna la riga dei tab (LB e RB
+  passano da un tab all'altro, o D-pad sinistra e destra sulla riga), la cornice e i badge; il Pod
+  disegna solo il contenuto del suo tab, con `Content` di `pod-ui`. Al massimo `MAX_GAME_TABS` (4)
+  tab e `MAX_GAME_BADGES` (4) badge per gioco; una condizione che fallisce o lancia nasconde il tab.
+  Il testo di un badge si taglia a `MAX_BADGE_CHARS` (12) caratteri; un'eccezione nel calcolo del
+  testo conta come guasto e il badge sparisce. Mentre un tab di un Pod è aperto vale lo stesso
+  controllo delle schermate del Pod: se il processo muore, il Pod conta un guasto (§10).
 - Il focus del pad entra negli elementi come in quelli del launcher, con gli stessi suoni.
 - Un errore mentre si dichiara o si disegna uno slot conta come guasto del Pod (§10) e lo slot
   sparisce; il resto della schermata non cambia.
 
 ## 8. Permessi e servizi (`PodHost`)
 
-Sempre disponibili: `theme`, `play(action)`, `strings`, `storage`, `close()`, `navigate(route)`,
-`events`. Gli altri richiedono il permesso nel manifest.
+Sempre disponibili: `theme`, `play(action)`, `toast(testo, suono)`, `strings`, `storage`,
+`close()`, `navigate(route)`, `events`. Gli altri richiedono il permesso nel manifest.
 
 | Permesso | Servizio |
 | --- | --- |
@@ -250,6 +259,12 @@ Sempre disponibili: `theme`, `play(action)`, `strings`, `storage`, `close()`, `n
 | `folders` | `platformRoot(id)`: la cartella della console nella libreria (percorso assoluto: quella di una cartella ROM che ne contiene i giochi, altrimenti quella col nome della piattaforma o di un alias); `pick()` (da fare): cartella scelta dall'utente e ricordata per il Pod |
 | `audio` | richiesta di focus audio; abbassare o sostituire la musica del launcher |
 
+- `toast(testo, suono)` (api 3): mostra `testo` come avviso del launcher (la riga in basso, che
+  sparisce dopo pochi secondi) e suona il suono del tema per `suono` (predefinito `NOTIFICATION`;
+  `null` per il silenzio; se il tema non ha quel suono, tace). Funziona su ogni schermata e al
+  rientro da un gioco, per esempio in risposta a `GameEnded`. Il testo si taglia a
+  `MAX_TOAST_CHARS` (120); un avviso nuovo sostituisce quello a schermo. È il launcher a tradurre
+  e a decidere il suono: il Pod passa solo il testo già nella lingua dell'utente (`strings`).
 - `storage`: una cartella di file privata e una di cache, più preferenze chiave-valore. Niente
   altro è raggiungibile da un altro Pod.
 - `strings`: i testi di `i18n/<lingua>.json` secondo la lingua dell'app, con ripiego su `en` e poi
@@ -259,7 +274,8 @@ Sempre disponibili: `theme`, `play(action)`, `strings`, `storage`, `close()`, `n
   lancia `PermissionNotDeclared`), ma un Pod ostile non è fermato da questo. L'interfaccia di
   installazione lo dice in chiaro (§11).
 
-**Eventi** (`PodHost.events`): `GameStarted(game)`, `GameEnded(game, seconds)`,
+**Eventi** (`PodHost.events`): `GameStarted(game)`, `GameEnded(game, seconds)` (arriva ai Pod
+che hanno una schermata o un tab aperti quando il launcher registra la sessione),
 `LibraryChanged(platformIds)`, `ThemeChanged(theme)`. Quelli di gioco e libreria richiedono
 `library.read`. Un'eccezione nel gestore di un evento conta come guasto.
 

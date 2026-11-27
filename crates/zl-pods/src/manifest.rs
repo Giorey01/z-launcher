@@ -15,6 +15,8 @@ pub const KNOWN_SLOTS: &[&str] = &[
     "settings_section",
     "status_widget",
     "home_shortcut",
+    "game_tab",
+    "game_badge",
 ];
 
 /// The recognized permission names defined in `docs/spec/pods.md` §8.

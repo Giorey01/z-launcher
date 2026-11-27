@@ -96,6 +96,8 @@ l'elenco degli slot e i **permessi dichiarati** (mostrati all'utente, vedi §6).
 | `SettingsSection` | Sezione nelle impostazioni |
 | `StatusWidget` | Widget nella barra della Home (per esempio un mini player) |
 | `HomeShortcut` | Scorciatoia nella Home |
+| `GameTab(game)` | Tab nella scheda del gioco, col contenuto Compose del Pod (api 3) |
+| `GameBadge(game)` | Badge con un testo breve nella scheda del gioco (api 3) |
 
 **Eventi** (dal launcher al Pod): gioco avviato, gioco terminato, libreria cambiata, tema
 cambiato, Pod aggiornato.
