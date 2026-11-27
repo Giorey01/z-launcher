@@ -51,4 +51,4 @@ pub use models::{
     ScraperSource,
 };
 pub use pods::{InstalledPod, PodState};
-pub use sessions::{GameFlags, NewSession, PlayStats, SessionSource};
+pub use sessions::{GameFlags, NewSession, PlayStats, SessionRow, SessionSource};

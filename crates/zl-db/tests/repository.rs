@@ -2,7 +2,7 @@
 
 use zl_db::{
     Db, DbError, GameFile, GameKind, GameMeta, GameQuery, MediaKind, MediaSource, MetaField,
-    NewGame, NewMedia,
+    NewGame, NewMedia, NewSession, SessionSource,
 };
 
 /// Result type of the tests: any error fails the test.
@@ -376,7 +376,7 @@ fn migration_from_v3_preserves_data() -> TestResult {
 /// on every import.
 #[test]
 fn flags_and_play_sessions() -> TestResult {
-    use zl_db::{GameFlags, NewSession, SessionSource};
+    use zl_db::GameFlags;
     let dir = tempfile::tempdir()?;
     let db = Db::open(&dir.path().join("lib.db"))?;
     let root = db.upsert_root("/roms", true)?;
@@ -421,5 +421,105 @@ fn flags_and_play_sessions() -> TestResult {
         "zero removes the Steam total"
     );
     assert_eq!(db.play_stats(b)?, zl_db::PlayStats::default());
+    Ok(())
+}
+
+/// Steam's total is not a session: the list leaves it out and the edits refuse to touch it.
+#[test]
+fn session_edits_leave_the_steam_total_alone() -> TestResult {
+    let dir = tempfile::tempdir()?;
+    let db = Db::open(&dir.path().join("lib.db"))?;
+    let root = db.upsert_root("/roms", true)?;
+    let a = db.upsert_game(&game(root, "gba", "A", "/roms/gba/a.gba"), 1)?;
+    let manual = db.add_session(&NewSession {
+        game_id: a,
+        started_at: 1000,
+        ended_at: 1600,
+        seconds: 600,
+        source: SessionSource::Manual,
+    })?;
+    db.set_steam_playtime(a, 7200, 60)?;
+    let listed = db.game_sessions(a)?;
+    assert_eq!(listed.len(), 1);
+    assert_eq!(
+        (listed[0].id, listed[0].source),
+        (manual, SessionSource::Manual)
+    );
+    let steam_id: i64 = rusqlite::Connection::open(dir.path().join("lib.db"))?.query_row(
+        "SELECT id FROM game_sessions WHERE source = 'steam'",
+        [],
+        |r| r.get(0),
+    )?;
+    assert!(!db.set_session_seconds(steam_id, 5)?);
+    assert!(!db.delete_session(steam_id)?);
+    assert_eq!(db.play_stats(a)?.steam_seconds, 7200);
+    assert!(db.set_session_seconds(manual, 900)?);
+    assert_eq!(db.game_sessions(a)?[0].ended_at, 1900);
+    assert!(db.delete_session(manual)?);
+    assert!(db.game_sessions(a)?.is_empty());
+    Ok(())
+}
+
+/// The exclusion of an app is stored, undone and repeated without error.
+#[test]
+fn excluded_apps_are_stored() -> TestResult {
+    let dir = tempfile::tempdir()?;
+    let db = Db::open(&dir.path().join("lib.db"))?;
+    assert!(!db.is_app_excluded("com.emu")?);
+    db.set_app_excluded("com.emu", true)?;
+    db.set_app_excluded("com.emu", true)?;
+    assert!(db.is_app_excluded("com.emu")?);
+    assert!(!db.is_app_excluded("com.other")?);
+    db.set_app_excluded("com.emu", false)?;
+    assert!(!db.is_app_excluded("com.emu")?);
+    Ok(())
+}
+
+/// A database at the step before sessions could be entered by hand keeps its sessions when the
+/// table is rebuilt, and then takes `manual` ones.
+#[test]
+fn migration_to_manual_sessions_preserves_sessions() -> TestResult {
+    let dir = tempfile::tempdir()?;
+    let db_path = dir.path().join("library.db");
+    {
+        let conn = rusqlite::Connection::open(&db_path)?;
+        for sql in &zl_db::migrations::MIGRATIONS[..8] {
+            conn.execute_batch(sql)?;
+        }
+        conn.execute_batch("PRAGMA user_version = 8")?;
+        conn.execute(
+            "INSERT INTO rom_roots (path, enabled, scan_subfolders) VALUES ('/roms', 1, 1)",
+            [],
+        )?;
+        conn.execute("INSERT INTO platforms (id) VALUES ('gba')", [])?;
+        conn.execute(
+            "INSERT INTO games (root_id, platform_id, title, path, kind, size, mtime, fingerprint, missing, added_at, last_seen_scan)
+             VALUES (1, 'gba', 'A', '/roms/gba/a.gba', 'rom', 1, 1, 1, 0, 1, 1)",
+            [],
+        )?;
+        conn.execute(
+            "INSERT INTO game_sessions (game_id, started_at, ended_at, seconds, source)
+             VALUES (1, 10, 70, 60, 'usage')",
+            [],
+        )?;
+    }
+    let db = Db::open(&db_path)?;
+    assert_eq!(
+        db.schema_version()?,
+        zl_db::migrations::MIGRATIONS.len() as u32
+    );
+    let kept = db.game_sessions(1)?;
+    assert_eq!(
+        (kept.len(), kept[0].seconds, kept[0].source),
+        (1, 60, SessionSource::Usage)
+    );
+    db.add_session(&NewSession {
+        game_id: 1,
+        started_at: 100,
+        ended_at: 160,
+        seconds: 60,
+        source: SessionSource::Manual,
+    })?;
+    assert_eq!(db.play_stats(1)?.sessions, 2);
     Ok(())
 }

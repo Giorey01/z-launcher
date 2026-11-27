@@ -48,7 +48,13 @@ pub enum SessionEnd {
 
 impl Service {
     /// Notes that `game_id` was started through `package` at `now_ms` (replaces any older one).
+    /// An app left out of the tracking (RF-41) notes nothing: no session will be recorded.
     pub fn begin_session(&self, game_id: i64, package: &str, now_ms: i64) -> Result<(), CoreError> {
+        self.remember_tracking_package(game_id, package)?;
+        if self.db().is_app_excluded(package)? {
+            self.db().set_setting(KEY_PENDING, "")?;
+            return Ok(());
+        }
         let pending = PendingSession {
             game_id,
             package: package.to_string(),
