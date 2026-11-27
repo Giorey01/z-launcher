@@ -24,7 +24,7 @@ Ordine delle settimane:
 | RF-02 | Libreria | Multi-disco (`.m3u`, una cartella per gioco, `(Disc N)`) raccolto in una sola voce | 1 | Fatto (`.m3u`, `.cue`/`.gdi`, `(Disc N)`, dischi nudi in una cartella) |
 | RF-03 | Libreria | Rescan incrementale per data di modifica; i giochi spariti vengono segnalati, non cancellati | 1 | Parziale: rescan per impronta di percorso, dimensione e data; spariti segnalati e ripristinati; manca l'elenco dei giochi spariti nella UI |
 | RF-04 | Libreria | Lettura dei file tag `[tag] valore` (`.steamappid`, `.localgameid`, `.dpt`, `.moonlight`, `.xcloud`) | 1 | Fatto (le cinque estensioni, UTF-16, errori per riga) |
-| RF-05 | Libreria | Hash delle ROM in background, anche dentro zip, 7z e CHD (per abbinare i metadati; l'hash di RetroAchievements è RF-53) | 2 |  |
+| RF-05 | Libreria | Hash delle ROM in background, anche dentro zip, 7z e CHD (per abbinare i metadati; l'hash di RetroAchievements è RF-53) | 2 | Parziale: CRC32, MD5 e SHA1 in background (file, zip, 7z, header CHD; anche senza header per NES, SNES, Lynx, 7800, FDS); RAR no; non mostrati nella scheda |
 | RF-06 | Libreria | Elenco delle app Android installate, con categoria giochi | 1 | Fatto |
 | RF-75 | Libreria | App Android che sono giochi di una console (recomp, port) nella cartella di quella console, avviate come app | 2 | Fatto: `.localgameid` in ogni console, "Sposta in una console" dal cassetto |
 | RF-76 | Libreria | Update, DLC e secondi dump di un gioco Switch uniti al gioco base | 1 | Fatto (per title id; un add-on senza base resta un gioco) |
@@ -34,10 +34,10 @@ Ordine delle settimane:
 | RF-10 | Lancio | Rilevamento degli emulatori installati e proposta automatica nell'onboarding | 1 | Fatto |
 | RF-11 | Lancio | Lancio di giochi PC con profili per GameNative, GameHub, Winlator e DroidDeck | 7 | Parziale: profili di tutti e quattro, giochi Steam e Windows in una sola cartella "PC"; DroidDeck non provato su dispositivo |
 | RF-12 | Lancio | Gestore emulatori: segnala gli aggiornamenti e scarica le release ufficiali | 7 |  |
-| RF-13 | Organizzazione | Smart Folders: Preferiti, Recenti, Più giocati, Mai giocati, Nuovi, App, Emulatori, Per piattaforma | 2 | Parziale: Preferiti, Recenti, Mai giocati, Nascosti, Per piattaforma |
+| RF-13 | Organizzazione | Smart Folders: Preferiti, Recenti, Più giocati, Mai giocati, Nuovi, App, Emulatori, Per piattaforma | 2 | Fatto (anche Più giocati, Nuovi, App, Emulatori) |
 | RF-14 | Organizzazione | Simple Mode, con tutti i giochi nella Home | 2 | Fatto |
-| RF-15 | Organizzazione | Cartelle manuali e lo stesso gioco in più cartelle | 2 |  |
-| RF-16 | Organizzazione | Ricerca e ordinamenti; selezione multipla con sposta e rimuovi | 2 | Parziale: ricerca fuzzy typo-tolerant e schermata di ricerca gamepad-first |
+| RF-15 | Organizzazione | Cartelle manuali e lo stesso gioco in più cartelle | 2 | Fatto |
+| RF-16 | Organizzazione | Ricerca e ordinamenti; selezione multipla con sposta e rimuovi | 2 | Fatto (ricerca fuzzy, cinque ordinamenti per cartella o globali, selezione multipla con sposta, togli, nascondi) |
 | RF-17 | Organizzazione | Nascondi gioco, preferito, valutazione | 2 | Fatto |
 | RF-18 | Metadati | Orchestratore con fonti in ordine scelto: libretro-db, ScreenScraper, SteamGridDB, IGDB, LaunchBox, HLTB | 2 | Parziale: SteamGridDB (immagini, chiave dell'utente, scaricate da sole per i giochi nuovi dopo ogni scansione), Steam Store (dettagli e screenshot), ES-DE; niente orchestratore |
 | RF-19 | Metadati | Tre modalità: solo mancanti, campi scelti, forza tutto | 2 | Parziale: solo mancanti (copertina, hero, logo) |
@@ -47,19 +47,19 @@ Ordine delle settimane:
 | RF-23 | Home | Griglia con zoom continuo e un layout salvato per ogni livello | 3 |  |
 | RF-24 | Home | Page Mode con righe e colonne per pagina e frecce di scorrimento | 3 | Parziale: solo l'impostazione, senza effetto |
 | RF-25 | Home | Stili a riga singola: Standard, Carousel, Cover Flow | 3 | Fatto |
-| RF-26 | Home | Riordino manuale (prendi e posa) | 3 |  |
+| RF-26 | Home | Riordino manuale (prendi e posa) | 3 | Fatto (nelle cartelle manuali) |
 | RF-27 | Home | Dock in basso e cassetto delle app | 1 | Fatto (dock con pin da cassetto con Y) |
 | RF-28 | Home | Ruolo di Home del sistema | 1 | Fatto (richiesta del ruolo nel setup; l'esito dipende dall'utente) |
 | RF-29 | Home | Onboarding: permessi, cartelle, modalità, emulatori | 1 | Fatto |
 | RF-30 | Scheda gioco | Tab Info: descrizione, screenshot, trailer, badge HLTB, scelta di emulatore e display | 2 | Parziale: descrizione, dati, ore, screenshot, trailer in streaming, emulatore per gioco; HLTB e display no |
-| RF-31 | Scheda gioco | Tab Activity: ore, sessioni, media, grafico settimanale | 3 |  |
+| RF-31 | Scheda gioco | Tab Activity: ore, sessioni, media, grafico settimanale | 3 | Fatto (totali, media, elenco, grafico delle ultime 12 settimane); non provato su dispositivo |
 | RF-35 | Controller | Navigazione completa da D-Pad e stick, senza punti morti | 1 | Parziale: D-pad, A, B, Start provati; stick sinistro non provato |
 | RF-36 | Controller | Mappa di default: A conferma, B indietro, Y menu, X scambia schermi, LB social, RB stato, Start impostazioni | 3 | Parziale: A, B, Y, Start (menu), LB/RB tra le piattaforme; X, pannelli e Start→impostazioni no |
 | RF-37 | Controller | Glifi Nintendo, Xbox e PlayStation, automatici o manuali, e Corner Hints | 3 | Parziale: Corner Hints con le sigle; glifi per marca no |
 | RF-38 | Controller | Remapping con profili per controller | 3 |  |
 | RF-39 | Controller | Tastiera, touch e pinch come alternative | 3 | Parziale: tastiera a schermo per il pad, Invio, touch; pinch no |
 | RF-40 | Sessioni | Tracciamento delle sessioni dall'uso delle app, al secondo, con pausa e ripresa | 3 | Fatto (stima dal lancio al ritorno senza accesso ai dati di utilizzo); ore Steam importate a parte |
-| RF-41 | Sessioni | Modifica manuale delle sessioni ed esclusione di un'app | 3 |  |
+| RF-41 | Sessioni | Modifica manuale delle sessioni ed esclusione di un'app | 3 | Fatto |
 | RF-42 | Sessioni | Pod Log: totali, calendario, classifica | 3 | Fatto (Pod integrato `builtin.log` con totali, classifica giochi e avvio) |
 | RF-43 | Sessioni | Now Playing sullo schermo secondario | 6 | Fatto (schermata Now Playing sull'altro display, con attenuazione) |
 | RF-44 | Temi | Formato temi proprio e import dei temi Cocoon senza conversione manuale | 4 | Fatto (lettura del formato e import dalle cartelle di Cocoon) |
@@ -93,9 +93,9 @@ Ciò che il launcher deve offrire perché le funzioni più grandi stiano nei Pod
 | ID | Area | Requisito | S. | Stato |
 | --- | --- | --- | --- | --- |
 | RF-73 | Estensioni | Pod esterni: una build terza può aggiungere Pod che usano tema, suoni e libreria del launcher | 4 | Fatto: contratto v2 (`Pod`, `PodHost`, `PodSlot`), `PodLoader` dex dinamico, store, firma Ed25519, `pod-platform`, `zpod-template`; API 2 con archivi (zip, 7z, RAR), download con ripresa e HTTP |
-| RF-78 | Estensioni | Slot tab nella scheda del gioco: un Pod aggiunge una tab con il suo contenuto | 5 |  |
-| RF-79 | Estensioni | Slot badge: un Pod mostra un dato breve sulla scheda e sulla tile del gioco (per esempio "12/40") | 5 |  |
-| RF-80 | Estensioni | Avviso del Pod con un suono del tema, anche al rientro da una sessione | 5 |  |
+| RF-78 | Estensioni | Slot tab nella scheda del gioco: un Pod aggiunge una tab con il suo contenuto | 5 | Fatto (`GameTab`, API 3) |
+| RF-79 | Estensioni | Slot badge: un Pod mostra un dato breve sulla scheda e sulla tile del gioco (per esempio "12/40") | 5 | Parziale: badge nella scheda; sulla tile no |
+| RF-80 | Estensioni | Avviso del Pod con un suono del tema, anche al rientro da una sessione | 5 | Fatto (`PodHost.toast` con suono; `GameEnded` inviato al rientro) |
 | RF-81 | Estensioni | Accesso dei Pod alle cartelle degli emulatori (dati e salvataggi), con il permesso dichiarato nel manifest | 5 |  |
 | RF-82 | Estensioni | Servizio delle sessioni multimediali di Android: elenco dei lettori attivi, titolo, copertina, comandi | 6 |  |
 | RF-83 | Estensioni | La musica del launcher cede il passo quando un Pod o un'altra app riproduce audio | 6 |  |
