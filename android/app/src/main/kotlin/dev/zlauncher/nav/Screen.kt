@@ -44,6 +44,18 @@ sealed interface Screen {
         val game: GameEntry,
     ) : Screen
 
+    /** The name of a manual folder, typed with the gamepad keyboard: a new folder or a rename. */
+    data class FolderName(
+        /** The folder to rename, `null` for a new one. */
+        val renameId: Long?,
+        /** The name the screen opens with. */
+        val initial: String,
+        /** Games to put in the new folder once it exists. */
+        val thenAdd: List<Long> = emptyList(),
+        /** With [thenAdd]: the manual folder they leave (a move), `null` for a plain add. */
+        val thenMoveFrom: Long? = null,
+    ) : Screen
+
     /** The consoles an Android app (a recomp or port) can be filed under. */
     data class ConsolePicker(
         /** Package of the app. */
@@ -61,6 +73,18 @@ sealed interface Overlay {
         val game: GameEntry,
         /** Focus key of the tile that opened it, to give the focus back on close. */
         val originKey: String,
+    ) : Overlay
+
+    /** The sort orders of the folder on screen. */
+    data object SortMenu : Overlay
+
+    /** What can be done to the games selected in the grid. */
+    data object SelectionMenu : Overlay
+
+    /** The Y menu of a manual folder on the Home: rename, delete. */
+    data class FolderMenu(
+        /** The folder. */
+        val folder: dev.zlauncher.core.nativecore.PlatformEntry,
     ) : Overlay
 
     /** The Start menu: Apps, Sort, Settings. */
@@ -146,3 +170,19 @@ enum class Boot {
     /** The Home and its screens are shown. */
     Ready,
 }
+
+/** Id of the Apps Smart Folder. */
+const val APPS_FOLDER = "@apps"
+
+/** Id of the Emulators Smart Folder. */
+const val EMULATORS_FOLDER = "@emulators"
+
+/** Prefix of the id of a manual folder. */
+const val MANUAL_FOLDER_PREFIX = "@folder:"
+
+/** Whether this is the folder of Apps or of Emulators, which lists apps and not games. */
+fun Screen.isAppFolder(): Boolean = this is Screen.Platform && (id == APPS_FOLDER || id == EMULATORS_FOLDER)
+
+/** The row id of a manual folder from its Home id, `null` for any other folder. */
+fun manualFolderId(folderId: String?): Long? = folderId?.takeIf { it.startsWith(MANUAL_FOLDER_PREFIX) }
+    ?.removePrefix(MANUAL_FOLDER_PREFIX)?.toLongOrNull()

@@ -17,7 +17,9 @@ import androidx.compose.material.icons.rounded.Tune
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -34,6 +36,9 @@ import dev.zlauncher.R
 import dev.zlauncher.ZLauncherApp
 import dev.zlauncher.core.nativecore.CoreException
 import dev.zlauncher.core.nativecore.GameEntry
+import dev.zlauncher.core.nativecore.SortOrder
+import dev.zlauncher.nav.OrganizeActions
+import dev.zlauncher.ui.menus.sortLabel
 import dev.zlauncher.launch.toMessage
 import dev.zlauncher.nav.AppViewModel
 import dev.zlauncher.nav.HeroTarget
@@ -68,6 +73,8 @@ fun PlatformScreen(
     LaunchedEffect(screen.id, app.resumeTick) { vm.load(screen.id) { app.message = it.toMessage() } }
     LaunchedEffect(screen.id) { app.hero = HeroTarget.Platform(screen.id, screen.name) }
     val list = games.orEmpty()
+    SideEffect { app.organize.shown = list }
+    DisposableEffect(screen.id) { onDispose { app.organize.reset() } }
     val gridState = rememberLazyGridState()
     val dockOnTop = LocalZTheme.current.settings.dockOnTop
     val dock: @Composable () -> Unit = {
@@ -84,7 +91,12 @@ fun PlatformScreen(
     val defaultKey = leads.firstOrNull()?.let { "lead:${it.podId}:${it.label}" } ?: list.firstOrNull()?.let { gameKey(it.id) }
     Column(Modifier.fillMaxSize()) {
         if (dockOnTop) dock()
-        FolderHeader(screen.name, Modifier.padding(top = if (dockOnTop) 6.dp else 20.dp, bottom = 6.dp))
+        FolderHeader(
+            screen.name,
+            app.organize,
+            loaded?.takeIf { it.platformId == screen.id }?.order ?: SortOrder.NAME,
+            Modifier.padding(top = if (dockOnTop) 6.dp else 20.dp, bottom = 6.dp),
+        )
         Box(Modifier.weight(1f)) { GameGrid(app, list, gridState, memory, leads) }
         if (!dockOnTop) dock()
     }
@@ -101,7 +113,7 @@ fun PlatformScreen(
 
 /** The header of a folder: back hint, the folder name, and on the right the sort label with the bumper hint. */
 @Composable
-private fun FolderHeader(title: String, modifier: Modifier = Modifier) {
+private fun FolderHeader(title: String, organize: OrganizeActions, order: SortOrder, modifier: Modifier = Modifier) {
     val theme = LocalZTheme.current
     Row(modifier.fillMaxWidth().padding(horizontal = 8.dp), verticalAlignment = Alignment.CenterVertically) {
         if (theme.settings.cornerHints) FaintPill { ButtonChip("LB") }
@@ -110,7 +122,7 @@ private fun FolderHeader(title: String, modifier: Modifier = Modifier) {
         FaintPill(Modifier.padding(end = 6.dp)) {
             Icon(Icons.AutoMirrored.Rounded.Sort, null, Modifier.size(20.dp), tint = theme.textPrimary.copy(alpha = 0.5f))
             Text(
-                stringResource(R.string.sort_manual),
+                headerHint(organize, order),
                 color = theme.textPrimary.copy(alpha = 0.6f),
                 fontSize = 15.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -130,4 +142,12 @@ private fun FolderHeader(title: String, modifier: Modifier = Modifier) {
             ButtonChip("RB", Modifier.background(theme.textPrimary.copy(alpha = 0.10f), CircleShape), 31.dp)
         }
     }
+}
+
+/** What the sort pill of the header says: the order, or what the grid is doing (selecting, moving a game). */
+@Composable
+private fun headerHint(organize: OrganizeActions, order: SortOrder): String = when {
+    organize.grabbed != null -> stringResource(R.string.reorder_pill)
+    organize.selecting -> stringResource(R.string.selection_pill, organize.selected.size)
+    else -> sortLabel(order)
 }

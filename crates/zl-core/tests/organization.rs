@@ -81,35 +81,50 @@ fn new_folder_follows_the_added_time() -> Res {
     Ok(())
 }
 
-/// Apps and Emulators come from the installed packages: an emulator is not an app, a game is
-/// neither, and a folder with nothing in it is not listed.
+/// Apps and Emulators come from the installed packages in `fixtures/organization` (the Kotlin
+/// tests read the same file through the FFI): an emulator is not an app, a game is neither, and a
+/// folder with nothing in it is not listed.
 #[test]
 fn app_folders_split_the_installed_packages() -> Res {
     let (_dir, svc, _) = library()?;
-    let app = |package: &str, is_game: bool| InstalledApp {
-        package: package.into(),
-        is_game,
+    let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../fixtures/organization/app_folders.json");
+    let doc: serde_json::Value = serde_json::from_str(&fs::read_to_string(path)?)?;
+    let installed: Vec<InstalledApp> = doc["installed"]
+        .as_array()
+        .ok_or("installed")?
+        .iter()
+        .map(|a| InstalledApp {
+            package: a["package"].as_str().unwrap_or_default().to_string(),
+            is_game: a["is_game"].as_bool().unwrap_or(false),
+        })
+        .collect();
+    let list = |key: &str| -> Vec<String> {
+        doc[key]
+            .as_array()
+            .map(|v| {
+                v.iter()
+                    .filter_map(|x| x.as_str().map(str::to_string))
+                    .collect()
+            })
+            .unwrap_or_default()
     };
-    let installed = [
-        app("com.explusalpha.A2600Emu", false),
-        app("org.example.notes", false),
-        app("org.example.puzzle", true),
-    ];
-    assert_eq!(
-        svc.app_folder_packages("@apps", &installed)?,
-        ["org.example.notes"]
-    );
+    assert_eq!(svc.app_folder_packages("@apps", &installed)?, list("apps"));
     assert_eq!(
         svc.app_folder_packages("@emulators", &installed)?,
-        ["com.explusalpha.A2600Emu"]
+        list("emulators")
     );
     let kinds: Vec<_> = svc
         .app_folder_entries(&installed)?
         .into_iter()
         .map(|e| (e.kind, e.games))
         .collect();
-    assert_eq!(kinds, [(FolderKind::Apps, 1), (FolderKind::Emulators, 1)]);
-    assert!(svc.app_folder_entries(&[app("x.y", true)])?.is_empty());
+    assert_eq!(kinds, [(FolderKind::Apps, 2), (FolderKind::Emulators, 1)]);
+    let only_game = InstalledApp {
+        package: "x.y".into(),
+        is_game: true,
+    };
+    assert!(svc.app_folder_entries(&[only_game])?.is_empty());
     assert_eq!(
         svc.app_folder_packages("@favorites", &installed),
         Err(CoreError::InvalidInput)

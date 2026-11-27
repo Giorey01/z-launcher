@@ -40,8 +40,10 @@ import dev.zlauncher.nav.AppViewModel
 import dev.zlauncher.nav.Boot
 import dev.zlauncher.nav.NowPlaying
 import dev.zlauncher.nav.Overlay
+import dev.zlauncher.nav.OrganizeKeys
 import dev.zlauncher.nav.Screen
 import dev.zlauncher.nav.UiEvent
+import dev.zlauncher.nav.isAppFolder
 import dev.zlauncher.ui.ScreenRoot
 import dev.zlauncher.ui.settings.SettingsKeys
 import dev.zlauncher.ui.theme.ZLauncherTheme
@@ -215,7 +217,8 @@ abstract class ScreenActivity : ComponentActivity() {
             return host.dispatchKeyEvent(event)
         }
         val inSettings = app.top == Screen.Settings && !app.settings.editing
-        val consumed = (inSettings && event.action == KeyEvent.ACTION_DOWN && SettingsKeys.handle(app, event)) ||
+        val consumed = (app.organize.grabbed != null && OrganizeKeys.handle(app, event)) ||
+            (inSettings && event.action == KeyEvent.ACTION_DOWN && SettingsKeys.handle(app, event)) ||
             (inSettings && event.action == KeyEvent.ACTION_UP && SettingsKeys.consumes(event))
         return if (consumed) true else super.dispatchKeyEvent(event)
     }
@@ -238,11 +241,22 @@ abstract class ScreenActivity : ComponentActivity() {
     }
 
     /** X toggles search when inside the app drawer. */
-    private fun handleX(): Boolean = if (app.top is Screen.Drawer) {
-        app.drawerSearching = !app.drawerSearching
-        app.play(SoundAction.OPEN_EDIT)
-        true
-    } else false
+    private fun handleX(): Boolean {
+        val top = app.top
+        return when {
+            top is Screen.Drawer || top?.isAppFolder() == true -> {
+                app.drawerSearching = !app.drawerSearching
+                app.play(SoundAction.OPEN_EDIT)
+                true
+            }
+            top is Screen.Platform && app.overlay == null && app.organize.grabbed == null -> {
+                app.overlay = Overlay.SortMenu
+                app.play(SoundAction.OPEN_EDIT)
+                true
+            }
+            else -> false
+        }
+    }
 
     /** Steps platforms when in a folder, tabs in the Pod screen. */
     private fun handleBumper(delta: Int): Boolean = when {

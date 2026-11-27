@@ -51,9 +51,11 @@ import dev.zlauncher.R
 import dev.zlauncher.ZLauncherApp
 import dev.zlauncher.apps.AppEntry
 import dev.zlauncher.core.nativecore.CoreException
+import dev.zlauncher.core.nativecore.InstalledApp
 import dev.zlauncher.launch.toMessage
 import dev.zlauncher.nav.AppViewModel
 import dev.zlauncher.nav.Overlay
+import dev.zlauncher.nav.Screen
 import dev.zlauncher.ui.AppIcon
 import dev.zlauncher.ui.common.BackPill
 import dev.zlauncher.ui.common.HeaderTitle
@@ -100,11 +102,15 @@ class DrawerViewModel(application: Application) : AndroidViewModel(application) 
     /** The drawer state. */
     val ui: StateFlow<DrawerUi> = state.asStateFlow()
 
-    /** Reads the apps, the recent list and the dock. */
-    fun load(onError: (CoreException) -> Unit) {
+    /**
+     * Reads the apps, the recent list and the dock. With [folderId] (`@apps` or `@emulators`) the apps are those of
+     * that Smart Folder, as the core tells them apart.
+     */
+    fun load(folderId: String?, onError: (CoreException) -> Unit) {
         viewModelScope.launch {
-            val apps = zl.apps.list()
-            val byPackage = apps.associateBy { it.packageName }
+            val all = zl.apps.list()
+            val apps = if (folderId == null) all else inFolder(folderId, all, onError)
+            val byPackage = all.associateBy { it.packageName }
             val pinned = try {
                 zl.core.call { it.dock() }.toSet()
             } catch (e: CoreException) {
@@ -116,6 +122,18 @@ class DrawerViewModel(application: Application) : AndroidViewModel(application) 
     }
 }
 
+/** The apps of the Smart Folder [folderId] among [all]; the core decides which they are. */
+private suspend fun DrawerViewModel.inFolder(folderId: String, all: List<AppEntry>, onError: (CoreException) -> Unit): List<AppEntry> =
+    try {
+        val own = getApplication<Application>().packageName
+        val installed = all.filter { it.packageName != own }.map { InstalledApp(it.packageName, it.isGame) }
+        val packages = getApplication<ZLauncherApp>().core.call { it.appFolderPackages(folderId, installed) }.toSet()
+        all.filter { it.packageName in packages }
+    } catch (e: CoreException) {
+        onError(e)
+        emptyList()
+    }
+
 /** Focus key of an app tile (recent apps use a different prefix, they are the same apps again). */
 private fun key(app: AppEntry, recent: Boolean = false) = "${if (recent) "r" else "a"}:${app.packageName}"
 
@@ -125,11 +143,10 @@ private fun key(app: AppEntry, recent: Boolean = false) = "${if (recent) "r" els
  * B goes back.
  */
 @Composable
-fun DrawerScreen(app: AppViewModel, vm: DrawerViewModel = viewModel()) {
+fun DrawerScreen(app: AppViewModel, folder: Screen.Platform?, vm: DrawerViewModel = viewModel()) {
     val ui by vm.ui.collectAsState()
-    val memory = app.memory("drawer")
-    LaunchedEffect(app.resumeTick) { vm.load { app.message = it.toMessage() } }
-    LaunchedEffect(Unit) { app.hero = dev.zlauncher.nav.HeroTarget.None }
+    val memory = app.memory(memoryId(folder))
+    DrawerLoading(app, folder, vm)
     val gridState = rememberLazyGridState()
     var letter by remember { mutableStateOf<Char?>(null) }
     val searching = app.drawerSearching
@@ -139,11 +156,12 @@ fun DrawerScreen(app: AppViewModel, vm: DrawerViewModel = viewModel()) {
         if (!searching) ui.apps else ui.apps.filter { matchesSearch(it.label, query) }
     }
     // The search hides the recent row, so it is not part of the grid (or of the focus) while it is open.
-    val shownRecent = if (searching) emptyList() else ui.recent
+    val shownRecent = recentShown(ui.recent, searching, folder)
     Box(Modifier.fillMaxSize()) {
         ZPanel(Modifier.fillMaxSize(), RectangleShape, elevation = 0.dp) {
             Column(Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
                 DrawerHeader(
+                    title = folder?.let { folderTitle(it) } ?: stringResource(R.string.drawer_title),
                     searching = searching,
                     query = query,
                     onBack = { if (searching) { app.drawerSearching = false; query = "" } else app.back() },
@@ -166,6 +184,22 @@ fun DrawerScreen(app: AppViewModel, vm: DrawerViewModel = viewModel()) {
     // Not while the keyboard is open: every letter changes the results and would pull the focus off the keyboard.
     FocusRestorer(memory, app.resumeTick, !ui.loading && !searching, first) { focused ->
         gridIndexOf(focused, shownRecent.map { key(it, true) }, displayApps.map { key(it) })?.let { gridState.scrollToItem(it) }
+    }
+}
+
+/** The id of the focus memory of the drawer, or of the app folder it shows. */
+private fun memoryId(folder: Screen.Platform?): String = folder?.let { "drawer:${it.id}" } ?: "drawer"
+
+/** The recent apps to show: none while searching and in an app folder, which lists only its own apps. */
+private fun recentShown(recent: List<AppEntry>, searching: Boolean, folder: Screen.Platform?): List<AppEntry> =
+    if (searching || folder != null) emptyList() else recent
+
+/** Reads the apps (again after each change) and tells the hero area what is open: nothing, or the app folder. */
+@Composable
+private fun DrawerLoading(app: AppViewModel, folder: Screen.Platform?, vm: DrawerViewModel) {
+    LaunchedEffect(app.resumeTick, folder?.id) { vm.load(folder?.id) { app.message = it.toMessage() } }
+    LaunchedEffect(folder?.id) {
+        app.hero = folder?.let { dev.zlauncher.nav.HeroTarget.Platform(it.id, it.name) } ?: dev.zlauncher.nav.HeroTarget.None
     }
 }
 
@@ -199,11 +233,11 @@ private fun DrawerBody(
 
 /** Header row of the app drawer with back button, title or query, and search button. */
 @Composable
-private fun DrawerHeader(searching: Boolean, query: String, onBack: () -> Unit, onToggleSearch: () -> Unit) {
+private fun DrawerHeader(title: String, searching: Boolean, query: String, onBack: () -> Unit, onToggleSearch: () -> Unit) {
     Row(Modifier.fillMaxWidth().padding(top = 16.dp, bottom = 6.dp), verticalAlignment = Alignment.CenterVertically) {
         BackPill(onClick = onBack)
-        val title = if (searching) query.ifEmpty { stringResource(R.string.menu_search) } else stringResource(R.string.drawer_title)
-        HeaderTitle(title, Modifier.padding(start = 12.dp).weight(1f))
+        val shown = if (searching) query.ifEmpty { stringResource(R.string.menu_search) } else title
+        HeaderTitle(shown, Modifier.padding(start = 12.dp).weight(1f))
         SearchPill(onClick = onToggleSearch)
     }
 }
@@ -321,4 +355,12 @@ private fun SearchPill(modifier: Modifier = Modifier, onClick: () -> Unit = {}) 
         }
         Icon(Icons.Rounded.Search, null, Modifier.size(17.dp), tint = Color.White)
     }
+}
+
+/** The title of an app folder: the name of its Smart Folder in the app's language. */
+@Composable
+private fun folderTitle(folder: Screen.Platform): String = when (folder.id) {
+    dev.zlauncher.nav.APPS_FOLDER -> stringResource(R.string.folder_apps)
+    dev.zlauncher.nav.EMULATORS_FOLDER -> stringResource(R.string.folder_emulators)
+    else -> folder.name
 }

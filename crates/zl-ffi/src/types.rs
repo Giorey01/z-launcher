@@ -86,7 +86,9 @@ impl From<core::RootInfo> for RomRoot {
 mirror_enum! {
     /// What a folder of the Home is: a platform (or group) with its own name, or a Smart Folder
     /// the app names itself.
-    FolderKind <=> core::FolderKind { Platform, Favorites, Recent, NeverPlayed, Hidden }
+    FolderKind <=> core::FolderKind {
+        Platform, Favorites, Recent, MostPlayed, New, NeverPlayed, Hidden, Apps, Emulators, Collection
+    }
 }
 
 /// A folder of the Home: a platform with games, or a Smart Folder.
