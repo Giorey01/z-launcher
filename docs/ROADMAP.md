@@ -21,9 +21,9 @@ Ordine delle settimane:
 | ID | Area | Requisito | S. | Stato |
 | --- | --- | --- | --- | --- |
 | RF-01 | Libreria | Scansione delle cartelle per piattaforma, filtrata per estensione, su memoria interna, microSD e USB | 1 | Fatto su memoria interna (provato sul Thor); microSD e USB da provare |
-| RF-02 | Libreria | Multi-disco (`.m3u`, una cartella per gioco, `(Disc N)`) raccolto in una sola voce | 1 |  |
-| RF-03 | Libreria | Rescan incrementale per data di modifica; i giochi spariti vengono segnalati, non cancellati | 1 |  |
-| RF-04 | Libreria | Lettura dei file tag `[tag] valore` (`.steamappid`, `.localgameid`, `.dpt`, `.moonlight`, `.xcloud`) | 1 |  |
+| RF-02 | Libreria | Multi-disco (`.m3u`, una cartella per gioco, `(Disc N)`) raccolto in una sola voce | 1 | Fatto (`.m3u`, `.cue`/`.gdi`, `(Disc N)`, dischi nudi in una cartella) |
+| RF-03 | Libreria | Rescan incrementale per data di modifica; i giochi spariti vengono segnalati, non cancellati | 1 | Parziale: rescan per impronta di percorso, dimensione e data; spariti segnalati e ripristinati; manca l'elenco dei giochi spariti nella UI |
+| RF-04 | Libreria | Lettura dei file tag `[tag] valore` (`.steamappid`, `.localgameid`, `.dpt`, `.moonlight`, `.xcloud`) | 1 | Fatto (le cinque estensioni, UTF-16, errori per riga) |
 | RF-05 | Libreria | Hash delle ROM in background, anche dentro zip, 7z e CHD (per abbinare i metadati; l'hash di RetroAchievements è RF-53) | 2 |  |
 | RF-06 | Libreria | Elenco delle app Android installate, con categoria giochi | 1 | Fatto |
 | RF-75 | Libreria | App Android che sono giochi di una console (recomp, port) nella cartella di quella console, avviate come app | 2 | Fatto: `.localgameid` in ogni console, "Sposta in una console" dal cassetto |
@@ -35,18 +35,18 @@ Ordine delle settimane:
 | RF-11 | Lancio | Lancio di giochi PC con profili per GameNative, GameHub, Winlator e DroidDeck | 7 | Parziale: profili di tutti e quattro, giochi Steam e Windows in una sola cartella "PC"; DroidDeck non provato su dispositivo |
 | RF-12 | Lancio | Gestore emulatori: segnala gli aggiornamenti e scarica le release ufficiali | 7 |  |
 | RF-13 | Organizzazione | Smart Folders: Preferiti, Recenti, Più giocati, Mai giocati, Nuovi, App, Emulatori, Per piattaforma | 2 | Parziale: Preferiti, Recenti, Mai giocati, Nascosti, Per piattaforma |
-| RF-14 | Organizzazione | Simple Mode, con tutti i giochi nella Home | 2 |  |
+| RF-14 | Organizzazione | Simple Mode, con tutti i giochi nella Home | 2 | Fatto |
 | RF-15 | Organizzazione | Cartelle manuali e lo stesso gioco in più cartelle | 2 |  |
 | RF-16 | Organizzazione | Ricerca e ordinamenti; selezione multipla con sposta e rimuovi | 2 | Parziale: ricerca fuzzy typo-tolerant e schermata di ricerca gamepad-first |
 | RF-17 | Organizzazione | Nascondi gioco, preferito, valutazione | 2 | Fatto |
 | RF-18 | Metadati | Orchestratore con fonti in ordine scelto: libretro-db, ScreenScraper, SteamGridDB, IGDB, LaunchBox, HLTB | 2 | Parziale: SteamGridDB (immagini, chiave dell'utente, scaricate da sole per i giochi nuovi dopo ogni scansione), Steam Store (dettagli e screenshot), ES-DE; niente orchestratore |
-| RF-19 | Metadati | Tre modalità: solo mancanti, campi scelti, forza tutto | 2 |  |
-| RF-20 | Metadati | Campi protetti: una modifica manuale non viene sovrascritta | 2 |  |
+| RF-19 | Metadati | Tre modalità: solo mancanti, campi scelti, forza tutto | 2 | Parziale: solo mancanti (copertina, hero, logo) |
+| RF-20 | Metadati | Campi protetti: una modifica manuale non viene sovrascritta | 2 | Parziale: campi protetti nel core; nella UI si modificano solo titolo e valutazione |
 | RF-21 | Metadati | Import dei media già scaricati da ES-DE | 2 | Fatto (media e `gamelist.xml`) |
-| RF-22 | Metadati | Modifica di nome, descrizione e artwork, con scelta tra le alternative | 2 |  |
+| RF-22 | Metadati | Modifica di nome, descrizione e artwork, con scelta tra le alternative | 2 | Parziale: modifica del titolo; descrizione e scelta dell'artwork no |
 | RF-23 | Home | Griglia con zoom continuo e un layout salvato per ogni livello | 3 |  |
-| RF-24 | Home | Page Mode con righe e colonne per pagina e frecce di scorrimento | 3 |  |
-| RF-25 | Home | Stili a riga singola: Standard, Carousel, Cover Flow | 3 |  |
+| RF-24 | Home | Page Mode con righe e colonne per pagina e frecce di scorrimento | 3 | Parziale: solo l'impostazione, senza effetto |
+| RF-25 | Home | Stili a riga singola: Standard, Carousel, Cover Flow | 3 | Fatto |
 | RF-26 | Home | Riordino manuale (prendi e posa) | 3 |  |
 | RF-27 | Home | Dock in basso e cassetto delle app | 1 | Fatto (dock con pin da cassetto con Y) |
 | RF-28 | Home | Ruolo di Home del sistema | 1 | Fatto (richiesta del ruolo nel setup; l'esito dipende dall'utente) |
@@ -54,31 +54,31 @@ Ordine delle settimane:
 | RF-30 | Scheda gioco | Tab Info: descrizione, screenshot, trailer, badge HLTB, scelta di emulatore e display | 2 | Parziale: descrizione, dati, ore, screenshot, trailer in streaming, emulatore per gioco; HLTB e display no |
 | RF-31 | Scheda gioco | Tab Activity: ore, sessioni, media, grafico settimanale | 3 |  |
 | RF-35 | Controller | Navigazione completa da D-Pad e stick, senza punti morti | 1 | Parziale: D-pad, A, B, Start provati; stick sinistro non provato |
-| RF-36 | Controller | Mappa di default: A conferma, B indietro, Y menu, X scambia schermi, LB social, RB stato, Start impostazioni | 3 |  |
-| RF-37 | Controller | Glifi Nintendo, Xbox e PlayStation, automatici o manuali, e Corner Hints | 3 |  |
+| RF-36 | Controller | Mappa di default: A conferma, B indietro, Y menu, X scambia schermi, LB social, RB stato, Start impostazioni | 3 | Parziale: A, B, Y, Start (menu), LB/RB tra le piattaforme; X, pannelli e Start→impostazioni no |
+| RF-37 | Controller | Glifi Nintendo, Xbox e PlayStation, automatici o manuali, e Corner Hints | 3 | Parziale: Corner Hints con le sigle; glifi per marca no |
 | RF-38 | Controller | Remapping con profili per controller | 3 |  |
-| RF-39 | Controller | Tastiera, touch e pinch come alternative | 3 |  |
+| RF-39 | Controller | Tastiera, touch e pinch come alternative | 3 | Parziale: tastiera a schermo per il pad, Invio, touch; pinch no |
 | RF-40 | Sessioni | Tracciamento delle sessioni dall'uso delle app, al secondo, con pausa e ripresa | 3 | Fatto (stima dal lancio al ritorno senza accesso ai dati di utilizzo); ore Steam importate a parte |
 | RF-41 | Sessioni | Modifica manuale delle sessioni ed esclusione di un'app | 3 |  |
 | RF-42 | Sessioni | Pod Log: totali, calendario, classifica | 3 | Fatto (Pod integrato `builtin.log` con totali, classifica giochi e avvio) |
-| RF-43 | Sessioni | Now Playing sullo schermo secondario | 6 |  |
-| RF-44 | Temi | Formato temi proprio e import dei temi Cocoon senza conversione manuale | 4 |  |
-| RF-45 | Temi | Cinque layer componibili da pacchetti diversi; i file dell'utente hanno la precedenza | 4 |  |
-| RF-46 | Temi | Sfondi statici e animati (webp, png, gif, mp4), separati per schermo principale ed esterno | 4 |  |
-| RF-47 | Temi | Superficie solida o in vetro, con parametri; ripiego sotto API 33 | 4 |  |
-| RF-48 | Temi | Quattro stili di cursore con gradiente proprio; maschere e cornici delle icone per piattaforma | 4 |  |
-| RF-49 | Temi | Validatore con errori comprensibili | 4 |  |
+| RF-43 | Sessioni | Now Playing sullo schermo secondario | 6 | Fatto (schermata Now Playing sull'altro display, con attenuazione) |
+| RF-44 | Temi | Formato temi proprio e import dei temi Cocoon senza conversione manuale | 4 | Fatto (lettura del formato e import dalle cartelle di Cocoon) |
+| RF-45 | Temi | Cinque layer componibili da pacchetti diversi; i file dell'utente hanno la precedenza | 4 | Fatto |
+| RF-46 | Temi | Sfondi statici e animati (webp, png, gif, mp4), separati per schermo principale ed esterno | 4 | Fatto (immagini con Coil, video in loop muto); non provato su dispositivo |
+| RF-47 | Temi | Superficie solida o in vetro, con parametri; ripiego dove la sfocatura non c'è | 4 | Fatto (sfocatura da API 31, tinta sotto) |
+| RF-48 | Temi | Quattro stili di cursore con gradiente proprio; maschere e cornici delle icone per piattaforma | 4 | Fatto |
+| RF-49 | Temi | Validatore con errori comprensibili | 4 | Parziale: validatore nel core e nella FFI; gli errori non si vedono nell'app |
 | RF-50 | Temi | Theme Hub: catalogo da un indice su GitHub, anteprima, installazione, import ZIP | 4 | Fatto (Pod integrato `builtin.themehub` con catalogo e anteprime) |
 | RF-51 | Audio | Effetti sonori a bassa latenza per le 22 azioni | 4 | Parziale: suoni propri sintetizzati per le 22 azioni, sostituibili dal tema, sul volume dei media; latenza non misurata |
 | RF-52 | Audio | Musica di sottofondo del launcher: playlist, per ora del giorno o spenta; jingle per gioco; sfumatura quando parte un gioco | 4 | Parziale: playlist in ordine o casuale, brano per ora del giorno, musica propria se il tema non ne ha, pausa quando parte un gioco; jingle e sfumatura no |
-| RF-61 | Dual-screen | Schermo sopra con wallpaper, hero e logo del gioco selezionato | 6 |  |
-| RF-62 | Dual-screen | Docking automatico, sempre o mai; scambio con X; display preferito per gioco, cartella o app | 6 |  |
-| RF-63 | Dual-screen | Display esterno con fino a 5 righe | 6 |  |
+| RF-61 | Dual-screen | Schermo sopra con wallpaper, hero e logo del gioco selezionato | 6 | Fatto (hero, logo e sfondo esterno); non provato su dispositivo |
+| RF-62 | Dual-screen | Docking automatico, sempre o mai; scambio con X; display preferito per gioco, cartella o app | 6 | Parziale: modalità schermo, inversione dei ruoli, docking esterno; scambio con X e display preferito per gioco no |
+| RF-63 | Dual-screen | Display esterno con fino a 5 righe | 6 | Parziale: da 1 a 5 righe solo nella modalità a schermo singolo |
 | RF-77 | Dual-screen | Luminosità del secondo schermo indipendente dal primo | 6 | Fatto (20–100%, velo sullo schermo) |
 | RF-64 | Widget | Orologio, Recenti, Ultimo giocato, Musica, Immagine, Log, Gioco casuale nella griglia | 6 |  |
 | RF-65 | Widget | Host di AppWidget Android di terze parti | 6 |  |
 | RF-66 | Widget | Pod Picnic: screenshot per gioco | 6 |  |
-| RF-67 | Steam e PC | Libreria Steam, ore e artwork con la Web API ufficiale | 7 | Parziale: import dei giochi posseduti con la chiave dell'utente; ore non ancora salvate |
+| RF-67 | Steam e PC | Libreria Steam, ore e artwork con la Web API ufficiale | 7 | Parziale: giochi posseduti e ore importati con la chiave dell'utente; artwork da SteamGridDB |
 | RF-68 | Pannelli | Pannello stato (RB): Wi-Fi, Bluetooth, Non disturbare, luminosità, volume, notifiche | 3 |  |
 | RF-69 | Pannelli | Pannello social (LB): amici Steam e Discord in sola lettura, conversazioni Android con risposta rapida | 8 |  |
 | RF-71 | Sistema | Backup e ripristino di tutta la configurazione | 8 |  |
