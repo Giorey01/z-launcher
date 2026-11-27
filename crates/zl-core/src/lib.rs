@@ -13,8 +13,10 @@
     clippy::cognitive_complexity
 )]
 
+mod app_folders;
 mod app_games;
 mod appearance_types;
+mod collections;
 mod default_sounds;
 mod detect;
 mod error;
@@ -33,6 +35,7 @@ pub mod search;
 mod secrets;
 mod sessions;
 mod smart_folders;
+mod sort_order;
 mod steam_details;
 mod steam_library;
 mod theme_files;
@@ -67,8 +70,9 @@ pub use secrets::{MemorySecrets, SecretStore};
 pub use sessions::{PendingSession, SessionEnd};
 pub use steam_library::{SteamAccount, SteamImport, SteamProblem};
 pub use types::{
-    Candidate, Detection, FolderKind, GameDetails, GameEntry, InstalledView, LibraryMode, Plan,
-    PlatformEmulatorSetting, PlatformEntry, ProposedDefault, RootInfo, ScraperConfig,
+    Candidate, CollectionInfo, Detection, FolderKind, GameDetails, GameEntry, InstalledApp,
+    InstalledView, LibraryMode, Plan, PlatformEmulatorSetting, PlatformEntry, ProposedDefault,
+    RootInfo, ScraperConfig, SortOrder,
 };
 
 /// The service: an open library database and the platform data, shared by every call.

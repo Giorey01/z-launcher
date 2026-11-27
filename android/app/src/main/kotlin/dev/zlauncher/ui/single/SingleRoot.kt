@@ -22,7 +22,11 @@ import dev.zlauncher.ui.hero.HeroArea
 import dev.zlauncher.ui.hero.StatusPill
 import dev.zlauncher.ui.home.GridSpec
 import dev.zlauncher.ui.home.LocalGridSpec
+import dev.zlauncher.nav.isAppFolder
 import dev.zlauncher.ui.menus.AppMenu
+import dev.zlauncher.ui.menus.FolderTileMenu
+import dev.zlauncher.ui.menus.SelectionMenu
+import dev.zlauncher.ui.menus.SortMenu
 import dev.zlauncher.ui.menus.GameMenu
 import dev.zlauncher.ui.menus.StartMenu
 import dev.zlauncher.ui.theme.LocalZTheme
@@ -55,6 +59,9 @@ fun SingleRoot(app: AppViewModel) {
             is Overlay.GameMenu -> GameMenu(app, menu)
             Overlay.StartMenu -> StartMenu(app)
             is Overlay.AppMenu -> AppMenu(app, menu)
+            Overlay.SortMenu -> SortMenu(app)
+            Overlay.SelectionMenu -> SelectionMenu(app)
+            is Overlay.FolderMenu -> FolderTileMenu(app, menu)
         }
         app.message?.let { MessageLine(it, { app.message = null }, Modifier.align(Alignment.BottomCenter)) }
     }
@@ -85,6 +92,7 @@ private fun SingleContent(app: AppViewModel, settings: UserSettings) {
 /** Whether [screen] takes the whole display in the single-screen layout (no hero area above it). */
 private fun isFullScreen(screen: Screen?): Boolean = when (screen) {
     Screen.Settings, Screen.Drawer, Screen.Picker, is Screen.ConsolePicker, is Screen.GameInfo, is Screen.Pod,
-    Screen.PodManagement, Screen.Search -> true
-    null, is Screen.Platform -> false
+    Screen.PodManagement, Screen.Search, is Screen.FolderName -> true
+    is Screen.Platform -> screen.isAppFolder()
+    null -> false
 }

@@ -10,7 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,6 +35,7 @@ import dev.zlauncher.core.nativecore.GameEntry
 import dev.zlauncher.core.nativecore.IconStyle
 import dev.zlauncher.core.nativecore.OverlayArt
 import dev.zlauncher.core.nativecore.PlatformEntry
+import dev.zlauncher.nav.TileMark
 import dev.zlauncher.pods.LeadTileSlotItem
 import dev.zlauncher.ui.art.ArtImage
 import dev.zlauncher.ui.art.CoverArt
@@ -78,6 +82,7 @@ fun PlatformTile(
     onOpen: () -> Unit,
     modifier: Modifier = Modifier,
     onFocused: () -> Unit = {},
+    onMenu: (() -> Unit)? = null,
 ) {
     val theme = LocalZTheme.current
     val art = rememberPlatformArt(platform.id, theme)
@@ -85,6 +90,7 @@ fun PlatformTile(
     PadTile(
         onOpen,
         modifier.fillMaxWidth().aspectRatio(1f),
+        onSecondary = onMenu,
         shape = shape,
         surface = TileSurface.NONE,
         cursorOutset = PLATFORM_CURSOR,
@@ -148,6 +154,7 @@ fun GameTile(
     onMenu: () -> Unit,
     modifier: Modifier = Modifier,
     onFocused: () -> Unit = {},
+    mark: TileMark = TileMark.NONE,
 ) {
     val theme = LocalZTheme.current
     val overlay = rememberOverlay(game.platformId, theme)
@@ -166,6 +173,27 @@ fun GameTile(
             modifier = Modifier.align(Alignment.Center).fillMaxSize(GAME_COVER_FRACTION),
             colorFilter = if (theme.settings.iconStyle == IconStyle.ACCENT && !focused) GreyMatrix else null,
         ) { TitleFallback(game.displayTitle) }
+        if (mark != TileMark.NONE) MarkBadge(mark)
+    }
+}
+
+/** Side of the check that marks a selected game. */
+private val MARK_SIZE = 26.dp
+
+/** What marks a tile: a check on a selected game, an accent frame around the one picked up. */
+@Composable
+private fun BoxScope.MarkBadge(mark: TileMark) {
+    val theme = LocalZTheme.current
+    val shape = RoundedCornerShape(theme.settings.iconRoundness.dpPercent())
+    if (mark == TileMark.GRABBED) {
+        Box(Modifier.align(Alignment.Center).fillMaxSize(GAME_COVER_FRACTION).border(3.dp, theme.accentStart, shape))
+        return
+    }
+    Box(
+        Modifier.align(Alignment.TopEnd).padding(top = 10.dp, end = 10.dp).size(MARK_SIZE).clip(CircleShape).background(theme.accentStart),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(Icons.Rounded.Check, null, Modifier.size(MARK_SIZE - 8.dp), tint = Color.White)
     }
 }
 

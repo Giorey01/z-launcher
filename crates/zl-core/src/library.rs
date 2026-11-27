@@ -115,8 +115,8 @@ impl Service {
             .map_or_else(|| id.to_string(), |p| p.id.clone())
     }
 
-    /// The folders of the Home: the Smart Folders that have games (Favourites, Recent, Never
-    /// played, once something was played) first, then one folder per platform with its count, sorted by name, then Hidden
+    /// The folders of the Home: the Smart Folders that have games (Favourites, Recent, Most
+    /// played, New, Never played) first, then the manual folders, then one folder per platform with its count, sorted by name, then Hidden
     /// when some game is hidden. Folders that are aliases of the same platform are merged, and
     /// so are the platforms of a group folder (Steam and Windows under "PC"). Hidden games count
     /// nowhere but in Hidden.
@@ -137,6 +137,7 @@ impl Service {
             .collect();
         out.sort_by_key(|p| p.name.to_lowercase());
         let mut folders = self.smart_entries(&visible)?;
+        folders.extend(self.collection_entries()?);
         folders.extend(out);
         folders.extend(self.hidden_entry()?);
         Ok(folders)

@@ -1,0 +1,11 @@
+{
+  "comment": "Installed launcher apps and what the Apps and Emulators Smart Folders hold: emulators are the packages the emulator data knows, apps are the rest that are not games, games are in neither.",
+  "installed": [
+    { "package": "com.explusalpha.A2600Emu", "is_game": false },
+    { "package": "org.example.notes", "is_game": false },
+    { "package": "org.example.puzzle", "is_game": true },
+    { "package": "org.example.player", "is_game": false }
+  ],
+  "apps": ["org.example.notes", "org.example.player"],
+  "emulators": ["com.explusalpha.A2600Emu"]
+}

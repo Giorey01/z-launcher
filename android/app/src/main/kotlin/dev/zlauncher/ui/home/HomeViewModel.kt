@@ -6,9 +6,11 @@ import androidx.lifecycle.viewModelScope
 import dev.zlauncher.R
 import dev.zlauncher.ZLauncherApp
 import dev.zlauncher.apps.AppEntry
+import dev.zlauncher.core.nativecore.Core
 import dev.zlauncher.core.nativecore.CoreException
 import dev.zlauncher.core.nativecore.FolderKind
 import dev.zlauncher.core.nativecore.GameEntry
+import dev.zlauncher.core.nativecore.InstalledApp
 import dev.zlauncher.core.nativecore.LibraryMode
 import dev.zlauncher.core.nativecore.PlatformEntry
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,8 +42,13 @@ fun folderNameRes(kind: FolderKind): Int? = when (kind) {
     FolderKind.PLATFORM -> null
     FolderKind.FAVORITES -> R.string.folder_favorites
     FolderKind.RECENT -> R.string.folder_recent
+    FolderKind.MOST_PLAYED -> R.string.folder_most_played
+    FolderKind.NEW -> R.string.folder_new
     FolderKind.NEVER_PLAYED -> R.string.folder_never_played
     FolderKind.HIDDEN -> R.string.folder_hidden
+    FolderKind.APPS -> R.string.folder_apps
+    FolderKind.EMULATORS -> R.string.folder_emulators
+    FolderKind.COLLECTION -> null
 }
 
 /** Loads the Home from the core; every call runs off the main thread. */
@@ -58,6 +65,19 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     /** [entry] with its name in the app's language when it is a Smart Folder. */
     private fun named(entry: PlatformEntry): PlatformEntry =
         folderNameRes(entry.kind)?.let { entry.copy(name = getApplication<Application>().getString(it)) } ?: entry
+
+    /**
+     * The folders of the Home: the core's, with Apps and Emulators among the Smart Folders, before the manual folders
+     * and the platforms.
+     */
+    private fun folders(core: Core, allApps: List<AppEntry>): List<PlatformEntry> {
+        val own = getApplication<Application>().packageName
+        val installed = allApps.filter { it.packageName != own }.map { InstalledApp(it.packageName, it.isGame) }
+        val entries = core.platforms().map(::named)
+        val apps = core.appFolderEntries(installed).map(::named)
+        val at = entries.indexOfFirst { it.kind == FolderKind.COLLECTION || it.kind == FolderKind.PLATFORM || it.kind == FolderKind.HIDDEN }
+        return if (at < 0) entries + apps else entries.take(at) + apps + entries.drop(at)
+    }
 
     /** Reads the library mode, the platforms or games, and the dock again. */
     fun refresh() {
@@ -78,7 +98,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                     HomeUi(
                         loading = false,
                         mode = mode,
-                        platforms = if (mode == LibraryMode.SMART) core.platforms().map(::named) else emptyList(),
+                        platforms = if (mode == LibraryMode.SMART) folders(core, allApps) else emptyList(),
                         games = if (mode == LibraryMode.SIMPLE) core.games(null) else emptyList(),
                         dock = dockApps,
                     )

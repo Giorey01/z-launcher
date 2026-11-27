@@ -138,7 +138,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     /** Goes back: closes the open menu first, else one screen; `false` when the Home is already shown. */
     fun back(): Boolean {
-        if (overlay != null || drawerSearching) {
+        if (overlay != null || drawerSearching || organize.cancel()) {
             overlay = null
             drawerSearching = false
             return true
@@ -152,6 +152,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     /** Returns to the Home from anywhere (the system Home button while the launcher is the Home). */
     fun goHome() {
+        organize.reset()
         stack.clear()
         overlay = null
         choice = null
@@ -172,6 +173,9 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     /** Favourites, hidden games, the dock and apps filed under consoles. */
     val library = LibraryActions(this)
+
+    /** Manual folders, sort orders, multiple selection and the manual order. */
+    val organize = OrganizeActions(this)
 
     /** Asks every screen to read its lists again (after a change to the library). */
     fun refresh() {

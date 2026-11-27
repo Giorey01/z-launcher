@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.zlauncher.R
+import dev.zlauncher.core.nativecore.FolderKind
 import dev.zlauncher.core.nativecore.GameEntry
 import dev.zlauncher.core.nativecore.LibraryMode
 import dev.zlauncher.nav.AppViewModel
@@ -139,6 +140,11 @@ private fun PlatformGrid(
             },
             modifier.then(memory.track(platformKey(platform.id))),
             onFocused = { app.hero = HeroTarget.Platform(platform.id, platform.name) },
+            onMenu = if (platform.kind == FolderKind.COLLECTION) {
+                { app.overlay = Overlay.FolderMenu(platform) }
+            } else {
+                null
+            },
         )
     }
     if (spec.rows == 1) {

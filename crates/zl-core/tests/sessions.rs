@@ -109,6 +109,7 @@ fn smart_folders_follow_flags_and_sessions() -> Res {
         [
             (FolderKind::Favorites, 1),
             (FolderKind::Recent, 1),
+            (FolderKind::MostPlayed, 1),
             (FolderKind::NeverPlayed, 1),
             (FolderKind::Platform, 2),
             (FolderKind::Hidden, 1),

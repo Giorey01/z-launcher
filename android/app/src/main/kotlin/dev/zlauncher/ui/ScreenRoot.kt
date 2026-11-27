@@ -22,12 +22,17 @@ import dev.zlauncher.display.Role
 import dev.zlauncher.nav.AppViewModel
 import dev.zlauncher.nav.Boot
 import dev.zlauncher.nav.Screen
+import dev.zlauncher.nav.isAppFolder
 import dev.zlauncher.nav.UiMessage
 import dev.zlauncher.ui.drawer.DrawerScreen
 import dev.zlauncher.ui.hero.HeroRoot
 import dev.zlauncher.ui.home.HomeScreen
 import dev.zlauncher.ui.home.PlatformScreen
+import dev.zlauncher.ui.home.FolderNameScreen
 import dev.zlauncher.ui.menus.AppMenu
+import dev.zlauncher.ui.menus.FolderTileMenu
+import dev.zlauncher.ui.menus.SelectionMenu
+import dev.zlauncher.ui.menus.SortMenu
 import dev.zlauncher.ui.menus.GameMenu
 import dev.zlauncher.ui.nowplaying.NowPlayingScreen
 import dev.zlauncher.ui.menus.StartMenu
@@ -110,6 +115,9 @@ fun GridContent(app: AppViewModel, single: Boolean) {
             is Overlay.GameMenu -> GameMenu(app, menu)
             Overlay.StartMenu -> StartMenu(app)
             is Overlay.AppMenu -> AppMenu(app, menu)
+            Overlay.SortMenu -> SortMenu(app)
+            Overlay.SelectionMenu -> SelectionMenu(app)
+            is Overlay.FolderMenu -> FolderTileMenu(app, menu)
         }
     }
 }
@@ -119,8 +127,9 @@ fun GridContent(app: AppViewModel, single: Boolean) {
 private fun ReadyScreens(app: AppViewModel, single: Boolean) {
     when (val screen = app.top) {
         null -> HomeScreen(app)
-        is Screen.Platform -> PlatformScreen(app, screen)
-        Screen.Drawer -> DrawerScreen(app)
+        is Screen.Platform -> if (screen.isAppFolder()) DrawerScreen(app, screen) else PlatformScreen(app, screen)
+        is Screen.FolderName -> FolderNameScreen(app, screen)
+        Screen.Drawer -> DrawerScreen(app, null)
         Screen.Picker -> EmulatorPickerScreen(app)
         is Screen.ConsolePicker -> ConsolePickerScreen(app, screen)
         is Screen.GameInfo -> GameInfoScreen(app, screen)

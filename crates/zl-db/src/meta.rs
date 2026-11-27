@@ -141,6 +141,21 @@ impl Db {
         Ok(out)
     }
 
+    /// The rating (0 to 5) of every game that has one, the user's override over the scraped value.
+    pub fn all_ratings(&self) -> Result<HashMap<i64, f32>, DbError> {
+        let mut stmt = self
+            .conn
+            .prepare("SELECT game_id, rating FROM game_meta WHERE rating IS NOT NULL")?;
+        let rows = stmt.query_map([], |row| Ok((row.get(0)?, row.get(1)?)))?;
+        let mut map: HashMap<i64, f32> = rows.collect::<Result<_, _>>()?;
+        for (id, value) in self.all_meta_overrides(MetaField::Rating)? {
+            if let Ok(rating) = value.parse() {
+                map.insert(id, rating);
+            }
+        }
+        Ok(map)
+    }
+
     /// Returns all overrides for a specific field as a map from game_id to value.
     pub fn all_meta_overrides(&self, field: MetaField) -> Result<HashMap<i64, String>, DbError> {
         let mut stmt = self

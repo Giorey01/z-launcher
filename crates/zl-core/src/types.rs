@@ -27,6 +27,16 @@ pub enum FolderKind {
     Recent,
     /// The games never played.
     NeverPlayed,
+    /// The games with the most play time, longest first.
+    MostPlayed,
+    /// The games added to the library recently.
+    New,
+    /// Installed Android apps that are not games and not emulators.
+    Apps,
+    /// Installed emulators.
+    Emulators,
+    /// A manual folder the user made (`@folder:<id>`); its name comes with it.
+    Collection,
     /// The hidden games.
     Hidden,
 }
@@ -42,6 +52,45 @@ pub struct PlatformEntry {
     pub games: u32,
     /// What the folder is.
     pub kind: FolderKind,
+}
+
+/// An installed launcher app, as the app reports it, for the Apps and Emulators folders.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct InstalledApp {
+    /// Android package name.
+    pub package: String,
+    /// The app declares itself a game.
+    pub is_game: bool,
+}
+
+/// How a list of games is ordered.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SortOrder {
+    /// By title, A to Z.
+    Name,
+    /// Last played first; never played last.
+    LastPlayed,
+    /// Most play time first.
+    PlayTime,
+    /// Added to the library last first.
+    Added,
+    /// Best rated first; unrated last.
+    Rating,
+    /// The user's own order (manual folders only).
+    Manual,
+}
+
+/// A manual folder with the games it holds.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CollectionInfo {
+    /// Row id.
+    pub id: i64,
+    /// Folder id as the Home uses it (`@folder:<id>`).
+    pub folder_id: String,
+    /// The name the user gave.
+    pub name: String,
+    /// Games in it that are not missing.
+    pub games: u32,
 }
 
 /// A game as listed on screen.

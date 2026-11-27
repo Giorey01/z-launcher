@@ -14,6 +14,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Download
+import androidx.compose.material.icons.rounded.DragHandle
+import androidx.compose.material.icons.rounded.Folder
+import androidx.compose.material.icons.rounded.SelectAll
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.PlayArrow
@@ -73,6 +76,7 @@ private enum class MenuLevel {
     Main,
     Displays,
     Rating,
+    Folders,
 }
 
 /**
@@ -111,6 +115,7 @@ private fun entries(
 ): List<MenuEntry> = when (level) {
     MenuLevel.Displays -> targetEntries(app, menu.game, targets)
     MenuLevel.Rating -> ratingEntries(app, menu.game.id)
+    MenuLevel.Folders -> folderRows(app, menu.game)
     MenuLevel.Main -> mainEntries(app, menu, targets, setLevel)
 }
 
@@ -139,6 +144,32 @@ private fun ratingEntries(app: AppViewModel, gameId: Long): List<MenuEntry> {
         app.library.setRating(gameId, null)
     }
     return entries + remove
+}
+
+/** The manual folders as rows: a check marks those that hold the game, A puts it in or takes it out. */
+@Composable
+private fun folderRows(app: AppViewModel, game: GameEntry): List<MenuEntry> {
+    val folders = rememberCollections(app)
+    val inside = rememberGameFolders(app, game.id)
+    return folderEntries(folders, null, { it.id in inside }, { app.organize.toggleIn(it, game.id, it.id in inside) }) {
+        app.open(Screen.FolderName(null, "", listOf(game.id)))
+    }
+}
+
+/** The entries that organise the game: folders, selection and, in a manual folder, taking it out and reordering. */
+@Composable
+private fun organizeEntries(app: AppViewModel, game: GameEntry, setLevel: (MenuLevel) -> Unit): List<MenuEntry> {
+    val manual = app.organize.manualId != null
+    val inFolder = app.top is Screen.Platform
+    return listOfNotNull(
+        MenuEntry(Icons.Rounded.Folder, stringResource(R.string.menu_add_to_folder), submenu = true) { setLevel(MenuLevel.Folders) },
+        MenuEntry(Icons.Rounded.RemoveCircleOutline, stringResource(R.string.menu_remove_from_folder)) {
+            app.organize.removeFromFolder(listOf(game.id))
+        }.takeIf { manual },
+        MenuEntry(Icons.Rounded.DragHandle, stringResource(R.string.menu_reorder)) { app.organize.grab(game) }.takeIf { manual },
+        MenuEntry(Icons.Rounded.SelectAll, stringResource(R.string.menu_select_multiple)) { app.organize.startSelecting(game) }
+            .takeIf { inFolder },
+    )
 }
 
 @Composable
@@ -184,7 +215,8 @@ private fun mainEntries(
             app.open(Screen.Pod(slot.podId, slot.route))
         }
     }
-    return listOfNotNull(launch, info, favorite, rating, edit.takeIf { game.appPackage == null }, art) + pods + listOfNotNull(hide, unfile)
+    val organize = organizeEntries(app, game, setLevel)
+    return listOfNotNull(launch, info, favorite, rating, edit.takeIf { game.appPackage == null }, art) + organize + pods + listOfNotNull(hide, unfile)
 }
 
 /** The displays that are on, the larger as the top screen. */

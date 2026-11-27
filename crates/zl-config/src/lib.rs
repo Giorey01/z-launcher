@@ -20,6 +20,7 @@ pub mod hashing;
 pub mod library;
 pub mod media;
 pub mod net;
+pub mod organization;
 pub mod platforms;
 pub mod pods;
 pub mod sessions;

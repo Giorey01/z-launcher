@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dev.zlauncher.ZLauncherApp
 import dev.zlauncher.core.nativecore.CoreException
 import dev.zlauncher.core.nativecore.GameEntry
+import dev.zlauncher.core.nativecore.SortOrder
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,8 +16,10 @@ import kotlinx.coroutines.launch
 data class PlatformGames(
     /** The platform the list belongs to. */
     val platformId: String,
-    /** Its games. */
+    /** Its games, in the order in force for the folder. */
     val games: List<GameEntry>,
+    /** The order they are in. */
+    val order: SortOrder = SortOrder.NAME,
 )
 
 /** The games of one platform. */
@@ -36,13 +39,12 @@ class PlatformViewModel(application: Application) : AndroidViewModel(application
     /** Reads the games of [platformId]; a core error is reported through [onError]. */
     fun load(platformId: String, onError: (CoreException) -> Unit) {
         viewModelScope.launch {
-            val games = try {
-                zl.core.call { it.games(platformId) }
+            state.value = try {
+                zl.core.call { PlatformGames(platformId, it.games(platformId), it.sortOrder(platformId)) }
             } catch (e: CoreException) {
                 onError(e)
-                emptyList()
+                PlatformGames(platformId, emptyList())
             }
-            state.value = PlatformGames(platformId, games)
         }
     }
 }

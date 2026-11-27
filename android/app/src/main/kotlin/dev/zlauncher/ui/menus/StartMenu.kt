@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Apps
+import androidx.compose.material.icons.rounded.CreateNewFolder
 import androidx.compose.material.icons.rounded.Extension
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Settings
@@ -43,6 +44,9 @@ fun StartMenu(app: AppViewModel) {
                 MenuEntry(Icons.Rounded.Apps, stringResource(R.string.menu_apps)) { app.open(Screen.Drawer) },
                 MenuEntry(Icons.Rounded.Search, stringResource(R.string.menu_search), badge = "X") {
                     app.open(Screen.Search)
+                },
+                MenuEntry(Icons.Rounded.CreateNewFolder, stringResource(R.string.menu_new_folder)) {
+                    app.open(Screen.FolderName(null, ""))
                 },
                 MenuEntry(Icons.Rounded.Settings, stringResource(R.string.menu_settings), submenu = true) {
                     app.open(Screen.Settings)

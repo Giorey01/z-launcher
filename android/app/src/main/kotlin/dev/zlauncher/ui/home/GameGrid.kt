@@ -57,6 +57,7 @@ fun GameGrid(
     leads: List<LeadTileSlotItem> = emptyList(),
 ) {
     val spec = LocalGridSpec.current
+    app.organize.columns = if (spec.rows == 0) GAME_COLUMNS else spec.gameColumns
     val allCells = cellsOf(leads, games)
     if (spec.rows == 1) {
         val nonEmpties = leads.map { Cell.Lead(it) } + games.map { Cell.Game(it) }
@@ -93,10 +94,11 @@ private fun RenderCell(app: AppViewModel, cell: Cell, memory: FocusMemory) {
         )
         is Cell.Game -> GameTile(
             cell.game,
-            { app.launchGame(cell.game) },
-            { openGameMenu(app, cell.game) },
+            { app.organize.activate(cell.game) },
+            { app.organize.menu { openGameMenu(app, cell.game) } },
             Modifier.then(memory.track(gameKey(cell.game.id))),
             onFocused = { app.hero = HeroTarget.Game(cell.game) },
+            mark = app.organize.markOf(cell.game.id),
         )
         is Cell.Empty -> EmptySlot()
     }
