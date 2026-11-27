@@ -1,0 +1,27 @@
+[package]
+name = "zl-hash"
+description = "CRC32, MD5 and SHA1 of ROM files, also inside zip and 7z archives and from the header of CHD images"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+thiserror = { workspace = true }
+zip = { workspace = true }
+sevenz-rust2 = { version = "0.25" }
+zl-archive = { path = "../zl-archive" }
+zl-config = { path = "../zl-config" }
+crc32fast = "1.4"
+sha1 = "0.10"
+md-5 = "0.10"
+
+[dev-dependencies]
+tempfile = { workspace = true }
+serde_json = { workspace = true }
+serde = { workspace = true }
+# Writes the 7z of the tests.
+sevenz-rust2 = { version = "0.25", features = ["compress"] }
+
+[lints]
+workspace = true

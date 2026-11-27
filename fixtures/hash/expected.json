@@ -1,0 +1,220 @@
+{
+  "cases": [
+    {
+      "file": "plain.bin",
+      "container": "raw",
+      "entries": [
+        {
+          "entry": "",
+          "size": 200,
+          "crc32": "0ff16903",
+          "md5": "4c79b81ac94bad7a875519ce6b964c66",
+          "sha1": "892b673ca3c696ab13ab8aab3cf3abfbc3aaeb3b",
+          "headerless": null
+        }
+      ]
+    },
+    {
+      "file": "mario.nes",
+      "container": "raw",
+      "entries": [
+        {
+          "entry": "",
+          "size": 80,
+          "crc32": "bf28aed3",
+          "md5": "2f36ae6c48d1946e92f5e16f4082edc1",
+          "sha1": "2c9e424df8c76eadbc257e5ff0fdd8eba0d289ec",
+          "headerless": {
+            "header_bytes": 16,
+            "crc32": "ec81d986",
+            "md5": "de5f72ad343a370558ccbd34e807b7de",
+            "sha1": "87cd98f2e4886e120bbb7a016a8e610b1d703baf"
+          }
+        }
+      ]
+    },
+    {
+      "file": "game.smc",
+      "container": "raw",
+      "entries": [
+        {
+          "entry": "",
+          "size": 1536,
+          "crc32": "47f073db",
+          "md5": "430818d429ca662993f2c3ad4c3ed33c",
+          "sha1": "77190650967f190c5a7127bb9491c17ba1f304bf",
+          "headerless": {
+            "header_bytes": 512,
+            "crc32": "c4593d8b",
+            "md5": "ae432ad222141acab7a9d85d01ccd501",
+            "sha1": "6c31d4e54412c968d0dd16bd6b70a347ea1db311"
+          }
+        }
+      ]
+    },
+    {
+      "file": "game.sfc",
+      "container": "raw",
+      "entries": [
+        {
+          "entry": "",
+          "size": 1024,
+          "crc32": "c4593d8b",
+          "md5": "ae432ad222141acab7a9d85d01ccd501",
+          "sha1": "6c31d4e54412c968d0dd16bd6b70a347ea1db311",
+          "headerless": null
+        }
+      ]
+    },
+    {
+      "file": "game.lnx",
+      "container": "raw",
+      "entries": [
+        {
+          "entry": "",
+          "size": 164,
+          "crc32": "514cd30e",
+          "md5": "df2455afe4813e01eab1034450cb8c74",
+          "sha1": "b581aa0dcb9f55d9157f7b31e64e4c6c7c3c4bfc",
+          "headerless": {
+            "header_bytes": 64,
+            "crc32": "c4b1ff66",
+            "md5": "687f980c2959201be84a762ae26192ae",
+            "sha1": "2bda5918e8160e01ace292eb3c730962d1e65a33"
+          }
+        }
+      ]
+    },
+    {
+      "file": "game.a78",
+      "container": "raw",
+      "entries": [
+        {
+          "entry": "",
+          "size": 227,
+          "crc32": "d256281a",
+          "md5": "393a1ba4f4099c8896e42f9311eed4da",
+          "sha1": "2f5e4cfc431c9c20abc91e673cda792856d71bb4",
+          "headerless": {
+            "header_bytes": 128,
+            "crc32": "57e72115",
+            "md5": "67bb30036bbe7182459949513383b534",
+            "sha1": "82c7f4a33b867f59b79ac5f321e4eaf372d16f0c"
+          }
+        }
+      ]
+    },
+    {
+      "file": "set.zip",
+      "container": "zip",
+      "entries": [
+        {
+          "entry": "roms/a.nes",
+          "size": 80,
+          "crc32": "bf28aed3",
+          "md5": "2f36ae6c48d1946e92f5e16f4082edc1",
+          "sha1": "2c9e424df8c76eadbc257e5ff0fdd8eba0d289ec",
+          "headerless": {
+            "header_bytes": 16,
+            "crc32": "ec81d986",
+            "md5": "de5f72ad343a370558ccbd34e807b7de",
+            "sha1": "87cd98f2e4886e120bbb7a016a8e610b1d703baf"
+          }
+        },
+        {
+          "entry": "b.bin",
+          "size": 200,
+          "crc32": "0ff16903",
+          "md5": "4c79b81ac94bad7a875519ce6b964c66",
+          "sha1": "892b673ca3c696ab13ab8aab3cf3abfbc3aaeb3b",
+          "headerless": null
+        }
+      ]
+    },
+    {
+      "file": "locked.zip",
+      "error": "password"
+    },
+    {
+      "file": "locked.7z",
+      "error": "password"
+    },
+    {
+      "file": "set.7z",
+      "container": "7z",
+      "entries": [
+        {
+          "entry": "roms/a.nes",
+          "size": 80,
+          "crc32": "bf28aed3",
+          "md5": "2f36ae6c48d1946e92f5e16f4082edc1",
+          "sha1": "2c9e424df8c76eadbc257e5ff0fdd8eba0d289ec",
+          "headerless": {
+            "header_bytes": 16,
+            "crc32": "ec81d986",
+            "md5": "de5f72ad343a370558ccbd34e807b7de",
+            "sha1": "87cd98f2e4886e120bbb7a016a8e610b1d703baf"
+          }
+        },
+        {
+          "entry": "b.bin",
+          "size": 200,
+          "crc32": "0ff16903",
+          "md5": "4c79b81ac94bad7a875519ce6b964c66",
+          "sha1": "892b673ca3c696ab13ab8aab3cf3abfbc3aaeb3b",
+          "headerless": null
+        }
+      ]
+    },
+    {
+      "file": "disc-v3.chd",
+      "container": "chd",
+      "entries": [
+        {
+          "entry": "",
+          "size": 734003200,
+          "crc32": null,
+          "md5": "e8841d6c07aab651da28b9556fa5c126",
+          "sha1": "be4b80ee6ae8e7ccb89551a6318619f1e013cf14",
+          "headerless": null
+        }
+      ]
+    },
+    {
+      "file": "disc-v4.chd",
+      "container": "chd",
+      "entries": [
+        {
+          "entry": "",
+          "size": 734003200,
+          "crc32": null,
+          "md5": null,
+          "sha1": "735ba5c4a2636bb563190c0fdb216fcfe6f30bae",
+          "headerless": null
+        }
+      ]
+    },
+    {
+      "file": "disc-v5.chd",
+      "container": "chd",
+      "entries": [
+        {
+          "entry": "",
+          "size": 734003200,
+          "crc32": null,
+          "md5": null,
+          "sha1": "a657e2cc3983a9745a3767214564897e762b075e",
+          "headerless": null
+        }
+      ]
+    },
+    {
+      "file": "not-a-chd.chd",
+      "error": "damaged"
+    },
+    {
+      "file": "empty.zip",
+      "error": "empty"
+    }
+  ]
+}

@@ -200,9 +200,41 @@ CREATE TABLE pod_health (
 CREATE INDEX pod_health_pod ON pod_health(pod_id, crashed_at);
 ";
 
+/// Step 10: the digests of the files of each game (CRC32, MD5, SHA1), for matching metadata
+/// and, later, achievements. One row per file, or per entry for a zip or a 7z (`entry` is the
+/// path inside, empty otherwise). `file_size` and `file_mtime` are those of the file when it was
+/// hashed: the row is current only while they equal the ones in `game_files`, so an unchanged
+/// file is never read again. A file that cannot be hashed for a lasting reason (too large,
+/// encrypted, damaged) has one row with `error` set and no digests, so it is not retried either.
+const STEP_10: &str = "
+CREATE TABLE rom_hashes (
+    game_id INTEGER NOT NULL REFERENCES games(id) ON DELETE CASCADE,
+    file_path TEXT NOT NULL,
+    entry TEXT NOT NULL DEFAULT '',
+    file_size INTEGER NOT NULL,
+    file_mtime INTEGER NOT NULL,
+    container TEXT NOT NULL CHECK (container IN ('raw','zip','7z','chd')),
+    size INTEGER NOT NULL DEFAULT 0,
+    crc32 TEXT,
+    md5 TEXT,
+    sha1 TEXT,
+    header_bytes INTEGER NOT NULL DEFAULT 0,
+    hl_crc32 TEXT,
+    hl_md5 TEXT,
+    hl_sha1 TEXT,
+    error TEXT,
+    hashed_at INTEGER NOT NULL DEFAULT (unixepoch()),
+    PRIMARY KEY (game_id, file_path, entry)
+) WITHOUT ROWID;
+CREATE INDEX rom_hashes_crc32 ON rom_hashes(crc32);
+CREATE INDEX rom_hashes_sha1 ON rom_hashes(sha1);
+";
+
 /// All steps in order; step `n` is `MIGRATIONS[n - 1]`.
 pub const MIGRATIONS: &[&str] = &[
     STEP_1, STEP_2, STEP_3, STEP_4, STEP_5, STEP_6, STEP_7, STEP_8,
+    // STEP_9: in arrivo da un altro ramo
+    STEP_10,
 ];
 
 /// Reads the schema version of the open database.

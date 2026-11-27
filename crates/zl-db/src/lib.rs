@@ -20,6 +20,8 @@
 //!
 //! - `game_media` holds the media files of each game (cover, hero, logo, screenshots, video) with
 //!   their source; a `protected` row is the user's choice and imports leave it alone.
+//! - `rom_hashes` holds the CRC32, MD5 and SHA1 of each file of a game (and of each entry of an
+//!   archive), current while the file's size and mtime are unchanged.
 //! - `game_flags` holds the user's favourite and hidden flags, `game_sessions` the play time.
 //!
 //! Timestamps are Unix time, `added_at` in seconds and file modification times in milliseconds.
@@ -39,6 +41,7 @@ mod meta;
 pub mod migrations;
 mod models;
 mod pods;
+mod rom_hashes;
 mod roots;
 mod sessions;
 mod settings;
@@ -47,8 +50,8 @@ pub use db::Db;
 pub use error::DbError;
 pub use models::{
     Counts, ExistingGame, Game, GameFile, GameKind, GameMeta, GameQuery, MediaKind, MediaRow,
-    MediaSource, MetaField, MetaOverride, NewGame, NewMedia, PlatformCount, Root, ScrapeMode,
-    ScraperSource,
+    MediaSource, MetaField, MetaOverride, NewGame, NewMedia, NewRomHash, PlatformCount, RomHash,
+    Root, ScrapeMode, ScraperSource,
 };
 pub use pods::{InstalledPod, PodState};
 pub use sessions::{GameFlags, NewSession, PlayStats, SessionSource};
