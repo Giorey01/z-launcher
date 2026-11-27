@@ -1,7 +1,22 @@
 # Roadmap
 
 Requisiti funzionali del launcher. **S.** è la settimana prevista (8 settimane: release 0.1 alla
-fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare.
+fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare. Gli ID non si rinumerano: un
+requisito spostato cambia area e settimana, non numero.
+
+Ordine delle settimane:
+
+| S. | Tema |
+| --- | --- |
+| 1–2 | Chiudere libreria e metadati |
+| 3 | Home e controller |
+| 4 | Temi e audio |
+| 5 | Slot per i Pod; Pod integrati Achievements e Saves |
+| 6 | Dual-screen, widget, Pod Media |
+| 7 | Steam e PC |
+| 8 | Pannelli, backup, sync |
+
+## Launcher
 
 | ID | Area | Requisito | S. | Stato |
 | --- | --- | --- | --- | --- |
@@ -9,8 +24,10 @@ fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare.
 | RF-02 | Libreria | Multi-disco (`.m3u`, una cartella per gioco, `(Disc N)`) raccolto in una sola voce | 1 |  |
 | RF-03 | Libreria | Rescan incrementale per data di modifica; i giochi spariti vengono segnalati, non cancellati | 1 |  |
 | RF-04 | Libreria | Lettura dei file tag `[tag] valore` (`.steamappid`, `.localgameid`, `.dpt`, `.moonlight`, `.xcloud`) | 1 |  |
-| RF-05 | Libreria | Hash delle ROM in background, anche dentro zip, 7z e CHD | 2 |  |
+| RF-05 | Libreria | Hash delle ROM in background, anche dentro zip, 7z e CHD (per abbinare i metadati; l'hash di RetroAchievements è RF-53) | 2 |  |
 | RF-06 | Libreria | Elenco delle app Android installate, con categoria giochi | 1 | Fatto |
+| RF-75 | Libreria | App Android che sono giochi di una console (recomp, port) nella cartella di quella console, avviate come app | 2 | Fatto: `.localgameid` in ogni console, "Sposta in una console" dal cassetto |
+| RF-76 | Libreria | Update, DLC e secondi dump di un gioco Switch uniti al gioco base | 1 | Fatto (per title id; un add-on senza base resta un gioco) |
 | RF-07 | Lancio | Database JSON di piattaforme, emulatori e profili di lancio, aggiornabile senza nuovo APK | 1 | Fatto |
 | RF-08 | Lancio | Ordine di scelta dell'emulatore: gioco, poi sistema, poi estensione, poi chiedi | 1 | Fatto |
 | RF-09 | Lancio | Variabili nei profili, come `{rom}`, `{core}` e `{tags.NOME}` | 1 | Fatto |
@@ -22,7 +39,7 @@ fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare.
 | RF-15 | Organizzazione | Cartelle manuali e lo stesso gioco in più cartelle | 2 |  |
 | RF-16 | Organizzazione | Ricerca e ordinamenti; selezione multipla con sposta e rimuovi | 2 | Parziale: ricerca fuzzy typo-tolerant e schermata di ricerca gamepad-first |
 | RF-17 | Organizzazione | Nascondi gioco, preferito, valutazione | 2 | Fatto |
-| RF-18 | Metadati | Orchestratore con fonti in ordine scelto: libretro-db, ScreenScraper, SteamGridDB, IGDB, LaunchBox, HLTB | 2 | Parziale: SteamGridDB (immagini, chiave dell'utente), Steam Store (dettagli e screenshot, gratis), ES-DE; niente orchestratore |
+| RF-18 | Metadati | Orchestratore con fonti in ordine scelto: libretro-db, ScreenScraper, SteamGridDB, IGDB, LaunchBox, HLTB | 2 | Parziale: SteamGridDB (immagini, chiave dell'utente, scaricate da sole per i giochi nuovi dopo ogni scansione), Steam Store (dettagli e screenshot), ES-DE; niente orchestratore |
 | RF-19 | Metadati | Tre modalità: solo mancanti, campi scelti, forza tutto | 2 |  |
 | RF-20 | Metadati | Campi protetti: una modifica manuale non viene sovrascritta | 2 |  |
 | RF-21 | Metadati | Import dei media già scaricati da ES-DE | 2 | Fatto (media e `gamelist.xml`) |
@@ -36,9 +53,6 @@ fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare.
 | RF-29 | Home | Onboarding: permessi, cartelle, modalità, emulatori | 1 | Fatto |
 | RF-30 | Scheda gioco | Tab Info: descrizione, screenshot, trailer, badge HLTB, scelta di emulatore e display | 2 | Parziale: descrizione, dati, ore, screenshot, trailer in streaming, emulatore per gioco; HLTB e display no |
 | RF-31 | Scheda gioco | Tab Activity: ore, sessioni, media, grafico settimanale | 3 |  |
-| RF-32 | Scheda gioco | Tab Achievements | 5 |  |
-| RF-33 | Scheda gioco | Tab Saves | 5 |  |
-| RF-34 | Scheda gioco | Tab Mods | 8 |  |
 | RF-35 | Controller | Navigazione completa da D-Pad e stick, senza punti morti | 1 | Parziale: D-pad, A, B, Start provati; stick sinistro non provato |
 | RF-36 | Controller | Mappa di default: A conferma, B indietro, Y menu, X scambia schermi, LB social, RB stato, Start impostazioni | 3 |  |
 | RF-37 | Controller | Glifi Nintendo, Xbox e PlayStation, automatici o manuali, e Corner Hints | 3 |  |
@@ -55,31 +69,64 @@ fine della 4, 1.0 alla fine dell'8). **Stato**: vuoto = da fare.
 | RF-48 | Temi | Quattro stili di cursore con gradiente proprio; maschere e cornici delle icone per piattaforma | 4 |  |
 | RF-49 | Temi | Validatore con errori comprensibili | 4 |  |
 | RF-50 | Temi | Theme Hub: catalogo da un indice su GitHub, anteprima, installazione, import ZIP | 4 | Fatto (Pod integrato `builtin.themehub` con catalogo e anteprime) |
-| RF-51 | Audio | Effetti sonori a bassa latenza per le 22 azioni | 4 | Parziale: suoni propri sintetizzati per le 22 azioni, sostituibili dal tema; latenza non misurata |
-| RF-52 | Audio | Musica in playlist, per ora del giorno o spenta; jingle per gioco; sfumatura quando parte un gioco | 4 |  |
-| RF-53 | Achievement | Hash compatibile con RetroAchievements per le piattaforme supportate | 5 |  |
-| RF-54 | Achievement | Trofei, percentuale, Hardcore e Softcore; abbinamento manuale | 5 |  |
-| RF-55 | Achievement | Avviso con suono al rientro dalla sessione | 5 |  |
-| RF-56 | Achievement | Achievement Steam dall'appid | 7 |  |
-| RF-57 | Salvataggi | Posizione dei salvataggi per emulatore nel database dei profili | 5 |  |
-| RF-58 | Salvataggi | Snapshot versionati con SHA-256, versioni fissate, snapshot a fine sessione | 5 |  |
-| RF-59 | Salvataggi | Ripristino sicuro (backup prima di sovrascrivere); import ed export ZIP o grezzi | 5 |  |
-| RF-60 | Salvataggi | Pod Vault con vista per console; avviso per gli emulatori non raggiungibili | 5 |  |
+| RF-51 | Audio | Effetti sonori a bassa latenza per le 22 azioni | 4 | Parziale: suoni propri sintetizzati per le 22 azioni, sostituibili dal tema, sul volume dei media; latenza non misurata |
+| RF-52 | Audio | Musica di sottofondo del launcher: playlist, per ora del giorno o spenta; jingle per gioco; sfumatura quando parte un gioco | 4 | Parziale: playlist in ordine o casuale, brano per ora del giorno, musica propria se il tema non ne ha, pausa quando parte un gioco; jingle e sfumatura no |
 | RF-61 | Dual-screen | Schermo sopra con wallpaper, hero e logo del gioco selezionato | 6 |  |
 | RF-62 | Dual-screen | Docking automatico, sempre o mai; scambio con X; display preferito per gioco, cartella o app | 6 |  |
 | RF-63 | Dual-screen | Display esterno con fino a 5 righe | 6 |  |
+| RF-77 | Dual-screen | Luminosità del secondo schermo indipendente dal primo | 6 | Fatto (20–100%, velo sullo schermo) |
 | RF-64 | Widget | Orologio, Recenti, Ultimo giocato, Musica, Immagine, Log, Gioco casuale nella griglia | 6 |  |
 | RF-65 | Widget | Host di AppWidget Android di terze parti | 6 |  |
 | RF-66 | Widget | Pod Picnic: screenshot per gioco | 6 |  |
 | RF-67 | Steam e PC | Libreria Steam, ore e artwork con la Web API ufficiale | 7 | Parziale: import dei giochi posseduti con la chiave dell'utente; ore non ancora salvate |
 | RF-68 | Pannelli | Pannello stato (RB): Wi-Fi, Bluetooth, Non disturbare, luminosità, volume, notifiche | 3 |  |
 | RF-69 | Pannelli | Pannello social (LB): amici Steam e Discord in sola lettura, conversazioni Android con risposta rapida | 8 |  |
-| RF-70 | Mod | Mod da GameBanana e cartelle mod degli emulatori; attiva o disattiva; conflitti | 8 |  |
-| RF-71 | Sistema | Backup e ripristino di tutta la configurazione | 3 |  |
+| RF-71 | Sistema | Backup e ripristino di tutta la configurazione | 8 |  |
 | RF-72 | Sistema | Sync in LAN verso il PC di salvataggi, screenshot e backup | 8 |  |
-| RF-73 | Estensioni | Pod esterni: una build terza può aggiungere Pod che usano tema, suoni e libreria del launcher | 4 | Fatto: contratto v2 (`Pod`, `PodHost`, `PodSlot`), `PodLoader` dex dinamico, store, firma Ed25519, `pod-platform`, `zpod-template` |
 | RF-74 | Sistema | Interfaccia in italiano e inglese | 1 | Fatto |
-| RF-75 | Libreria | App Android che sono giochi di una console (recomp, port) nella cartella di quella console, avviate come app | 2 | Fatto: `.localgameid` in ogni console, "Sposta in una console" dal cassetto |
+
+## Estensioni (contratto dei Pod)
+
+Ciò che il launcher deve offrire perché le funzioni più grandi stiano nei Pod. Il contratto è in
+`docs/spec/pods.md`.
+
+| ID | Area | Requisito | S. | Stato |
+| --- | --- | --- | --- | --- |
+| RF-73 | Estensioni | Pod esterni: una build terza può aggiungere Pod che usano tema, suoni e libreria del launcher | 4 | Fatto: contratto v2 (`Pod`, `PodHost`, `PodSlot`), `PodLoader` dex dinamico, store, firma Ed25519, `pod-platform`, `zpod-template`; API 2 con archivi (zip, 7z, RAR), download con ripresa e HTTP |
+| RF-78 | Estensioni | Slot tab nella scheda del gioco: un Pod aggiunge una tab con il suo contenuto | 5 |  |
+| RF-79 | Estensioni | Slot badge: un Pod mostra un dato breve sulla scheda e sulla tile del gioco (per esempio "12/40") | 5 |  |
+| RF-80 | Estensioni | Avviso del Pod con un suono del tema, anche al rientro da una sessione | 5 |  |
+| RF-81 | Estensioni | Accesso dei Pod alle cartelle degli emulatori (dati e salvataggi), con il permesso dichiarato nel manifest | 5 |  |
+| RF-82 | Estensioni | Servizio delle sessioni multimediali di Android: elenco dei lettori attivi, titolo, copertina, comandi | 6 |  |
+| RF-83 | Estensioni | La musica del launcher cede il passo quando un Pod o un'altra app riproduce audio | 6 |  |
+
+## Pod integrati
+
+Pod pubblici che vivono in questa repo e usano lo stesso contratto dei Pod esterni.
+
+| ID | Pod | Requisito | S. | Stato |
+| --- | --- | --- | --- | --- |
+| RF-32 | Achievements | Tab Achievements nella scheda del gioco (slot RF-78) | 5 |  |
+| RF-53 | Achievements | Hash compatibile con RetroAchievements per le piattaforme supportate | 5 |  |
+| RF-54 | Achievements | Trofei, percentuale, Hardcore e Softcore; abbinamento manuale | 5 |  |
+| RF-55 | Achievements | Avviso con suono al rientro dalla sessione (RF-80) | 5 |  |
+| RF-56 | Achievements | Achievement Steam dall'appid | 7 |  |
+| RF-33 | Saves | Tab Saves nella scheda del gioco (slot RF-78) | 5 |  |
+| RF-57 | Saves | Posizione dei salvataggi per emulatore, nei dati del Pod | 5 |  |
+| RF-58 | Saves | Snapshot versionati con SHA-256, versioni fissate, snapshot a fine sessione | 5 |  |
+| RF-59 | Saves | Ripristino sicuro (backup prima di sovrascrivere); import ed export ZIP o grezzi | 5 |  |
+| RF-60 | Saves | Vault con vista per console; avviso per gli emulatori non raggiungibili | 5 |  |
+| RF-84 | Media | Controllo di Spotify, YouTube Music e altri lettori dalle sessioni multimediali (RF-82): titolo, copertina, play, pausa, avanti | 6 |  |
+| RF-85 | Media | Mini player nella barra della Home (slot `StatusWidget`) e widget Musica (RF-64) | 6 |  |
+
+## Fuori dal launcher
+
+Funzioni lasciate ai Pod esterni; il launcher fornisce solo gli slot.
+
+| ID | Area | Requisito | Stato |
+| --- | --- | --- | --- |
+| RF-34 | Mod | Tab Mods nella scheda del gioco (slot RF-78) | Da un Pod esterno |
+| RF-70 | Mod | Mod da GameBanana e cartelle mod degli emulatori; attiva o disattiva; conflitti | Da un Pod esterno |
 
 ## Requisiti non funzionali
 

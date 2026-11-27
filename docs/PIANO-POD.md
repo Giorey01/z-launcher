@@ -13,7 +13,9 @@ Questa repo è pubblica e non nomina nessun Pod esterno né chi lo scrive: tutto
    cambia anche i Pod.
 2. **Un Pod porta la sua logica e i suoi dati.** Il core pubblico resta ciò che serve al launcher
    per essere completo da solo (libreria, lancio, temi, sessioni, metadati, import Steam).
-   Mod, musica, salvataggi e simili sono Pod. Un Pod può portare codice Rust nel suo `.so`.
+   Achievements, salvataggi, controllo dei lettori musicali (Spotify, YouTube Music…) e mod
+   sono Pod: i primi tre integrati e pubblici, le mod esterne. La musica di sottofondo del
+   launcher resta nel core. Un Pod può portare codice Rust nel suo `.so`.
 3. **Il Pod entra nell'interfaccia dagli slot**, punti di estensione tipizzati. Non tocca il
    codice interno e non disegna la cornice: la disegna il launcher.
 4. **Codice scaricato, firmato, senza WebView.** Un Pod remoto è un file `.zlpod` che si installa
