@@ -80,7 +80,10 @@ fn a_stopped_download_resumes_from_its_part() {
     });
     assert!(matches!(stopped, Err(HttpError::Cancelled)));
     let kept = std::fs::metadata(part_of(&dest)).unwrap().len();
-    assert_eq!(kept, cfg::DOWNLOAD_CHUNK as u64);
+    // A network read can return less than a chunk, so the stop lands on the first read that
+    // reaches one chunk: at least a chunk is kept, never the whole file.
+    assert!(kept >= cfg::DOWNLOAD_CHUNK as u64, "kept {kept}");
+    assert!(kept < data.len() as u64, "kept {kept}");
     let mut first = None;
     downloader
         .download(&url, &dest, &[], &mut |done, _| {

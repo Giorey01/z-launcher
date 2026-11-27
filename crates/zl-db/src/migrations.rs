@@ -206,7 +206,7 @@ CREATE INDEX pod_health_pod ON pod_health(pod_id, crashed_at);
 /// hashed: the row is current only while they equal the ones in `game_files`, so an unchanged
 /// file is never read again. A file that cannot be hashed for a lasting reason (too large,
 /// encrypted, damaged) has one row with `error` set and no digests, so it is not retried either.
-const STEP_10: &str = "
+const STEP_9: &str = "
 CREATE TABLE rom_hashes (
     game_id INTEGER NOT NULL REFERENCES games(id) ON DELETE CASCADE,
     file_path TEXT NOT NULL,
@@ -233,8 +233,7 @@ CREATE INDEX rom_hashes_sha1 ON rom_hashes(sha1);
 /// All steps in order; step `n` is `MIGRATIONS[n - 1]`.
 pub const MIGRATIONS: &[&str] = &[
     STEP_1, STEP_2, STEP_3, STEP_4, STEP_5, STEP_6, STEP_7, STEP_8,
-    // STEP_9: in arrivo da un altro ramo
-    STEP_10,
+    STEP_9,
 ];
 
 /// Reads the schema version of the open database.
